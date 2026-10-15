@@ -2736,36 +2736,51 @@ void ggml_vec_dot_iq2_xxs_q8_K(int n, float * GGML_RESTRICT s, size_t bs, const 
 
 #if defined(__AVX2__)
 
-    const uint64_t * signs64 = (const uint64_t *)keven_signs_q2xs;
+    const __m256i shifts = _mm256_setr_epi32(0, 7, 0, 7, 14, 21, 14, 21);
+    const __m256i spread1 = _mm256_setr_epi8(0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4,
+                                           0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4);
+    const __m256i spread2 = _mm256_setr_epi8(8, 8, 8, 8, 8, 8, 8, 8, 12, 12, 12, 12, 12, 12, 12, 12,
+                                           8, 8, 8, 8, 8, 8, 8, 8, 12, 12, 12, 12, 12, 12, 12, 12);
+    const __m256i bits = _mm256_set1_epi64x(0x8040201008040201);
+    const __m256i parity = _mm256_broadcastsi128_si256(_mm_setr_epi8(0, -128, -128, 0, -128, 0, 0, -128, -128, 0, 0, -128, 0, -128, -128, 0));
 
-    uint32_t aux32[4];
-    const uint8_t * aux8 = (const uint8_t *)aux32;
+    const __m256i scale_shuffle1 = _mm256_set1_epi16(0x0100);
+    const __m256i scale_shuffle2 = _mm256_set1_epi16(0x0908);
 
     __m256 accumf = _mm256_setzero_ps();
     for (int i = 0; i < nb; ++i) {
         const float d = GGML_CPU_FP16_TO_FP32(x[i].d) * y[i].d;
-        const uint16_t * GGML_RESTRICT q2 = x[i].qs;
-        const int8_t   * GGML_RESTRICT q8 = y[i].qs;
+        const uint8_t * GGML_RESTRICT q2 = (const uint8_t *) x[i].qs;
+        const int8_t  * GGML_RESTRICT q8 = y[i].qs;
         __m256i sumi1 = _mm256_setzero_si256();
         __m256i sumi2 = _mm256_setzero_si256();
+#if defined(__GNUC__)
+        #pragma GCC unroll 4
+#endif
         for (int ib32 = 0; ib32 < QK_K/32; ib32 += 2) {
             const __m256i q8_1 = _mm256_loadu_si256((const __m256i *)q8); q8 += 32;
             const __m256i q8_2 = _mm256_loadu_si256((const __m256i *)q8); q8 += 32;
-            memcpy(aux32, q2, 4*sizeof(uint32_t)); q2 += 8;
+            const uint8_t * aux8 = q2; q2 += 16;
             const __m256i q2_1 = _mm256_set_epi64x(iq2xxs_grid[aux8[ 3]], iq2xxs_grid[aux8[ 2]], iq2xxs_grid[aux8[1]], iq2xxs_grid[aux8[0]]);
             const __m256i q2_2 = _mm256_set_epi64x(iq2xxs_grid[aux8[11]], iq2xxs_grid[aux8[10]], iq2xxs_grid[aux8[9]], iq2xxs_grid[aux8[8]]);
-            const __m256i s2_1 = _mm256_set_epi64x(signs64[(aux32[1] >> 21) & 127], signs64[(aux32[1] >> 14) & 127],
-                                                   signs64[(aux32[1] >>  7) & 127], signs64[(aux32[1] >>  0) & 127]);
-            const __m256i s2_2 = _mm256_set_epi64x(signs64[(aux32[3] >> 21) & 127], signs64[(aux32[3] >> 14) & 127],
-                                                   signs64[(aux32[3] >>  7) & 127], signs64[(aux32[3] >>  0) & 127]);
-            const __m256i q8s_1 = _mm256_sign_epi8(q8_1, s2_1);
-            const __m256i q8s_2 = _mm256_sign_epi8(q8_2, s2_2);
+            // Each 128-bit lane holds two sign codes from each 32-value group.
+            const __m256i words = _mm256_shuffle_epi32(_mm256_broadcastsi128_si256(_mm_loadu_si128((const __m128i *) aux8)), _MM_SHUFFLE(3, 3, 1, 1));
+            __m256i signs = _mm256_and_si256(_mm256_srlv_epi32(words, shifts), _mm256_set1_epi32(127));
+            // The eighth sign bit is the parity of the seven stored bits.
+            const __m256i parity_bits = _mm256_shuffle_epi8(parity, _mm256_xor_si256(signs, _mm256_srli_epi32(signs, 4)));
+            signs = _mm256_or_si256(signs, parity_bits);
+            const __m256i signs1 = _mm256_shuffle_epi8(signs, spread1);
+            const __m256i signs2 = _mm256_shuffle_epi8(signs, spread2);
+            const __m256i neg1 = _mm256_cmpeq_epi8(_mm256_and_si256(signs1, bits), bits);
+            const __m256i neg2 = _mm256_cmpeq_epi8(_mm256_and_si256(signs2, bits), bits);
+            const __m256i q8s_1 = _mm256_sub_epi8(_mm256_xor_si256(q8_1, neg1), neg1);
+            const __m256i q8s_2 = _mm256_sub_epi8(_mm256_xor_si256(q8_2, neg2), neg2);
             const __m256i dot1  = _mm256_maddubs_epi16(q2_1, q8s_1);
             const __m256i dot2  = _mm256_maddubs_epi16(q2_2, q8s_2);
-            const uint16_t ls1 = aux32[1] >> 28;
-            const uint16_t ls2 = aux32[3] >> 28;
-            const __m256i p1 = _mm256_madd_epi16(dot1, _mm256_set1_epi16(2*ls1+1));
-            const __m256i p2 = _mm256_madd_epi16(dot2, _mm256_set1_epi16(2*ls2+1));
+            // Shift the scale to bits 1-4 and force the low bit to get 2*scale + 1.
+            const __m256i scales = _mm256_or_si256(_mm256_srli_epi32(words, 27), _mm256_set1_epi32(1));
+            const __m256i p1 = _mm256_madd_epi16(dot1, _mm256_shuffle_epi8(scales, scale_shuffle1));
+            const __m256i p2 = _mm256_madd_epi16(dot2, _mm256_shuffle_epi8(scales, scale_shuffle2));
             sumi1 = _mm256_add_epi32(sumi1, p1);
             sumi2 = _mm256_add_epi32(sumi2, p2);
         }
