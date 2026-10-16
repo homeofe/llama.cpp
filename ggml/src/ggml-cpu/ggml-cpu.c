@@ -1585,6 +1585,28 @@ static void * incr_ptr_aligned(void ** p, size_t size, size_t align) {
     return ptr;
 }
 
+// measurement only: GGML_MMID_STATS=1 prints columns per active IQ2_XXS expert for 2..8-token calls at exit
+static int64_t mmid_stats_hist[2][9];
+static void mmid_stats_print(void) {
+    for (int k = 0; k < 2; ++k) {
+        fprintf(stderr, "mmid_stats %s:", k ? "k>1024" : "k=1024");
+        for (int c = 1; c <= 8; ++c) {
+            fprintf(stderr, " %d%s=%lld", c, c == 8 ? "+" : "", (long long) mmid_stats_hist[k][c]);
+        }
+        fprintf(stderr, "\n");
+    }
+}
+static bool mmid_stats_enabled(void) {
+    static int enabled = -1;
+    if (enabled < 0) {
+        enabled = getenv("GGML_MMID_STATS") != NULL;
+        if (enabled) {
+            atexit(mmid_stats_print);
+        }
+    }
+    return enabled;
+}
+
 static void ggml_compute_forward_mul_mat_id(
         const struct ggml_compute_params * params,
               struct ggml_tensor * dst) {
@@ -1690,6 +1712,13 @@ static void ggml_compute_forward_mul_mat_id(
 
                 MMID_MATRIX_ROW(i02, matrix_row_counts[i02]) = (struct mmid_row_mapping) {id, iid1};
                 matrix_row_counts[i02] += 1;
+            }
+        }
+        if (src0->type == GGML_TYPE_IQ2_XXS && ids->ne[1] > 1 && ids->ne[1] <= 8 && mmid_stats_enabled()) {
+            for (int a = 0; a < n_as; ++a) {
+                if (matrix_row_counts[a] > 0) {
+                    mmid_stats_hist[ne00 > 1024][MIN(matrix_row_counts[a], 8)]++;
+                }
             }
         }
     }

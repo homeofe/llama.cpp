@@ -341,7 +341,9 @@ ggml_tensor * llama_model_nemotron_h::graph::build_ffn_layer(ggml_tensor * cur, 
                     LLM_FFN_RELU_SQR, LLM_FFN_PAR, il);
         cb(ffn_shexp, "ffn_shexp", il);
 
-        cur = ggml_add(ctx0, moe_out, ffn_shexp);
+        // measurement only: LLAMA_SKIP_SHEXP=1 drops the shared expert (wrong outputs) to bound what overlapping it can gain
+        static const bool skip_shexp = getenv("LLAMA_SKIP_SHEXP") != nullptr;
+        cur = skip_shexp ? moe_out : ggml_add(ctx0, moe_out, ffn_shexp);
         cb(cur, "ffn_out", il);
     }
 
