@@ -1944,7 +1944,12 @@ static enum ggml_status ggml_backend_sched_compute_splits(ggml_backend_sched_t s
         if (sched->overlap && !sched->callback_eval && sched->overlap_events[split_backend_id] != NULL && split_id + 1 < sched->n_splits &&
             ggml_backend_dev_type(ggml_backend_get_device(sched->backends[splits[split_id + 1].backend_id])) == GGML_BACKEND_DEVICE_TYPE_CPU) {
             overlap_cut = ggml_backend_sched_overlap_cut(sched, split, &splits[split_id + 1]);
-            if (overlap_cut + 1 >= split->graph.n_nodes) {
+            // part B must hold real work, otherwise the split runs whole as before
+            bool b_has_work = false;
+            for (int n = overlap_cut + 1; overlap_cut >= 0 && n < split->graph.n_nodes && !b_has_work; n++) {
+                b_has_work = !ggml_op_is_empty(split->graph.nodes[n]->op);
+            }
+            if (!b_has_work) {
                 overlap_cut = -1;
             }
         }
