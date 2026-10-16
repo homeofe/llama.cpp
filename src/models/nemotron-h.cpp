@@ -311,6 +311,17 @@ ggml_tensor * llama_model_nemotron_h::graph::build_ffn_layer(ggml_tensor * cur, 
         ggml_tensor * router_logits = build_lora_mm(model.layers[il].ffn_gate_inp, cur);
         cb(router_logits, "ffn_moe_logits", il);
 
+        ggml_tensor * ffn_shexp = build_ffn(inp_emb,
+                    model.layers[il].ffn_up_shexp,   NULL, model.layers[il].ffn_up_shexp_s,
+                    NULL /* no gate */           ,   NULL, NULL,
+                    model.layers[il].ffn_down_shexp, NULL, model.layers[il].ffn_down_shexp_s,
+                    NULL,
+                    LLM_FFN_RELU_SQR, LLM_FFN_PAR, il);
+        cb(ffn_shexp, "ffn_shexp", il);
+
+        // LLAMA_MOE_SHEXP_EARLY=1 orders the shared expert right after the routing, before the CPU experts
+        static const bool shexp_early = getenv("LLAMA_MOE_SHEXP_EARLY") != nullptr && getenv("LLAMA_SKIP_SHEXP") == nullptr;
+
         ggml_tensor * moe_out =
             build_moe_ffn(inp_latent,
                     model.layers[il].ffn_gate_inp,
@@ -326,20 +337,14 @@ ggml_tensor * llama_model_nemotron_h::graph::build_ffn_layer(ggml_tensor * cur, 
                     router_logits, nullptr,
                     model.layers[il].ffn_up_exps_s,
                     nullptr, // no gate
-                    model.layers[il].ffn_down_exps_s);
+                    model.layers[il].ffn_down_exps_s,
+                    nullptr, // no selected experts given
+                    shexp_early ? ffn_shexp : nullptr);
         cb(moe_out, "ffn_moe_out", il);
 
         if (model.layers[il].ffn_latent_up) {
             moe_out = ggml_mul_mat(ctx0, model.layers[il].ffn_latent_up, moe_out);
         }
-
-        ggml_tensor * ffn_shexp = build_ffn(inp_emb,
-                    model.layers[il].ffn_up_shexp,   NULL, model.layers[il].ffn_up_shexp_s,
-                    NULL /* no gate */           ,   NULL, NULL,
-                    model.layers[il].ffn_down_shexp, NULL, model.layers[il].ffn_down_shexp_s,
-                    NULL,
-                    LLM_FFN_RELU_SQR, LLM_FFN_PAR, il);
-        cb(ffn_shexp, "ffn_shexp", il);
 
         // measurement only: LLAMA_SKIP_SHEXP=1 drops the shared expert (wrong outputs) to bound what overlapping it can gain
         static const bool skip_shexp = getenv("LLAMA_SKIP_SHEXP") != nullptr;
