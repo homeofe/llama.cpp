@@ -320,7 +320,7 @@ ggml_tensor * llama_model_nemotron_h::graph::build_ffn_layer(ggml_tensor * cur, 
         cb(ffn_shexp, "ffn_shexp", il);
 
         // LLAMA_MOE_SHEXP_EARLY=1 orders the shared expert right after the routing, before the CPU experts
-        static const bool shexp_early = getenv("LLAMA_MOE_SHEXP_EARLY") != nullptr && getenv("LLAMA_SKIP_SHEXP") == nullptr;
+        static const bool shexp_early = getenv("LLAMA_MOE_SHEXP_EARLY") && atoi(getenv("LLAMA_MOE_SHEXP_EARLY")) != 0 && getenv("LLAMA_SKIP_SHEXP") == nullptr;
 
         ggml_tensor * moe_out =
             build_moe_ffn(inp_latent,

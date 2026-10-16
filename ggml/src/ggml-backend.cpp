@@ -1942,6 +1942,7 @@ static enum ggml_status ggml_backend_sched_compute_splits(ggml_backend_sched_t s
         // overlap: a GPU split followed by a CPU split runs as part A (up to the CPU inputs), event, part B
         int overlap_cut = -1;
         if (sched->overlap && !sched->callback_eval && sched->overlap_events[split_backend_id] != NULL && split_id + 1 < sched->n_splits &&
+            ggml_backend_get_device(sched->backends[splits[split_id + 1].backend_id]) != NULL &&
             ggml_backend_dev_type(ggml_backend_get_device(sched->backends[splits[split_id + 1].backend_id])) == GGML_BACKEND_DEVICE_TYPE_CPU) {
             overlap_cut = ggml_backend_sched_overlap_cut(sched, split, &splits[split_id + 1]);
             // part B must hold real work, otherwise the split runs whole as before
