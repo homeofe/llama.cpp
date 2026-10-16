@@ -986,6 +986,13 @@ struct ggml_backend_sched {
     int prev_graph_size;
 
     int debug_realloc;
+
+    // GGML_SCHED_OVERLAP: split a GPU split before a CPU split, the CPU copies wait only for part A
+    bool overlap;
+    ggml_backend_event_t overlap_events[GGML_SCHED_MAX_BACKENDS];
+    // event the next split's input copies wait on instead of a full sync, and its backend (-1 none)
+    ggml_backend_event_t overlap_wait_event;
+    int overlap_wait_backend_id;
 };
 
 #define hash_id(tensor) ggml_hash_find_or_insert(&sched->hash_set, tensor)
@@ -1852,7 +1859,12 @@ static void ggml_backend_sched_copy_input(ggml_backend_sched_t sched, struct ggm
     // try async copy, but if not possible, we can still use a sync copy without synchronizing the dst backend, since we handle the synchronization here with multiple copies and events
     // TODO: add public function to facilitate this, since applications do not have direct access to the backend interface
     if (!split_backend->iface.cpy_tensor_async || !split_backend->iface.cpy_tensor_async(input_backend, split_backend, input, input_cpy)) {
-        ggml_backend_synchronize(input_backend);
+        if (sched->overlap_wait_event != NULL && input_backend == sched->backends[sched->overlap_wait_backend_id]) {
+            // overlap: the input is final once part A of the previous split is done
+            ggml_backend_event_synchronize(sched->overlap_wait_event);
+        } else {
+            ggml_backend_synchronize(input_backend);
+        }
         if (sched->events[split_backend_id][sched->cur_copy] != NULL) {
             ggml_backend_event_synchronize(sched->events[split_backend_id][sched->cur_copy]);
         } else {
@@ -1860,6 +1872,32 @@ static void ggml_backend_sched_copy_input(ggml_backend_sched_t sched, struct ggm
         }
         ggml_backend_tensor_copy(input, input_cpy);
     }
+}
+
+static const struct ggml_tensor * ggml_backend_sched_view_root(const struct ggml_tensor * t) {
+    while (t->view_src != NULL) {
+        t = t->view_src;
+    }
+    return t;
+}
+
+// overlap: last node of split that writes the storage of any input of next coming from split's backend, -1 if none
+static int ggml_backend_sched_overlap_cut(ggml_backend_sched_t sched, const struct ggml_backend_sched_split * split, const struct ggml_backend_sched_split * next) {
+    int last = -1;
+    for (int j = 0; j < next->n_inputs; j++) {
+        struct ggml_tensor * input = next->inputs[j];
+        if (ggml_backend_sched_get_tensor_backend(sched, input) != sched->backends[split->backend_id]) {
+            continue;
+        }
+        const struct ggml_tensor * root = ggml_backend_sched_view_root(input);
+        for (int n = split->graph.n_nodes - 1; n > last; n--) {
+            if (ggml_backend_sched_view_root(split->graph.nodes[n]) == root) {
+                last = n;
+                break;
+            }
+        }
+    }
+    return last;
 }
 
 static enum ggml_status ggml_backend_sched_compute_splits(ggml_backend_sched_t sched) {
@@ -1896,7 +1934,40 @@ static enum ggml_status ggml_backend_sched_compute_splits(ggml_backend_sched_t s
             }
         }
 
-        if (!sched->callback_eval) {
+        // the inputs of this split are copied, later splits sync on the whole stream again
+        sched->overlap_wait_event = NULL;
+        sched->overlap_wait_backend_id = -1;
+
+        // overlap: a GPU split followed by a CPU split runs as part A (up to the CPU inputs), event, part B
+        int overlap_cut = -1;
+        if (sched->overlap && !sched->callback_eval && sched->overlap_events[split_backend_id] != NULL && split_id + 1 < sched->n_splits &&
+            ggml_backend_dev_type(ggml_backend_get_device(sched->backends[splits[split_id + 1].backend_id])) == GGML_BACKEND_DEVICE_TYPE_CPU) {
+            overlap_cut = ggml_backend_sched_overlap_cut(sched, split, &splits[split_id + 1]);
+            if (overlap_cut + 1 >= split->graph.n_nodes) {
+                overlap_cut = -1;
+            }
+        }
+
+        if (overlap_cut >= 0) {
+            if (sched->debug > 1) {
+                GGML_LOG_DEBUG("%s: overlap split %d: part A ends at node %d (%s), part B starts at %s, %d nodes\n", __func__, split_id,
+                    overlap_cut, split->graph.nodes[overlap_cut]->name, split->graph.nodes[overlap_cut + 1]->name, split->graph.n_nodes);
+            }
+            struct ggml_cgraph gv_a = ggml_graph_view(&split->graph, 0, overlap_cut + 1);
+            struct ggml_cgraph gv_b = ggml_graph_view(&split->graph, overlap_cut + 1, split->graph.n_nodes);
+            // stable uid so the CUDA graph of each part is reused without a property check
+            gv_a.uid = split->graph.uid;
+            gv_b.uid = split->graph.uid;
+            enum ggml_status ec = ggml_backend_graph_compute_async(split_backend, &gv_a);
+            if (ec != GGML_STATUS_SUCCESS) {
+                return ec;
+            }
+            ggml_backend_event_record(sched->overlap_events[split_backend_id], split_backend);
+            ec = ggml_backend_graph_compute_async(split_backend, &gv_b);
+            if (ec != GGML_STATUS_SUCCESS) {
+                return ec;
+            }
+        } else if (!sched->callback_eval) {
             enum ggml_status ec = ggml_backend_graph_compute_async(split_backend, &split->graph);
             if (ec != GGML_STATUS_SUCCESS) {
                 return ec;
@@ -1940,8 +2011,16 @@ static enum ggml_status ggml_backend_sched_compute_splits(ggml_backend_sched_t s
             ggml_backend_event_record(sched->events[split_backend_id][sched->cur_copy], split_backend);
         }
 
+        if (overlap_cut >= 0) {
+            sched->overlap_wait_event = sched->overlap_events[split_backend_id];
+            sched->overlap_wait_backend_id = split_backend_id;
+        }
+
         prev_backend_id = split_backend_id;
     }
+
+    sched->overlap_wait_event = NULL;
+    sched->overlap_wait_backend_id = -1;
 
     return GGML_STATUS_SUCCESS;
 }
@@ -1968,6 +2047,11 @@ ggml_backend_sched_t ggml_backend_sched_new(
 #endif
     const char * GGML_SCHED_DEBUG_REALLOC = getenv("GGML_SCHED_DEBUG_REALLOC");
     sched->debug_realloc = GGML_SCHED_DEBUG_REALLOC ? atoi(GGML_SCHED_DEBUG_REALLOC) : sched->debug_realloc;
+
+    const char * GGML_SCHED_OVERLAP = getenv("GGML_SCHED_OVERLAP");
+    sched->overlap = GGML_SCHED_OVERLAP ? atoi(GGML_SCHED_OVERLAP) != 0 : false;
+    sched->overlap_wait_event = NULL;
+    sched->overlap_wait_backend_id = -1;
 
     sched->n_backends = n_backends;
     sched->n_copies = parallel ? GGML_SCHED_MAX_COPIES : 1;
@@ -2008,6 +2092,11 @@ ggml_backend_sched_t ggml_backend_sched_new(
                 sched->events[b][c] = ggml_backend_event_new(backends[b]->device);
             }
         }
+
+        // overlap needs an event on the GPU side, without one the split runs whole as before
+        if (sched->overlap && backends[b]->device != NULL && ggml_backend_dev_type(backends[b]->device) != GGML_BACKEND_DEVICE_TYPE_CPU) {
+            sched->overlap_events[b] = ggml_backend_event_new(backends[b]->device);
+        }
     }
 
     sched->galloc = ggml_gallocr_new_n(sched->bufts, n_backends);
@@ -2026,6 +2115,7 @@ void ggml_backend_sched_free(ggml_backend_sched_t sched) {
         for (int c = 0; c < sched->n_copies; c++) {
             ggml_backend_event_free(sched->events[b][c]);
         }
+        ggml_backend_event_free(sched->overlap_events[b]);
     }
     ggml_gallocr_free(sched->galloc);
     ggml_free(sched->ctx);
