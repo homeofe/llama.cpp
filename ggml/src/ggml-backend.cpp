@@ -1891,7 +1891,8 @@ static int ggml_backend_sched_overlap_cut(ggml_backend_sched_t sched, const stru
         }
         const struct ggml_tensor * root = ggml_backend_sched_view_root(input);
         for (int n = split->graph.n_nodes - 1; n > last; n--) {
-            if (ggml_backend_sched_view_root(split->graph.nodes[n]) == root) {
+            // views and reshapes write nothing, only real ops can still be producing the input's data
+            if (!ggml_op_is_empty(split->graph.nodes[n]->op) && ggml_backend_sched_view_root(split->graph.nodes[n]) == root) {
                 last = n;
                 break;
             }
@@ -1950,7 +1951,7 @@ static enum ggml_status ggml_backend_sched_compute_splits(ggml_backend_sched_t s
 
         if (overlap_cut >= 0) {
             if (sched->debug > 1) {
-                GGML_LOG_DEBUG("%s: overlap split %d: part A ends at node %d (%s), part B starts at %s, %d nodes\n", __func__, split_id,
+                GGML_LOG_INFO("%s: overlap split %d: part A ends at node %d (%s), part B starts at %s, %d nodes\n", __func__, split_id,
                     overlap_cut, split->graph.nodes[overlap_cut]->name, split->graph.nodes[overlap_cut + 1]->name, split->graph.n_nodes);
             }
             struct ggml_cgraph gv_a = ggml_graph_view(&split->graph, 0, overlap_cut + 1);
