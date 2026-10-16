@@ -339,6 +339,9 @@ static const struct ggml_type_traits_cpu type_traits_cpu[GGML_TYPE_COUNT] = {
         .vec_dot                  = ggml_vec_dot_iq2_xxs_q8_K,
         .vec_dot_type             = GGML_TYPE_Q8_K,
         .nrows                    = 1,
+#if defined(__AVX2__)
+        .vec_dot_multi            = ggml_vec_dot_iq2_xxs_q8_K_multi,
+#endif
     },
     [GGML_TYPE_IQ2_XS] = {
         .from_float               = NULL,
@@ -1505,6 +1508,37 @@ static void ggml_compute_forward_mul_mat_id_one_chunk(
 
     const int64_t blck_0 = 16;
     const int64_t blck_1 = 16;
+
+    ggml_vec_dot_multi_t const vec_dot_multi = type_traits_cpu[type].vec_dot_multi;
+    if (vec_dot_multi && ids->ne[1] > 1 && ir1_end - ir1_start > 1) {
+        for (int64_t ir1 = ir1_start; ir1 < ir1_end; ir1 += 2) {
+            const int ncols = MIN(2, ir1_end - ir1);
+            const void * src1_cols[2];
+            float * dst_cols[2];
+            for (int c = 0; c < ncols; ++c) {
+                const struct mmid_row_mapping row = MMID_MATRIX_ROW(cur_a, ir1 + c);
+                const int64_t i11 = row.i1 % ne11;
+                src1_cols[c] = (const char *) wdata + (src1_cont || src1->type != vec_dot_type
+                    ? (i11 + row.i2*ne11)*row_size : i11*nb11 + row.i2*nb12);
+                dst_cols[c] = (float *) ((char *) dst->data + row.i1*nb1 + row.i2*nb2);
+            }
+            for (int64_t ir0 = ir0_start; ir0 < ir0_end; ir0 += blck_0) {
+                float tmp[32];
+                const int64_t nr = MIN(blck_0, ir0_end - ir0);
+                for (int64_t r = 0; r < nr; ++r) {
+                    if (ncols == 2) {
+                        vec_dot_multi(ne00, tmp + r, 16, src0_cur + (ir0 + r)*nb01, src1_cols, ncols);
+                    } else {
+                        vec_dot(ne00, tmp + r, 0, src0_cur + (ir0 + r)*nb01, 0, src1_cols[0], 0, 1);
+                    }
+                }
+                for (int c = 0; c < ncols; ++c) {
+                    memcpy(dst_cols[c] + ir0, tmp + c*16, nr*sizeof(float));
+                }
+            }
+        }
+        return;
+    }
 
     float tmp[16];
 

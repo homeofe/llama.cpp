@@ -2721,6 +2721,73 @@ static const int8_t keven_signs_q2xs[1024] = {
 };
 #endif
 
+#if defined(__AVX2__)
+void ggml_vec_dot_iq2_xxs_q8_K_multi(int n, float * GGML_RESTRICT s, size_t bs, const void * GGML_RESTRICT vx, const void * const * vy, int ncols) {
+    assert(n % QK_K == 0);
+    assert(ncols == 2);
+    UNUSED(ncols);
+    const block_iq2_xxs * x = vx;
+    const int nb = n / QK_K;
+
+    const __m256i shifts = _mm256_setr_epi32(0, 7, 0, 7, 14, 21, 14, 21);
+    const __m256i spread1 = _mm256_setr_epi8(0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4,
+                                           0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4);
+    const __m256i spread2 = _mm256_setr_epi8(8, 8, 8, 8, 8, 8, 8, 8, 12, 12, 12, 12, 12, 12, 12, 12,
+                                           8, 8, 8, 8, 8, 8, 8, 8, 12, 12, 12, 12, 12, 12, 12, 12);
+    const __m256i bits = _mm256_set1_epi64x(0x8040201008040201);
+    const __m256i parity = _mm256_broadcastsi128_si256(_mm_setr_epi8(0, -128, -128, 0, -128, 0, 0, -128, -128, 0, 0, -128, 0, -128, -128, 0));
+
+    const __m256i scale_shuffle1 = _mm256_set1_epi16(0x0100);
+    const __m256i scale_shuffle2 = _mm256_set1_epi16(0x0908);
+
+    const block_q8_K * y0 = vy[0];
+    __m256 accumf0 = _mm256_setzero_ps();
+    const block_q8_K * y1 = vy[1];
+    __m256 accumf1 = _mm256_setzero_ps();
+    for (int i = 0; i < nb; ++i) {
+        const uint8_t * q2 = (const uint8_t *) x[i].qs;
+        __m256i sumi1_0 = _mm256_setzero_si256();
+        __m256i sumi1_1 = _mm256_setzero_si256();
+        for (int ib32 = 0; ib32 < QK_K/32; ib32 += 2) {
+            const uint8_t * aux8 = q2; q2 += 16;
+            const __m256i q2_1 = _mm256_set_epi64x(iq2xxs_grid[aux8[ 3]], iq2xxs_grid[aux8[ 2]], iq2xxs_grid[aux8[1]], iq2xxs_grid[aux8[0]]);
+            const __m256i q2_2 = _mm256_set_epi64x(iq2xxs_grid[aux8[11]], iq2xxs_grid[aux8[10]], iq2xxs_grid[aux8[9]], iq2xxs_grid[aux8[8]]);
+            // Each 128-bit lane holds two sign codes from each 32-value group.
+            const __m256i words = _mm256_shuffle_epi32(_mm256_broadcastsi128_si256(_mm_loadu_si128((const __m128i *) aux8)), _MM_SHUFFLE(3, 3, 1, 1));
+            __m256i signs = _mm256_and_si256(_mm256_srlv_epi32(words, shifts), _mm256_set1_epi32(127));
+            // The eighth sign bit is the parity of the seven stored bits.
+            const __m256i parity_bits = _mm256_shuffle_epi8(parity, _mm256_xor_si256(signs, _mm256_srli_epi32(signs, 4)));
+            signs = _mm256_or_si256(signs, parity_bits);
+            const __m256i signs1 = _mm256_shuffle_epi8(signs, spread1);
+            const __m256i signs2 = _mm256_shuffle_epi8(signs, spread2);
+            const __m256i neg1 = _mm256_cmpeq_epi8(_mm256_and_si256(signs1, bits), bits);
+            const __m256i neg2 = _mm256_cmpeq_epi8(_mm256_and_si256(signs2, bits), bits);
+            const __m256i scales = _mm256_or_si256(_mm256_srli_epi32(words, 27), _mm256_set1_epi32(1));
+            const __m256i scale1 = _mm256_shuffle_epi8(scales, scale_shuffle1);
+            const __m256i scale2 = _mm256_shuffle_epi8(scales, scale_shuffle2);
+            {
+                const __m256i q8_1 = _mm256_loadu_si256((const __m256i *) (y0[i].qs + 32*ib32));
+                const __m256i q8_2 = _mm256_loadu_si256((const __m256i *) (y0[i].qs + 32*ib32 + 32));
+                sumi1_0 = _mm256_add_epi32(sumi1_0, _mm256_madd_epi16(_mm256_maddubs_epi16(q2_1, _mm256_sub_epi8(_mm256_xor_si256(q8_1, neg1), neg1)), scale1));
+                sumi1_0 = _mm256_add_epi32(sumi1_0, _mm256_madd_epi16(_mm256_maddubs_epi16(q2_2, _mm256_sub_epi8(_mm256_xor_si256(q8_2, neg2), neg2)), scale2));
+            }
+            {
+                const __m256i q8_1 = _mm256_loadu_si256((const __m256i *) (y1[i].qs + 32*ib32));
+                const __m256i q8_2 = _mm256_loadu_si256((const __m256i *) (y1[i].qs + 32*ib32 + 32));
+                sumi1_1 = _mm256_add_epi32(sumi1_1, _mm256_madd_epi16(_mm256_maddubs_epi16(q2_1, _mm256_sub_epi8(_mm256_xor_si256(q8_1, neg1), neg1)), scale1));
+                sumi1_1 = _mm256_add_epi32(sumi1_1, _mm256_madd_epi16(_mm256_maddubs_epi16(q2_2, _mm256_sub_epi8(_mm256_xor_si256(q8_2, neg2), neg2)), scale2));
+            }
+        }
+        const float d0 = GGML_CPU_FP16_TO_FP32(x[i].d) * y0[i].d;
+        accumf0 = _mm256_fmadd_ps(_mm256_set1_ps(d0), _mm256_cvtepi32_ps(sumi1_0), accumf0);
+        const float d1 = GGML_CPU_FP16_TO_FP32(x[i].d) * y1[i].d;
+        accumf1 = _mm256_fmadd_ps(_mm256_set1_ps(d1), _mm256_cvtepi32_ps(sumi1_1), accumf1);
+    }
+    s[0] = 0.125f * hsum_float_8(accumf0);
+    s[bs] = 0.125f * hsum_float_8(accumf1);
+}
+#endif
+
 void ggml_vec_dot_iq2_xxs_q8_K(int n, float * GGML_RESTRICT s, size_t bs, const void * GGML_RESTRICT vx, size_t bx, const void * GGML_RESTRICT vy, size_t by, int nrc) {
     assert(n % QK_K == 0);
     assert(nrc == 1);

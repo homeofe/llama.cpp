@@ -12045,9 +12045,9 @@ static std::vector<std::unique_ptr<test_case>> make_test_cases_eval() {
 static std::vector<std::unique_ptr<test_case>> make_test_cases_perf() {
     std::vector<std::unique_ptr<test_case>> test_cases;
 
-    // Nemotron 3.5 Bolt 74B-A9B decode on the CPU: latent MoE, 9 of 240 (or 496) experts, latent 1024, expert FFN 2048 (or 2560); IQ2_XXS, others for reference
+    // Nemotron 3.5 Bolt up/down shapes; 16/64 experts increase token sharing in seven-token windows.
     for (ggml_type type : {GGML_TYPE_IQ2_XXS, GGML_TYPE_IQ2_XS, GGML_TYPE_Q2_K, GGML_TYPE_Q4_K, GGML_TYPE_Q4_0}) {
-        for (int n_mats : {240, 496}) {
+        for (int n_mats : {16, 64, 240, 496}) {
             for (int n : {1, 7}) {   // one token, and a verify window of seven (DFlash drafts six)
                 test_cases.emplace_back(new test_mul_mat_id(type, GGML_TYPE_F32, n_mats, 9, false, 2048, n, 1024));   // up
                 test_cases.emplace_back(new test_mul_mat_id(type, GGML_TYPE_F32, n_mats, 9, false, 1024, n, 2048));   // down

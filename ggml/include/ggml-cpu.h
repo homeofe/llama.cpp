@@ -114,11 +114,14 @@ extern "C" {
     typedef void (*ggml_vec_dot_t)  (int n, float * GGML_RESTRICT s, size_t bs, const void * GGML_RESTRICT x, size_t bx,
                                        const void * GGML_RESTRICT y, size_t by, int nrc);
 
+    typedef void (*ggml_vec_dot_multi_t)(int n, float * GGML_RESTRICT s, size_t bs, const void * GGML_RESTRICT x, const void * const * y, int ncols);
+
     struct ggml_type_traits_cpu {
         ggml_from_float_t        from_float;
         ggml_vec_dot_t           vec_dot;
         enum ggml_type           vec_dot_type;
         int64_t                  nrows; // number of rows to process simultaneously
+        ggml_vec_dot_multi_t     vec_dot_multi; // one weight row and two activation columns
     };
 
     GGML_BACKEND_API const struct ggml_type_traits_cpu * ggml_get_type_traits_cpu(enum ggml_type type);
