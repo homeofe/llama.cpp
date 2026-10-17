@@ -1,0 +1,106 @@
+{
+  "summary": [
+    {
+      "config": "q-warm-draft",
+      "category": "code",
+      "n": 12,
+      "median": 46.82447792709772,
+      "minimum": 43.8895221022052,
+      "maximum": 48.71584098617069,
+      "acceptance": 0.9194395796847635,
+      "vram_mib": 10694,
+      "ttft": 1.3399436473846436
+    },
+    {
+      "config": "q-warm-draft",
+      "category": "english",
+      "n": 12,
+      "median": 39.4448835580272,
+      "minimum": 37.08661856358171,
+      "maximum": 41.235501854242855,
+      "acceptance": 0.6855807743658211,
+      "vram_mib": 10696,
+      "ttft": 0.9437390565872192
+    },
+    {
+      "config": "q-r8-policy",
+      "category": "code",
+      "n": 12,
+      "median": 47.090692333527315,
+      "minimum": 45.40158338563126,
+      "maximum": 49.457852194068586,
+      "acceptance": 0.9292035398230089,
+      "vram_mib": 10694,
+      "ttft": 1.4643198251724243
+    },
+    {
+      "config": "q-r8-policy",
+      "category": "english",
+      "n": 12,
+      "median": 39.705497832094636,
+      "minimum": 38.63062034299577,
+      "maximum": 42.67781984008679,
+      "acceptance": 0.7227414330218068,
+      "vram_mib": 10696,
+      "ttft": 0.9364725351333618
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "category": "code",
+      "n": 12,
+      "median": 50.7870135303898,
+      "minimum": 48.36045571477717,
+      "maximum": 53.704725029714105,
+      "acceptance": 0.682370820668693,
+      "vram_mib": 9938,
+      "ttft": 1.1992781162261963
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "category": "english",
+      "n": 12,
+      "median": 45.781792002461,
+      "minimum": 41.69113724393248,
+      "maximum": 49.217656715953616,
+      "acceptance": 0.5272368049675417,
+      "vram_mib": 9940,
+      "ttft": 0.8755772113800049
+    },
+    {
+      "config": "ling-r8-policy",
+      "category": "code",
+      "n": 12,
+      "median": 50.69049969346888,
+      "minimum": 46.95140755368578,
+      "maximum": 51.82374442717754,
+      "acceptance": 0.6728395061728395,
+      "vram_mib": 9938,
+      "ttft": 1.1925630569458008
+    },
+    {
+      "config": "ling-r8-policy",
+      "category": "english",
+      "n": 12,
+      "median": 47.05700190268228,
+      "minimum": 42.09542378329459,
+      "maximum": 48.943710323950405,
+      "acceptance": 0.5332197614991482,
+      "vram_mib": 9940,
+      "ttft": 0.876537561416626
+    }
+  ],
+  "output_comparisons": [
+    {
+      "control": "q-warm-draft",
+      "candidate": "q-r8-policy",
+      "requests": 24,
+      "same_hash": 9
+    },
+    {
+      "control": "ling-cache-mtp3",
+      "candidate": "ling-r8-policy",
+      "requests": 24,
+      "same_hash": 9
+    }
+  ]
+}

@@ -75,7 +75,7 @@ def main():
                     run.check_gpu()
                     peak_vram = max(peak_vram, sum(run.gpu_apps().values()))
                     run.renew()
-                    if now > run.end:
+                    if time.time() > run.end:
                         raise TimeoutError('quality deadline')
                     last = now
                 code = run.child.returncode

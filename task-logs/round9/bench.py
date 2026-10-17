@@ -63,6 +63,9 @@ if __name__ == '__main__':
         if key.startswith('GGML_MOE_HYBRID') or key == 'LLAMA_ARG_SPEC_DRAFT_N_UBATCH':
             del os.environ[key]
     stage.Run = Run
+    extra = Path(__file__).with_name('extra-configs.json')
+    if extra.exists():
+        stage.CONFIGS.update(json.loads(extra.read_text()))
     out = Path(sys.argv[1])
     out.mkdir(parents=True, exist_ok=True)
     (out / 'harness.py').write_bytes(SOURCE.read_bytes())
