@@ -8,6 +8,8 @@
 
 struct llama_model;
 
+size_t llama_moe_cache_env_size(const char * name, size_t fallback, size_t maximum = SIZE_MAX);
+
 // Host policy shared by the hybrid cache and routing replay tests.
 struct llama_moe_cache_lfu {
     struct fill {
@@ -21,15 +23,19 @@ struct llama_moe_cache_lfu {
     std::vector<int32_t> key_of;
     std::vector<int32_t> candidates;
     std::vector<bool> pending;
+    std::vector<bool> pinned;
+    std::vector<double> prompt_counts;
+    uint64_t decay = 512;
     uint64_t tokens = 0;
     uint64_t hits = 0;
     uint64_t misses = 0;
 
-    void init(size_t n_keys, int32_t n_slots);
-    void seed(int32_t key, int32_t slot, double count);
+    void init(size_t n_keys, int32_t n_slots, uint64_t decay_interval = 512);
+    void seed(int32_t key, int32_t slot, double count, bool pin = false);
     void begin_token();
-    void observe(int32_t key, bool use_cache = true);
-    std::vector<fill> plan(size_t limit);
+    void observe(int32_t key, bool use_cache = true, bool prompt = false);
+    void clear_prompt();
+    std::vector<fill> plan(size_t limit, bool prompt = false);
 };
 
 // keeps experts of host-resident MoE layers in device banks
@@ -37,7 +43,7 @@ struct llama_moe_cache_lfu {
 class llama_moe_cache {
 public:
     // backends are all the backends of the context, each GPU gets its own cache of the given size for the layers assigned to it
-    llama_moe_cache(const llama_model & model, const std::vector<ggml_backend_t> & backends, const std::vector<ggml_backend_buffer_type_t> & bufts, size_t size, const char * profile = nullptr, bool adaptive = false);
+    llama_moe_cache(const llama_model & model, const std::vector<ggml_backend_t> & backends, const std::vector<ggml_backend_buffer_type_t> & bufts, size_t size, const char * profile = nullptr, bool adaptive = false, bool draft = false, int32_t layer_start = 0);
     ~llama_moe_cache();
 
     // the device that caches layer il
@@ -47,7 +53,8 @@ public:
 
     // Collect routes on the CPU branch, using the IDs already copied for the expert matmuls.
     ggml_tensor * build_observe(ggml_context * ctx, ggml_tensor * ids, int32_t il, bool use_cache) const;
-    void begin_graph(int64_t n_tokens, const int8_t * output = nullptr);
+    void begin_graph(int64_t n_tokens, const int8_t * output = nullptr, const int32_t * positions = nullptr,
+                     const int32_t * n_seq_id = nullptr, int32_t * const * seq_id = nullptr, bool prefill = false, bool prefill_end = false);
     void end_graph(bool success);
 
     // the slot map of layer il, if its experts can be read from the cache for n_tokens tokens, nullptr otherwise

@@ -2610,8 +2610,9 @@ common_params common_base_params_to_speculative(const common_params & params) {
         result.n_ubatch = params_spec.n_ubatch;
     }
 
-    // the MoE cache is only used by the target context
+    // The draft has an independent hybrid budget; do not inherit the target's legacy cache.
     result.moe_cache_size = 0;
+    result.moe_cache_draft = true;
 
     // dflash/dspark decode the whole noise block in a single pass and sample every block position on the backend
     // TODO: refactor such properties to be announced by the speculative types

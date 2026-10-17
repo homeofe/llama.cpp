@@ -361,28 +361,28 @@ llama_context::llama_context(
     cparams.kv_unified     = params.kv_unified;
     cparams.moe_cache_size = params.moe_cache_size;
 
+    const int32_t cache_layer_start = params.moe_cache_draft && params.ctx_type == LLAMA_CONTEXT_TYPE_MTP ? model.hparams.n_layer() : 0;
     const char * hybrid_profile = nullptr;
     bool hybrid_adaptive = false;
     const char * hybrid = getenv("GGML_MOE_HYBRID");
-    if (hybrid && std::strcmp(hybrid, "1") == 0) {
+    const bool hybrid_enabled = hybrid && std::strcmp(hybrid, "1") == 0;
+    const size_t draft_mib = hybrid_enabled && params.moe_cache_draft ?
+        llama_moe_cache_env_size("GGML_MOE_HYBRID_DRAFT_MIB", 0, SIZE_MAX/(1024*1024)) : 0;
+    if (hybrid_enabled && (!params.moe_cache_draft || draft_mib > 0)) {
         const char * adaptive = getenv("GGML_MOE_HYBRID_ADAPTIVE");
         hybrid_adaptive = adaptive && std::strcmp(adaptive, "1") == 0;
         const char * value = getenv("GGML_MOE_HYBRID_MIB");
-        hybrid_profile = getenv("GGML_MOE_HYBRID_PROFILE");
-        if (params.moe_cache_size || !value || (!hybrid_adaptive && (!hybrid_profile || !*hybrid_profile))) {
+        hybrid_profile = getenv(params.moe_cache_draft ? "GGML_MOE_HYBRID_DRAFT_PROFILE" : "GGML_MOE_HYBRID_PROFILE");
+        if (params.moe_cache_draft) {
+            hybrid_adaptive = true;
+        }
+        if (params.moe_cache_size || (!params.moe_cache_draft && !value) || (!hybrid_adaptive && (!hybrid_profile || !*hybrid_profile))) {
             throw std::runtime_error("hybrid MoE needs GGML_MOE_HYBRID_MIB and a profile or GGML_MOE_HYBRID_ADAPTIVE=1, without --moe-cache-mib");
         }
         if (hybrid_profile && !*hybrid_profile) {
             hybrid_profile = nullptr;
         }
-        size_t mib = 0;
-        const size_t limit = std::numeric_limits<size_t>::max() / (1024*1024);
-        for (const char * p = value; *p; ++p) {
-            if (*p < '0' || *p > '9' || mib > (limit - (*p - '0')) / 10) {
-                throw std::runtime_error("invalid GGML_MOE_HYBRID_MIB");
-            }
-            mib = mib*10 + (*p - '0');
-        }
+        const size_t mib = params.moe_cache_draft ? draft_mib : llama_moe_cache_env_size("GGML_MOE_HYBRID_MIB", 0, SIZE_MAX/(1024*1024));
         if (mib == 0) {
             throw std::runtime_error("GGML_MOE_HYBRID_MIB must be positive");
         }
@@ -395,11 +395,11 @@ llama_context::llama_context(
             std::getline(input, header);
             int64_t il, expert, count;
             while (profile_fits && input >> il >> expert >> count) {
-                profile_fits = il >= 0 && il < (int64_t) model.layers.size() &&
+                profile_fits = il >= cache_layer_start && il < (int64_t) model.layers.size() &&
                     (model.layers[il].ffn_up_exps || model.layers[il].ffn_gate_up_exps);
             }
         }
-        const bool has_experts = std::any_of(model.layers.begin(), model.layers.end(), [](const llama_layer & l) {
+        const bool has_experts = std::any_of(model.layers.begin() + cache_layer_start, model.layers.end(), [](const llama_layer & l) {
             return l.ffn_up_exps || l.ffn_gate_up_exps;
         });
         if (hybrid_adaptive && !has_experts) {
@@ -604,8 +604,9 @@ llama_context::llama_context(
             LLAMA_LOG_INFO("%s: pipeline parallelism enabled\n", __func__);
         }
 
-        if (cparams.moe_cache_size > 0) {
-            moe_cache = std::make_unique<llama_moe_cache>(model, backend_ptrs, backend_buft, cparams.moe_cache_size, hybrid_profile, hybrid_adaptive);
+        const char * trace_path = getenv("GGML_MOE_HYBRID_TRACE");
+        if (cparams.moe_cache_size > 0 || (!model.hparams.no_alloc && trace_path && *trace_path)) {
+            moe_cache = std::make_unique<llama_moe_cache>(model, backend_ptrs, backend_buft, cparams.moe_cache_size, hybrid_profile, hybrid_adaptive, params.moe_cache_draft, cache_layer_start);
         }
 
         sched_reserve();
@@ -1560,7 +1561,7 @@ bool llama_context::set_adapter_cvec(
     return res;
 }
 
-llm_graph_result * llama_context::process_ubatch(const llama_ubatch & ubatch, llm_graph_type gtype, llama_memory_context_i * mctx, ggml_status & ret) {
+llm_graph_result * llama_context::process_ubatch(const llama_ubatch & ubatch, llm_graph_type gtype, llama_memory_context_i * mctx, ggml_status & ret, bool prefill, bool prefill_end) {
     if (mctx && !mctx->apply()) {
         LLAMA_LOG_ERROR("%s: failed to apply memory context\n", __func__);
         ret = GGML_STATUS_FAILED;
@@ -1624,7 +1625,8 @@ llm_graph_result * llama_context::process_ubatch(const llama_ubatch & ubatch, ll
     }
 
     if (moe_cache) {
-        moe_cache->begin_graph(cparams.warmup ? 0 : ubatch.n_tokens, ubatch.output);
+        moe_cache->begin_graph(cparams.warmup ? 0 : ubatch.n_tokens, ubatch.output, ubatch.pos,
+                               ubatch.n_seq_id, ubatch.seq_id, prefill, prefill_end);
     }
     const auto status = graph_compute(res->get_gf(), ubatch.n_tokens > 1);
     if (moe_cache) {
@@ -1709,7 +1711,7 @@ int llama_context::encode(const llama_batch_ext & batch_inp) {
     cparams.causal_attn = false;
 
     ggml_status status;
-    const auto * res = process_ubatch(ubatch, LLM_GRAPH_TYPE_ENCODER, nullptr, status);
+    const auto * res = process_ubatch(ubatch, LLM_GRAPH_TYPE_ENCODER, nullptr, status, ubatch.n_tokens > 8, true);
 
     cparams.causal_attn = causal_attn_org;
 
@@ -2062,9 +2064,12 @@ int llama_context::decode(const llama_batch_ext & batch_inp) {
 
         ggml_status status;
 
-        const auto * res = process_ubatch(ubatch, ctx_type_to_graph_type(cparams.ctx_type), mctx.get(), status);
+        const auto * res = process_ubatch(ubatch, ctx_type_to_graph_type(cparams.ctx_type), mctx.get(), status, n_tokens_all > 8, n_tokens_prev + ubatch.n_tokens == n_tokens_all && n_outputs_all > 0);
 
         if (!res) {
+            if (moe_cache) {
+                moe_cache->end_graph(false);
+            }
             // the last ubatch failed or was aborted -> remove all positions of that ubatch from the memory module
             llama_pos pos_min[LLAMA_MAX_SEQ];
             for (int s = 0; s < LLAMA_MAX_SEQ; ++s) {
@@ -4067,6 +4072,7 @@ llama_context_params llama_context_default_params() {
         /*.moe_cache_size              =*/ 0,
         /*.abort_callback              =*/ nullptr,
         /*.abort_callback_data         =*/ nullptr,
+        /*.moe_cache_draft             =*/ false,
         /*.embeddings                  =*/ false,
         /*.offload_kqv                 =*/ true,
         /*.no_perf                     =*/ true,
