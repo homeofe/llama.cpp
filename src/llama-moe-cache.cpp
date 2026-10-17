@@ -6,6 +6,7 @@
 #include "ggml-cpp.h"
 
 #include <algorithm>
+#include <fstream>
 #include <stdexcept>
 #include <unordered_map>
 #include <vector>
@@ -177,6 +178,8 @@ struct llama_moe_cache::impl {
 
     struct layer {
         int32_t ig = -1;                    // -1 if the layer is not cached
+        bool has_resident = false;
+        ggml_tensor * slot_map_device = nullptr;
         ggml_tensor * slot_map = nullptr;   // I32 [1, n_expert] in host memory
         std::vector<ggml_tensor *> experts; // host expert tensors, in the order of the banks
     };
@@ -196,6 +199,7 @@ struct llama_moe_cache::impl {
     static constexpr int64_t max_batch = 32;
 
     int32_t n_expert_used;
+    bool hybrid;
 
     stats stats_small; // up to 8 tokens per ubatch
     stats stats_large;
@@ -218,8 +222,8 @@ struct llama_moe_cache::impl {
     // views used by copy_experts
     ggml_context_ptr ctx_views;
 
-    impl(const llama_model & model, const std::vector<ggml_backend_t> & backends, const std::vector<ggml_backend_buffer_type_t> & bufts, size_t size) :
-            n_expert_used(model.hparams.n_expert_used_max()), layers(model.layers.size()) {
+    impl(const llama_model & model, const std::vector<ggml_backend_t> & backends, const std::vector<ggml_backend_buffer_type_t> & bufts, size_t size, const char * profile) :
+            n_expert_used(model.hparams.n_expert_used_max()), hybrid(profile != nullptr), layers(model.layers.size()) {
         for (size_t i = 0; i < backends.size(); ++i) {
             const auto dev_type = ggml_backend_dev_type(ggml_backend_get_device(backends[i]));
             if (dev_type == GGML_BACKEND_DEVICE_TYPE_GPU || dev_type == GGML_BACKEND_DEVICE_TYPE_IGPU) {
@@ -270,7 +274,7 @@ struct llama_moe_cache::impl {
         // one extra slot at the end, CUDA MMQ can read past the last expert
         auto alloc_size = [&](const group & g, int32_t n_slots) {
             const size_t alignment = ggml_backend_buft_get_alignment(devices[g.id].buft);
-            size_t res = 0;
+            size_t res = hybrid ? g.layers.size()*GGML_PAD(g.ref[0]->ne[2]*sizeof(int32_t), alignment) : 0;
             for (const ggml_tensor * t : g.ref) {
                 res += GGML_PAD(t->nb[2]*(n_slots + 1), alignment);
             }
@@ -318,13 +322,16 @@ struct llama_moe_cache::impl {
             while (g.n_slots < max_slots && alloc_size(g, g.n_slots + 1) <= budget) {
                 g.n_slots++;
             }
+            if (hybrid && g.n_slots >= (1 << 24)) {
+                throw std::runtime_error("MoE hybrid slots must be exactly representable as F32");
+            }
             if (g.n_slots < n_expert_used) {
                 LLAMA_LOG_WARN("%s: MoE cache budget is too small for %zu layers, they are not cached\n", __func__, g.layers.size());
                 g.n_slots = 0;
                 continue;
             }
             g.lru.init(model.layers.size(), n_expert, g.n_slots);
-            n_tensors[g.id] += g.ref.size()*(1 + g.layers.size());
+            n_tensors[g.id] += g.ref.size()*(1 + g.layers.size()) + (hybrid ? g.layers.size() : 0);
             n_tensors_host  += g.layers.size();
         }
         if (n_tensors_host == 0) {
@@ -379,6 +386,10 @@ struct llama_moe_cache::impl {
                 l.slot_map = ggml_new_tensor_2d(ctx_host.get(), GGML_TYPE_I32, 1, g.ref[0]->ne[2]);
                 ggml_format_name(l.slot_map, "moe_cache.slot_map-%d", il);
                 layer_of[l.slot_map] = il;
+                if (hybrid) {
+                    l.slot_map_device = ggml_dup_tensor(ctx, l.slot_map);
+                    ggml_format_name(l.slot_map_device, "moe_cache.slot_map_device-%d", il);
+                }
                 buf_host_size += GGML_PAD(ggml_nbytes(l.slot_map), alignment_host);
             }
             devices[g.id].buf_size += alloc_size(g, g.n_slots);
@@ -435,6 +446,10 @@ struct llama_moe_cache::impl {
         }
         ggml_backend_buffer_set_usage(buf_host.get(), GGML_BACKEND_BUFFER_USAGE_WEIGHTS);
 
+        if (hybrid && !model.hparams.no_alloc) {
+            load_profile(profile);
+        }
+
         for (size_t id = 0; id < devices.size(); ++id) {
             const device & d = devices[id];
             if (d.host_bytes == 0) {
@@ -459,11 +474,74 @@ struct llama_moe_cache::impl {
         log_stats();
     }
 
+    void load_profile(const char * path) {
+        std::ifstream input(path);
+        char header[64];
+        if (!input.getline(header, sizeof(header)) || std::string(header) != "llama-moe-profile-v1") {
+            throw std::runtime_error("invalid MoE hybrid profile header");
+        }
+        std::vector<int32_t> next_slot(groups.size(), 0);
+        size_t uploaded = 0;
+        while (input >> std::ws && input.peek() != std::char_traits<char>::eof()) {
+            int64_t il;
+            int64_t expert;
+            int64_t count;
+            if (!(input >> il >> expert >> count) || il < 0 || il >= (int64_t) layers.size() || count < 0) {
+                throw std::runtime_error("invalid MoE hybrid profile entry");
+            }
+            layer & l = layers[il];
+            if (l.ig < 0 || l.slot_map == nullptr || expert < 0 || expert >= l.slot_map->ne[1]) {
+                throw std::runtime_error("MoE hybrid profile references an uncached layer or invalid expert");
+            }
+            group & g = groups[l.ig];
+            int32_t & slot = g.lru.slot_map[il][expert];
+            if (slot >= 0 || next_slot[l.ig] >= g.n_slots) {
+                throw std::runtime_error("MoE hybrid profile has duplicate experts or exceeds its group budget");
+            }
+            slot = next_slot[l.ig]++;
+            l.has_resident = true;
+            g.lru.key_of[slot] = il*g.lru.n_expert + expert;
+        }
+        if (!input.eof()) {
+            throw std::runtime_error("invalid MoE hybrid profile data");
+        }
+        size_t resident = 0;
+        for (size_t ig = 0; ig < groups.size(); ++ig) {
+            group & g = groups[ig];
+            resident += next_slot[ig];
+            for (int32_t slot = 0; slot < next_slot[ig]; ++slot) {
+                const int32_t key = g.lru.key_of[slot];
+                const layer & l = layers[key / g.lru.n_expert];
+                const int32_t expert = key % g.lru.n_expert;
+                for (size_t ip = 0; ip < l.experts.size(); ++ip) {
+                    const ggml_tensor * w = l.experts[ip];
+                    ggml_backend_tensor_set_async(devices[g.id].backend, g.banks[ip],
+                        (const char *) w->data + expert*w->nb[2], slot*w->nb[2], w->nb[2]);
+                    uploaded += w->nb[2];
+                }
+            }
+        }
+        for (const layer & l : layers) {
+            if (l.slot_map_device) {
+                ggml_backend_tensor_set(l.slot_map_device, l.slot_map->data, 0, ggml_nbytes(l.slot_map));
+            }
+        }
+        for (const device & d : devices) {
+            ggml_backend_synchronize(d.backend);
+        }
+        LLAMA_LOG_INFO("llama_moe_cache: frozen hybrid profile: %zu resident experts, %.2f MiB uploaded at initialization\n",
+            resident, uploaded/1024.0/1024.0);
+    }
+
     ggml_tensor * get_slot_map(int32_t il, int64_t n_tokens, int64_t n_expert_used) const {
         if (il < 0 || il >= (int32_t) layers.size() || layers[il].ig < 0) {
             return nullptr;
         }
         const layer & l = layers[il];
+
+        if (hybrid) {
+            return n_tokens >= 1 && n_tokens <= 8 && l.has_resident ? l.slot_map_device : nullptr;
+        }
 
         // large batches use most experts of a layer, so they gain little from the cache and would evict the experts used in generation
         if (n_tokens == 0 || n_tokens > max_batch || std::min(n_tokens*n_expert_used, l.slot_map->ne[1]) > groups[l.ig].n_slots) {
@@ -478,6 +556,9 @@ struct llama_moe_cache::impl {
     }
 
     int64_t copy_experts(ggml_backend_t backend, const ggml_tensor * w, ggml_tensor * dst, int64_t e, int64_t last) {
+        if (hybrid) {
+            return 0;
+        }
         const auto it = bindings.find(w);
         if (it == bindings.end()) {
             return 0;
@@ -513,6 +594,9 @@ struct llama_moe_cache::impl {
     }
 
     bool copy(ggml_backend_t backend, const ggml_tensor * src, ggml_tensor * dst, ggml_cgraph * graph) {
+        if (hybrid) {
+            return false;
+        }
         const auto it = layer_of.find(src);
         if (it == layer_of.end()) {
             return false;
@@ -599,14 +683,18 @@ struct llama_moe_cache::impl {
     }
 };
 
-llama_moe_cache::llama_moe_cache(const llama_model & model, const std::vector<ggml_backend_t> & backends, const std::vector<ggml_backend_buffer_type_t> & bufts, size_t size) :
-    pimpl(new impl(model, backends, bufts, size)) {
+llama_moe_cache::llama_moe_cache(const llama_model & model, const std::vector<ggml_backend_t> & backends, const std::vector<ggml_backend_buffer_type_t> & bufts, size_t size, const char * profile) :
+    pimpl(new impl(model, backends, bufts, size, profile)) {
 }
 
 llama_moe_cache::~llama_moe_cache() = default;
 
 ggml_backend_t llama_moe_cache::backend(int32_t il) const {
     return pimpl->backend(il);
+}
+
+bool llama_moe_cache::is_hybrid() const {
+    return pimpl->hybrid;
 }
 
 ggml_tensor * llama_moe_cache::get_slot_map(int32_t il, int64_t n_tokens, int64_t n_expert_used) const {

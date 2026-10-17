@@ -1614,6 +1614,25 @@ static void ggml_compute_forward_mul_mat_id(
     const struct ggml_tensor * src0 = dst->src[0];
     const struct ggml_tensor * src1 = dst->src[1];
     const struct ggml_tensor * ids = dst->src[2];
+    const float * mask = dst->op == GGML_OP_MUL_MAT_ID_MASKED ? (const float *) dst->src[3]->data : NULL;
+
+    if (mask && params->use_ref) {
+        // Compare the sparse path against an unmasked matmul followed by zero selection.
+        struct ggml_tensor unmasked = *dst;
+        unmasked.op = GGML_OP_MUL_MAT_ID;
+        unmasked.src[3] = NULL;
+        ggml_compute_forward_mul_mat_id(params, &unmasked);
+        ggml_barrier(params->threadpool);
+        for (int64_t id = 0; id < ggml_nelements(ids); ++id) {
+            if (mask[id] == 0.0f) {
+                float * col = (float *) ((char *) dst->data + (id % ids->ne[0])*dst->nb[1] + (id / ids->ne[0])*dst->nb[2]);
+                for (int64_t row = params->ith; row < dst->ne[0]; row += params->nth) {
+                    col[row] = 0.0f;
+                }
+            }
+        }
+        return;
+    }
 
     GGML_TENSOR_BINARY_OP_LOCALS
 
@@ -1640,6 +1659,17 @@ static void ggml_compute_forward_mul_mat_id(
     // row groups
     const int n_ids = ids->ne[0]; // n_expert_used
     const int n_as  = ne02;       // n_expert
+
+    if (mask) {
+        for (int64_t id = 0; id < ggml_nelements(ids); ++id) {
+            if (mask[id] == 0.0f) {
+                float * col = (float *) ((char *) dst->data + (id % n_ids)*nb1 + (id / n_ids)*nb2);
+                const int64_t begin = ne01*ith/nth;
+                const int64_t end = ne01*(ith + 1)/nth;
+                memset(col + begin, 0, (end - begin)*sizeof(float));
+            }
+        }
+    }
 
     void * wdata_cur = params->wdata;
 
@@ -1708,7 +1738,10 @@ static void ggml_compute_forward_mul_mat_id(
             for (int id = 0; id < n_ids; ++id) {
                 const int32_t i02 = *(const int32_t *) ((const char *) ids->data + iid1*ids->nb[1] + id*ids->nb[0]);
 
-                assert(i02 >= 0 && i02 < n_as);
+                GGML_ASSERT(i02 >= 0 && i02 < n_as);
+                if (mask && mask[id + iid1*n_ids] == 0.0f) {
+                    continue;
+                }
 
                 MMID_MATRIX_ROW(i02, matrix_row_counts[i02]) = (struct mmid_row_mapping) {id, iid1};
                 matrix_row_counts[i02] += 1;
@@ -1930,6 +1963,7 @@ static void ggml_compute_forward(struct ggml_compute_params * params, struct ggm
                 ggml_compute_forward_mul_mat(params, tensor);
             } break;
         case GGML_OP_MUL_MAT_ID:
+        case GGML_OP_MUL_MAT_ID_MASKED:
             {
                 ggml_compute_forward_mul_mat_id(params, tensor);
             } break;
@@ -2422,6 +2456,7 @@ static int ggml_get_n_tasks(struct ggml_tensor * node, int n_threads) {
         case GGML_OP_CONCAT:
         case GGML_OP_MUL_MAT:
         case GGML_OP_MUL_MAT_ID:
+        case GGML_OP_MUL_MAT_ID_MASKED:
         case GGML_OP_OUT_PROD:
         case GGML_OP_SET_ROWS:
             {
@@ -2954,6 +2989,7 @@ struct ggml_cplan ggml_graph_plan(
                         cur += ggml_tiled_wdata_size(n_tasks, node);
                     } break;
                 case GGML_OP_MUL_MAT_ID:
+                case GGML_OP_MUL_MAT_ID_MASKED:
                     {
                         cur = 0;
                         const struct ggml_tensor * src0 = node->src[0];

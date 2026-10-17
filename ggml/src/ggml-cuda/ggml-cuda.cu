@@ -2389,6 +2389,9 @@ static bool ggml_cuda_compute_forward(ggml_backend_cuda_context & ctx, struct gg
         case GGML_OP_MUL_MAT_ID:
             ggml_cuda_mul_mat_id(ctx, dst);
             break;
+        case GGML_OP_MUL_MAT_ID_MASKED:
+            ggml_cuda_mul_mat_vec_q(ctx, dst->src[0], dst->src[1], dst->src[2], dst, nullptr, dst->src[3]);
+            break;
         case GGML_OP_OUT_PROD:
             ggml_cuda_out_prod(ctx, dst);
             break;
@@ -5478,6 +5481,39 @@ static bool ggml_backend_cuda_device_supports_op(ggml_backend_dev_t dev, const g
                         return false;
                     }
                     return ggml_is_contiguous_1(op->src[0]);
+                default:
+                    return false;
+            }
+        case GGML_OP_MUL_MAT_ID_MASKED:
+            if (op->src[1]->type != GGML_TYPE_F32 || op->ne[2] < 1 || op->ne[2] > MMVQ_MAX_BATCH_SIZE || op->ne[3] != 1 ||
+                op->src[0]->ne[3] != 1 || op->src[1]->ne[3] != 1 || op->src[2]->nb[0] != sizeof(int32_t) ||
+                op->src[0]->nb[0] != ggml_type_size(op->src[0]->type) || op->src[1]->nb[0] != sizeof(float) ||
+                op->ne[0] % 32 != 0 || ggml_get_op_params_i32(op, 3) == GGML_PREC_F32) {
+                return false;
+            }
+            switch (op->src[0]->type) {
+                case GGML_TYPE_Q2_0:
+                case GGML_TYPE_Q4_0:
+                case GGML_TYPE_Q4_1:
+                case GGML_TYPE_Q5_0:
+                case GGML_TYPE_Q5_1:
+                case GGML_TYPE_Q8_0:
+                case GGML_TYPE_Q2_K:
+                case GGML_TYPE_Q3_K:
+                case GGML_TYPE_Q4_K:
+                case GGML_TYPE_Q5_K:
+                case GGML_TYPE_Q6_K:
+                case GGML_TYPE_IQ1_S:
+                case GGML_TYPE_IQ1_M:
+                case GGML_TYPE_IQ2_XXS:
+                case GGML_TYPE_IQ2_XS:
+                case GGML_TYPE_IQ2_S:
+                case GGML_TYPE_IQ3_XXS:
+                case GGML_TYPE_IQ3_S:
+                case GGML_TYPE_IQ4_NL:
+                case GGML_TYPE_IQ4_XS:
+                case GGML_TYPE_MXFP4:
+                    return true;
                 default:
                     return false;
             }

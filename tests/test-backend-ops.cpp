@@ -5565,6 +5565,43 @@ struct test_mul_mat_id_dup : public test_mul_mat_id {
     }
 };
 
+struct test_mul_mat_id_masked : test_mul_mat_id {
+    const int active_pattern;
+    const bool duplicate_ids;
+
+    test_mul_mat_id_masked(ggml_type type, bool broadcast, int64_t rows, int pattern, bool duplicate, int64_t cols = 256, int64_t tokens = 1)
+        : test_mul_mat_id(type, GGML_TYPE_F32, 11, 3, broadcast, rows, tokens, cols, 1.0f, rows + 8, duplicate),
+          active_pattern(pattern), duplicate_ids(duplicate) {}
+
+    std::string vars() override {
+        return test_mul_mat_id::vars() + "," + VARS_TO_STR2(active_pattern, duplicate_ids);
+    }
+
+    ggml_tensor * build_graph(ggml_context * ctx) override {
+        ggml_tensor * base = test_mul_mat_id::build_graph(ctx);
+        ggml_tensor * mask = ggml_new_tensor_2d(ctx, GGML_TYPE_F32, n_used, n);
+        ggml_set_name(mask, "expert_mask");
+        return ggml_mul_mat_id_masked(ctx, base->src[0], base->src[1], base->src[2], mask);
+    }
+
+    void initialize_tensors(ggml_context * ctx) override {
+        test_mul_mat_id::initialize_tensors(ctx);
+        if (duplicate_ids) {
+            ggml_tensor * ids = ggml_get_tensor(ctx, "ids");
+            std::vector<int32_t> values(ggml_nelements(ids), n_mats - 1);
+            ggml_backend_tensor_set(ids, values.data(), 0, values.size()*sizeof(int32_t));
+        }
+        ggml_tensor * mask = ggml_get_tensor(ctx, "expert_mask");
+        std::vector<float> values(n_used*n, active_pattern == 1 ? 1.0f : 0.0f);
+        if (active_pattern == 2) {
+            for (int64_t token = 0; token < n; ++token) {
+                values[token*n_used + token % n_used] = 1.0f;
+            }
+        }
+        ggml_backend_tensor_set(mask, values.data(), 0, values.size()*sizeof(float));
+    }
+};
+
 // FP4 W4A8 path on the MoE path (GGML_PREC_Q8 on src1 disallows 4-bit activations)
 struct test_mul_mat_id_w4a8 : public test_mul_mat_id {
     test_mul_mat_id_w4a8(ggml_type type_a = GGML_TYPE_NVFP4, ggml_type type_b = GGML_TYPE_F32,
@@ -11036,6 +11073,36 @@ static std::vector<std::unique_ptr<test_case>> make_test_cases_eval() {
         test_cases.emplace_back(new test_mul_mat_id(GGML_TYPE_Q4_0,   GGML_TYPE_F32, 1024, 10, false, 256, n, 128));
     }
     test_cases.emplace_back(new test_mul_mat_id(GGML_TYPE_Q4_0, GGML_TYPE_F32, 32, 2, false, 2880, 32, 2880));
+
+    for (ggml_type type : { GGML_TYPE_F32, GGML_TYPE_Q4_0, GGML_TYPE_IQ2_XXS, GGML_TYPE_IQ3_XXS, GGML_TYPE_IQ3_S, GGML_TYPE_IQ4_NL, GGML_TYPE_MXFP4, GGML_TYPE_IQ2_S, GGML_TYPE_IQ4_XS, GGML_TYPE_Q2_0, GGML_TYPE_Q4_K, GGML_TYPE_Q5_K, GGML_TYPE_Q6_K }) {
+        for (bool broadcast : { false, true }) {
+            for (bool duplicate : { false, true }) {
+                for (int pattern : { 0, 1, 2 }) {
+                    for (int64_t rows : { 64, 65, 128 }) {
+                        test_cases.emplace_back(new test_mul_mat_id_masked(type, broadcast, rows, pattern, duplicate));
+                    }
+                }
+            }
+        }
+    }
+
+    for (ggml_type type : { GGML_TYPE_IQ3_S, GGML_TYPE_IQ3_XXS, GGML_TYPE_IQ2_S, GGML_TYPE_IQ4_NL, GGML_TYPE_IQ4_XS, GGML_TYPE_Q2_0, GGML_TYPE_Q4_K, GGML_TYPE_Q5_K, GGML_TYPE_Q6_K, GGML_TYPE_IQ2_XXS }) {
+        for (int64_t tokens = 2; tokens <= 8; ++tokens) {
+            for (bool broadcast : { false, true }) {
+                for (bool duplicate : { false, true }) {
+                    for (int pattern : { 0, 1, 2 }) {
+                        test_cases.emplace_back(new test_mul_mat_id_masked(type, broadcast, 64, pattern, duplicate, 256, tokens));
+                    }
+                }
+            }
+        }
+    }
+
+    for (bool broadcast : { false, true }) {
+        test_cases.emplace_back(new test_mul_mat_id_masked(GGML_TYPE_IQ3_S,   broadcast, 128, 2, true, 2560));
+        test_cases.emplace_back(new test_mul_mat_id_masked(GGML_TYPE_IQ4_NL,  broadcast, 128, 2, true,  640));
+        test_cases.emplace_back(new test_mul_mat_id_masked(GGML_TYPE_IQ2_XXS, broadcast, 128, 2, true, 4096));
+    }
 
     // multiple blocks per row: exercises the block-stride loop and the
     // per-expert base offset, which k == 256 alone leaves untested

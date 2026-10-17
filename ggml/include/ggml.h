@@ -601,6 +601,8 @@ extern "C" {
 
         GGML_OP_GLU,
 
+        GGML_OP_MUL_MAT_ID_MASKED,
+
         GGML_OP_COUNT,
     };
 
@@ -1507,6 +1509,15 @@ extern "C" {
             struct ggml_tensor  * as,
             struct ggml_tensor  * b,
             struct ggml_tensor  * ids);
+
+    // Indirect matmul. IDs remain valid; a zero F32 mask entry gives an exact zero output column.
+    // mask is contiguous and has the same shape as ids. Nonzero mask entries select the normal matmul.
+    GGML_API struct ggml_tensor * ggml_mul_mat_id_masked(
+            struct ggml_context * ctx,
+            struct ggml_tensor  * as,
+            struct ggml_tensor  * b,
+            struct ggml_tensor  * ids,
+            struct ggml_tensor  * mask);
 
     // A: m columns, n rows,
     // B: p columns, n rows,

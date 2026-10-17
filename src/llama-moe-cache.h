@@ -8,16 +8,18 @@
 
 struct llama_model;
 
-// keeps the most recently used experts of host-resident MoE layers in a device buffer
-// each layer has a slot map in host memory: when the scheduler copies it to the device, the copy callback uploads the missing experts
+// keeps experts of host-resident MoE layers in device banks
+// the default policy uploads misses; a hybrid profile freezes the banks and leaves misses on the CPU
 class llama_moe_cache {
 public:
     // backends are all the backends of the context, each GPU gets its own cache of the given size for the layers assigned to it
-    llama_moe_cache(const llama_model & model, const std::vector<ggml_backend_t> & backends, const std::vector<ggml_backend_buffer_type_t> & bufts, size_t size);
+    llama_moe_cache(const llama_model & model, const std::vector<ggml_backend_t> & backends, const std::vector<ggml_backend_buffer_type_t> & bufts, size_t size, const char * profile = nullptr);
     ~llama_moe_cache();
 
     // the device that caches layer il
     ggml_backend_t backend(int32_t il) const;
+
+    bool is_hybrid() const;
 
     // the slot map of layer il, if its experts can be read from the cache for n_tokens tokens, nullptr otherwise
     ggml_tensor * get_slot_map(int32_t il, int64_t n_tokens, int64_t n_expert_used) const;

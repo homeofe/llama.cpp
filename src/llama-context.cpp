@@ -360,6 +360,28 @@ llama_context::llama_context(
     cparams.kv_unified     = params.kv_unified;
     cparams.moe_cache_size = params.moe_cache_size;
 
+    const char * hybrid_profile = nullptr;
+    const char * hybrid = getenv("GGML_MOE_HYBRID");
+    if (hybrid && std::strcmp(hybrid, "1") == 0) {
+        const char * value = getenv("GGML_MOE_HYBRID_MIB");
+        hybrid_profile = getenv("GGML_MOE_HYBRID_PROFILE");
+        if (params.moe_cache_size || !value || !hybrid_profile || !*hybrid_profile) {
+            throw std::runtime_error("hybrid MoE needs GGML_MOE_HYBRID_MIB and GGML_MOE_HYBRID_PROFILE, without --moe-cache-mib");
+        }
+        size_t mib = 0;
+        const size_t limit = std::numeric_limits<size_t>::max() / (1024*1024);
+        for (const char * p = value; *p; ++p) {
+            if (*p < '0' || *p > '9' || mib > (limit - (*p - '0')) / 10) {
+                throw std::runtime_error("invalid GGML_MOE_HYBRID_MIB");
+            }
+            mib = mib*10 + (*p - '0');
+        }
+        if (mib == 0) {
+            throw std::runtime_error("GGML_MOE_HYBRID_MIB must be positive");
+        }
+        cparams.moe_cache_size = mib*1024*1024;
+    }
+
     // initialized later
     cparams.pipeline_parallel = false;
     cparams.training = false;
@@ -549,7 +571,7 @@ llama_context::llama_context(
         }
 
         if (cparams.moe_cache_size > 0) {
-            moe_cache = std::make_unique<llama_moe_cache>(model, backend_ptrs, backend_buft, cparams.moe_cache_size);
+            moe_cache = std::make_unique<llama_moe_cache>(model, backend_ptrs, backend_buft, cparams.moe_cache_size, hybrid_profile);
         }
 
         sched_reserve();

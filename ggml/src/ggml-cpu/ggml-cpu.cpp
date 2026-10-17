@@ -440,6 +440,8 @@ static bool ggml_backend_cpu_device_supports_op(ggml_backend_dev_t dev, const st
     }
 
     switch (op->op) {
+        case GGML_OP_MUL_MAT_ID_MASKED:
+            return src1->type == GGML_TYPE_F32 && ggml_get_type_traits_cpu(src0->type)->vec_dot != nullptr;
         case GGML_OP_CPY:
         case GGML_OP_SET_ROWS:
             return

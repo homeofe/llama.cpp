@@ -1109,7 +1109,8 @@ struct llm_graph_context {
               ggml_tensor * cur, // ggml_tensor * b
               ggml_tensor * ids,
               ggml_tensor * w_s   = nullptr,
-              ggml_tensor * slots = nullptr) const;
+              ggml_tensor * slots = nullptr,
+              ggml_tensor * active = nullptr) const;
 
     ggml_tensor * build_norm(
              ggml_tensor * cur,

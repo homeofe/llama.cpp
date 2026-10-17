@@ -1110,9 +1110,10 @@ static const char * GGML_OP_NAME[GGML_OP_COUNT] = {
     "OPT_STEP_SGD",
 
     "GLU",
+    "MUL_MAT_ID_MASKED",
 };
 
-static_assert(GGML_OP_COUNT == 101, "GGML_OP_COUNT != 101");
+static_assert(GGML_OP_COUNT == 102, "GGML_OP_COUNT != 102");
 
 static const char * GGML_OP_SYMBOL[GGML_OP_COUNT] = {
     "none",
@@ -1225,9 +1226,10 @@ static const char * GGML_OP_SYMBOL[GGML_OP_COUNT] = {
     "sgd(x)",
 
     "glu(x)",
+    "masked(X[i]*Y)",
 };
 
-static_assert(GGML_OP_COUNT == 101, "GGML_OP_COUNT != 101");
+static_assert(GGML_OP_COUNT == 102, "GGML_OP_COUNT != 102");
 
 static_assert(GGML_OP_POOL_COUNT == 2, "GGML_OP_POOL_COUNT != 2");
 
@@ -3306,6 +3308,7 @@ bool ggml_prec_set_acc(
     switch (a->op) {
         case GGML_OP_MUL_MAT:
         case GGML_OP_MUL_MAT_ID:
+        case GGML_OP_MUL_MAT_ID_MASKED:
             {
                 const int32_t prec_i32 = (int32_t) prec;
                 ggml_set_op_params_i32(a, 0, prec_i32);
@@ -3333,6 +3336,7 @@ bool ggml_prec_set_src(
     switch (a->op) {
         case GGML_OP_MUL_MAT:
         case GGML_OP_MUL_MAT_ID:
+        case GGML_OP_MUL_MAT_ID_MASKED:
             {
                 if (idx != 1) {
                     return false;
@@ -3433,6 +3437,21 @@ struct ggml_tensor * ggml_mul_mat_id(
     result->src[1] = b;
     result->src[2] = ids;
 
+    return result;
+}
+
+struct ggml_tensor * ggml_mul_mat_id_masked(
+        struct ggml_context * ctx,
+        struct ggml_tensor  * as,
+        struct ggml_tensor  * b,
+        struct ggml_tensor  * ids,
+        struct ggml_tensor  * mask) {
+    GGML_ASSERT(b->type == GGML_TYPE_F32);
+    GGML_ASSERT(mask->type == GGML_TYPE_F32 && ggml_is_contiguous(mask));
+    GGML_ASSERT(ggml_are_same_shape(ids, mask));
+    struct ggml_tensor * result = ggml_mul_mat_id(ctx, as, b, ids);
+    result->op = GGML_OP_MUL_MAT_ID_MASKED;
+    result->src[3] = mask;
     return result;
 }
 
