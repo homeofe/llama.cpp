@@ -74,3 +74,20 @@ The CPU backend wrapper records 25,970 four-token graph calls taking 17.157 seco
 Across 252 request-phase GPU sensor samples, the link stays at Gen3 x16, GPU activity averages 43.86% (maximum 64%), memory activity averages 16.17%, power averages 147 W (maximum 188 W), and SM clock reaches 1890 MHz. These activity sensors do not measure how many FP32 lanes execute useful operations. All four populated memory channels are also exposed by the temporarily loaded `amd_uncore` module: DF controllers 2, 3, 4 and 5 count traffic; 0, 1, 6 and 7 remain zero in the first scan. The module will be unloaded after measurement. The Linux Zen 2 event definitions count 64-byte DRAM data requests: [primary event source](https://raw.githubusercontent.com/torvalds/linux/master/tools/perf/pmu-events/arch/x86/amdzen2/data-fabric.json).
 
 Nsight Systems initially failed its automatic importer lookup; invoking the installed matching `QdstrmImporter` directly recovered the existing capture without another GPU run. The 80-token target-only diagnostic spans 1.906 seconds from first to last CUDA kernel. It contains 79,652 kernels, 622 ms of union kernel activity and 135 ms of union copy activity (751 ms combined union). Host-to-device copies transfer 1.394 GB in 112 ms summed copy duration. CUDA graphs are disabled for this diagnostic, so launch gaps and overlap cannot be extrapolated to the graph-enabled production benchmark. Raw capture and SQLite are kept locally; `nsys-summary.json` records the reproducible aggregate. Initial Nsight Compute matched no kernels because its demangled booleans are `(bool)1`, not `true`; the corrected filter is queued before advancing to DSpark.
+
+DF counters during the first slot screen provide 36 complete one-second samples within Ling control requests: mean 33.110 GB/s, minimum 27.972 and maximum 38.172 GB/s. All four counters ran continuously (100%, no multiplexing); per-channel traffic is balanced. This is whole-system DRAM traffic across an entire request, including GPU/CPU-wait phases, not the peak bandwidth of an isolated CPU kernel. The measured intervals and calculation inputs are in `dram-slots-summary.json`, `dram-slots.csv` and `dram-slots-meta.json`.
+
+## Task 2: more slots
+
+The first actual allocation tests fit Qwen target 2944 MiB plus draft 512 MiB at 10156 MiB VRAM, and Ling target 6144 MiB at 10334 MiB. Both use draft ubatch 32. Qwen has more headroom than the prior estimate: another actual-fit test at target 3456 MiB is queued, followed by a same-condition comparison and quality checks.
+
+The initial one-round screen finished at 21:17 UTC (32 accepted requests, four observations per category). Every request passed the original foreign-CPU gate on the first attempt; compaction was 0 throughout. Raw data: `/opt/llm-gateway/data/moe-quant/qwen38/round9-slots/`. These screening numbers do not replace the three-round policy comparison.
+
+| Configuration | Code tok/s | English tok/s | Peak VRAM MiB | Matching control outputs |
+| --- | ---: | ---: | ---: | ---: |
+| Qwen round 7 control | 46.9894 | 39.7515 | 10696 | 8/8 |
+| Qwen target 2944, draft ubatch 32 | 47.8567 | 39.2530 | 10160 | 5/8 |
+| Ling round 7 control | 50.5623 | 47.2623 | 9940 | 8/8 |
+| Ling target 6144, draft ubatch 32 | 51.4992 | 45.7750 | 10338 | 3/8 |
+
+Qwen's four code outputs and draft counts match exactly; their individual gains are 1.48-2.31%. English acceptance falls from 69.57% to 65.56%, with three changed outputs. Ling's code median rises 1.85%, but English falls 3.15%; English acceptance falls from 53.02% to 49.96%, with all four outputs changed. Thus the first larger-cache screen does not justify promoting a universal speed improvement.

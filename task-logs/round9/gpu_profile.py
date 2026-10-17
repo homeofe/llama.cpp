@@ -16,8 +16,12 @@ ROOT = Path(__file__).resolve().parents[2]
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('profiler', choices=['nsys', 'ncu'])
+    parser.add_argument('--graphs', action='store_true')
     args = parser.parse_args()
-    out = ROOT / 'task-logs/round9' / ('gpu-' + args.profiler + ('-retry' if args.profiler == 'ncu' else ''))
+    if args.graphs and args.profiler != 'nsys':
+        parser.error('--graphs is reserved for the systems runtime trace')
+    suffix = '-graphs' if args.graphs else ('-retry' if args.profiler == 'ncu' else '')
+    out = ROOT / 'task-logs/round9' / ('gpu-' + args.profiler + suffix)
     out.mkdir(exist_ok=True)
     cfg = bench.stage.CONFIGS['q-warm-draft']
     model = cfg['cmd'][cfg['cmd'].index('-m') + 1]
@@ -26,6 +30,9 @@ def main():
                 'GGML_MOE_PROBE_WINDOW': '4', 'GGML_MOE_PROBE_PREFIX': '4',
                 'NV_COMPUTE_PROFILER_DISABLE_STOCK_FILE_DEPLOYMENT': '1',
                 'XDG_CONFIG_HOME': str(out / 'config'), 'XDG_CACHE_HOME': str(out / 'cache')}
+    if args.graphs:
+        settings.pop('GGML_CUDA_DISABLE_GRAPHS')
+        env.pop('GGML_CUDA_DISABLE_GRAPHS', None)
     env.update(settings)
     probe = [str(ROOT / 'task-logs/round9/moe-probe'), str(out / 'probe'), '-m', model,
              '-c', '512', '-b', '512', '-ub', '4', '-n', '16', '-lm', 'none',
@@ -38,12 +45,12 @@ def main():
         cmd = ['sudo', '-n', 'env', 'NV_COMPUTE_PROFILER_DISABLE_STOCK_FILE_DEPLOYMENT=1',
                'timeout', '--signal=TERM', '--kill-after=20', '600', 'ncu',
                '--set', 'full', '--metrics', 'sm__cycles_active.sum', '--kernel-name-base', 'demangled',
-               '--target-processes', 'all', '--kernel-name', 'regex:mul_mat_vec_q_moe', '--launch-skip', '144',
+               '--target-processes', 'all', '--kernel-name', 'regex:.*mul_mat_vec_q_moe.*', '--launch-skip', '144',
                '--launch-count', '6', '--force-overwrite', '--export', str(out / 'kernels'),
                'env'] + [f'{key}={value}' for key, value in settings.items()] + probe
     (out / 'command.json').write_text(json.dumps(dict(command=cmd, env=settings,
-        graphs=False, performance_comparison=False, target_only=True,
-        description='Four fixed topics; four-token target windows; no drafter; graphs disabled for Nsight 2022.4.'), indent=2) + '\n')
+        graphs=args.graphs, performance_comparison=False, target_only=True,
+        description='Four fixed topics; four-token target windows; no drafter; inspect graphs flag.'), indent=2) + '\n')
     run = bench.Run(out, min(time.time() + 900, 1792277760))
     run.quiet()
     code = -1
@@ -71,6 +78,14 @@ def main():
             run.child.wait(timeout=30)
         run.stop()
     run.event(kind='profiler_complete', exit=code, performance_comparison=False)
+    if code == 0 and args.profiler == 'nsys' and not (out / 'trace.sqlite').exists():
+        with (out / 'import.log').open('w') as stream:
+            subprocess.run(['/usr/lib/nsight-systems/host-linux-x64/QdstrmImporter',
+                            '-i', str(out / 'trace.qdstrm'), '-o', str(out / 'trace.nsys-rep'), '-f'],
+                           stdout=stream, stderr=subprocess.STDOUT, check=True)
+            subprocess.run(['nsys', 'export', '--type', 'sqlite', '--force-overwrite=true',
+                            '-o', str(out / 'trace.sqlite'), str(out / 'trace.nsys-rep')],
+                           stdout=stream, stderr=subprocess.STDOUT, check=True)
     if code == 0 and args.profiler == 'ncu':
         with (out / 'metrics.csv').open('w') as stream:
             subprocess.run(['ncu', '--import', str(out / 'kernels.ncu-rep'), '--page', 'raw', '--csv'],

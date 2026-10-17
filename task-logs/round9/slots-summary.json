@@ -1,0 +1,106 @@
+{
+  "summary": [
+    {
+      "config": "q-warm-draft",
+      "category": "code",
+      "n": 4,
+      "median": 46.98936942302132,
+      "minimum": 44.07507315507258,
+      "maximum": 48.69336446484149,
+      "acceptance": 0.9194395796847635,
+      "vram_mib": 10694,
+      "ttft": 1.4638566970825195
+    },
+    {
+      "config": "q-warm-draft",
+      "category": "english",
+      "n": 4,
+      "median": 39.75146034431506,
+      "minimum": 38.19177905900138,
+      "maximum": 40.41968087594986,
+      "acceptance": 0.6956521739130435,
+      "vram_mib": 10696,
+      "ttft": 0.9544452428817749
+    },
+    {
+      "config": "qwen-r9-slots-2944",
+      "category": "code",
+      "n": 4,
+      "median": 47.856718776954956,
+      "minimum": 44.826823951907414,
+      "maximum": 49.81931261734166,
+      "acceptance": 0.9194395796847635,
+      "vram_mib": 10158,
+      "ttft": 1.4948556423187256
+    },
+    {
+      "config": "qwen-r9-slots-2944",
+      "category": "english",
+      "n": 4,
+      "median": 39.253013244701364,
+      "minimum": 35.76372593115392,
+      "maximum": 40.076969843560626,
+      "acceptance": 0.6556420233463035,
+      "vram_mib": 10160,
+      "ttft": 0.9509290456771851
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "category": "code",
+      "n": 4,
+      "median": 50.56225246499835,
+      "minimum": 48.48480420222913,
+      "maximum": 51.10119619111928,
+      "acceptance": 0.6787878787878788,
+      "vram_mib": 9938,
+      "ttft": 1.1921273469924927
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "category": "english",
+      "n": 4,
+      "median": 47.262347141537816,
+      "minimum": 41.620439159983924,
+      "maximum": 49.09258578829344,
+      "acceptance": 0.530161427357689,
+      "vram_mib": 9940,
+      "ttft": 0.883561372756958
+    },
+    {
+      "config": "ling-r9-slots-6144",
+      "category": "code",
+      "n": 4,
+      "median": 51.49922948543278,
+      "minimum": 49.41110994084138,
+      "maximum": 53.302153166787164,
+      "acceptance": 0.6775193798449612,
+      "vram_mib": 10336,
+      "ttft": 1.19969642162323
+    },
+    {
+      "config": "ling-r9-slots-6144",
+      "category": "english",
+      "n": 4,
+      "median": 45.775039259429846,
+      "minimum": 41.35495470470684,
+      "maximum": 49.282219659179404,
+      "acceptance": 0.4995904995904996,
+      "vram_mib": 10338,
+      "ttft": 0.8808629512786865
+    }
+  ],
+  "output_comparisons": [
+    {
+      "control": "q-warm-draft",
+      "candidate": "qwen-r9-slots-2944",
+      "requests": 8,
+      "same_hash": 5
+    },
+    {
+      "control": "ling-cache-mtp3",
+      "candidate": "ling-r9-slots-6144",
+      "requests": 8,
+      "same_hash": 3
+    }
+  ]
+}
