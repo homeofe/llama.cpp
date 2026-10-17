@@ -38,6 +38,9 @@ class ProfileRun(bench.Run):
             except FileNotFoundError:
                 pass
         prefix.with_suffix('.affinity.json').write_text(json.dumps(threads, indent=2) + '\n')
+        with prefix.with_suffix('.cpu.jsonl').open('w') as stream:
+            self.telemetry.append(subprocess.Popen(['python3', '-S', str(ROOT / 'task-logs/round9/cpu_telemetry.py'),
+                                                   str(self.child.pid)], stdout=stream, stderr=subprocess.STDOUT))
         fields = 'timestamp,pcie.link.gen.current,pcie.link.width.current,clocks.current.sm,clocks.current.memory,power.draw,utilization.gpu,utilization.memory,memory.used'
         with prefix.with_suffix('.gpu.csv').open('w') as stream:
             self.telemetry.append(subprocess.Popen(['nvidia-smi', '--query-gpu=' + fields,
@@ -46,13 +49,13 @@ class ProfileRun(bench.Run):
             self.telemetry.append(subprocess.Popen(['nvidia-smi', 'dmon', '-s', 'pucvt', '-o', 'DT', '-d', '1', '-c', '120'],
                                                    stdout=stream, stderr=subprocess.STDOUT))
         if self.perf_enabled:
-            command = ['sudo', '-n', 'perf', 'record', '-F', '499', '-e', 'cycles:u',
+            command = ['sudo', '-n', 'perf', 'record', '--no-buildid-cache', '-F', '499', '-e', 'cycles:u',
                        '-p', str(self.child.pid), '-o', '-', '--', 'sleep', '120']
             with prefix.with_suffix('.perf.data').open('wb') as data, prefix.with_suffix('.perf.log').open('w') as log:
                 proc = subprocess.Popen(command, stdout=data, stderr=log)
             self.recorders.append((proc, prefix))
             self.event(kind='profiler', command=command, target_pid=self.child.pid, prefix=str(prefix))
-            stats = ['sudo', '-n', 'perf', 'stat', '-x', ',', '-e', 'cycles:u,instructions:u,cache-misses:u,dTLB-load-misses:u',
+            stats = ['sudo', '-n', 'perf', 'stat', '-x', ',', '-e', 'task-clock,cycles:u,instructions:u,cache-misses:u,dTLB-load-misses:u',
                      '-p', str(self.child.pid), '--', 'sleep', '120']
             with prefix.with_suffix('.counters.csv').open('w') as log:
                 proc = subprocess.Popen(stats, stdout=subprocess.DEVNULL, stderr=log)
