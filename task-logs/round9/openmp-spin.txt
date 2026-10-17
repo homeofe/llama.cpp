@@ -1,0 +1,42 @@
+
+/usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+00000000000256a0 <omp_get_num_procs@@OMP_1.0+0x2f0>:
+   256a0:	48 8b 35 c1 00 03 00 	mov    0x300c1(%rip),%rsi        # 55768 <acc_update_self_async_array_h_@@OACC_2.5+0xeb40>
+   256a7:	48 8b 05 6a fd 02 00 	mov    0x2fd6a(%rip),%rax        # 55418 <acc_update_self_async_array_h_@@OACC_2.5+0xe7f0>
+   256ae:	48 39 05 6b fd 02 00 	cmp    %rax,0x2fd6b(%rip)        # 55420 <acc_update_self_async_array_h_@@OACC_2.5+0xe7f8>
+   256b5:	72 69                	jb     25720 <omp_get_num_procs@@OMP_1.0+0x370>
+   256b7:	31 c0                	xor    %eax,%eax
+   256b9:	48 85 f6             	test   %rsi,%rsi
+   256bc:	75 0d                	jne    256cb <omp_get_num_procs@@OMP_1.0+0x31b>
+   256be:	eb 20                	jmp    256e0 <omp_get_num_procs@@OMP_1.0+0x330>
+   256c0:	f3 90                	pause
+   256c2:	48 83 c0 01          	add    $0x1,%rax
+   256c6:	48 39 f0             	cmp    %rsi,%rax
+   256c9:	74 15                	je     256e0 <omp_get_num_procs@@OMP_1.0+0x330>
+   256cb:	8b 0f                	mov    (%rdi),%ecx
+   256cd:	39 ca                	cmp    %ecx,%edx
+   256cf:	74 ef                	je     256c0 <omp_get_num_procs@@OMP_1.0+0x310>
+   256d1:	8b 07                	mov    (%rdi),%eax
+   256d3:	39 d0                	cmp    %edx,%eax
+   256d5:	74 c9                	je     256a0 <omp_get_num_procs@@OMP_1.0+0x2f0>
+   256d7:	c3                   	ret
+   256d8:	0f 1f 84 00 00 00 00 	nopl   0x0(%rax,%rax,1)
+   256df:	00 
+   256e0:	8b 35 8a fd 02 00    	mov    0x2fd8a(%rip),%esi        # 55470 <acc_update_self_async_array_h_@@OACC_2.5+0xe848>
+   256e6:	45 31 d2             	xor    %r10d,%r10d
+   256e9:	44 89 c0             	mov    %r8d,%eax
+   256ec:	0f 05                	syscall
+   256ee:	48 83 f8 da          	cmp    $0xffffffffffffffda,%rax
+   256f2:	75 dd                	jne    256d1 <omp_get_num_procs@@OMP_1.0+0x321>
+   256f4:	8b 35 76 fd 02 00    	mov    0x2fd76(%rip),%esi        # 55470 <acc_update_self_async_array_h_@@OACC_2.5+0xe848>
+   256fa:	45 31 d2             	xor    %r10d,%r10d
+   256fd:	44 89 c0             	mov    %r8d,%eax
+   25700:	81 25 6a fd 02 00 7f 	andl   $0xffffff7f,0x2fd6a(%rip)        # 55474 <acc_update_self_async_array_h_@@OACC_2.5+0xe84c>
+   25707:	ff ff ff 
+   2570a:	40 80 e6 7f          	and    $0x7f,%sil
+   2570e:	89                   	.byte 0x89
+   2570f:	35                   	.byte 0x35

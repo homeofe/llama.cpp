@@ -13,6 +13,7 @@ REVISION = 'd60b0e1291dacb256194c6d48154398730cf8986'
 
 
 def main():
+    subprocess.run(['python3', '-S', 'task-logs/round9/extend_slots.py'], cwd=ROOT, check=True)
     DEST.mkdir(parents=True, exist_ok=True)
     env = {**os.environ, 'HF_HOME': str(DEST / 'hf-cache'), 'HF_XET_CACHE': str(DEST / 'xet-cache'),
            'PYTHONDONTWRITEBYTECODE': '1', 'OMP_NUM_THREADS': '4', 'MKL_NUM_THREADS': '4'}

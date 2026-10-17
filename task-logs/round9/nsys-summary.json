@@ -1,0 +1,390 @@
+{
+  "diagnostic_only": true,
+  "cuda_graphs": false,
+  "target_only": true,
+  "measured_tokens": 80,
+  "boundary": "first to last CUDA kernel, including four prefixes",
+  "window_s": 1.905649452,
+  "kernels": 79652,
+  "kernel_union_ms": 621.971391,
+  "copy_union_ms": 135.345714,
+  "kernel_or_copy_union_ms": 751.382987,
+  "copies": [
+    {
+      "kind": "Host-to-Device",
+      "calls": 3765,
+      "bytes": 1394095412,
+      "sum_ms": 112.128311
+    },
+    {
+      "kind": "Device-to-Host",
+      "calls": 2859,
+      "bytes": 108827904,
+      "sum_ms": 11.050976
+    },
+    {
+      "kind": "Device-to-Device",
+      "calls": 3000,
+      "bytes": 197943040,
+      "sum_ms": 12.166427
+    }
+  ],
+  "kernels_by_sum_time": [
+    {
+      "name": "void mul_mat_vec_f<__nv_bfloat16, float, (int)4, (int)160, (bool)0, (bool)0>(const T1 *, const float *, const int *, ggml_cuda_mm_fusion_args_device, float *, int, uint3, int, int, int, uint3, int, int, int, uint3, int, int, int, int)",
+      "calls": 1932,
+      "sum_ms": 102.480179
+    },
+    {
+      "name": "void mul_mat_vec_f<__nv_bfloat16, float, (int)4, (int)256, (bool)0, (bool)0>(const T1 *, const float *, const int *, ggml_cuda_mm_fusion_args_device, float *, int, uint3, int, int, int, uint3, int, int, int, uint3, int, int, int, int)",
+      "calls": 7720,
+      "sum_ms": 93.941744
+    },
+    {
+      "name": "void mul_mat_vec_q<(ggml_type)14, (int)4, (bool)0, (bool)0, (bool)0>(const void *, const void *, const int *, ggml_cuda_mmvq_args, float *, unsigned int, uint3, unsigned int, unsigned int, unsigned int, uint3, unsigned int, unsigned int, unsigned int, uint3, unsigned int, unsigned int, unsigned int, unsigned int)",
+      "calls": 2576,
+      "sum_ms": 88.145737
+    },
+    {
+      "name": "void mul_mat_vec_q_moe<(ggml_type)22, (int)2, (bool)0, (bool)1>(const void *, const void *, const int *, ggml_cuda_mmvq_args, float *, unsigned int, uint3, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int)",
+      "calls": 800,
+      "sum_ms": 27.610514
+    },
+    {
+      "name": "void mul_mat_vec_q_moe<(ggml_type)20, (int)2, (bool)0, (bool)1>(const void *, const void *, const int *, ggml_cuda_mmvq_args, float *, unsigned int, uint3, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int)",
+      "calls": 760,
+      "sum_ms": 23.272886
+    },
+    {
+      "name": "quantize_q8_1(const float *, void *, long, long, long, long, long, unsigned int, uint3)",
+      "calls": 8780,
+      "sum_ms": 20.975284
+    },
+    {
+      "name": "void scale_f32<float>(const T1 *, T1 *, float, float, long)",
+      "calls": 8912,
+      "sum_ms": 20.464159
+    },
+    {
+      "name": "void mul_mat_vec_q_moe<(ggml_type)18, (int)2, (bool)0, (bool)1>(const void *, const void *, const int *, ggml_cuda_mmvq_args, float *, unsigned int, uint3, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int)",
+      "calls": 680,
+      "sum_ms": 19.886026
+    },
+    {
+      "name": "void mul_mat_vec_q<(ggml_type)13, (int)4, (bool)0, (bool)0, (bool)0>(const void *, const void *, const int *, ggml_cuda_mmvq_args, float *, unsigned int, uint3, unsigned int, unsigned int, unsigned int, uint3, unsigned int, unsigned int, unsigned int, uint3, unsigned int, unsigned int, unsigned int, unsigned int)",
+      "calls": 696,
+      "sum_ms": 19.187332
+    },
+    {
+      "name": "void concat_non_cont<unsigned int, (int)0>(const char *, const char *, char *, long, long, long, long, unsigned long, unsigned long, unsigned long, unsigned long, long, long, long, long, unsigned long, unsigned long, unsigned long, unsigned long, long, long, long, long, unsigned long, unsigned long, unsigned long, unsigned long)",
+      "calls": 740,
+      "sum_ms": 17.146253
+    },
+    {
+      "name": "void mul_mat_vec_q<(ggml_type)12, (int)4, (bool)0, (bool)0, (bool)0>(const void *, const void *, const int *, ggml_cuda_mmvq_args, float *, unsigned int, uint3, unsigned int, unsigned int, unsigned int, uint3, unsigned int, unsigned int, unsigned int, uint3, unsigned int, unsigned int, unsigned int, unsigned int)",
+      "calls": 936,
+      "sum_ms": 14.477339
+    },
+    {
+      "name": "void mul_mat_vec_q_moe<(ggml_type)21, (int)2, (bool)0, (bool)1>(const void *, const void *, const int *, ggml_cuda_mmvq_args, float *, unsigned int, uint3, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int)",
+      "calls": 360,
+      "sum_ms": 13.88834
+    },
+    {
+      "name": "void mul_mat_vec_q<(ggml_type)23, (int)4, (bool)0, (bool)0, (bool)0>(const void *, const void *, const int *, ggml_cuda_mmvq_args, float *, unsigned int, uint3, unsigned int, unsigned int, unsigned int, uint3, unsigned int, unsigned int, unsigned int, uint3, unsigned int, unsigned int, unsigned int, unsigned int)",
+      "calls": 840,
+      "sum_ms": 13.745295
+    },
+    {
+      "name": "void k_bin_bcast<&op_add, float, float, float, const float *>(const T2 *, const T3 *, T4 *, unsigned int, unsigned int, unsigned int, uint3, uint3, uint3, uint3, uint3, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, T5...)",
+      "calls": 3720,
+      "sum_ms": 9.391767
+    },
+    {
+      "name": "void gated_delta_net_cuda<(int)128, (bool)0, (bool)0, (int)4>(const float *, const float *, const float *, const float *, const float *, const float *, float *, float *, long, long, long, long, long, long, long, long, long, long, long, long, uint3, uint3, float, long, int)",
+      "calls": 720,
+      "sum_ms": 9.003722
+    },
+    {
+      "name": "void rms_norm_f32<(int)1024, (bool)1, (bool)0, (bool)0>(const float *, float *, int, int, int, long, long, long, float, const float *, long, long, long, uint3, uint3, uint3, uint3, const float *, long, long, long, uint3, uint3, uint3, uint3, float)",
+      "calls": 2000,
+      "sum_ms": 8.557793
+    },
+    {
+      "name": "void mul_mat_vec_q<(ggml_type)20, (int)4, (bool)0, (bool)0, (bool)0>(const void *, const void *, const int *, ggml_cuda_mmvq_args, float *, unsigned int, uint3, unsigned int, unsigned int, unsigned int, uint3, unsigned int, unsigned int, unsigned int, uint3, unsigned int, unsigned int, unsigned int, unsigned int)",
+      "calls": 940,
+      "sum_ms": 7.209259
+    },
+    {
+      "name": "void unary_op_kernel<&op_sigmoid, float>(const T2 *, T2 *, int)",
+      "calls": 3620,
+      "sum_ms": 7.019547
+    },
+    {
+      "name": "void k_get_rows_float_vec<float>(const T1 *, const int *, T1 *, long, long, uint3, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)",
+      "calls": 720,
+      "sum_ms": 6.391531
+    },
+    {
+      "name": "void dsv4_hc_pre_f32<(bool)1>(const float *, const float *, float *, long, long, long, long, long, long, long, long, long, long, long, float)",
+      "calls": 1920,
+      "sum_ms": 6.217565
+    },
+    {
+      "name": "void dsv4_hc_post_f32<(bool)0>(const float *, const float *, const float *, const float *, float *, long, long, long, long, long, long, long, long, long, long, long, long, long, long, long, long)",
+      "calls": 1920,
+      "sum_ms": 5.832498
+    },
+    {
+      "name": "void topk_moe_cuda<(int)512, (bool)0>(const float *, float *, int *, float *, int, int, float, float, topk_moe_config)",
+      "calls": 920,
+      "sum_ms": 5.521468
+    },
+    {
+      "name": "void rms_norm_f32<(int)256, (bool)1, (bool)0, (bool)0>(const float *, float *, int, int, int, long, long, long, float, const float *, long, long, long, uint3, uint3, uint3, uint3, const float *, long, long, long, uint3, uint3, uint3, uint3, float)",
+      "calls": 1680,
+      "sum_ms": 5.478725
+    },
+    {
+      "name": "void k_bin_bcast<&op_mul, float, float, float, const float *>(const T2 *, const T3 *, T4 *, unsigned int, unsigned int, unsigned int, uint3, uint3, uint3, uint3, uint3, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, T5...)",
+      "calls": 2060,
+      "sum_ms": 4.877787
+    },
+    {
+      "name": "void flash_attn_ext_f16<(int)256, (int)256, (int)4, (int)8, (bool)0, (bool)0, (bool)0>(const char *, const char *, const char *, const char *, const char *, const int *, float *, float2 *, float, float, float, float, unsigned int, float, int, uint3, int, int, int, int, int, int, int, int, int, int, int, long, int, int, long, int, int, int, int, int, long)",
+      "calls": 240,
+      "sum_ms": 4.430389
+    },
+    {
+      "name": "void unary_gated_op_kernel<&op_silu, float>(const T2 *, const T2 *, T2 *, long, long, long, long)",
+      "calls": 1880,
+      "sum_ms": 4.390809
+    },
+    {
+      "name": "void unary_op_kernel<&op_silu, float>(const T2 *, T2 *, int)",
+      "calls": 1960,
+      "sum_ms": 4.263814
+    },
+    {
+      "name": "void rms_norm_f32<(int)256, (bool)0, (bool)0, (bool)1>(const float *, float *, int, int, int, long, long, long, float, const float *, long, long, long, uint3, uint3, uint3, uint3, const float *, long, long, long, uint3, uint3, uint3, uint3, float)",
+      "calls": 1440,
+      "sum_ms": 3.8912
+    },
+    {
+      "name": "void mul_mat_vec_q_moe<(ggml_type)42, (int)2, (bool)0, (bool)1>(const void *, const void *, const int *, ggml_cuda_mmvq_args, float *, unsigned int, uint3, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int)",
+      "calls": 160,
+      "sum_ms": 3.829269
+    },
+    {
+      "name": "void mul_mat_vec_q<(ggml_type)14, (int)1, (bool)0, (bool)0, (bool)0>(const void *, const void *, const int *, ggml_cuda_mmvq_args, float *, unsigned int, uint3, unsigned int, unsigned int, unsigned int, uint3, unsigned int, unsigned int, unsigned int, uint3, unsigned int, unsigned int, unsigned int, unsigned int)",
+      "calls": 4,
+      "sum_ms": 3.617829
+    },
+    {
+      "name": "void k_get_rows_float<float, float>(const T1 *, const int *, T2 *, long, long, uint3, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)",
+      "calls": 1080,
+      "sum_ms": 3.424773
+    },
+    {
+      "name": "moe_weighted_reduction_f32(const float *, const float *, const float *, float *, long, int)",
+      "calls": 960,
+      "sum_ms": 2.886462
+    },
+    {
+      "name": "void ssm_conv_f32<(bool)1, (unsigned long)128, (unsigned long)4>(const float *, const float *, const float *, int, int, int, int, float *, int, int, int, long)",
+      "calls": 720,
+      "sum_ms": 2.842137
+    },
+    {
+      "name": "void cpy_scalar_contiguous<int, float>(const char *, char *, long)",
+      "calls": 1400,
+      "sum_ms": 2.749264
+    },
+    {
+      "name": "void unary_gated_op_kernel<&op_sigmoid, float>(const T2 *, const T2 *, T2 *, long, long, long, long)",
+      "calls": 980,
+      "sum_ms": 2.708329
+    },
+    {
+      "name": "void k_get_rows_float<int, int>(const T1 *, const int *, T2 *, long, long, uint3, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)",
+      "calls": 920,
+      "sum_ms": 2.550315
+    },
+    {
+      "name": "void rope_multi<(bool)1, (bool)0, float>(const T3 *, T3 *, int, int, int, int, int, int, int, int, int, int, int, const int *, float, float, float, rope_corr_dims, float, const float *, mrope_sections, bool, bool)",
+      "calls": 960,
+      "sum_ms": 2.426404
+    },
+    {
+      "name": "void k_set_rows<float, long, __half>(const T1 *, const T2 *, T3 *, long, long, long, long, long, long, long, long, long, long, long, long, long, long, uint3, uint3, uint3, uint3, uint3)",
+      "calls": 960,
+      "sum_ms": 2.300658
+    },
+    {
+      "name": "void cpy_scalar_contiguous<float, int>(const char *, char *, long)",
+      "calls": 1160,
+      "sum_ms": 2.24454
+    },
+    {
+      "name": "void k_argsort_f32_i32<(ggml_sort_order)1>(const float *, int *, int, int)",
+      "calls": 280,
+      "sum_ms": 2.234496
+    },
+    {
+      "name": "void unary_op_kernel<&op_relu, float>(const T2 *, T2 *, int)",
+      "calls": 920,
+      "sum_ms": 1.774041
+    },
+    {
+      "name": "void unary_op_kernel<&op_step, float>(const T2 *, T2 *, int)",
+      "calls": 920,
+      "sum_ms": 1.760966
+    },
+    {
+      "name": "void concat_cont<unsigned int, (int)0>(const T1 *, const T1 *, T1 *, long, long, long, long, long, long)",
+      "calls": 720,
+      "sum_ms": 1.720202
+    },
+    {
+      "name": "void lightning_indexer_kernel_vec<(int)8, (int)64, (long)128, (long)4, (ggml_type)0>(const float *, const char *, const float *, const __half *, float *, long, long, long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, long)",
+      "calls": 240,
+      "sum_ms": 1.509938
+    },
+    {
+      "name": "void unary_op_kernel<&op_softplus, float>(const T2 *, T2 *, int)",
+      "calls": 720,
+      "sum_ms": 1.398661
+    },
+    {
+      "name": "void fill_kernel<float>(T1 *, long, T1)",
+      "calls": 720,
+      "sum_ms": 1.302359
+    },
+    {
+      "name": "void k_get_rows_float<__half, float>(const T1 *, const int *, T2 *, long, long, uint3, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)",
+      "calls": 480,
+      "sum_ms": 1.231903
+    },
+    {
+      "name": "void k_bin_bcast<&op_repeat, __half, __half, __half, >(const T2 *, const T3 *, T4 *, unsigned int, unsigned int, unsigned int, uint3, uint3, uint3, uint3, uint3, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, T5...)",
+      "calls": 480,
+      "sum_ms": 1.132075
+    },
+    {
+      "name": "void op_clamp_kernel<float>(const T1 *, T1 *, T1, T1, unsigned int, uint3, uint3, uint3, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int)",
+      "calls": 540,
+      "sum_ms": 1.07901
+    },
+    {
+      "name": "void cpy_scalar<&cpy_1_scalar<float, float>>(const char *, char *, long, long, long, long, long, long, long, long, long, long, long, long, long, long, long)",
+      "calls": 320,
+      "sum_ms": 1.045106
+    },
+    {
+      "name": "void fill_kernel<__half>(T1 *, long, T1)",
+      "calls": 480,
+      "sum_ms": 0.889641
+    },
+    {
+      "name": "void k_get_rows_float_vec<int>(const T1 *, const int *, T1 *, long, long, uint3, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long)",
+      "calls": 240,
+      "sum_ms": 0.843532
+    },
+    {
+      "name": "void k_bin_bcast<&op_repeat, float, float, float, >(const T2 *, const T3 *, T4 *, unsigned int, unsigned int, unsigned int, uint3, uint3, uint3, uint3, uint3, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, T5...)",
+      "calls": 280,
+      "sum_ms": 0.619616
+    },
+    {
+      "name": "void cumsum_kernel<float>(const T1 *, T1 *, long, long, long, long, long, long, long, long, long, long, long, long)",
+      "calls": 240,
+      "sum_ms": 0.616007
+    },
+    {
+      "name": "void k_bin_bcast<&op_add, __half, __half, __half, const __half *>(const T2 *, const T3 *, T4 *, unsigned int, unsigned int, unsigned int, uint3, uint3, uint3, uint3, uint3, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, T5...)",
+      "calls": 240,
+      "sum_ms": 0.615106
+    },
+    {
+      "name": "void flash_attn_stream_k_fixup_uniform<(int)256, (int)4, (int)8>(float *, const float2 *, int, int, int, int, int, int, uint3, uint3, uint3)",
+      "calls": 240,
+      "sum_ms": 0.606844
+    },
+    {
+      "name": "void k_bin_bcast<&op_sub, float, float, float, const float *>(const T2 *, const T3 *, T4 *, unsigned int, unsigned int, unsigned int, uint3, uint3, uint3, uint3, uint3, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, T5...)",
+      "calls": 240,
+      "sum_ms": 0.544074
+    },
+    {
+      "name": "void k_set_rows<__half, int, __half>(const T1 *, const T2 *, T3 *, long, long, long, long, long, long, long, long, long, long, long, long, long, long, uint3, uint3, uint3, uint3, uint3)",
+      "calls": 240,
+      "sum_ms": 0.538221
+    },
+    {
+      "name": "void mul_mat_vec_f<__nv_bfloat16, float, (int)1, (int)160, (bool)0, (bool)0>(const T1 *, const float *, const int *, ggml_cuda_mm_fusion_args_device, float *, int, uint3, int, int, int, uint3, int, int, int, uint3, int, int, int, int)",
+      "calls": 8,
+      "sum_ms": 0.22936
+    },
+    {
+      "name": "void mul_mat_vec_f<__nv_bfloat16, float, (int)1, (int)256, (bool)0, (bool)0>(const T1 *, const float *, const int *, ggml_cuda_mm_fusion_args_device, float *, int, uint3, int, int, int, uint3, int, int, int, uint3, int, int, int, int)",
+      "calls": 20,
+      "sum_ms": 0.180846
+    },
+    {
+      "name": "void cpy_scalar_contiguous<__half, float>(const char *, char *, long)",
+      "calls": 80,
+      "sum_ms": 0.154662
+    },
+    {
+      "name": "void reduce_rows_f32<(bool)0>(const float *, float *, int)",
+      "calls": 60,
+      "sum_ms": 0.140324
+    },
+    {
+      "name": "void mul_mat_vec_q<(ggml_type)8, (int)4, (bool)0, (bool)0, (bool)0>(const void *, const void *, const int *, ggml_cuda_mmvq_args, float *, unsigned int, uint3, unsigned int, unsigned int, unsigned int, uint3, unsigned int, unsigned int, unsigned int, uint3, unsigned int, unsigned int, unsigned int, unsigned int)",
+      "calls": 16,
+      "sum_ms": 0.129603
+    },
+    {
+      "name": "void soft_max_f32<(bool)1, (int)512, (int)512, float>(const float *, const T4 *, const float *, float *, soft_max_params)",
+      "calls": 40,
+      "sum_ms": 0.117128
+    },
+    {
+      "name": "void k_bin_bcast<&op_div, float, float, float, const float *>(const T2 *, const T3 *, T4 *, unsigned int, unsigned int, unsigned int, uint3, uint3, uint3, uint3, uint3, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, T5...)",
+      "calls": 40,
+      "sum_ms": 0.103493
+    },
+    {
+      "name": "void unary_op_kernel<&op_sgn, float>(const T2 *, T2 *, int)",
+      "calls": 20,
+      "sum_ms": 0.03664
+    },
+    {
+      "name": "void unary_op_kernel<&op_sqrt, float>(const T2 *, T2 *, int)",
+      "calls": 20,
+      "sum_ms": 0.036514
+    },
+    {
+      "name": "void unary_op_kernel<&op_abs, float>(const T2 *, T2 *, int)",
+      "calls": 20,
+      "sum_ms": 0.036448
+    },
+    {
+      "name": "void mul_mat_vec_q<(ggml_type)8, (int)1, (bool)0, (bool)1, (bool)0>(const void *, const void *, const int *, ggml_cuda_mmvq_args, float *, unsigned int, uint3, unsigned int, unsigned int, unsigned int, uint3, unsigned int, unsigned int, unsigned int, uint3, unsigned int, unsigned int, unsigned int, unsigned int)",
+      "calls": 4,
+      "sum_ms": 0.024896
+    },
+    {
+      "name": "void mul_mat_vec_q<(ggml_type)12, (int)1, (bool)0, (bool)0, (bool)0>(const void *, const void *, const int *, ggml_cuda_mmvq_args, float *, unsigned int, uint3, unsigned int, unsigned int, unsigned int, uint3, unsigned int, unsigned int, unsigned int, uint3, unsigned int, unsigned int, unsigned int, unsigned int)",
+      "calls": 4,
+      "sum_ms": 0.020416
+    },
+    {
+      "name": "void mul_mat_vec_q<(ggml_type)13, (int)1, (bool)0, (bool)0, (bool)0>(const void *, const void *, const int *, ggml_cuda_mmvq_args, float *, unsigned int, uint3, unsigned int, unsigned int, unsigned int, uint3, unsigned int, unsigned int, unsigned int, uint3, unsigned int, unsigned int, unsigned int, unsigned int)",
+      "calls": 4,
+      "sum_ms": 0.020321
+    }
+  ],
+  "caveat": "Graphs disabled; launch gaps and overlap differ from production. Never infer a production speedup from these times."
+}

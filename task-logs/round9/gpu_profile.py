@@ -17,7 +17,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('profiler', choices=['nsys', 'ncu'])
     args = parser.parse_args()
-    out = ROOT / 'task-logs/round9' / ('gpu-' + args.profiler)
+    out = ROOT / 'task-logs/round9' / ('gpu-' + args.profiler + ('-retry' if args.profiler == 'ncu' else ''))
     out.mkdir(exist_ok=True)
     cfg = bench.stage.CONFIGS['q-warm-draft']
     model = cfg['cmd'][cfg['cmd'].index('-m') + 1]
@@ -38,7 +38,7 @@ def main():
         cmd = ['sudo', '-n', 'env', 'NV_COMPUTE_PROFILER_DISABLE_STOCK_FILE_DEPLOYMENT=1',
                'timeout', '--signal=TERM', '--kill-after=20', '600', 'ncu',
                '--set', 'full', '--metrics', 'sm__cycles_active.sum', '--kernel-name-base', 'demangled',
-               '--kernel-name', 'regex:mul_mat_vec_q_moe.*true', '--launch-skip', '144',
+               '--target-processes', 'all', '--kernel-name', 'regex:mul_mat_vec_q_moe', '--launch-skip', '144',
                '--launch-count', '6', '--force-overwrite', '--export', str(out / 'kernels'),
                'env'] + [f'{key}={value}' for key, value in settings.items()] + probe
     (out / 'command.json').write_text(json.dumps(dict(command=cmd, env=settings,

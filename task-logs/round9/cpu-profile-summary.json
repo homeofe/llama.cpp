@@ -1,0 +1,190 @@
+{
+  "diagnostic_only": true,
+  "cuda_graphs": true,
+  "requests": 8,
+  "decode_wall_s": 41.8230242729187,
+  "request_wall_s": 52.23,
+  "gpu_request_samples": 252,
+  "gpu_request_mean": {
+    "pcie.link.gen.current": 3.0,
+    "pcie.link.width.current": 16.0,
+    "clocks.current.sm [MHz]": 1758.095238095238,
+    "clocks.current.memory [MHz]": 6800.0,
+    "power.draw [W]": 146.99269841269842,
+    "utilization.gpu [%]": 43.857142857142854,
+    "utilization.memory [%]": 16.166666666666668,
+    "memory.used [MiB]": 10695.119047619048
+  },
+  "gpu_request_max": {
+    "pcie.link.gen.current": 3.0,
+    "pcie.link.width.current": 16.0,
+    "clocks.current.sm [MHz]": 1890.0,
+    "clocks.current.memory [MHz]": 6800.0,
+    "power.draw [W]": 188.14,
+    "utilization.gpu [%]": 64.0,
+    "utilization.memory [%]": 26.0,
+    "memory.used [MiB]": 10696.0
+  },
+  "cpu_request_samples": 52,
+  "cpu_request_mean_busy_cores": 20.378982748090547,
+  "cpu_request_median_reported_mhz": 4054.8990000000003,
+  "cpu_symbols": [
+    {
+      "cycles_pct": 46.1,
+      "library": "libgomp.so.1.0.0",
+      "symbol": "0x00000000000256c2"
+    },
+    {
+      "cycles_pct": 10.82,
+      "library": "libggml-cpu.so.0.27.0",
+      "symbol": "ggml_vec_dot_iq4_nl_q8_0"
+    },
+    {
+      "cycles_pct": 7.78,
+      "library": "libggml-cpu.so.0.27.0",
+      "symbol": "ggml_vec_dot_iq3_xxs_q8_K"
+    },
+    {
+      "cycles_pct": 6.8,
+      "library": "libggml-cpu.so.0.27.0",
+      "symbol": "ggml_vec_dot_iq2_s_q8_K"
+    },
+    {
+      "cycles_pct": 6.55,
+      "library": "libgomp.so.1.0.0",
+      "symbol": "0x00000000000258a2"
+    },
+    {
+      "cycles_pct": 5.45,
+      "library": "libggml-cpu.so.0.27.0",
+      "symbol": "ggml_vec_dot_iq3_s_q8_K"
+    },
+    {
+      "cycles_pct": 2.25,
+      "library": "libgomp.so.1.0.0",
+      "symbol": "0x00000000000256cd"
+    },
+    {
+      "cycles_pct": 2.05,
+      "library": "libggml-cpu.so.0.27.0",
+      "symbol": "ggml_compute_forward_mul_mat_id"
+    },
+    {
+      "cycles_pct": 1.85,
+      "library": "libggml-cpu.so.0.27.0",
+      "symbol": "ggml_vec_dot_q2_0_q8_0"
+    },
+    {
+      "cycles_pct": 1.5,
+      "library": "libgomp.so.1.0.0",
+      "symbol": "0x00000000000256c9"
+    },
+    {
+      "cycles_pct": 1.5,
+      "library": "libggml-cpu.so.0.27.0",
+      "symbol": "ggml_vec_dot_q8_0_q8_0"
+    },
+    {
+      "cycles_pct": 0.73,
+      "library": "libggml-cpu.so.0.27.0",
+      "symbol": "ggml_vec_dot_iq4_xs_q8_K"
+    },
+    {
+      "cycles_pct": 0.5,
+      "library": "libgomp.so.1.0.0",
+      "symbol": "0x00000000000258af"
+    },
+    {
+      "cycles_pct": 0.31,
+      "library": "libggml-cpu.so.0.27.0",
+      "symbol": "ggml_vec_swiglu_f32"
+    },
+    {
+      "cycles_pct": 0.27,
+      "library": "libggml-cpu.so.0.27.0",
+      "symbol": "void tiled_run_microtile_avx2<32, false, 128, 0, true>(tiled_tile_src0 const&, tiled_tile_src1 const&, int, int, int, int, float*, int)"
+    },
+    {
+      "cycles_pct": 0.26,
+      "library": "libggml-cpu.so.0.27.0",
+      "symbol": "void tiled_run_microtile_avx2<32, false, 128, 1, true>(tiled_tile_src0 const&, tiled_tile_src1 const&, int, int, int, int, float*, int) [clone .constprop.0]"
+    },
+    {
+      "cycles_pct": 0.24,
+      "library": "libcuda.so.580.178.04",
+      "symbol": "0x000000000046090e"
+    },
+    {
+      "cycles_pct": 0.24,
+      "library": "libcuda.so.580.178.04",
+      "symbol": "0x0000000000460938"
+    },
+    {
+      "cycles_pct": 0.23,
+      "library": "libggml-cpu.so.0.27.0",
+      "symbol": "void tiled_run_microtile_avx2<16, false, 128, 1, true>(tiled_tile_src0 const&, tiled_tile_src1 const&, int, int, int, int, float*, int) [clone .constprop.0]"
+    },
+    {
+      "cycles_pct": 0.23,
+      "library": "libggml-cpu.so.0.27.0",
+      "symbol": "quantize_row_q8_0"
+    }
+  ],
+  "cpu_backend_graph_times": [
+    {
+      "tokens": 0,
+      "calls": 2668,
+      "cpu_ms": 268.02
+    },
+    {
+      "tokens": 1,
+      "calls": 1579,
+      "cpu_ms": 363.528
+    },
+    {
+      "tokens": 2,
+      "calls": 244,
+      "cpu_ms": 94.604
+    },
+    {
+      "tokens": 3,
+      "calls": 49,
+      "cpu_ms": 22.853
+    },
+    {
+      "tokens": 4,
+      "calls": 25970,
+      "cpu_ms": 17156.599
+    },
+    {
+      "tokens": 5,
+      "calls": 0,
+      "cpu_ms": 0.0
+    },
+    {
+      "tokens": 6,
+      "calls": 0,
+      "cpu_ms": 0.0
+    },
+    {
+      "tokens": 7,
+      "calls": 0,
+      "cpu_ms": 0.0
+    },
+    {
+      "tokens": 8,
+      "calls": 0,
+      "cpu_ms": 0.0
+    },
+    {
+      "tokens": 9,
+      "calls": 441,
+      "cpu_ms": 5433.09
+    }
+  ],
+  "caveats": [
+    "CPU graph durations may overlap GPU work and include warmup.",
+    "OpenMP cycles include spin waiting; they are not useful math throughput.",
+    "GPU utilization is a time-activity sensor, not per-SM occupancy."
+  ]
+}
