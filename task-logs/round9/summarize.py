@@ -28,7 +28,7 @@ def main():
         hashes[row['config']][row['round'], row['prompt']] = row['text_sha256']
     comparisons = []
     for candidate in hashes:
-        control = 'q-warm-draft' if candidate.startswith('q-') else 'ling-cache-mtp3'
+        control = 'q-warm-draft' if candidate.startswith(('q-', 'qwen-')) else 'ling-cache-mtp3'
         if candidate == control or control not in hashes:
             continue
         common = hashes[candidate].keys() & hashes[control].keys()

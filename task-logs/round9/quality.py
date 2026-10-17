@@ -80,7 +80,9 @@ def main():
                     busy_next = stage.busy_jiffies()
                     own_next = stage.proc_jiffies([pid])
                     if own_next >= own:
-                        interval_foreign = max(0, busy_next - busy - own_next + own)
+                        # Keep signed deltas until the entire observation is summed.
+                        # Independent /proc accounting updates can briefly disagree.
+                        interval_foreign = busy_next - busy - own_next + own
                         foreign_ticks += interval_foreign
                         if evaluation_started and not evaluation_finished:
                             evaluation_ticks += interval_foreign
@@ -100,8 +102,8 @@ def main():
                         raise TimeoutError('quality deadline')
                     last = now
                 code = run.child.returncode
-                total_foreign = foreign_ticks / stage.HZ / (last - t0)
-                foreign = evaluation_ticks / stage.HZ / evaluation_s if evaluation_s > 0 else None
+                total_foreign = max(0, foreign_ticks) / stage.HZ / (last - t0)
+                foreign = max(0, evaluation_ticks) / stage.HZ / evaluation_s if evaluation_s > 0 else None
         finally:
             run.stop()
         accepted = code == 0 and foreign is not None and foreign < 1.0

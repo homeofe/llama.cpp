@@ -19,6 +19,7 @@ class ProfileRun(bench.Run):
         self.perf_enabled = perf
         self.telemetry = []
         self.recorders = []
+        self.counters = []
 
     def start(self, name, cfg):
         super().start(name, cfg)
@@ -42,6 +43,12 @@ class ProfileRun(bench.Run):
                 proc = subprocess.Popen(command, stdout=data, stderr=log)
             self.recorders.append((proc, prefix))
             self.event(kind='profiler', command=command, target_pid=self.child.pid, prefix=str(prefix))
+            stats = ['sudo', '-n', 'perf', 'stat', '-x', ',', '-e', 'cycles:u,instructions:u,cache-misses:u,dTLB-load-misses:u',
+                     '-p', str(self.child.pid), '--', 'sleep', '120']
+            with prefix.with_suffix('.counters.csv').open('w') as log:
+                proc = subprocess.Popen(stats, stdout=subprocess.DEVNULL, stderr=log)
+            self.counters.append((proc, prefix))
+            self.event(kind='hardware_counters', command=stats, prefix=str(prefix))
 
     def stop(self):
         try:
@@ -79,6 +86,10 @@ def main():
             with prefix.with_suffix('.perf.txt').open('w') as output, prefix.with_suffix('.perf.data').open('rb') as data:
                 subprocess.run(['perf', 'report', '--stdio', '--no-children', '--sort', 'dso,symbol',
                                 '-i', '-'], stdin=data, stdout=output, stderr=subprocess.STDOUT, check=True)
+    for proc, prefix in run.counters:
+        while proc.poll() is None:
+            time.sleep(1)
+        run.event(kind='hardware_counters_complete', exit=proc.returncode, prefix=str(prefix))
     run.event(kind='profile_complete', performance_comparison=False)
 
 
