@@ -1,0 +1,45 @@
+{
+  "commands": [
+    [
+      "hf",
+      "download",
+      "inclusionAI/Ling-3.0-flash-dspark",
+      "--revision",
+      "d60b0e1291dacb256194c6d48154398730cf8986",
+      "--include",
+      "*.safetensors",
+      "--include",
+      "*.json",
+      "--local-dir",
+      "/opt/llm-gateway/models/Ling-3.0-flash-GGUF/dspark/hf"
+    ],
+    [
+      "hf",
+      "download",
+      "inclusionAI/Ling-3.0-flash",
+      "--include",
+      "*.json",
+      "--include",
+      "*.model",
+      "--include",
+      "merges.txt",
+      "--local-dir",
+      "/opt/llm-gateway/models/Ling-3.0-flash-GGUF/dspark/target-metadata"
+    ],
+    [
+      "/opt/llm-gateway/data/venvs/convert/bin/python",
+      "-B",
+      "convert_hf_to_gguf.py",
+      "/opt/llm-gateway/models/Ling-3.0-flash-GGUF/dspark/hf",
+      "--target-model-dir",
+      "/opt/llm-gateway/models/Ling-3.0-flash-GGUF/dspark/target-metadata",
+      "--outtype",
+      "q8_0",
+      "--outfile",
+      "/opt/llm-gateway/models/Ling-3.0-flash-GGUF/dspark/Ling-3.0-flash-DSpark-Q8_0.gguf"
+    ]
+  ],
+  "draft_revision": "d60b0e1291dacb256194c6d48154398730cf8986",
+  "draft_quant": "q8_0",
+  "production_code_changed": false
+}

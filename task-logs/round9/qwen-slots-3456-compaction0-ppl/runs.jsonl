@@ -1,0 +1,1 @@
+{"kind": "quality", "name": "qwen-slots-3456-compaction0-ppl", "attempt": 1, "exit": 0, "foreign_cores": 0.2603958585708523, "whole_process_foreign_cores": 0.26691414448864903, "evaluation_wall_s": 87.98142998793628, "wall_s": 140.60701081203297, "peak_vram_mib": 7664, "accepted": true, "epoch": 1792273055.1, "utc": "2026-10-17 21:37:35"}

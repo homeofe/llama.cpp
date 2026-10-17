@@ -1,0 +1,1 @@
+{"kind": "quality", "name": "ling-slots-6144-compaction0-ppl", "attempt": 1, "exit": 0, "foreign_cores": 0.5590642241217293, "whole_process_foreign_cores": 0.3789655773027234, "evaluation_wall_s": 59.867898098076694, "wall_s": 242.73972495005, "peak_vram_mib": 8964, "accepted": true, "epoch": 1792273303.0, "utc": "2026-10-17 21:41:42"}

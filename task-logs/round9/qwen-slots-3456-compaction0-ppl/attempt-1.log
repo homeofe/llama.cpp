@@ -1,0 +1,30 @@
+0.38.285.950 W impl: MoE cache budget is too small for 1 layers, they are not cached
+0.38.285.955 W impl: MoE cache budget is too small for 1 layers, they are not cached
+0.38.292.551 W llama_moe_cache: 40 profile entries name layers without a cache group, skipped
+0.38.454.051 W llama_moe_cache: adaptive warm start: 998 experts, 1939.26 MiB (excluded from runtime uploads)
+0.38.454.081 W llama_moe_cache: adaptive LFU: 1690 slots, admit <= 32 experts/ubatch, decay every 128 tokens
+0.38.454.083 W llama_moe_cache: context = 624936823757 (target), prefill 1024, static 0%
+0.38.483.425 I cmn          init: llama threadpool init, n_threads = 24
+0.38.597.558 I 
+0.38.597.662 I system_info: n_threads = 24 (n_threads_batch = 24) / 48 | CUDA : ARCHS = 750 | USE_GRAPHS = 1 | FA_QUANTS = q4_0-q4_0,q8_0-q8_0,f16-f16,bf16-bf16 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
+0.38.597.676 I perplexity: tokenizing the input ..
+0.38.725.689 I perplexity: tokenization took 128.007 ms
+0.38.725.735 I perplexity: calculating perplexity over 12 chunks, n_ctx=512, batch_size=512, n_seq=1
+0.47.071.294 W llama_moe_cache: prefill burst: context = 624936823757, uploads = 1024, MiB = 2046.73, enqueue = 119.627 ms (device completion not timed)
+0.47.135.339 I perplexity: 8.41 seconds per pass - ETA 1.67 minutes
+[1]5.1905,0.54.902.368 W llama_moe_cache: prefill burst: context = 624936823757, uploads = 842, MiB = 1614.31, enqueue = 89.748 ms (device completion not timed)
+[2]4.1633,1.02.210.140 W llama_moe_cache: prefill burst: context = 624936823757, uploads = 638, MiB = 1232.67, enqueue = 51.525 ms (device completion not timed)
+[3]4.3779,1.09.514.736 W llama_moe_cache: prefill burst: context = 624936823757, uploads = 695, MiB = 1341.09, enqueue = 57.180 ms (device completion not timed)
+[4]3.9767,1.16.293.144 W llama_moe_cache: prefill burst: context = 624936823757, uploads = 267, MiB = 516.87, enqueue = 4.071 ms (device completion not timed)
+[5]4.2420,1.23.773.627 W llama_moe_cache: prefill burst: context = 624936823757, uploads = 674, MiB = 1302.93, enqueue = 57.830 ms (device completion not timed)
+[6]4.1057,1.30.874.255 W llama_moe_cache: prefill burst: context = 624936823757, uploads = 446, MiB = 856.50, enqueue = 20.617 ms (device completion not timed)
+[7]3.6704,1.38.607.145 W llama_moe_cache: prefill burst: context = 624936823757, uploads = 1010, MiB = 1952.74, enqueue = 118.978 ms (device completion not timed)
+[8]3.4651,1.45.915.389 W llama_moe_cache: prefill burst: context = 624936823757, uploads = 675, MiB = 1306.91, enqueue = 63.759 ms (device completion not timed)
+[9]3.7863,1.52.933.334 W llama_moe_cache: prefill burst: context = 624936823757, uploads = 561, MiB = 1082.60, enqueue = 38.818 ms (device completion not timed)
+[10]3.8334,1.59.805.928 W llama_moe_cache: prefill burst: context = 624936823757, uploads = 573, MiB = 1112.09, enqueue = 38.156 ms (device completion not timed)
+[11]3.8860,2.06.721.515 W llama_moe_cache: prefill burst: context = 624936823757, uploads = 472, MiB = 908.70, enqueue = 25.148 ms (device completion not timed)
+[12]3.8126,
+2.06.960.536 I Final estimate: PPL = 3.8126 +/- 0.15966
+
+2.07.032.076 W llama_moe_cache: context = 624936823757 (target) statistics follow
+2.07.032.088 W llama_moe_cache: adaptive: tokens = 6146, hits = 1460010, misses = 1367150, hit rate = 51.64%, uploads = 7909, uploaded = 15340.56 MiB, hits/token = 237.55, misses/token = 222.45, uploads/token = 1.287, MiB/token = 2.496

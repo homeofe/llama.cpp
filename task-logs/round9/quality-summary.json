@@ -25,6 +25,14 @@
       "within_half_percent": true
     },
     {
+      "name": "ling-slots-6144-compaction0-ppl",
+      "ppl": 4.5513,
+      "stderr": 0.20908,
+      "log": "/opt/llm-gateway/data/build/llama-l5/task-logs/round9/ling-slots-6144-compaction0-ppl/attempt-1.log",
+      "relative_percent": -0.10096797559209225,
+      "within_half_percent": true
+    },
+    {
       "name": "qwen-off-ppl",
       "ppl": 3.8093,
       "stderr": 0.15977,
@@ -46,6 +54,14 @@
       "stderr": 0.15898,
       "log": "/opt/llm-gateway/data/build/llama-l5/task-logs/round9/qwen-r7-ppl/attempt-1.log",
       "relative_percent": -0.17851048749113474,
+      "within_half_percent": true
+    },
+    {
+      "name": "qwen-slots-3456-compaction0-ppl",
+      "ppl": 3.8126,
+      "stderr": 0.15966,
+      "log": "/opt/llm-gateway/data/build/llama-l5/task-logs/round9/qwen-slots-3456-compaction0-ppl/attempt-1.log",
+      "relative_percent": 0.08663008951776963,
       "within_half_percent": true
     }
   ],

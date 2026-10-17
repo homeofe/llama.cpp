@@ -1,0 +1,115 @@
+{
+  "summary": [
+    {
+      "config": "qwen-r9-slots-2944",
+      "category": "code",
+      "n": 4,
+      "median": 47.50940096756487,
+      "minimum": 44.66001757913789,
+      "maximum": 49.19745929549065,
+      "acceptance": 0.9194395796847635,
+      "vram_mib": 10158,
+      "ttft": 1.479902744293213
+    },
+    {
+      "config": "qwen-r9-slots-2944",
+      "category": "english",
+      "n": 4,
+      "median": 39.16786804065278,
+      "minimum": 35.681176778647654,
+      "maximum": 40.010318799428035,
+      "acceptance": 0.6556420233463035,
+      "vram_mib": 10160,
+      "ttft": 0.9410498142242432
+    },
+    {
+      "config": "qwen-r9-slots-3456",
+      "category": "code",
+      "n": 4,
+      "median": 48.3684994315429,
+      "minimum": 44.85051493405846,
+      "maximum": 50.30464576433811,
+      "acceptance": 0.9194395796847635,
+      "vram_mib": 10648,
+      "ttft": 1.4835634231567383
+    },
+    {
+      "config": "qwen-r9-slots-3456",
+      "category": "english",
+      "n": 4,
+      "median": 40.118728678679986,
+      "minimum": 39.15864962957271,
+      "maximum": 42.26516352947555,
+      "acceptance": 0.6925403225806451,
+      "vram_mib": 10650,
+      "ttft": 0.9438704252243042
+    }
+  ],
+  "output_comparisons": [
+    {
+      "control": "qwen-r9-slots-2944",
+      "candidate": "qwen-r9-slots-3456",
+      "requests": 8,
+      "same_hash": 5,
+      "same_work": 4,
+      "pairs": [
+        {
+          "round": 1,
+          "prompt": "code-bugfix",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": 2.2504952180506965
+        },
+        {
+          "round": 1,
+          "prompt": "code-duration",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": 0.4265501118153381
+        },
+        {
+          "round": 1,
+          "prompt": "code-intervals",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": 1.923434019261916
+        },
+        {
+          "round": 1,
+          "prompt": "code-roman",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": 1.6960281565033375
+        },
+        {
+          "round": 1,
+          "prompt": "en-1",
+          "same_hash": false,
+          "same_work": false,
+          "gain_percent": -0.12346417135429277
+        },
+        {
+          "round": 1,
+          "prompt": "en-2",
+          "same_hash": true,
+          "same_work": false,
+          "gain_percent": 1.269520768525001
+        },
+        {
+          "round": 1,
+          "prompt": "en-3",
+          "same_hash": false,
+          "same_work": false,
+          "gain_percent": 5.635657994506538
+        },
+        {
+          "round": 1,
+          "prompt": "en-4",
+          "same_hash": false,
+          "same_work": false,
+          "gain_percent": 13.819202512358576
+        }
+      ]
+    }
+  ]
+}

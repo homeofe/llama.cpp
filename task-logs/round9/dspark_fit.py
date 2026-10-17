@@ -3,6 +3,7 @@
 import json
 import os
 from pathlib import Path
+import re
 import signal
 import subprocess
 import time
@@ -40,7 +41,7 @@ def main():
     cmd = list(bench.stage.CONFIGS['ling-mtp3']['cmd'])
     cmd[cmd.index('--spec-type') + 1] = 'draft-dspark'
     cmd[cmd.index('--spec-draft-n-max') + 1] = '7'
-    cmd += ['-md', DRAFT, '-ngld', '99', '--spec-draft-n-ubatch', '32']
+    cmd += ['-md', DRAFT, '-ngld', '99', '--spec-draft-n-ubatch', '32', '--spec-draft-p-min', '0']
     off = dict(cmd=cmd, env=bench.stage.BOLT)
     fixed = fit('ling-dspark-off-fit', off)
     budget = min(5120, ((10700 - fixed - 256) // 256) * 256)
@@ -55,6 +56,18 @@ def main():
     extra = json.loads(path.read_text()) if path.exists() else {}
     extra.update({'ling-dspark-off': off, 'ling-dspark-cache': cached})
     path.write_text(json.dumps(extra, indent=2) + '\n')
+    with (OUT / 'dspark-budget-quality.log').open('w') as stream:
+        subprocess.run(['python3', '-S', 'task-logs/round9/quality.py', 'ling', 'slots',
+                        '--budget-mib', str(budget), '--tag', 'dspark'], cwd=ROOT,
+                       stdout=stream, stderr=subprocess.STDOUT, check=True)
+    quality = OUT / f'ling-slots-{budget}-dspark-ppl'
+    log = (quality / (quality / 'accepted.txt').read_text().strip()).read_text()
+    match = re.search(r'Final estimate: PPL = ([0-9.]+)', log)
+    assert match, 'missing draft-cache-budget quality result'
+    ppl = float(match[1])
+    (OUT / 'dspark-budget-quality.json').write_text(json.dumps(dict(budget_mib=budget,
+        cache_off_ppl=4.5559, candidate_ppl=ppl, passes=ppl <= 4.5559 * 1.005), indent=2) + '\n')
+    assert ppl <= 4.5559 * 1.005, 'DSpark cache budget fails quality gate'
     print(json.dumps(dict(fixed_mib=fixed, budget_mib=budget, cached_mib=memory)))
 
 
