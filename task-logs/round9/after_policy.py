@@ -3,6 +3,7 @@
 import json
 from pathlib import Path
 import subprocess
+import sys
 import time
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -19,6 +20,24 @@ def command(args, name, expected=0):
 
 
 def main():
+    if sys.argv[1:] == ['--resume-ling-compaction']:
+        assert int(Path('/proc/sys/vm/compaction_proactiveness').read_text()) == 0
+        for policy in ['off', 'r7', 'policy']:
+            command(['python3', '-S', 'task-logs/round9/quality.py', 'ling', policy,
+                     '--tag', 'compaction0', '--attempts', '1'], f'ling-{policy}-compaction0-ppl-run.log')
+        (OUT / 'quality-complete.txt').write_text(time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime()) + '\n')
+        return
+    if sys.argv[1:] == ['--resume-ling-nothp']:
+        deadline = time.monotonic() + 1200
+        while not (OUT / 'ling-off-nothp-ppl/accepted.txt').exists():
+            if time.monotonic() > deadline:
+                raise TimeoutError('process-local THP test did not pass')
+            time.sleep(5)
+        for policy in ['r7', 'policy']:
+            command(['python3', '-S', 'task-logs/round9/quality.py', 'ling', policy, '--disable-thp'],
+                    f'ling-{policy}-nothp-ppl-run.log')
+        (OUT / 'quality-complete.txt').write_text(time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime()) + '\n')
+        return
     deadline = time.monotonic() + 5400
     while True:
         rows = [json.loads(line) for line in RUNS.read_text().splitlines()]

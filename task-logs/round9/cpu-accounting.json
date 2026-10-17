@@ -1,0 +1,626 @@
+{
+  "own_pid": 3978706,
+  "wall_s": 89.07019176497124,
+  "signed_foreign_cores": 1.3640927182530493,
+  "per_interval_clamped_foreign_cores": 1.3640927182530493,
+  "top_processes": [
+    {
+      "pid": 3978706,
+      "name": "llama-perplexit",
+      "cores": 23.39727757069428
+    },
+    {
+      "pid": 322,
+      "name": "kcompactd0",
+      "cores": 0.9947211097713594
+    },
+    {
+      "pid": 3908179,
+      "name": "codex",
+      "cores": 0.07791607789856925
+    },
+    {
+      "pid": 3473089,
+      "name": "htop",
+      "cores": 0.0633208471682897
+    },
+    {
+      "pid": 3979800,
+      "name": "python3",
+      "cores": 0.034242656713348155
+    },
+    {
+      "pid": 1888,
+      "name": "MainThread",
+      "cores": 0.013921604696574332
+    },
+    {
+      "pid": 2642740,
+      "name": "node",
+      "cores": 0.013697062685339262
+    },
+    {
+      "pid": 3890338,
+      "name": "nvidia-smi",
+      "cores": 0.012798894640398982
+    },
+    {
+      "pid": 429444,
+      "name": "claude",
+      "cores": 0.012125268606693773
+    },
+    {
+      "pid": 2896754,
+      "name": "MainThread",
+      "cores": 0.005950363297729352
+    },
+    {
+      "pid": 2436,
+      "name": "python3",
+      "cores": 0.004827653241554002
+    },
+    {
+      "pid": 2654005,
+      "name": "sshd",
+      "cores": 0.004154027207848792
+    },
+    {
+      "pid": 2647892,
+      "name": "claude",
+      "cores": 0.003817214190996188
+    },
+    {
+      "pid": 1745,
+      "name": "dockerd",
+      "cores": 0.0029190461460559085
+    },
+    {
+      "pid": 1891,
+      "name": "MainThread",
+      "cores": 0.0017963360898805589
+    },
+    {
+      "pid": 3972892,
+      "name": "python3",
+      "cores": 0.0017963360898805589
+    },
+    {
+      "pid": 17,
+      "name": "rcu_preempt",
+      "cores": 0.0014595230730279542
+    },
+    {
+      "pid": 3727745,
+      "name": "kworker/u96:2-atlantic",
+      "cores": 0.0011227100561753494
+    },
+    {
+      "pid": 878272,
+      "name": "udisksd",
+      "cores": 0.0010104390505578144
+    },
+    {
+      "pid": 1819099,
+      "name": "python3",
+      "cores": 0.0010104390505578144
+    }
+  ],
+  "samples": [
+    {
+      "wall_s": 1.035712293931283,
+      "busy_ticks": 2593,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 107
+    },
+    {
+      "wall_s": 1.038698393967934,
+      "busy_ticks": 2631,
+      "own_ticks": 2493,
+      "foreign_signed_ticks": 138
+    },
+    {
+      "wall_s": 1.0358625419903547,
+      "busy_ticks": 2622,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 138
+    },
+    {
+      "wall_s": 1.0363448810530826,
+      "busy_ticks": 2622,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 135
+    },
+    {
+      "wall_s": 1.0358192609855905,
+      "busy_ticks": 2614,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 127
+    },
+    {
+      "wall_s": 1.035809900960885,
+      "busy_ticks": 2626,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 142
+    },
+    {
+      "wall_s": 1.026560221100226,
+      "busy_ticks": 2403,
+      "own_ticks": 2193,
+      "foreign_signed_ticks": 210
+    },
+    {
+      "wall_s": 1.0352261719526723,
+      "busy_ticks": 2462,
+      "own_ticks": 2413,
+      "foreign_signed_ticks": 49
+    },
+    {
+      "wall_s": 1.0360740380128846,
+      "busy_ticks": 2628,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 142
+    },
+    {
+      "wall_s": 1.0359449279494584,
+      "busy_ticks": 2629,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 143
+    },
+    {
+      "wall_s": 1.0366690960945562,
+      "busy_ticks": 2627,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 139
+    },
+    {
+      "wall_s": 1.0352883889572695,
+      "busy_ticks": 2637,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 153
+    },
+    {
+      "wall_s": 1.0362199359806255,
+      "busy_ticks": 2634,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 148
+    },
+    {
+      "wall_s": 1.0343645720276982,
+      "busy_ticks": 2618,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 134
+    },
+    {
+      "wall_s": 1.0366411729482934,
+      "busy_ticks": 2295,
+      "own_ticks": 2155,
+      "foreign_signed_ticks": 140
+    },
+    {
+      "wall_s": 1.0362740440759808,
+      "busy_ticks": 2626,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 139
+    },
+    {
+      "wall_s": 1.0362526729004458,
+      "busy_ticks": 2618,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 130
+    },
+    {
+      "wall_s": 1.036928110057488,
+      "busy_ticks": 2622,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 134
+    },
+    {
+      "wall_s": 1.035894864005968,
+      "busy_ticks": 2624,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 138
+    },
+    {
+      "wall_s": 1.0362068909453228,
+      "busy_ticks": 2618,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 131
+    },
+    {
+      "wall_s": 1.036144001991488,
+      "busy_ticks": 2708,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 222
+    },
+    {
+      "wall_s": 1.0354835930047557,
+      "busy_ticks": 2282,
+      "own_ticks": 2151,
+      "foreign_signed_ticks": 131
+    },
+    {
+      "wall_s": 1.0358759009977803,
+      "busy_ticks": 2629,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 142
+    },
+    {
+      "wall_s": 1.0366122080013156,
+      "busy_ticks": 2622,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 134
+    },
+    {
+      "wall_s": 1.0353940920904279,
+      "busy_ticks": 2613,
+      "own_ticks": 2483,
+      "foreign_signed_ticks": 130
+    },
+    {
+      "wall_s": 1.0362742979777977,
+      "busy_ticks": 2634,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 148
+    },
+    {
+      "wall_s": 1.0353893709834665,
+      "busy_ticks": 2626,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 139
+    },
+    {
+      "wall_s": 1.0358496389817446,
+      "busy_ticks": 2612,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 126
+    },
+    {
+      "wall_s": 1.0357187880435959,
+      "busy_ticks": 2294,
+      "own_ticks": 2151,
+      "foreign_signed_ticks": 143
+    },
+    {
+      "wall_s": 1.036480814917013,
+      "busy_ticks": 2636,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 147
+    },
+    {
+      "wall_s": 1.0372973330086097,
+      "busy_ticks": 2613,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 125
+    },
+    {
+      "wall_s": 1.0370597920846194,
+      "busy_ticks": 2627,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 139
+    },
+    {
+      "wall_s": 1.035735755925998,
+      "busy_ticks": 2634,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 148
+    },
+    {
+      "wall_s": 1.0373822100227699,
+      "busy_ticks": 2608,
+      "own_ticks": 2492,
+      "foreign_signed_ticks": 116
+    },
+    {
+      "wall_s": 1.038149647996761,
+      "busy_ticks": 2725,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 237
+    },
+    {
+      "wall_s": 1.0355446949834004,
+      "busy_ticks": 2287,
+      "own_ticks": 2153,
+      "foreign_signed_ticks": 134
+    },
+    {
+      "wall_s": 1.03525909606833,
+      "busy_ticks": 2621,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 137
+    },
+    {
+      "wall_s": 1.036455090972595,
+      "busy_ticks": 2624,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 136
+    },
+    {
+      "wall_s": 1.0348664759658277,
+      "busy_ticks": 2615,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 131
+    },
+    {
+      "wall_s": 1.0355573730776086,
+      "busy_ticks": 2630,
+      "own_ticks": 2483,
+      "foreign_signed_ticks": 147
+    },
+    {
+      "wall_s": 1.0375550559256226,
+      "busy_ticks": 2637,
+      "own_ticks": 2491,
+      "foreign_signed_ticks": 146
+    },
+    {
+      "wall_s": 1.0362955790478736,
+      "busy_ticks": 2624,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 138
+    },
+    {
+      "wall_s": 1.0370770669542253,
+      "busy_ticks": 2299,
+      "own_ticks": 2157,
+      "foreign_signed_ticks": 142
+    },
+    {
+      "wall_s": 1.0361634190194309,
+      "busy_ticks": 2628,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 142
+    },
+    {
+      "wall_s": 1.035286681028083,
+      "busy_ticks": 2620,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 136
+    },
+    {
+      "wall_s": 1.036172927939333,
+      "busy_ticks": 2618,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 130
+    },
+    {
+      "wall_s": 1.0352249500574544,
+      "busy_ticks": 2624,
+      "own_ticks": 2483,
+      "foreign_signed_ticks": 141
+    },
+    {
+      "wall_s": 1.0362812669482082,
+      "busy_ticks": 2609,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 122
+    },
+    {
+      "wall_s": 1.035509848035872,
+      "busy_ticks": 2630,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 144
+    },
+    {
+      "wall_s": 1.034791850950569,
+      "busy_ticks": 2286,
+      "own_ticks": 2150,
+      "foreign_signed_ticks": 136
+    },
+    {
+      "wall_s": 1.036458514048718,
+      "busy_ticks": 2614,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 128
+    },
+    {
+      "wall_s": 1.0354590669739991,
+      "busy_ticks": 2622,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 138
+    },
+    {
+      "wall_s": 1.0356059960322455,
+      "busy_ticks": 2620,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 133
+    },
+    {
+      "wall_s": 1.0362460640026256,
+      "busy_ticks": 2685,
+      "own_ticks": 2485,
+      "foreign_signed_ticks": 200
+    },
+    {
+      "wall_s": 1.0360766029916704,
+      "busy_ticks": 2637,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 151
+    },
+    {
+      "wall_s": 1.036423131939955,
+      "busy_ticks": 2615,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 126
+    },
+    {
+      "wall_s": 1.0360937130171806,
+      "busy_ticks": 2295,
+      "own_ticks": 2152,
+      "foreign_signed_ticks": 143
+    },
+    {
+      "wall_s": 1.0356875030556694,
+      "busy_ticks": 2625,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 138
+    },
+    {
+      "wall_s": 1.036465910030529,
+      "busy_ticks": 2631,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 145
+    },
+    {
+      "wall_s": 1.0375777449226007,
+      "busy_ticks": 2630,
+      "own_ticks": 2491,
+      "foreign_signed_ticks": 139
+    },
+    {
+      "wall_s": 1.0351701540639624,
+      "busy_ticks": 2628,
+      "own_ticks": 2483,
+      "foreign_signed_ticks": 145
+    },
+    {
+      "wall_s": 1.0352253229357302,
+      "busy_ticks": 2634,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 150
+    },
+    {
+      "wall_s": 1.0370417759986594,
+      "busy_ticks": 2626,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 138
+    },
+    {
+      "wall_s": 1.03031549800653,
+      "busy_ticks": 2322,
+      "own_ticks": 2138,
+      "foreign_signed_ticks": 184
+    },
+    {
+      "wall_s": 1.0361208179965615,
+      "busy_ticks": 2565,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 76
+    },
+    {
+      "wall_s": 1.0362439480377361,
+      "busy_ticks": 2626,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 140
+    },
+    {
+      "wall_s": 1.036162776988931,
+      "busy_ticks": 2628,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 142
+    },
+    {
+      "wall_s": 1.0362178259529173,
+      "busy_ticks": 2607,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 121
+    },
+    {
+      "wall_s": 1.036742234020494,
+      "busy_ticks": 2647,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 159
+    },
+    {
+      "wall_s": 1.0361463060835376,
+      "busy_ticks": 2624,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 137
+    },
+    {
+      "wall_s": 1.0282388519262895,
+      "busy_ticks": 2637,
+      "own_ticks": 2431,
+      "foreign_signed_ticks": 206
+    },
+    {
+      "wall_s": 1.03726164996624,
+      "busy_ticks": 2270,
+      "own_ticks": 2190,
+      "foreign_signed_ticks": 80
+    },
+    {
+      "wall_s": 1.0357659460278228,
+      "busy_ticks": 2624,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 137
+    },
+    {
+      "wall_s": 1.0357602450530976,
+      "busy_ticks": 2626,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 140
+    },
+    {
+      "wall_s": 1.0366267909994349,
+      "busy_ticks": 2625,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 137
+    },
+    {
+      "wall_s": 1.0374962280038744,
+      "busy_ticks": 2646,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 158
+    },
+    {
+      "wall_s": 1.0351428659632802,
+      "busy_ticks": 2630,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 146
+    },
+    {
+      "wall_s": 1.0351030350429937,
+      "busy_ticks": 2623,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 139
+    },
+    {
+      "wall_s": 1.0361804309068248,
+      "busy_ticks": 2277,
+      "own_ticks": 2155,
+      "foreign_signed_ticks": 122
+    },
+    {
+      "wall_s": 1.0356143231038004,
+      "busy_ticks": 2619,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 135
+    },
+    {
+      "wall_s": 1.0353435029974207,
+      "busy_ticks": 2631,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 145
+    },
+    {
+      "wall_s": 1.0350451829144731,
+      "busy_ticks": 2627,
+      "own_ticks": 2482,
+      "foreign_signed_ticks": 145
+    },
+    {
+      "wall_s": 1.036055410047993,
+      "busy_ticks": 2624,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 137
+    },
+    {
+      "wall_s": 1.035820999997668,
+      "busy_ticks": 2632,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 148
+    },
+    {
+      "wall_s": 1.036413377034478,
+      "busy_ticks": 2619,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 131
+    },
+    {
+      "wall_s": 1.0251608149847016,
+      "busy_ticks": 995,
+      "own_ticks": 790,
+      "foreign_signed_ticks": 205
+    }
+  ]
+}

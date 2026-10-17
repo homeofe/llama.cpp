@@ -23,11 +23,20 @@ def main():
     parser.add_argument('policy', choices=['off', 'off-knobs', 'r7', 'policy', 'slots'])
     parser.add_argument('--probe', action='store_true')
     parser.add_argument('--budget-mib', type=int)
+    parser.add_argument('--disable-thp', action='store_true')
+    parser.add_argument('--tag', default='')
+    parser.add_argument('--attempts', type=int, default=3, choices=[1, 2, 3])
     args = parser.parse_args()
     if args.budget_mib is not None and args.budget_mib <= 0:
         parser.error('--budget-mib must be positive')
     budget_tag = f'-{args.budget_mib}' if args.budget_mib is not None else ''
     name = f'{args.model}-{args.policy}{budget_tag}-' + ('probe' if args.probe else 'ppl')
+    if args.disable_thp:
+        name = name.replace('-ppl', '-nothp-ppl').replace('-probe', '-nothp-probe')
+    if args.tag:
+        if not args.tag.isalnum():
+            parser.error('--tag must be alphanumeric')
+        name = name.replace('-ppl', f'-{args.tag}-ppl').replace('-probe', f'-{args.tag}-probe')
     out = ROOT / 'task-logs/round9' / name
     out.mkdir(exist_ok=True)
     cfg = stage.CONFIGS['q-warm-draft' if args.model == 'qwen' else 'ling-cache-mtp3']
@@ -51,9 +60,11 @@ def main():
         env.update(GGML_MOE_PROBE_LOGITS='1', GGML_MOE_PROBE_WINDOW='4', GGML_MOE_PROBE_PREFIX='32')
     else:
         cmd = [str(ROOT / 'build-cuda/bin/llama-perplexity')] + flags + ['-f', '/opt/llm-gateway/data/build/texts/test-de.txt', '--chunks', '12']
+    if args.disable_thp:
+        cmd = [str(ROOT / 'task-logs/round9/no-thp')] + cmd
     (out / 'command.json').write_text(json.dumps(dict(command=cmd, env={k: v for k, v in env.items() if k.startswith(('GGML_', 'LLAMA_', 'OMP_'))}), indent=2) + '\n')
     run = bench.Run(out, min(time.time() + 1800, 1792277760))
-    for attempt in range(1, 4):
+    for attempt in range(1, args.attempts + 1):
         run.quiet()
         try:
             stage.gw('POST', '/api/v1/gpu/free', {})

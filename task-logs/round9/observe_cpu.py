@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Record signed CPU accounting deltas and the processes responsible for load."""
 import collections
+import argparse
 import json
 import os
 from pathlib import Path
 import time
 
 OUT = Path(__file__).resolve().parent
-LOG = OUT / 'ling-off-ppl/attempt-3.log'
 HZ = os.sysconf('SC_CLK_TCK')
 
 
@@ -27,8 +27,13 @@ def snapshot():
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--log', default='ling-off-ppl/attempt-3.log')
+    parser.add_argument('--output', default='cpu-accounting.json')
+    args = parser.parse_args()
+    log = OUT / args.log
     deadline = time.monotonic() + 600
-    while 'calculating perplexity over' not in LOG.read_text():
+    while not log.exists() or 'calculating perplexity over' not in log.read_text():
         if time.monotonic() > deadline:
             raise TimeoutError('evaluation did not start')
         time.sleep(.25)
@@ -36,11 +41,13 @@ def main():
     pids = [pid for pid, (name, _) in initial[2].items() if name.startswith('llama-perplexit')]
     assert len(pids) == 1, pids
     own_pid = pids[0]
+    vm_start = Path('/proc/vmstat').read_text()
+    status = Path(f'/proc/{own_pid}/status').read_text()
     totals = collections.Counter()
     names = {}
     signed = clamped = 0
     samples = []
-    while 'Final estimate: PPL =' not in LOG.read_text():
+    while 'Final estimate: PPL =' not in log.read_text():
         time.sleep(1)
         current = snapshot()
         t, busy, procs = current
@@ -59,9 +66,10 @@ def main():
     result = dict(own_pid=own_pid, wall_s=wall, signed_foreign_cores=signed/HZ/wall,
                   per_interval_clamped_foreign_cores=clamped/HZ/wall,
                   top_processes=[dict(pid=pid, name=names[pid], cores=ticks/HZ/wall) for pid, ticks in totals.most_common(20)],
-                  samples=samples)
-    (OUT / 'cpu-accounting.json').write_text(json.dumps(result, indent=2) + '\n')
-    print(json.dumps({k: v for k, v in result.items() if k != 'samples'}, indent=2))
+                  samples=samples, vmstat_start=vm_start, vmstat_end=Path('/proc/vmstat').read_text(),
+                  process_status=status)
+    (OUT / args.output).write_text(json.dumps(result, indent=2) + '\n')
+    print(json.dumps({k: v for k, v in result.items() if k not in ['samples', 'vmstat_start', 'vmstat_end', 'process_status']}, indent=2))
 
 
 if __name__ == '__main__':

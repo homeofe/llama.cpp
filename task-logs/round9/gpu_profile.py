@@ -37,7 +37,7 @@ def main():
     else:
         cmd = ['sudo', '-n', 'env', 'NV_COMPUTE_PROFILER_DISABLE_STOCK_FILE_DEPLOYMENT=1',
                'timeout', '--signal=TERM', '--kill-after=20', '600', 'ncu',
-               '--set', 'full', '--kernel-name-base', 'demangled',
+               '--set', 'full', '--metrics', 'sm__cycles_active.sum', '--kernel-name-base', 'demangled',
                '--kernel-name', 'regex:mul_mat_vec_q_moe.*true', '--launch-skip', '144',
                '--launch-count', '6', '--force-overwrite', '--export', str(out / 'kernels'),
                'env'] + [f'{key}={value}' for key, value in settings.items()] + probe
@@ -74,6 +74,10 @@ def main():
     if code == 0 and args.profiler == 'ncu':
         with (out / 'metrics.csv').open('w') as stream:
             subprocess.run(['ncu', '--import', str(out / 'kernels.ncu-rep'), '--page', 'raw', '--csv'],
+                           env=env, stdout=stream, stderr=subprocess.STDOUT, check=True)
+        with (out / 'instances.csv').open('w') as stream:
+            subprocess.run(['ncu', '--import', str(out / 'kernels.ncu-rep'), '--page', 'raw',
+                            '--print-metric-instances', 'values', '--csv'],
                            env=env, stdout=stream, stderr=subprocess.STDOUT, check=True)
     return code
 

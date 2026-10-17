@@ -38,7 +38,8 @@ def main():
             raise RuntimeError(f'{directory}: no final PPL')
         rows.append(dict(name=directory.name, ppl=float(match[1]), stderr=float(match[2]),
                          log=str(directory / marker.read_text().strip())))
-    baselines = {r['name'].split('-')[0]: r['ppl'] for r in rows if r['name'].endswith('-off-ppl')}
+    baselines = {r['name'].split('-')[0]: r['ppl'] for r in rows
+                 if r['name'].endswith(('-off-ppl', '-off-nothp-ppl', '-off-compaction0-ppl'))}
     for row in rows:
         baseline = baselines.get(row['name'].split('-')[0])
         if baseline is not None:

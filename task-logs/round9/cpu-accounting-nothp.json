@@ -1,0 +1,629 @@
+{
+  "own_pid": 3984168,
+  "wall_s": 89.06675775407348,
+  "signed_foreign_cores": 1.3201333804544206,
+  "per_interval_clamped_foreign_cores": 1.320357931122979,
+  "top_processes": [
+    {
+      "pid": 3984168,
+      "name": "llama-perplexit",
+      "cores": 23.368538975528264
+    },
+    {
+      "pid": 322,
+      "name": "kcompactd0",
+      "cores": 0.9930753316992134
+    },
+    {
+      "pid": 3908179,
+      "name": "codex",
+      "cores": 0.07488764796420297
+    },
+    {
+      "pid": 3473089,
+      "name": "htop",
+      "cores": 0.061863709187819846
+    },
+    {
+      "pid": 3984496,
+      "name": "python3",
+      "cores": 0.034356252289424453
+    },
+    {
+      "pid": 2642740,
+      "name": "node",
+      "cores": 0.013922141450616444
+    },
+    {
+      "pid": 3890338,
+      "name": "nvidia-smi",
+      "cores": 0.01358531544777895
+    },
+    {
+      "pid": 1888,
+      "name": "MainThread",
+      "cores": 0.012799388107824794
+    },
+    {
+      "pid": 429444,
+      "name": "claude",
+      "cores": 0.010441606087962334
+    },
+    {
+      "pid": 2436,
+      "name": "python3",
+      "cores": 0.005052390042562419
+    },
+    {
+      "pid": 2654005,
+      "name": "sshd",
+      "cores": 0.00460328870544576
+    },
+    {
+      "pid": 2647892,
+      "name": "claude",
+      "cores": 0.00392963669977077
+    },
+    {
+      "pid": 2896754,
+      "name": "MainThread",
+      "cores": 0.003368260028374946
+    },
+    {
+      "pid": 1745,
+      "name": "dockerd",
+      "cores": 0.002919158691258287
+    },
+    {
+      "pid": 1891,
+      "name": "MainThread",
+      "cores": 0.0020209560170249678
+    },
+    {
+      "pid": 3984141,
+      "name": "python3",
+      "cores": 0.001908680682745803
+    },
+    {
+      "pid": 17,
+      "name": "rcu_preempt",
+      "cores": 0.0014595793456291435
+    },
+    {
+      "pid": 353,
+      "name": "kswapd0",
+      "cores": 0.0010104780085124839
+    },
+    {
+      "pid": 1819099,
+      "name": "python3",
+      "cores": 0.0010104780085124839
+    },
+    {
+      "pid": 3727745,
+      "name": "kworker/u96:2-atlantic",
+      "cores": 0.000898202674233319
+    }
+  ],
+  "samples": [
+    {
+      "wall_s": 1.0349146130029112,
+      "busy_ticks": 2416,
+      "own_ticks": 2418,
+      "foreign_signed_ticks": -2
+    },
+    {
+      "wall_s": 1.0352030419744551,
+      "busy_ticks": 2626,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 142
+    },
+    {
+      "wall_s": 1.036100878030993,
+      "busy_ticks": 2619,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 132
+    },
+    {
+      "wall_s": 1.035836659022607,
+      "busy_ticks": 2620,
+      "own_ticks": 2485,
+      "foreign_signed_ticks": 135
+    },
+    {
+      "wall_s": 1.0361705779796466,
+      "busy_ticks": 2623,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 137
+    },
+    {
+      "wall_s": 1.0356889490503818,
+      "busy_ticks": 2627,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 143
+    },
+    {
+      "wall_s": 1.0320944120176136,
+      "busy_ticks": 2608,
+      "own_ticks": 2464,
+      "foreign_signed_ticks": 144
+    },
+    {
+      "wall_s": 1.034688093001023,
+      "busy_ticks": 2286,
+      "own_ticks": 2170,
+      "foreign_signed_ticks": 116
+    },
+    {
+      "wall_s": 1.0359435169957578,
+      "busy_ticks": 2620,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 134
+    },
+    {
+      "wall_s": 1.0357990589691326,
+      "busy_ticks": 2620,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 133
+    },
+    {
+      "wall_s": 1.0358557780273259,
+      "busy_ticks": 2634,
+      "own_ticks": 2485,
+      "foreign_signed_ticks": 149
+    },
+    {
+      "wall_s": 1.0355085479095578,
+      "busy_ticks": 2661,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 177
+    },
+    {
+      "wall_s": 1.0362884760834277,
+      "busy_ticks": 2612,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 124
+    },
+    {
+      "wall_s": 1.0367894339142367,
+      "busy_ticks": 2635,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 148
+    },
+    {
+      "wall_s": 1.0353024590294808,
+      "busy_ticks": 2295,
+      "own_ticks": 2156,
+      "foreign_signed_ticks": 139
+    },
+    {
+      "wall_s": 1.0360216869739816,
+      "busy_ticks": 2624,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 137
+    },
+    {
+      "wall_s": 1.0362137700431049,
+      "busy_ticks": 2626,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 140
+    },
+    {
+      "wall_s": 1.0363044460536912,
+      "busy_ticks": 2612,
+      "own_ticks": 2485,
+      "foreign_signed_ticks": 127
+    },
+    {
+      "wall_s": 1.034637609962374,
+      "busy_ticks": 2620,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 136
+    },
+    {
+      "wall_s": 1.0355945780174807,
+      "busy_ticks": 2622,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 138
+    },
+    {
+      "wall_s": 1.0356331060174853,
+      "busy_ticks": 2613,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 127
+    },
+    {
+      "wall_s": 1.034981848904863,
+      "busy_ticks": 2295,
+      "own_ticks": 2152,
+      "foreign_signed_ticks": 143
+    },
+    {
+      "wall_s": 1.035126929054968,
+      "busy_ticks": 2621,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 137
+    },
+    {
+      "wall_s": 1.0358889650087804,
+      "busy_ticks": 2628,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 142
+    },
+    {
+      "wall_s": 1.0357759660109878,
+      "busy_ticks": 2635,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 149
+    },
+    {
+      "wall_s": 1.0352650469867513,
+      "busy_ticks": 2633,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 149
+    },
+    {
+      "wall_s": 1.0359197850339115,
+      "busy_ticks": 2610,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 124
+    },
+    {
+      "wall_s": 1.0359673139173537,
+      "busy_ticks": 2627,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 141
+    },
+    {
+      "wall_s": 1.0369071810273454,
+      "busy_ticks": 2312,
+      "own_ticks": 2158,
+      "foreign_signed_ticks": 154
+    },
+    {
+      "wall_s": 1.0356332149822265,
+      "busy_ticks": 2625,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 141
+    },
+    {
+      "wall_s": 1.035801994963549,
+      "busy_ticks": 2619,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 132
+    },
+    {
+      "wall_s": 1.0377098080934957,
+      "busy_ticks": 2617,
+      "own_ticks": 2491,
+      "foreign_signed_ticks": 126
+    },
+    {
+      "wall_s": 1.036990060005337,
+      "busy_ticks": 2617,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 130
+    },
+    {
+      "wall_s": 1.0365888510132208,
+      "busy_ticks": 2627,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 138
+    },
+    {
+      "wall_s": 1.0352336859796196,
+      "busy_ticks": 2615,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 131
+    },
+    {
+      "wall_s": 1.035418014973402,
+      "busy_ticks": 2286,
+      "own_ticks": 2151,
+      "foreign_signed_ticks": 135
+    },
+    {
+      "wall_s": 1.0363369319820777,
+      "busy_ticks": 2618,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 130
+    },
+    {
+      "wall_s": 1.036090892041102,
+      "busy_ticks": 2616,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 130
+    },
+    {
+      "wall_s": 1.0367271699942648,
+      "busy_ticks": 2694,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 208
+    },
+    {
+      "wall_s": 1.0373981969896704,
+      "busy_ticks": 2628,
+      "own_ticks": 2490,
+      "foreign_signed_ticks": 138
+    },
+    {
+      "wall_s": 1.0367941099684685,
+      "busy_ticks": 2616,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 130
+    },
+    {
+      "wall_s": 1.0372416969621554,
+      "busy_ticks": 2648,
+      "own_ticks": 2492,
+      "foreign_signed_ticks": 156
+    },
+    {
+      "wall_s": 1.0362719310214743,
+      "busy_ticks": 2295,
+      "own_ticks": 2157,
+      "foreign_signed_ticks": 138
+    },
+    {
+      "wall_s": 1.0362065309891477,
+      "busy_ticks": 2626,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 140
+    },
+    {
+      "wall_s": 1.03584095207043,
+      "busy_ticks": 2623,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 137
+    },
+    {
+      "wall_s": 1.035842802026309,
+      "busy_ticks": 2618,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 131
+    },
+    {
+      "wall_s": 1.0355859230039641,
+      "busy_ticks": 2606,
+      "own_ticks": 2485,
+      "foreign_signed_ticks": 121
+    },
+    {
+      "wall_s": 1.0359419609885663,
+      "busy_ticks": 2625,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 141
+    },
+    {
+      "wall_s": 1.0352056429255754,
+      "busy_ticks": 2615,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 129
+    },
+    {
+      "wall_s": 1.0361014310037717,
+      "busy_ticks": 2286,
+      "own_ticks": 2155,
+      "foreign_signed_ticks": 131
+    },
+    {
+      "wall_s": 1.035602602059953,
+      "busy_ticks": 2620,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 136
+    },
+    {
+      "wall_s": 1.0363640689756721,
+      "busy_ticks": 2603,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 114
+    },
+    {
+      "wall_s": 1.0355556909926236,
+      "busy_ticks": 2621,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 137
+    },
+    {
+      "wall_s": 1.0362466489896178,
+      "busy_ticks": 2639,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 152
+    },
+    {
+      "wall_s": 1.035364071954973,
+      "busy_ticks": 2609,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 125
+    },
+    {
+      "wall_s": 1.0360216100234538,
+      "busy_ticks": 2612,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 126
+    },
+    {
+      "wall_s": 1.0371259760577232,
+      "busy_ticks": 2289,
+      "own_ticks": 2158,
+      "foreign_signed_ticks": 131
+    },
+    {
+      "wall_s": 1.036527276970446,
+      "busy_ticks": 2635,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 149
+    },
+    {
+      "wall_s": 1.0355639710323885,
+      "busy_ticks": 2644,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 158
+    },
+    {
+      "wall_s": 1.0371806549374014,
+      "busy_ticks": 2618,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 129
+    },
+    {
+      "wall_s": 1.0350288320332766,
+      "busy_ticks": 2628,
+      "own_ticks": 2485,
+      "foreign_signed_ticks": 143
+    },
+    {
+      "wall_s": 1.0352671809960157,
+      "busy_ticks": 2616,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 132
+    },
+    {
+      "wall_s": 1.0364800370298326,
+      "busy_ticks": 2622,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 136
+    },
+    {
+      "wall_s": 1.0319982529617846,
+      "busy_ticks": 2308,
+      "own_ticks": 2145,
+      "foreign_signed_ticks": 163
+    },
+    {
+      "wall_s": 1.0356825169874355,
+      "busy_ticks": 2583,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 97
+    },
+    {
+      "wall_s": 1.036283866968006,
+      "busy_ticks": 2618,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 132
+    },
+    {
+      "wall_s": 1.0368667850270867,
+      "busy_ticks": 2614,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 125
+    },
+    {
+      "wall_s": 1.0358539880253375,
+      "busy_ticks": 2640,
+      "own_ticks": 2485,
+      "foreign_signed_ticks": 155
+    },
+    {
+      "wall_s": 1.0359180379891768,
+      "busy_ticks": 2624,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 137
+    },
+    {
+      "wall_s": 1.036139806965366,
+      "busy_ticks": 2626,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 140
+    },
+    {
+      "wall_s": 1.0267793000675738,
+      "busy_ticks": 2568,
+      "own_ticks": 2355,
+      "foreign_signed_ticks": 213
+    },
+    {
+      "wall_s": 1.0362104260129854,
+      "busy_ticks": 2317,
+      "own_ticks": 2265,
+      "foreign_signed_ticks": 52
+    },
+    {
+      "wall_s": 1.0366280949674547,
+      "busy_ticks": 2636,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 148
+    },
+    {
+      "wall_s": 1.0364537950372323,
+      "busy_ticks": 2627,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 140
+    },
+    {
+      "wall_s": 1.035659977933392,
+      "busy_ticks": 2611,
+      "own_ticks": 2485,
+      "foreign_signed_ticks": 126
+    },
+    {
+      "wall_s": 1.0351256290450692,
+      "busy_ticks": 2621,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 137
+    },
+    {
+      "wall_s": 1.0357498279772699,
+      "busy_ticks": 2621,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 135
+    },
+    {
+      "wall_s": 1.0357374970335513,
+      "busy_ticks": 2612,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 128
+    },
+    {
+      "wall_s": 1.036077925004065,
+      "busy_ticks": 2288,
+      "own_ticks": 2155,
+      "foreign_signed_ticks": 133
+    },
+    {
+      "wall_s": 1.0349427799228579,
+      "busy_ticks": 2626,
+      "own_ticks": 2483,
+      "foreign_signed_ticks": 143
+    },
+    {
+      "wall_s": 1.0368609530851245,
+      "busy_ticks": 2611,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 122
+    },
+    {
+      "wall_s": 1.0356334069510922,
+      "busy_ticks": 2632,
+      "own_ticks": 2485,
+      "foreign_signed_ticks": 147
+    },
+    {
+      "wall_s": 1.036664042971097,
+      "busy_ticks": 2633,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 146
+    },
+    {
+      "wall_s": 1.0350617780350149,
+      "busy_ticks": 2630,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 146
+    },
+    {
+      "wall_s": 1.0367234429577366,
+      "busy_ticks": 2627,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 139
+    },
+    {
+      "wall_s": 1.025992470094934,
+      "busy_ticks": 765,
+      "own_ticks": 567,
+      "foreign_signed_ticks": 198
+    }
+  ],
+  "vmstat_start": "nr_free_pages 177876\nnr_zone_inactive_anon 108795\nnr_zone_active_anon 16054723\nnr_zone_inactive_file 15378697\nnr_zone_active_file 100541\nnr_zone_unevictable 6879\nnr_zone_write_pending 134\nnr_mlock 6879\nnr_bounce 0\nnr_zspages 0\nnr_free_cma 0\nnr_unaccepted 0\nnuma_hit 89178557802\nnuma_miss 0\nnuma_foreign 0\nnuma_interleave 231\nnuma_local 89177524396\nnuma_other 0\nnr_inactive_anon 108795\nnr_active_anon 16054723\nnr_inactive_file 15378697\nnr_active_file 100541\nnr_unevictable 6879\nnr_slab_reclaimable 384941\nnr_slab_unreclaimable 199738\nnr_isolated_anon 0\nnr_isolated_file 0\nworkingset_nodes 361420\nworkingset_refault_anon 2547004\nworkingset_refault_file 1039414432\nworkingset_activate_anon 687866\nworkingset_activate_file 380545148\nworkingset_restore_anon 687578\nworkingset_restore_file 133628850\nworkingset_nodereclaim 10758640\nnr_anon_pages 392152\nnr_mapped 15876829\nnr_file_pages 31385413\nnr_dirty 134\nnr_writeback 0\nnr_writeback_temp 0\nnr_shmem 15771831\nnr_shmem_hugepages 0\nnr_shmem_pmdmapped 0\nnr_file_hugepages 0\nnr_file_pmdmapped 0\nnr_anon_transparent_hugepages 0\nnr_vmscan_write 4848178\nnr_vmscan_immediate_reclaim 0\nnr_dirtied 6354366186\nnr_written 2801582522\nnr_throttled_written 0\nnr_kernel_misc_reclaimable 0\nnr_foll_pin_acquired 2065307058\nnr_foll_pin_released 2049545150\nnr_kernel_stack 28144\nnr_page_table_pages 48914\nnr_sec_page_table_pages 0\nnr_swapcached 132130\npgpromote_success 0\npgpromote_candidate 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\nnr_dirty_threshold 3095091\nnr_dirty_background_threshold 1545656\npgpgin 5840785445\npgpgout 16727967559\npswpin 4016599\npswpout 4848178\npgalloc_dma 1024\npgalloc_dma32 312132643\npgalloc_normal 90707682398\npgalloc_movable 0\npgalloc_device 0\nallocstall_dma 0\nallocstall_dma32 0\nallocstall_normal 97111\nallocstall_movable 590191\nallocstall_device 0\npgskip_dma 0\npgskip_dma32 306\npgskip_normal 16950\npgskip_movable 0\npgskip_device 0\npgfree 91940375041\npgactivate 17591432\npgdeactivate 0\npglazyfree 0\npgfault 90425977261\npgmajfault 270653335\npglazyfreed 0\npgrefill 919151618\npgreuse 9263899066\npgsteal_kswapd 1715484510\npgsteal_direct 89251138\npgsteal_khugepaged 16456\npgscan_kswapd 1752507786\npgscan_direct 109944661\npgscan_khugepaged 16462\npgscan_direct_throttle 0\npgscan_anon 29987461\npgscan_file 1832481448\npgsteal_anon 5356455\npgsteal_file 1799395649\nzone_reclaim_failed 0\npginodesteal 7807\nslabs_scanned 194926668\nkswapd_inodesteal 2484705\nkswapd_low_wmark_hit_quickly 25759\nkswapd_high_wmark_hit_quickly 1920\npageoutrun 42337\npgrotated 5361485\ndrop_pagecache 0\ndrop_slab 0\noom_kill 0\nnuma_pte_updates 0\nnuma_huge_pte_updates 0\nnuma_hint_faults 0\nnuma_hint_faults_local 0\nnuma_pages_migrated 0\npgmigrate_success 897343008\npgmigrate_fail 1181827829\nthp_migration_success 0\nthp_migration_fail 0\nthp_migration_split 0\ncompact_migrate_scanned 15964551754\ncompact_free_scanned 50409343113\ncompact_isolated 2981767485\ncompact_stall 301579\ncompact_fail 251893\ncompact_success 49686\ncompact_daemon_wake 38225\ncompact_daemon_migrate_scanned 10658429855\ncompact_daemon_free_scanned 45843202229\nhtlb_buddy_alloc_success 0\nhtlb_buddy_alloc_fail 0\nunevictable_pgs_culled 129677\nunevictable_pgs_scanned 0\nunevictable_pgs_rescued 40789\nunevictable_pgs_mlocked 47682\nunevictable_pgs_munlocked 22135\nunevictable_pgs_cleared 0\nunevictable_pgs_stranded 18668\nthp_fault_alloc 1059548\nthp_fault_fallback 76326\nthp_fault_fallback_charge 0\nthp_collapse_alloc 738\nthp_collapse_alloc_failed 8\nthp_file_alloc 0\nthp_file_fallback 0\nthp_file_fallback_charge 0\nthp_file_mapped 0\nthp_split_page 0\nthp_split_page_failed 0\nthp_deferred_split_page 2201\nthp_split_pmd 2201\nthp_scan_exceed_none_pte 1214\nthp_scan_exceed_swap_pte 0\nthp_scan_exceed_share_pte 0\nthp_split_pud 0\nthp_zero_page_alloc 12\nthp_zero_page_alloc_failed 1\nthp_swpout 0\nthp_swpout_fallback 0\nballoon_inflate 0\nballoon_deflate 0\nballoon_migrate 0\nswap_ra 2036037\nswap_ra_hit 1823382\nksm_swpin_copy 0\ncow_ksm 0\nzswpin 0\nzswpout 0\nzswpwb 0\ndirect_map_level2_splits 44055\ndirect_map_level3_splits 122\nnr_unstable 0\n",
+  "vmstat_end": "nr_free_pages 367865\nnr_zone_inactive_anon 108784\nnr_zone_active_anon 16036050\nnr_zone_inactive_file 15277001\nnr_zone_active_file 109113\nnr_zone_unevictable 6879\nnr_zone_write_pending 17\nnr_mlock 6879\nnr_bounce 0\nnr_zspages 0\nnr_free_cma 0\nnr_unaccepted 0\nnuma_hit 89179537061\nnuma_miss 0\nnuma_foreign 0\nnuma_interleave 231\nnuma_local 89178503655\nnuma_other 0\nnr_inactive_anon 108784\nnr_active_anon 16036050\nnr_inactive_file 15277001\nnr_active_file 109113\nnr_unevictable 6879\nnr_slab_reclaimable 384941\nnr_slab_unreclaimable 199139\nnr_isolated_anon 342\nnr_isolated_file 0\nworkingset_nodes 362787\nworkingset_refault_anon 2549284\nworkingset_refault_file 1039419167\nworkingset_activate_anon 688566\nworkingset_activate_file 380546480\nworkingset_restore_anon 688277\nworkingset_restore_file 133629885\nworkingset_nodereclaim 10758640\nnr_anon_pages 412832\nnr_mapped 15841068\nnr_file_pages 31254721\nnr_dirty 17\nnr_writeback 0\nnr_writeback_temp 0\nnr_shmem 15732528\nnr_shmem_hugepages 0\nnr_shmem_pmdmapped 0\nnr_file_hugepages 0\nnr_file_pmdmapped 0\nnr_anon_transparent_hugepages 0\nnr_vmscan_write 4848178\nnr_vmscan_immediate_reclaim 0\nnr_dirtied 6354368546\nnr_written 2801584716\nnr_throttled_written 0\nnr_kernel_misc_reclaimable 0\nnr_foll_pin_acquired 2065307426\nnr_foll_pin_released 2052271152\nnr_kernel_stack 28192\nnr_page_table_pages 48988\nnr_sec_page_table_pages 0\nnr_swapcached 133865\npgpromote_success 0\npgpromote_candidate 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\nnr_dirty_threshold 3107585\nnr_dirty_background_threshold 1551895\npgpgin 5840838657\npgpgout 16727977727\npswpin 4019808\npswpout 4848178\npgalloc_dma 1024\npgalloc_dma32 312132843\npgalloc_normal 90708664401\npgalloc_movable 0\npgalloc_device 0\nallocstall_dma 0\nallocstall_dma32 0\nallocstall_normal 97112\nallocstall_movable 590191\nallocstall_device 0\npgskip_dma 0\npgskip_dma32 306\npgskip_normal 16950\npgskip_movable 0\npgskip_device 0\npgfree 91941539214\npgactivate 17591432\npgdeactivate 0\npglazyfree 0\npgfault 90426952076\npgmajfault 270655311\npglazyfreed 0\npgrefill 919151740\npgreuse 9263912553\npgsteal_kswapd 1715588190\npgsteal_direct 89251202\npgsteal_khugepaged 16456\npgscan_kswapd 1752611466\npgscan_direct 109944725\npgscan_khugepaged 16462\npgscan_direct_throttle 0\npgscan_anon 29987461\npgscan_file 1832585192\npgsteal_anon 5356455\npgsteal_file 1799499393\nzone_reclaim_failed 0\npginodesteal 7807\nslabs_scanned 194926668\nkswapd_inodesteal 2484705\nkswapd_low_wmark_hit_quickly 25759\nkswapd_high_wmark_hit_quickly 1920\npageoutrun 42338\npgrotated 5361488\ndrop_pagecache 0\ndrop_slab 0\noom_kill 0\nnuma_pte_updates 0\nnuma_huge_pte_updates 0\nnuma_hint_faults 0\nnuma_hint_faults_local 0\nnuma_pages_migrated 0\npgmigrate_success 897350568\npgmigrate_fail 1188085850\nthp_migration_success 0\nthp_migration_fail 0\nthp_migration_split 0\ncompact_migrate_scanned 15964551754\ncompact_free_scanned 50409343113\ncompact_isolated 2988041648\ncompact_stall 301580\ncompact_fail 251894\ncompact_success 49686\ncompact_daemon_wake 38226\ncompact_daemon_migrate_scanned 10658429855\ncompact_daemon_free_scanned 45843202229\nhtlb_buddy_alloc_success 0\nhtlb_buddy_alloc_fail 0\nunevictable_pgs_culled 129677\nunevictable_pgs_scanned 0\nunevictable_pgs_rescued 40789\nunevictable_pgs_mlocked 47682\nunevictable_pgs_munlocked 22135\nunevictable_pgs_cleared 0\nunevictable_pgs_stranded 18668\nthp_fault_alloc 1059548\nthp_fault_fallback 76326\nthp_fault_fallback_charge 0\nthp_collapse_alloc 738\nthp_collapse_alloc_failed 8\nthp_file_alloc 0\nthp_file_fallback 0\nthp_file_fallback_charge 0\nthp_file_mapped 0\nthp_split_page 0\nthp_split_page_failed 0\nthp_deferred_split_page 2201\nthp_split_pmd 2201\nthp_scan_exceed_none_pte 1214\nthp_scan_exceed_swap_pte 0\nthp_scan_exceed_share_pte 0\nthp_split_pud 0\nthp_zero_page_alloc 12\nthp_zero_page_alloc_failed 1\nthp_swpout 0\nthp_swpout_fallback 0\nballoon_inflate 0\nballoon_deflate 0\nballoon_migrate 0\nswap_ra 2037653\nswap_ra_hit 1824684\nksm_swpin_copy 0\ncow_ksm 0\nzswpin 0\nzswpout 0\nzswpwb 0\ndirect_map_level2_splits 44055\ndirect_map_level3_splits 122\nnr_unstable 0\n",
+  "process_status": "Name:\tllama-perplexit\nUmask:\t0002\nState:\tR (running)\nTgid:\t3984168\nNgid:\t0\nPid:\t3984168\nPPid:\t3984141\nTracerPid:\t0\nUid:\t1001\t1001\t1001\t1001\nGid:\t1001\t1001\t1001\t1001\nFDSize:\t64\nGroups:\t4 24 27 30 46 988 1001 \nNStgid:\t3984168\nNSpid:\t3984168\nNSpgid:\t3984168\nNSsid:\t3984168\nKthread:\t0\nVmPeak:\t106228816 kB\nVmSize:\t106196052 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t63411928 kB\nVmRSS:\t63411928 kB\nRssAnon:\t  210560 kB\nRssFile:\t  153500 kB\nRssShmem:\t63047868 kB\nVmData:\t 1114924 kB\nVmStk:\t     136 kB\nVmExe:\t       4 kB\nVmLib:\t  677136 kB\nVmPTE:\t  124604 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t0\nuntag_mask:\t0xffffffffffffffff\nThreads:\t28\nSigQ:\t14/513523\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000000000000\nSigCgt:\t0000000100000000\nCapInh:\t0000000000000000\nCapPrm:\t0000000000000000\nCapEff:\t0000000000000000\nCapBnd:\t000001ffffffffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tthread vulnerable\nSpeculationIndirectBranch:\tconditional enabled\nCpus_allowed:\t0000,01000001\nCpus_allowed_list:\t0,24\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t490673\nnonvoluntary_ctxt_switches:\t311\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n"
+}
