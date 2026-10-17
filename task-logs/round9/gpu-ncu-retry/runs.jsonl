@@ -1,0 +1,2 @@
+{"kind": "profiler_start", "profiler": "ncu", "pid": 4006253, "epoch": 1792271879.1, "utc": "2026-10-17 21:17:59"}
+{"kind": "profiler_complete", "exit": 124, "performance_comparison": false, "epoch": 1792272479.7, "utc": "2026-10-17 21:27:59"}

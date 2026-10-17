@@ -1,0 +1,23 @@
+==PROF== Connected to process 4006266 (/opt/llm-gateway/data/build/llama-l5/task-logs/round9/moe-probe)
+1.06.301.563 W impl: MoE cache budget is too small for 1 layers, they are not cached
+1.06.301.567 W impl: MoE cache budget is too small for 1 layers, they are not cached
+1.06.306.679 W llama_moe_cache: 40 profile entries name layers without a cache group, skipped
+1.06.468.457 W llama_moe_cache: adaptive warm start: 998 experts, 1939.26 MiB (excluded from runtime uploads)
+1.06.468.481 W llama_moe_cache: adaptive LFU: 1248 slots, admit <= 32 experts/ubatch, decay every 128 tokens
+1.06.468.482 W llama_moe_cache: context = 623929621806 (target), prefill 1024, static 0%
+1.06.498.688 I cmn          init: llama threadpool init, n_threads = 24
+==PROF== Profiling "void mul_mat_vec_q_moe<(ggml_type)22, (int)2, (bool)0, (bool)1>(const void *, const void *, const int *, ggml_cuda_mmvq_args, float *, unsigned int, uint3, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int)": 0%
+==WARNING== Backing up device memory in system memory. Kernel replay might be slow. Consider using "--replay-mode application" to avoid memory save-and-restore.
+
+==WARNING== Backing up device memory in system memory. Kernel replay might be slow. Consider using "--replay-mode application" to avoid memory save-and-restore.
+....50%....100% - 31 passes
+==PROF== Profiling "void mul_mat_vec_q_moe<(ggml_type)22, (int)2, (bool)0, (bool)1>(const void *, const void *, const int *, ggml_cuda_mmvq_args, float *, unsigned int, uint3, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int)": 0%....50%....100% - 31 passes
+==PROF== Profiling "void mul_mat_vec_q_moe<(ggml_type)20, (int)2, (bool)0, (bool)1>(const void *, const void *, const int *, ggml_cuda_mmvq_args, float *, unsigned int, uint3, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int)": 0%....50%....100% - 31 passes
+==PROF== Profiling "void mul_mat_vec_q_moe<(ggml_type)22, (int)2, (bool)0, (bool)1>(const void *, const void *, const int *, ggml_cuda_mmvq_args, float *, unsigned int, uint3, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int)": 0%....50%....100% - 32 passes
+==PROF== Profiling "void mul_mat_vec_q_moe<(ggml_type)22, (int)2, (bool)0, (bool)1>(const void *, const void *, const int *, ggml_cuda_mmvq_args, float *, unsigned int, uint3, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int)": 0%==PROF== Received signal
+==PROF== Trying to shutdown target application
+
+==ERROR== Failed to profile "mul_mat_vec_q_moe" in process 4006266
+==PROF== Trying to shutdown target application
+==ERROR== An error occurred while trying to profile.
+==PROF== Report: /opt/llm-gateway/data/build/llama-l5/task-logs/round9/gpu-ncu-retry/kernels.ncu-rep
