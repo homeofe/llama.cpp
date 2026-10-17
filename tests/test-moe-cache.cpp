@@ -699,6 +699,7 @@ struct replay_context {
     size_t last_group = 0;
     size_t admit_remaining = 0;
     uint64_t tokens = 0, hits = 0, misses = 0;
+    uint64_t hit_bytes = 0, route_bytes = 0;
     uint64_t uploads = 0, bytes = 0, initial_uploads = 0, initial_bytes = 0;
     uint64_t decode_hits = 0, decode_routes = 0, decode_hit_bytes = 0, decode_bytes = 0;
     uint64_t first_hits = 0, first_routes = 0, first_hit_bytes = 0, first_bytes = 0;
@@ -940,6 +941,8 @@ static void replay_log(const char * path, int slots, size_t admit, size_t prefil
                 }
                 c.hits += hit;
                 c.misses += !hit;
+                c.hit_bytes += hit*bytes;
+                c.route_bytes += bytes;
                 if (deferred && policy) {
                     deferred->votes.push_back({r.group, r.key, pos, policy->tokens});
                 }
@@ -979,13 +982,13 @@ static void replay_log(const char * path, int slots, size_t admit, size_t prefil
         for (const auto & g : c.groups) {
             total_slots += g.second.slots;
         }
-        printf("context=%llu slots=%d admit=%zu prefill=%zu static_pct=%d decay=%llu tokens=%llu hits=%llu misses=%llu hit_rate=%.4f%% decode_hit_rate=%.4f%% first32_hit_rate=%.4f%% first32_routes=%llu uploads=%llu uploads/token=%.4f MiB/token=%.4f initial_uploads=%llu initial_MiB=%.4f decode_byte_hit_rate=%.4f%% first32_byte_hit_rate=%.4f%% groups=%zu rejected_routes=%llu unresolved_spans=%zu\n",
+        printf("context=%llu slots=%d admit=%zu prefill=%zu static_pct=%d decay=%llu tokens=%llu hits=%llu misses=%llu hit_rate=%.4f%% decode_hit_rate=%.4f%% first32_hit_rate=%.4f%% first32_routes=%llu uploads=%llu uploads/token=%.4f MiB/token=%.4f initial_uploads=%llu initial_MiB=%.4f decode_byte_hit_rate=%.4f%% first32_byte_hit_rate=%.4f%% groups=%zu rejected_routes=%llu unresolved_spans=%zu all_byte_hit_rate=%.4f%%\n",
             (unsigned long long) entry.first, total_slots, admit, prefill, static_pct, (unsigned long long) decay,
             (unsigned long long) c.tokens, (unsigned long long) c.hits, (unsigned long long) c.misses,
             pct(c.hits, c.hits + c.misses), pct(c.decode_hits, c.decode_routes), pct(c.first_hits, c.first_routes),
             (unsigned long long) c.first_routes, (unsigned long long) c.uploads, (double) c.uploads/c.tokens,
             (double) c.bytes/(1024*1024)/c.tokens, (unsigned long long) c.initial_uploads, (double) c.initial_bytes/(1024*1024),
-            pct(c.decode_hit_bytes, c.decode_bytes), pct(c.first_hit_bytes, c.first_bytes), c.groups.size(), (unsigned long long) c.rejected_routes, c.spans.size());
+            pct(c.decode_hit_bytes, c.decode_bytes), pct(c.first_hit_bytes, c.first_bytes), c.groups.size(), (unsigned long long) c.rejected_routes, c.spans.size(), pct(c.hit_bytes, c.route_bytes));
         for (size_t ip = 0; ip < c.prompts.size(); ++ip) {
             const auto & p = c.prompts[ip];
             printf("prompt context=%llu index=%zu seq=%d first32_tokens=%llu first32_hits=%llu first32_routes=%llu first32_hit_rate=%.4f%%\n",
