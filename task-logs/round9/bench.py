@@ -60,6 +60,17 @@ class Run(stage.Run):
             result['engine_cpu_s'] = (stage.proc_jiffies(own_pids) - cpu_start) / stage.HZ
             result['engine_busy_cores'] = result['engine_cpu_s'] / measured_wall
             result['engine_cpu_s_per_token'] = result['engine_cpu_s'] / result['tokens']
+            if args[0].startswith('qwen-cpu-'):
+                affinity_file = self.out / (args[0] + '.affinity.json')
+                if not affinity_file.exists():
+                    masks = {}
+                    for status in Path(f'/proc/{own_pids[0]}/task').glob('*/status'):
+                        try:
+                            fields = dict(line.split(':', 1) for line in status.read_text().splitlines() if ':' in line)
+                            masks[status.parent.name] = fields['Cpus_allowed_list'].strip()
+                        except FileNotFoundError:
+                            continue
+                    affinity_file.write_text(json.dumps(dict(pid=own_pids[0], threads=masks), indent=2) + '\n')
         output = []
         for raw in chunks:
             line = raw.decode().strip()

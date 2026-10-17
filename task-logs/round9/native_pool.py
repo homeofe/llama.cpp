@@ -5,8 +5,6 @@ import json
 from pathlib import Path
 import subprocess
 
-import bench
-
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'task-logs/round9'
 
@@ -45,7 +43,9 @@ def main():
     assert result['bit_exact'], 'native pool failed disabled-cache parity'
     path = OUT / 'extra-configs.json'
     extra = json.loads(path.read_text())
-    base = bench.stage.CONFIGS['q-warm-draft']
+    # libggml-base still links libgomp, whose binding can narrow inherited masks.
+    # Use the same explicit physical-core placement as the OpenMP comparison.
+    base = extra['qwen-cpu-t24-physical']
     extra['qwen-cpu-native-pool'] = dict(cmd=base['cmd'], env={**base['env'],
         'LD_PRELOAD': str(library), 'LD_LIBRARY_PATH': str(ROOT / 'build-cuda/bin')})
     path.write_text(json.dumps(extra, indent=2) + '\n')

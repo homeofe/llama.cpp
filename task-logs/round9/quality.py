@@ -65,6 +65,9 @@ def main():
     model = cfg['cmd'][cfg['cmd'].index('-m') + 1]
     placement = ['-ncmoe', '48'] if args.model == 'qwen' else ['-cmoe']
     flags = ['-m', model, '-c', '512', '-b', '512', '-ub', '4', '-lm', 'none', '-fa', 'on', '-ngl', '99', '-t', '24'] + placement
+    if args.cpu_library:
+        flags += ['-tb', '24', '--cpu-mask', 'ffffff', '--cpu-strict', '1',
+                  '--cpu-mask-batch', 'ffffff', '--cpu-strict-batch', '1']
     if args.probe:
         cmd = [str(ROOT / 'task-logs/round9/moe-probe'), str(out / 'logits')] + flags + ['-n', '32']
         env.update(GGML_MOE_PROBE_LOGITS='1', GGML_MOE_PROBE_WINDOW='4', GGML_MOE_PROBE_PREFIX='32')

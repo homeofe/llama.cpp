@@ -38,7 +38,7 @@ def main():
              '-c', '512', '-b', '512', '-ub', '4', '-n', '16', '-lm', 'none',
              '-fa', 'on', '-ngl', '99', '-ncmoe', '48', '-t', '24']
     if args.profiler == 'nsys':
-        cmd = ['timeout', '--signal=TERM', '--kill-after=20', '600', 'nsys', 'profile',
+        cmd = ['timeout', '--signal=TERM', '--kill-after=20', '180', 'nsys', 'profile',
                '--trace=cuda,osrt', '--sample=none', '--cpuctxsw=none', '--export=sqlite',
                '--force-overwrite=true', '-o', str(out / 'trace')] + probe
     else:
