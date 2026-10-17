@@ -1,5 +1,6 @@
 #include "llama-graph.h"
 
+#include <algorithm>
 #include <atomic>
 #include <mutex>
 
@@ -2077,31 +2078,46 @@ ggml_tensor * llm_graph_context::build_ffn(
     return cur;
 }
 
-// measurement only (LLAMA_MOE_SKIP_STATS): counts the expert slots LLAMA_MOE_SKIP keeps and drops, printed at exit
-static std::atomic<int64_t> moe_skip_kept{0}, moe_skip_total{0};
-static void llm_moe_skip_count(ggml_tensor * dst, const ggml_tensor * a, int ith, int nth, void * userdata) {
+// measurement only (LLAMA_MOE_SKIP_STATS): counts the expert slots LLAMA_MOE_SKIP keeps, and the distinct experts per
+// ubatch (a verify window reads each distinct expert once) before and after the skip, printed at exit
+static std::atomic<int64_t> moe_skip_kept{0}, moe_skip_total{0}, moe_skip_uniq_kept{0}, moe_skip_uniq_total{0};
+static void llm_moe_skip_count(ggml_tensor * dst, const ggml_tensor * a, const ggml_tensor * b, int ith, int nth, void * userdata) {
     GGML_UNUSED(userdata);
+    GGML_UNUSED(nth);
     if (ith != 0) {
         return;
     }
-    GGML_UNUSED(nth);
     static std::once_flag once;
     std::call_once(once, [] {
         atexit([] {
-            const int64_t t = moe_skip_total.load();
-            fprintf(stderr, "moe skip stats: %lld of %lld expert slots kept (%.2f %%)\n", (long long) moe_skip_kept.load(),
-                    (long long) t, t > 0 ? 100.0 * moe_skip_kept.load() / t : 0.0);
+            const int64_t t = moe_skip_total.load(), u = moe_skip_uniq_total.load();
+            fprintf(stderr, "moe skip stats: slots kept %lld of %lld (%.2f %%), distinct experts per ubatch kept %lld of %lld (%.2f %%)\n",
+                    (long long) moe_skip_kept.load(), (long long) t, t > 0 ? 100.0 * moe_skip_kept.load() / t : 0.0,
+                    (long long) moe_skip_uniq_kept.load(), (long long) u, u > 0 ? 100.0 * moe_skip_uniq_kept.load() / u : 0.0);
         });
     });
-    const int64_t n = ggml_nelements(a);
-    int64_t kept = 0;
-    for (int64_t i = 0; i < n; ++i) {
-        const float v = ((const float *) a->data)[i];
-        ((float *) dst->data)[i] = v;
-        kept += v > 0.5f;
+    // a: keep mask [n_used, n_tokens] (F32), b: selected experts [n_used, n_tokens] (I32)
+    const int64_t n_used = a->ne[0], n_tok = a->ne[1];
+    std::vector<int32_t> all, kept;
+    int64_t kept_slots = 0;
+    for (int64_t t = 0; t < n_tok; ++t) {
+        for (int64_t k = 0; k < n_used; ++k) {
+            const float   v = *(const float *)   ((const char *) a->data + t*a->nb[1] + k*a->nb[0]);
+            const int32_t e = *(const int32_t *) ((const char *) b->data + t*b->nb[1] + k*b->nb[0]);
+            all.push_back(e);
+            if (v > 0.5f) {
+                kept.push_back(e);
+                kept_slots++;
+            }
+        }
     }
-    moe_skip_kept += kept;
-    moe_skip_total += n;
+    memcpy(dst->data, a->data, ggml_nbytes(a));
+    std::sort(all.begin(), all.end());   all.erase(std::unique(all.begin(), all.end()), all.end());
+    std::sort(kept.begin(), kept.end()); kept.erase(std::unique(kept.begin(), kept.end()), kept.end());
+    moe_skip_total += n_used * n_tok;
+    moe_skip_kept  += kept_slots;
+    moe_skip_uniq_total += (int64_t) all.size();
+    moe_skip_uniq_kept  += (int64_t) kept.size();
 }
 
 ggml_tensor * llm_graph_context::build_moe_ffn(
@@ -2320,7 +2336,7 @@ ggml_tensor * llm_graph_context::build_moe_ffn(
         ggml_tensor * w_sum = ggml_clamp(ctx0, ggml_sum_rows(ctx0, w2), 6.103515625e-5, INFINITY); // [1, n_tokens]
         ggml_tensor * keep  = ggml_step(ctx0, ggml_scale_bias(ctx0, ggml_div(ctx0, w2, w_sum), 1.0f, -moe_skip));
         if (getenv("LLAMA_MOE_SKIP_STATS")) {
-            keep = ggml_map_custom1(ctx0, keep, llm_moe_skip_count, 1, nullptr);
+            keep = ggml_map_custom2(ctx0, ggml_cont(ctx0, keep), ggml_cont(ctx0, ggml_reshape_2d(ctx0, selected_experts, n_expert_used, n_tokens)), llm_moe_skip_count, 1, nullptr);
         }
         ggml_tensor * w_kept = ggml_mul(ctx0, w2, keep);
         ggml_tensor * k_sum  = ggml_clamp(ctx0, ggml_sum_rows(ctx0, w_kept), 6.103515625e-5, INFINITY);
