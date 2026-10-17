@@ -1,0 +1,14 @@
+{
+  "start_epoch": 1792271428,
+  "interval_s": 1,
+  "duration_s": 180,
+  "channels": [
+    2,
+    3,
+    4,
+    5
+  ],
+  "bytes_per_event": 64,
+  "source": "https://raw.githubusercontent.com/torvalds/linux/master/tools/perf/pmu-events/arch/x86/amdzen2/data-fabric.json",
+  "scope": "system-wide passive counters alongside slot benchmark; correlate request windows; not peak bandwidth"
+}
