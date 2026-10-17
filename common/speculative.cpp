@@ -1723,6 +1723,9 @@ struct common_speculative_impl_draft_mtp : public common_speculative_impl {
                 common_sampler_reset(smpls[seq_id].get());
             }
 
+            if (!is_mem_shared) {
+                llama_moe_cache_trace_speculation(ctx_dft, seq_id, dp.pos0, params.n_max + 1, -1);
+            }
             const int32_t idx = batch.add(dp.id_last, dp.pos0, seq_id, true);
             batch.set_embd_state(idx, { pending_h[seq_id].data(), 1, (size_t) n_embd });
 
@@ -1852,6 +1855,9 @@ struct common_speculative_impl_draft_mtp : public common_speculative_impl {
 
             if (dp.result->size() < (size_t) params.n_min) {
                 dp.result->clear();
+            }
+            if (!is_mem_shared && dp.result->empty()) {
+                llama_moe_cache_trace_speculation(ctx_dft, seq_id, dp.pos0, params.n_max + 1, 1);
             }
         }
     }

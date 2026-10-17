@@ -1,5 +1,6 @@
 #include "../src/llama-moe-cache.h"
 #include "../src/llama-model.h"
+#include "../src/llama-ext.h"
 #include "../ggml/src/ggml-backend-impl.h"
 #include "ggml-cpu.h"
 #include "ggml-cpp.h"
@@ -9,6 +10,8 @@
 #include <nlohmann/json.hpp>
 
 #include <algorithm>
+#include <cmath>
+#include <set>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -112,6 +115,43 @@ static void test_policy() {
     GGML_ASSERT(policy.plan(10).empty() && policy.plan(10, true).empty());
     puts("Prompt ranking, cross-ubatch candidates, static pinning and configurable decay passed");
     puts("LFU policy checks passed");
+
+    llama_moe_cache_lfu small, large;
+    small.init(4, 1);
+    large.init(4, 1);
+    small.observe(0);
+    large.observe(0);
+    auto plans = llama_moe_cache_plan({&small, &large}, {100, 200}, 1, false, 0, true);
+    GGML_ASSERT(plans[0].empty() && plans[1].size() == 1);
+    GGML_ASSERT(small.slot_of[0] == -1 && large.slot_of[0] == 0);
+    small.observe(1);
+    small.observe(1);
+    large.observe(1);
+    large.observe(1);
+    plans = llama_moe_cache_plan({&small, &large}, {100, 200}, 1, false, 1, true);
+    GGML_ASSERT(plans[0].size() == 1 && plans[1].empty());
+    GGML_ASSERT(large.slot_of[0] == 0 && large.slot_of[1] == -1);
+
+    policy.init(8, 2);
+    policy.keys_per_layer = 4;
+    policy.layer_soft_limit = 1;
+    policy.seed(0, 0, 9, true);
+    policy.seed(1, 1, 9);
+    for (int i = 0; i < 6; ++i) {
+        policy.observe(4);
+    }
+    fills = policy.plan(1);
+    GGML_ASSERT(fills.size() == 1 && fills[0].evicted == 1 && policy.slot_of[0] == 0);
+
+    policy.init(4, 1, 2);
+    policy.begin_token();
+    policy.observe(0, true, false, false);
+    GGML_ASSERT(policy.misses == 1 && policy.counts[0] == 0 && policy.plan(1).empty());
+    policy.begin_token();
+    policy.begin_token();
+    policy.learn(0, 0.5);
+    GGML_ASSERT(policy.counts[0] == 0.5 && policy.plan(1).size() == 1);
+    puts("Cross-group byte value, soft layer budgets, pinned survival and delayed feedback passed");
 }
 
 // Host storage with a deferred stream: async copies retain their source pointers until drain().
@@ -442,6 +482,45 @@ static void test_ordering(const char * path, const char * profile, const char * 
         puts("JSONL append, independent context IDs, cropped rows, positions and failed-graph exclusion passed");
     }
 
+    {
+        test_env byte_value("GGML_MOE_HYBRID_BYTE_VALUE", "1");
+        test_env cap("GGML_MOE_HYBRID_ADMIT", "1");
+        auto * original = model->layers[1].ffn_down_exps;
+        ggml_context_ptr weights_ctx(ggml_init({ggml_tensor_overhead()*2, nullptr, true}));
+        auto * different = ggml_new_tensor_3d(weights_ctx.get(), original->type == GGML_TYPE_F16 ? GGML_TYPE_F32 : GGML_TYPE_F16, original->ne[0], original->ne[1], original->ne[2]);
+        ggml_backend_buffer_ptr weights_buf(ggml_backend_alloc_ctx_tensors_from_buft(weights_ctx.get(), buft));
+        ggml_backend_buffer_set_usage(weights_buf.get(), GGML_BACKEND_BUFFER_USAGE_WEIGHTS);
+        ggml_backend_buffer_clear(weights_buf.get(), 0);
+        model->layers[1].ffn_down_exps = different;
+        {
+            llama_moe_cache mixed(*model, {&queued.backend}, {buft}, 2*budget, nullptr, true);
+            GGML_ASSERT(mixed.get_slot_map(0, 1, 1) && mixed.get_slot_map(1, 1, 1));
+            const size_t before = queued.syncs;
+            mixed.begin_graph(2);
+            ggml_context_ptr ctx(ggml_init({1024*1024, nullptr, false}));
+            auto * graph = ggml_new_graph(ctx.get());
+            for (int il = 0; il < 2; ++il) {
+                auto * ids = ggml_new_tensor_2d(ctx.get(), GGML_TYPE_I32, 1, 2);
+                ((int32_t *) ids->data)[0] = 0;
+                ((int32_t *) ids->data)[1] = il == 0 ? 1 : 0;
+                ggml_build_forward_expand(graph, mixed.build_observe(ctx.get(), ids, il, true));
+            }
+            GGML_ASSERT(ggml_backend_graph_compute(queued.cpu.get(), graph) == GGML_STATUS_SUCCESS);
+            mixed.end_graph(true);
+            GGML_ASSERT(queued.syncs == before && queued.queue.size() == 4);
+            queued.drain();
+            GGML_ASSERT(((int32_t *) mixed.get_slot_map(0, 1, 1)->data)[0] == -1);
+            const int32_t slot = ((int32_t *) mixed.get_slot_map(1, 1, 1)->data)[0];
+            GGML_ASSERT(slot >= 0);
+            for (const auto * w : {model->layers[1].ffn_gate_exps, model->layers[1].ffn_up_exps, different}) {
+                const auto * bank = mixed.get_experts(w);
+                GGML_ASSERT(memcmp((const char *) bank->data + slot*bank->nb[2], w->data, w->nb[2]) == 0);
+            }
+        }
+        model->layers[1].ffn_down_exps = original;
+        puts("Mixed-layout global admission and deferred bank/map writes passed");
+    }
+
 }
 
 static void test_contexts(const char * path, const char * trace_path) {
@@ -451,6 +530,11 @@ static void test_contexts(const char * path, const char * trace_path) {
     GGML_ASSERT(draft.moe_cache_draft && draft.moe_cache_size == 0);
     GGML_ASSERT(common_context_params_to_llama(draft).moe_cache_draft);
     GGML_ASSERT(!common_context_params_to_llama(base).moe_cache_draft && base.moe_cache_size == 1024);
+    base.n_ubatch = 256;
+    base.speculative.draft.n_ubatch = 32;
+    GGML_ASSERT(common_base_params_to_speculative(base).n_ubatch == 32 && base.n_ubatch == 256);
+    base.speculative.draft.n_ubatch = 0;
+    GGML_ASSERT(common_base_params_to_speculative(base).n_ubatch == 256);
 
     auto mp = llama_model_default_params();
     mp.n_gpu_layers = 0;
@@ -486,7 +570,9 @@ static void test_contexts(const char * path, const char * trace_path) {
         batch.n_tokens = 1;
         batch.pos[0] = 20;
         batch.logits[0] = 1;
+        llama_moe_cache_trace_speculation(traced.get(), 0, 20, 1, -1);
         GGML_ASSERT(llama_decode(traced.get(), batch) == 0);
+        llama_moe_cache_trace_speculation(traced.get(), 0, 20, 1, 0);
     }
     llama_batch_free(batch);
     std::ifstream trace(trace_path);
@@ -495,11 +581,13 @@ static void test_contexts(const char * path, const char * trace_path) {
     while (std::getline(trace, line)) {
         records.push_back(nlohmann::json::parse(line));
     }
-    GGML_ASSERT(records.size() == 3);
+    GGML_ASSERT(records.size() == 5);
     GGML_ASSERT(records[0]["trace_only"] == true && records[0]["n_tokens"] == 16 && records[0]["prefill_end"] == false);
     GGML_ASSERT(records[1]["n_tokens"] == 4 && records[1]["prefill"] == true && records[1]["prefill_end"] == true);
     GGML_ASSERT(records[1]["positions"][3] == 19);
-    GGML_ASSERT(records[2]["n_tokens"] == 1 && records[2]["prefill"] == false);
+    GGML_ASSERT(records[2]["event"] == "spec_begin" && records[2]["n_accepted"] == -1);
+    GGML_ASSERT(records[3]["n_tokens"] == 1 && records[3]["prefill"] == false);
+    GGML_ASSERT(records[4]["event"] == "spec_accept" && records[4]["n_accepted"] == 0);
 
     const std::string mismatch = std::string(trace_path) + ".profile";
     {
@@ -582,34 +670,71 @@ static void replay(const char * path, int slots, size_t admit, size_t ubatch) {
 }
 
 struct replay_context {
+    struct group {
+        llama_moe_cache_lfu policy;
+        int n_expert = 0;
+        int slots = 0;
+        size_t bytes = 0;
+        std::set<int> layers;
+    };
     struct prompt_stats {
         int seq;
-        uint64_t tokens = 0;
-        uint64_t hits = 0;
-        uint64_t routes = 0;
+        uint64_t tokens = 0, hits = 0, routes = 0;
     };
-
-    llama_moe_cache_lfu policy;
-    int n_expert = 0;
+    struct vote {
+        int group, key, pos;
+        uint64_t token;
+    };
+    struct span {
+        int pos, n_tokens;
+        std::vector<vote> votes;
+    };
+    std::map<int, group> groups;
+    std::map<int, int> layer_group;
+    std::map<int, size_t> uncached_bytes;
+    std::map<int, span> spans;
     int n_layer = 0;
-    int group = -1;
-    uint64_t uploads = 0;
-    uint64_t bytes = 0;
-    uint64_t initial_uploads = 0;
-    uint64_t initial_bytes = 0;
-    uint64_t decode_hits = 0;
-    uint64_t decode_routes = 0;
-    uint64_t first_hits = 0;
-    uint64_t first_routes = 0;
+    size_t n_groups = 0;
+    size_t next_group = 0;
+    size_t last_group = 0;
+    size_t admit_remaining = 0;
+    uint64_t tokens = 0, hits = 0, misses = 0;
+    uint64_t uploads = 0, bytes = 0, initial_uploads = 0, initial_bytes = 0;
+    uint64_t decode_hits = 0, decode_routes = 0, decode_hit_bytes = 0, decode_bytes = 0;
+    uint64_t first_hits = 0, first_routes = 0, first_hit_bytes = 0, first_bytes = 0;
+    uint64_t rejected_routes = 0;
     std::map<int, int> first_left;
     std::map<int, bool> in_prefill;
     std::map<int, size_t> prompt_of;
     std::vector<prompt_stats> prompts;
-    std::map<int, size_t> expert_bytes;
+
+    size_t plan(size_t limit, bool prompt, bool byte_value, size_t first_group) {
+        llama_moe_cache_lfu empty;
+        std::vector<llama_moe_cache_lfu *> policies(n_groups, &empty);
+        std::vector<size_t> sizes(n_groups, 0);
+        for (auto & entry : groups) {
+            policies[entry.first] = &entry.second.policy;
+            sizes[entry.first] = entry.second.bytes;
+        }
+        const auto plans = llama_moe_cache_plan(policies, sizes, limit, prompt, first_group, byte_value);
+        size_t admitted = 0;
+        for (size_t ig = 0; ig < plans.size(); ++ig) {
+            for (const auto & f : plans[ig]) {
+                ++admitted;
+                ++uploads;
+                bytes += sizes[ig] + sizeof(int32_t)*(f.evicted < 0 ? 1 : 2);
+            }
+        }
+        return admitted;
+    }
 };
 
 static void replay_log(const char * path, int slots, size_t admit, size_t prefill, int static_pct, uint64_t decay, const char * profile, uint64_t context_id) {
-    GGML_ASSERT(slots > 0 && static_pct >= 0 && static_pct <= 100 && decay > 0);
+    GGML_ASSERT(slots >= 0 && static_pct >= 0 && static_pct <= 100 && decay > 0);
+    const bool byte_value = llama_moe_cache_env_size("GGML_MOE_HYBRID_BYTE_VALUE", 0, 1);
+    const size_t soft_pct = llama_moe_cache_env_size("GGML_MOE_HYBRID_LAYER_SOFT_PCT", 0, 1000);
+    const bool accepted_only = llama_moe_cache_env_size("GGML_MOE_REPLAY_ACCEPTED_ONLY", 0, 1);
+    const bool warm_start = llama_moe_cache_env_size("GGML_MOE_REPLAY_WARM", 0, 1);
     std::ifstream input(path);
     GGML_ASSERT(input.good());
     std::vector<nlohmann::json> batches;
@@ -617,40 +742,61 @@ static void replay_log(const char * path, int slots, size_t admit, size_t prefil
     std::string line;
     while (std::getline(input, line)) {
         auto b = nlohmann::json::parse(line);
-        GGML_ASSERT(b.at("version") == 1);
+        GGML_ASSERT(b.at("version") == 1 || b.at("version") == 2);
         const uint64_t id = b.at("context");
         if (context_id != UINT64_MAX && id != context_id) {
             continue;
         }
         auto & c = contexts[id];
-        const int nt = b.at("n_tokens");
-        GGML_ASSERT(nt > 0 && b.at("positions").size() == (size_t) nt && b.at("seq_ids").size() == (size_t) nt);
-        for (const auto & l : b.at("layers")) {
-            const int group = l.value("group", 0);
-            if (group >= 0) {
-                if (c.group >= 0 && group != c.group) {
-                    throw std::runtime_error("replay-log currently supports one cache group per context");
+        if (!b.contains("event")) {
+            const int nt = b.at("n_tokens");
+            GGML_ASSERT(nt > 0 && nt <= 65536 && b.at("positions").size() == (size_t) nt && b.at("seq_ids").size() == (size_t) nt);
+            const int n_groups = b.value("n_groups", 0);
+            GGML_ASSERT(n_groups >= 0 && n_groups <= 4096);
+            c.n_groups = std::max(c.n_groups, (size_t) n_groups);
+            for (const auto & l : b.at("layers")) {
+                const int ig = l.value("group", 0);
+                const int layer = l.at("layer");
+                GGML_ASSERT(ig >= -1 && ig < 4096);
+                GGML_ASSERT(layer >= 0 && layer < 4096 && l.at("expert_bytes").get<size_t>() > 0);
+                c.n_layer = std::max(c.n_layer, layer + 1);
+                GGML_ASSERT(l.at("rows").size() == l.at("ids").size());
+                for (int row : l.at("rows")) {
+                    GGML_ASSERT(row >= 0 && row < nt);
                 }
-                c.group = group;
-            }
-            if (group < 0 && !b.value("trace_only", false)) {
-                continue;
-            }
-            const int n_expert = l.value("n_expert", 0);
-            GGML_ASSERT(n_expert >= 0 && n_expert <= 65536);
-            c.n_expert = std::max(c.n_expert, n_expert);
-            const int il = l.at("layer");
-            GGML_ASSERT(il >= 0 && il < 4096);
-            c.n_layer = std::max(c.n_layer, il + 1);
-            c.expert_bytes[il] = l.at("expert_bytes").get<size_t>();
-            GGML_ASSERT(l.at("rows").size() == l.at("ids").size());
-            for (int row : l.at("rows")) {
-                GGML_ASSERT(row >= 0 && row < nt);
-            }
-            for (const auto & ids : l.at("ids")) {
-                for (int id : ids) {
-                    GGML_ASSERT(id >= 0 && id < 65536);
-                    c.n_expert = std::max(c.n_expert, id + 1);
+                if (ig < 0 && (!b.value("trace_only", false) || slots == 0)) {
+                    c.uncached_bytes[layer] = l.at("expert_bytes");
+                    continue;
+                }
+                auto & g = c.groups[std::max(0, ig)];
+                c.n_groups = std::max(c.n_groups, (size_t) std::max(0, ig) + 1);
+                int ne = l.value("n_expert", 0);
+                if (!ne) {
+                    for (const auto & ids : l.at("ids")) {
+                        for (int expert : ids) {
+                            GGML_ASSERT(expert >= 0 && expert < 65536);
+                            ne = std::max(ne, expert + 1);
+                        }
+                    }
+                }
+                const int il = l.at("layer");
+                const size_t bytes = l.at("expert_bytes");
+                GGML_ASSERT(ne > 0 && ne <= 65536 && il >= 0 && il < 4096 && bytes > 0);
+                GGML_ASSERT(!g.n_expert || g.bytes == bytes);
+                g.n_expert = std::max(g.n_expert, ne);
+                g.bytes = bytes;
+                g.slots = l.value("slots", 0);
+                g.layers.insert(il);
+                GGML_ASSERT(!c.layer_group.count(il) || c.layer_group.at(il) == std::max(0, ig));
+                c.layer_group[il] = std::max(0, ig);
+                GGML_ASSERT(l.at("rows").size() == l.at("ids").size());
+                for (int row : l.at("rows")) {
+                    GGML_ASSERT(row >= 0 && row < nt);
+                }
+                for (const auto & ids : l.at("ids")) {
+                    for (int expert : ids) {
+                        GGML_ASSERT(expert >= 0 && expert < ne);
+                    }
                 }
             }
         }
@@ -659,61 +805,119 @@ static void replay_log(const char * path, int slots, size_t admit, size_t prefil
     GGML_ASSERT(!batches.empty());
     for (auto & entry : contexts) {
         auto & c = entry.second;
-        GGML_ASSERT(c.n_layer > 0 && c.n_expert > 0);
-        c.policy.init((size_t) c.n_layer*c.n_expert, slots, decay);
-        if (static_pct) {
-            GGML_ASSERT(profile);
-            std::ifstream in(profile);
-            std::getline(in, line);
-            GGML_ASSERT(line == "llama-moe-profile-v1");
-            std::vector<std::pair<double, int>> ranked;
-            int il, expert;
-            double count;
-            while (in >> il >> expert >> count) {
-                GGML_ASSERT(il >= 0 && il < c.n_layer && expert >= 0 && expert < c.n_expert && count >= 0);
-                ranked.push_back({count, il*c.n_expert + expert});
+        GGML_ASSERT(!c.groups.empty() || !c.uncached_bytes.empty());
+        c.n_groups = std::max<size_t>(1, c.n_groups);
+        if (slots > 0 && c.groups.size() != 1) {
+            throw std::runtime_error("multi-group replay requires recorded slot counts (slots argument 0)");
+        }
+        for (auto & ge : c.groups) {
+            auto & g = ge.second;
+            if (slots > 0) {
+                g.slots = slots;
             }
-            GGML_ASSERT(in.eof());
-            std::sort(ranked.begin(), ranked.end(), [](const auto & a, const auto & b) {
-                return a.first == b.first ? a.second < b.second : a.first > b.first;
-            });
-            const size_t base = (size_t) slots*static_pct/100;
-            GGML_ASSERT(ranked.size() >= base);
-            for (size_t slot = 0; slot < base; ++slot) {
-                const auto & r = ranked[slot];
-                c.policy.seed(r.second, slot, r.first, true);
-                ++c.initial_uploads;
-                c.initial_bytes += c.expert_bytes.at(r.second/c.n_expert);
+            GGML_ASSERT(g.slots > 0);
+            g.policy.init((size_t) c.n_layer*g.n_expert, g.slots, decay);
+            g.policy.keys_per_layer = g.n_expert;
+            g.policy.layer_soft_limit = (double) g.slots/g.layers.size()*soft_pct/100.0;
+            if (static_pct || warm_start) {
+                GGML_ASSERT(profile);
+                std::ifstream in(profile);
+                std::getline(in, line);
+                GGML_ASSERT(line == "llama-moe-profile-v1");
+                std::vector<std::pair<double, int>> ranked;
+                int il, expert;
+                double count;
+                while (in >> il >> expert >> count) {
+                    GGML_ASSERT(il >= 0 && il < c.n_layer && expert >= 0 && expert < g.n_expert && std::isfinite(count) && count >= 0);
+                    if (g.layers.count(il)) {
+                        ranked.push_back({count, il*g.n_expert + expert});
+                    }
+                }
+                GGML_ASSERT(in.eof());
+                if (static_pct) {
+                    std::sort(ranked.begin(), ranked.end(), [](const auto & a, const auto & b) {
+                        return a.first == b.first ? a.second < b.second : a.first > b.first;
+                    });
+                }
+                const size_t base = static_pct ? (size_t) g.slots*static_pct/100 : ranked.size();
+                GGML_ASSERT(ranked.size() >= base && base <= (size_t) g.slots);
+                for (size_t slot = 0; slot < base; ++slot) {
+                    g.policy.seed(ranked[slot].second, slot, ranked[slot].first, static_pct > 0);
+                    ++c.initial_uploads;
+                    c.initial_bytes += g.bytes;
+                }
             }
         }
     }
     for (const auto & b : batches) {
         auto & c = contexts.at(b.at("context").get<uint64_t>());
-        auto & policy = c.policy;
-        const int nt = b.at("n_tokens");
-        const bool prompt = b.at("prefill");
-        const bool prompt_end = b.at("prefill_end");
-        std::vector<std::vector<std::pair<int, bool>>> routes(nt);
-        for (const auto & l : b.at("layers")) {
-            if (l.value("group", 0) < 0 && !b.value("trace_only", false)) {
+        if (b.contains("event")) {
+            if (!accepted_only) {
                 continue;
             }
+            const int seq = b.at("seq"), pos = b.at("pos"), nt = b.at("n_tokens");
+            GGML_ASSERT(seq >= 0 && pos >= 0 && nt > 0 && nt <= 65536);
+            if (b.at("event") == "spec_begin") {
+                if (c.spans.count(seq)) {
+                    throw std::runtime_error("unresolved speculative span");
+                }
+                c.spans[seq] = {pos, nt, {}};
+            } else if (b.at("event") == "spec_accept") {
+                auto it = c.spans.find(seq);
+                if (it == c.spans.end()) {
+                    continue; // A draft may have no evaluated speculative rows.
+                }
+                const int accepted = b.at("n_accepted");
+                GGML_ASSERT(it->second.pos == pos && accepted >= 0 && accepted <= nt && nt <= it->second.n_tokens);
+                for (const auto & v : it->second.votes) {
+                    auto & p = c.groups.at(v.group).policy;
+                    if ((int64_t) v.pos < (int64_t) pos + accepted) {
+                        const uint64_t shifts = (p.tokens - 1)/decay - (v.token - 1)/decay;
+                        p.learn(v.key, shifts > 1074 ? 0 : std::ldexp(1.0, -(int) shifts));
+                    } else {
+                        ++c.rejected_routes;
+                    }
+                }
+                c.spans.erase(it);
+                c.admit_remaining -= c.plan(c.admit_remaining, false, byte_value, c.last_group);
+            } else {
+                throw std::runtime_error("unknown trace event");
+            }
+            continue;
+        }
+        const int nt = b.at("n_tokens");
+        const bool prompt = b.at("prefill"), prompt_end = b.at("prefill_end");
+        struct route { int group, key; bool cache; };
+        std::vector<std::vector<route>> routes(nt);
+        for (const auto & l : b.at("layers")) {
             const int il = l.at("layer");
-            // Trace-only logs have no banks; estimate supported GPU windows when replaying them.
+            const int ig = c.uncached_bytes.count(il) ? -1 : c.layer_group.at(il);
             const bool use_cache = b.value("trace_only", false) ? l.at("ids").size() <= 8 : l.at("cache").get<bool>();
             for (size_t i = 0; i < l.at("rows").size(); ++i) {
                 const int row = l.at("rows")[i];
-                for (int id : l.at("ids")[i]) {
-                    routes[row].push_back({il*c.n_expert + id, use_cache});
+                for (int expert : l.at("ids")[i]) {
+                    routes[row].push_back({ig, ig < 0 ? il : il*c.groups.at(ig).n_expert + expert, ig >= 0 && use_cache});
                 }
             }
         }
         for (int t = 0; t < nt; ++t) {
-            policy.begin_token();
+            ++c.tokens;
+            for (auto & g : c.groups) {
+                g.second.policy.begin_token();
+            }
             std::vector<size_t> first_prompts;
+            replay_context::span * deferred = nullptr;
+            const int pos = b.at("positions")[t];
             for (int seq : b.at("seq_ids")[t]) {
+                if (accepted_only && !prompt && c.spans.count(seq)) {
+                    auto & span = c.spans.at(seq);
+                    if (pos >= span.pos && (int64_t) pos < (int64_t) span.pos + span.n_tokens) {
+                        GGML_ASSERT(b.at("seq_ids")[t].size() == 1);
+                        deferred = &span;
+                    }
+                }
                 if (prompt) {
-                    if (!c.in_prefill[seq] || b.at("positions")[t] == 0) {
+                    if (!c.in_prefill[seq] || pos == 0) {
                         c.prompt_of[seq] = c.prompts.size();
                         c.prompts.push_back({seq});
                         c.in_prefill[seq] = true;
@@ -728,13 +932,26 @@ static void replay_log(const char * path, int slots, size_t admit, size_t prefil
             }
             const bool first = !first_prompts.empty();
             for (const auto & r : routes[t]) {
-                const bool hit = r.second && policy.slot_of[r.first] >= 0;
-                policy.observe(r.first, r.second, prompt && prefill > 0);
+                auto * policy = r.group < 0 ? nullptr : &c.groups.at(r.group).policy;
+                const size_t bytes = policy ? c.groups.at(r.group).bytes : c.uncached_bytes.at(r.key);
+                const bool hit = policy && r.cache && policy->slot_of[r.key] >= 0;
+                if (policy) {
+                    policy->observe(r.key, r.cache, prompt && prefill > 0, !deferred);
+                }
+                c.hits += hit;
+                c.misses += !hit;
+                if (deferred && policy) {
+                    deferred->votes.push_back({r.group, r.key, pos, policy->tokens});
+                }
                 if (!prompt) {
                     c.decode_hits += hit;
                     ++c.decode_routes;
+                    c.decode_hit_bytes += hit*bytes;
+                    c.decode_bytes += bytes;
                     c.first_hits += first && hit;
                     c.first_routes += first;
+                    c.first_hit_bytes += (first && hit)*bytes;
+                    c.first_bytes += first*bytes;
                     for (size_t ip : first_prompts) {
                         c.prompts[ip].hits += hit;
                         ++c.prompts[ip].routes;
@@ -742,14 +959,14 @@ static void replay_log(const char * path, int slots, size_t admit, size_t prefil
                 }
             }
         }
-        // Warm once at the prompt boundary; retain candidates from earlier prefill ubatches.
-        const auto fills = prompt && prefill ? (prompt_end ? policy.plan(prefill, true) : policy.plan(0)) : policy.plan(admit);
-        for (const auto & f : fills) {
-            ++c.uploads;
-            c.bytes += c.expert_bytes.at(f.key/c.n_expert) + sizeof(int32_t)*(f.evicted < 0 ? 1 : 2);
-        }
+        const size_t limit = prompt && prefill ? (prompt_end ? prefill : 0) : admit;
+        c.admit_remaining = limit - c.plan(limit, prompt && prefill && prompt_end, byte_value, c.next_group);
+        c.last_group = c.next_group;
+        c.next_group = (c.next_group + 1) % c.n_groups;
         if (prompt_end) {
-            policy.clear_prompt();
+            for (auto & g : c.groups) {
+                g.second.policy.clear_prompt();
+            }
             for (auto & seq : c.in_prefill) {
                 seq.second = false;
             }
@@ -758,18 +975,22 @@ static void replay_log(const char * path, int slots, size_t admit, size_t prefil
     auto pct = [](uint64_t hits, uint64_t routes) { return routes ? 100.0*hits/routes : 0.0; };
     for (const auto & entry : contexts) {
         const auto & c = entry.second;
-        const auto & p = c.policy;
-        printf("context=%llu slots=%d admit=%zu prefill=%zu static_pct=%d decay=%llu tokens=%llu hits=%llu misses=%llu hit_rate=%.4f%% decode_hit_rate=%.4f%% first32_hit_rate=%.4f%% first32_routes=%llu uploads=%llu uploads/token=%.4f MiB/token=%.4f initial_uploads=%llu initial_MiB=%.4f\n",
-            (unsigned long long) entry.first, slots, admit, prefill, static_pct, (unsigned long long) decay,
-            (unsigned long long) p.tokens, (unsigned long long) p.hits, (unsigned long long) p.misses,
-            pct(p.hits, p.hits + p.misses), pct(c.decode_hits, c.decode_routes), pct(c.first_hits, c.first_routes),
-            (unsigned long long) c.first_routes, (unsigned long long) c.uploads, (double) c.uploads/p.tokens,
-            (double) c.bytes/(1024*1024)/p.tokens, (unsigned long long) c.initial_uploads, (double) c.initial_bytes/(1024*1024));
+        int total_slots = 0;
+        for (const auto & g : c.groups) {
+            total_slots += g.second.slots;
+        }
+        printf("context=%llu slots=%d admit=%zu prefill=%zu static_pct=%d decay=%llu tokens=%llu hits=%llu misses=%llu hit_rate=%.4f%% decode_hit_rate=%.4f%% first32_hit_rate=%.4f%% first32_routes=%llu uploads=%llu uploads/token=%.4f MiB/token=%.4f initial_uploads=%llu initial_MiB=%.4f decode_byte_hit_rate=%.4f%% first32_byte_hit_rate=%.4f%% groups=%zu rejected_routes=%llu unresolved_spans=%zu\n",
+            (unsigned long long) entry.first, total_slots, admit, prefill, static_pct, (unsigned long long) decay,
+            (unsigned long long) c.tokens, (unsigned long long) c.hits, (unsigned long long) c.misses,
+            pct(c.hits, c.hits + c.misses), pct(c.decode_hits, c.decode_routes), pct(c.first_hits, c.first_routes),
+            (unsigned long long) c.first_routes, (unsigned long long) c.uploads, (double) c.uploads/c.tokens,
+            (double) c.bytes/(1024*1024)/c.tokens, (unsigned long long) c.initial_uploads, (double) c.initial_bytes/(1024*1024),
+            pct(c.decode_hit_bytes, c.decode_bytes), pct(c.first_hit_bytes, c.first_bytes), c.groups.size(), (unsigned long long) c.rejected_routes, c.spans.size());
         for (size_t ip = 0; ip < c.prompts.size(); ++ip) {
-            const auto & prompt = c.prompts[ip];
+            const auto & p = c.prompts[ip];
             printf("prompt context=%llu index=%zu seq=%d first32_tokens=%llu first32_hits=%llu first32_routes=%llu first32_hit_rate=%.4f%%\n",
-                (unsigned long long) entry.first, ip, prompt.seq, (unsigned long long) prompt.tokens,
-                (unsigned long long) prompt.hits, (unsigned long long) prompt.routes, pct(prompt.hits, prompt.routes));
+                (unsigned long long) entry.first, ip, p.seq, (unsigned long long) p.tokens,
+                (unsigned long long) p.hits, (unsigned long long) p.routes, pct(p.hits, p.routes));
         }
     }
 }

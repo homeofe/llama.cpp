@@ -59,6 +59,7 @@ struct llama_context {
     void sched_reserve();
 
     void synchronize();
+    void moe_cache_trace_speculation(llama_seq_id seq_id, llama_pos pos, int32_t n_tokens, int32_t n_accepted);
 
     const llama_model   & get_model()   const;
     const llama_cparams & get_cparams() const;

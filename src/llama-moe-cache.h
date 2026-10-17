@@ -29,14 +29,24 @@ struct llama_moe_cache_lfu {
     uint64_t tokens = 0;
     uint64_t hits = 0;
     uint64_t misses = 0;
+    int32_t keys_per_layer = 0;
+    double layer_soft_limit = 0;
 
     void init(size_t n_keys, int32_t n_slots, uint64_t decay_interval = 512);
     void seed(int32_t key, int32_t slot, double count, bool pin = false);
     void begin_token();
-    void observe(int32_t key, bool use_cache = true, bool prompt = false);
+    void observe(int32_t key, bool use_cache = true, bool prompt = false, bool admission = true);
+    void learn(int32_t key, double weight, bool prompt = false);
     void clear_prompt();
+    double score(int32_t key, bool prompt) const;
+    std::vector<fill> propose(size_t limit, bool prompt = false);
+    void apply(const std::vector<fill> & fills);
     std::vector<fill> plan(size_t limit, bool prompt = false);
 };
+
+std::vector<std::vector<llama_moe_cache_lfu::fill>> llama_moe_cache_plan(
+        const std::vector<llama_moe_cache_lfu *> & policies, const std::vector<size_t> & expert_bytes,
+        size_t limit, bool prompt, size_t first_group, bool byte_value);
 
 // keeps experts of host-resident MoE layers in device banks
 // the default policy uploads misses; hybrid mode leaves misses on the CPU
@@ -56,6 +66,7 @@ public:
     void begin_graph(int64_t n_tokens, const int8_t * output = nullptr, const int32_t * positions = nullptr,
                      const int32_t * n_seq_id = nullptr, int32_t * const * seq_id = nullptr, bool prefill = false, bool prefill_end = false);
     void end_graph(bool success);
+    void trace_speculation(int32_t seq_id, int32_t pos, int32_t n_tokens, int32_t n_accepted);
 
     // the slot map of layer il, if its experts can be read from the cache for n_tokens tokens, nullptr otherwise
     ggml_tensor * get_slot_map(int32_t il, int64_t n_tokens, int64_t n_expert_used) const;

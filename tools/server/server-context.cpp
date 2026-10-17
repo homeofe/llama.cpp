@@ -12,6 +12,7 @@
 #include "common.h"
 #include "fit.h"
 #include "llama.h"
+#include "../../src/llama-ext.h"
 #include "log.h"
 #include "sampling.h"
 #include "speculative.h"
@@ -570,6 +571,8 @@ struct server_slot {
             }
 
             auto pos0 = prompt.tokens.pos_next();
+
+            llama_moe_cache_trace_speculation(ctx_tgt, id, pos0, spec_draft.size() + 1, -1);
 
             add_ok &= batch.add(id, sampled, pos0++, true, false);
             for (auto token : spec_draft) {
@@ -4545,6 +4548,12 @@ private:
                 slot.spec_i_batch.clear();
 
                 GGML_ASSERT(accepted.size() >= 1);
+
+                const llama_pos pos0 = slot.prompt.tokens.pos_next() - n_draft - 1;
+                llama_moe_cache_trace_speculation(slot.ctx_tgt, slot.id, pos0, n_draft + 1, accepted.size());
+                if (slot.ctx_dft) {
+                    llama_moe_cache_trace_speculation(slot.ctx_dft, slot.id, pos0, n_draft + 1, accepted.size());
+                }
 
                 const uint32_t n_rollback = slot.spec_draft.size() + 1 - accepted.size();
 

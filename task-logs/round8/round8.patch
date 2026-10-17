@@ -1,0 +1,2706 @@
+diff --git a/common/speculative.cpp b/common/speculative.cpp
+index c4be1a847..745062f28 100644
+--- a/common/speculative.cpp
++++ b/common/speculative.cpp
+@@ -1723,6 +1723,9 @@ struct common_speculative_impl_draft_mtp : public common_speculative_impl {
+                 common_sampler_reset(smpls[seq_id].get());
+             }
+ 
++            if (!is_mem_shared) {
++                llama_moe_cache_trace_speculation(ctx_dft, seq_id, dp.pos0, params.n_max + 1, -1);
++            }
+             const int32_t idx = batch.add(dp.id_last, dp.pos0, seq_id, true);
+             batch.set_embd_state(idx, { pending_h[seq_id].data(), 1, (size_t) n_embd });
+ 
+@@ -1853,6 +1856,9 @@ struct common_speculative_impl_draft_mtp : public common_speculative_impl {
+             if (dp.result->size() < (size_t) params.n_min) {
+                 dp.result->clear();
+             }
++            if (!is_mem_shared && dp.result->empty()) {
++                llama_moe_cache_trace_speculation(ctx_dft, seq_id, dp.pos0, params.n_max + 1, 1);
++            }
+         }
+     }
+ 
+diff --git a/src/llama-context.cpp b/src/llama-context.cpp
+index be868ca75..d3cc2e111 100644
+--- a/src/llama-context.cpp
++++ b/src/llama-context.cpp
+@@ -4217,6 +4217,16 @@ uint32_t llama_n_batch(const llama_context * ctx) {
+     return ctx->n_batch();
+ }
+ 
++void llama_context::moe_cache_trace_speculation(llama_seq_id seq_id, llama_pos pos, int32_t n_tokens, int32_t n_accepted) {
++    if (moe_cache) {
++        moe_cache->trace_speculation(seq_id, pos, n_tokens, n_accepted);
++    }
++}
++
++void llama_moe_cache_trace_speculation(llama_context * ctx, llama_seq_id seq_id, llama_pos pos, int32_t n_tokens, int32_t n_accepted) {
++    ctx->moe_cache_trace_speculation(seq_id, pos, n_tokens, n_accepted);
++}
++
+ uint32_t llama_n_ubatch(const llama_context * ctx) {
+     return ctx->n_ubatch();
+ }
+diff --git a/src/llama-context.h b/src/llama-context.h
+index 996e480f3..ab585a6f5 100644
+--- a/src/llama-context.h
++++ b/src/llama-context.h
+@@ -59,6 +59,7 @@ struct llama_context {
+     void sched_reserve();
+ 
+     void synchronize();
++    void moe_cache_trace_speculation(llama_seq_id seq_id, llama_pos pos, int32_t n_tokens, int32_t n_accepted);
+ 
+     const llama_model   & get_model()   const;
+     const llama_cparams & get_cparams() const;
+diff --git a/src/llama-ext.h b/src/llama-ext.h
+index b8c5e8033..43a7700cb 100644
+--- a/src/llama-ext.h
++++ b/src/llama-ext.h
+@@ -10,6 +10,9 @@
+ #include <map>
+ #include <vector>
+ 
++// Trace a speculative input span: -1 starts it, otherwise n_accepted is the retained input prefix.
++LLAMA_API void llama_moe_cache_trace_speculation(struct llama_context * ctx, llama_seq_id seq_id, llama_pos pos, int32_t n_tokens, int32_t n_accepted);
++
+ // Reserve a new compute graph. It is valid until the next call to llama_graph_reserve.
+ LLAMA_API struct ggml_cgraph * llama_graph_reserve(
+         struct llama_context * ctx,
+diff --git a/src/llama-moe-cache.cpp b/src/llama-moe-cache.cpp
+index 986a35d80..7747ba874 100644
+--- a/src/llama-moe-cache.cpp
++++ b/src/llama-moe-cache.cpp
+@@ -45,6 +45,8 @@ void llama_moe_cache_lfu::init(size_t n_keys, int32_t n_slots, uint64_t decay_in
+     pending.assign(n_keys, false);
+     candidates.clear();
+     tokens = hits = misses = 0;
++    keys_per_layer = 0;
++    layer_soft_limit = 0;
+ }
+ 
+ void llama_moe_cache_lfu::seed(int32_t key, int32_t slot, double count, bool pin) {
+@@ -66,18 +68,25 @@ void llama_moe_cache_lfu::begin_token() {
+     ++tokens;
+ }
+ 
+-void llama_moe_cache_lfu::observe(int32_t key, bool use_cache, bool prompt) {
++void llama_moe_cache_lfu::observe(int32_t key, bool use_cache, bool prompt, bool admission) {
+     GGML_ASSERT(key >= 0 && (size_t) key < counts.size());
+-    ++counts[key];
+-    if (prompt) {
+-        ++prompt_counts[key];
++    if (admission) {
++        learn(key, 1.0, prompt);
+     }
+     if (use_cache && slot_of[key] >= 0) {
+         ++hits;
+     } else {
+         ++misses;
+     }
+-    if (slot_of[key] < 0 && !pending[key]) {
++}
++
++void llama_moe_cache_lfu::learn(int32_t key, double weight, bool prompt) {
++    GGML_ASSERT(key >= 0 && (size_t) key < counts.size() && weight >= 0);
++    counts[key] += weight;
++    if (prompt) {
++        prompt_counts[key] += weight;
++    }
++    if (weight > 0 && slot_of[key] < 0 && !pending[key]) {
+         candidates.push_back(key);
+         pending[key] = true;
+     }
+@@ -87,8 +96,37 @@ void llama_moe_cache_lfu::clear_prompt() {
+     std::fill(prompt_counts.begin(), prompt_counts.end(), 0.0);
+ }
+ 
+-std::vector<llama_moe_cache_lfu::fill> llama_moe_cache_lfu::plan(size_t limit, bool prompt) {
+-    const auto & rank = prompt ? prompt_counts : counts;
++double llama_moe_cache_lfu::score(int32_t key, bool prompt) const {
++    const double count = (prompt ? prompt_counts : counts)[key];
++    if (layer_soft_limit == 0) {
++        return count;
++    }
++    int resident = 0;
++    const int32_t begin = key/keys_per_layer*keys_per_layer;
++    for (int32_t k = begin; k < begin + keys_per_layer; ++k) {
++        resident += slot_of[k] >= 0;
++    }
++    return count/std::max(1.0, resident/layer_soft_limit);
++}
++
++std::vector<llama_moe_cache_lfu::fill> llama_moe_cache_lfu::propose(size_t limit, bool prompt) {
++    const auto & counts_rank = prompt ? prompt_counts : counts;
++    std::vector<double> adjusted;
++    if (layer_soft_limit > 0) {
++        GGML_ASSERT(keys_per_layer > 0 && counts.size() % keys_per_layer == 0);
++        adjusted.resize(counts.size());
++        for (size_t begin = 0; begin < counts.size(); begin += keys_per_layer) {
++            int resident = 0;
++            for (int32_t k = 0; k < keys_per_layer; ++k) {
++                resident += slot_of[begin + k] >= 0;
++            }
++            const double penalty = std::max(1.0, resident/layer_soft_limit);
++            for (int32_t k = 0; k < keys_per_layer; ++k) {
++                adjusted[begin + k] = counts_rank[begin + k]/penalty;
++            }
++        }
++    }
++    const auto & rank = adjusted.empty() ? counts_rank : adjusted;
+     if (prompt) {
+         for (size_t key = 0; key < counts.size(); ++key) {
+             if (prompt_counts[key] > 0 && slot_of[key] < 0 && !pending[key]) {
+@@ -99,10 +137,6 @@ std::vector<llama_moe_cache_lfu::fill> llama_moe_cache_lfu::plan(size_t limit, b
+     }
+     std::vector<int32_t> cold;
+     if (limit == 0 || candidates.empty()) {
+-        for (int32_t key : candidates) {
+-            pending[key] = false;
+-        }
+-        candidates.clear();
+         return {};
+     }
+     for (size_t slot = 0; slot < key_of.size(); ++slot) {
+@@ -131,20 +165,73 @@ std::vector<llama_moe_cache_lfu::fill> llama_moe_cache_lfu::plan(size_t limit, b
+         if (evicted >= 0 && rank[key] <= rank[evicted]) {
+             break;
+         }
+-        if (evicted >= 0) {
+-            slot_of[evicted] = -1;
+-        }
+-        slot_of[key] = slot;
+-        key_of[slot] = key;
+         fills.push_back({key, slot, evicted});
+     }
++    return fills;
++}
++
++void llama_moe_cache_lfu::apply(const std::vector<fill> & fills) {
++    for (const auto & f : fills) {
++        GGML_ASSERT(key_of[f.slot] == f.evicted && slot_of[f.key] < 0);
++        if (f.evicted >= 0) {
++            slot_of[f.evicted] = -1;
++        }
++        slot_of[f.key] = f.slot;
++        key_of[f.slot] = f.key;
++    }
+     for (int32_t key : candidates) {
+         pending[key] = false;
+     }
+     candidates.clear();
++}
++
++std::vector<llama_moe_cache_lfu::fill> llama_moe_cache_lfu::plan(size_t limit, bool prompt) {
++    auto fills = propose(limit, prompt);
++    apply(fills);
+     return fills;
+ }
+ 
++std::vector<std::vector<llama_moe_cache_lfu::fill>> llama_moe_cache_plan(
++        const std::vector<llama_moe_cache_lfu *> & policies, const std::vector<size_t> & expert_bytes,
++        size_t limit, bool prompt, size_t first_group, bool byte_value) {
++    GGML_ASSERT(policies.size() == expert_bytes.size());
++    std::vector<std::vector<llama_moe_cache_lfu::fill>> result(policies.size());
++    if (!byte_value) {
++        for (size_t i = 0; i < policies.size(); ++i) {
++            const size_t ig = (first_group + i) % policies.size();
++            result[ig] = policies[ig]->plan(limit, prompt);
++            limit -= result[ig].size();
++        }
++        return result;
++    }
++    struct candidate {
++        size_t group;
++        llama_moe_cache_lfu::fill fill;
++        double value;
++        size_t order;
++    };
++    std::vector<candidate> candidates;
++    for (size_t i = 0; i < policies.size(); ++i) {
++        const size_t ig = (first_group + i) % policies.size();
++        auto & policy = *policies[ig];
++        for (const auto & f : policy.propose(limit, prompt)) {
++            const double gain = policy.score(f.key, prompt) - (f.evicted < 0 ? 0 : policy.score(f.evicted, prompt));
++            const double upload = (double) expert_bytes[ig] + sizeof(int32_t)*(f.evicted < 0 ? 1 : 2);
++            candidates.push_back({ig, f, gain*expert_bytes[ig]/upload, candidates.size()});
++        }
++    }
++    std::sort(candidates.begin(), candidates.end(), [](const candidate & a, const candidate & b) {
++        return a.value == b.value ? a.order < b.order : a.value > b.value;
++    });
++    for (size_t i = 0; i < std::min(limit, candidates.size()); ++i) {
++        result[candidates[i].group].push_back(candidates[i].fill);
++    }
++    for (size_t ig = 0; ig < policies.size(); ++ig) {
++        policies[ig]->apply(result[ig]);
++    }
++    return result;
++}
++
+ namespace {
+ 
+ // LRU of the experts of a group of layers, the slot of each expert is kept in the slot map of its layer
+@@ -346,6 +433,8 @@ struct llama_moe_cache::impl {
+     size_t admit = 8;
+     size_t admit_prefill = 1024;
+     size_t static_pct = 0;
++    size_t layer_soft_pct = 0;
++    bool byte_value = false;
+     uint64_t decay = 512;
+     bool warm_prompt = false;
+     bool prompt_pending = false;
+@@ -397,6 +486,8 @@ struct llama_moe_cache::impl {
+             admit_prefill = llama_moe_cache_env_size("GGML_MOE_HYBRID_ADMIT_PREFILL", 1024);
+             static_pct = llama_moe_cache_env_size(draft ? "GGML_MOE_HYBRID_DRAFT_STATIC_PCT" : "GGML_MOE_HYBRID_STATIC_PCT", 0, 100);
+             decay = llama_moe_cache_env_size("GGML_MOE_HYBRID_DECAY", 512);
++            byte_value = llama_moe_cache_env_size("GGML_MOE_HYBRID_BYTE_VALUE", 0, 1) != 0;
++            layer_soft_pct = llama_moe_cache_env_size("GGML_MOE_HYBRID_LAYER_SOFT_PCT", 0, 1000);
+             if (!decay || (static_pct && !profile)) {
+                 throw std::runtime_error("hybrid MoE needs positive decay and a profile for a static base");
+             }
+@@ -539,6 +630,8 @@ struct llama_moe_cache::impl {
+             g.lru.init(model.layers.size(), n_expert, g.n_slots);
+             if (adaptive) {
+                 g.lfu.init(model.layers.size()*n_expert, g.n_slots, decay);
++                g.lfu.keys_per_layer = n_expert;
++                g.lfu.layer_soft_limit = (double) g.n_slots/g.layers.size()*layer_soft_pct/100.0;
+                 for (int32_t slot = -1; slot < g.n_slots; ++slot) {
+                     g.slot_values.push_back(slot);
+                 }
+@@ -905,7 +998,8 @@ struct llama_moe_cache::impl {
+             return;
+         }
+         std::ostringstream line;
+-        line << "{\"version\":1,\"context\":" << context_id << ",\"ubatch\":" << trace_ubatch++
++        line << "{\"version\":2,\"context\":" << context_id << ",\"ubatch\":" << trace_ubatch++
++             << ",\"n_groups\":" << groups.size()
+              << ",\"draft\":" << (draft_context ? "true" : "false") << ",\"trace_only\":" << (trace_only ? "true" : "false") << ",\"n_tokens\":" << graph_tokens << ",\"prefill\":" << (graph_prefill ? "true" : "false")
+              << ",\"prefill_end\":" << (graph_prefill_end ? "true" : "false") << ",\"positions\":[";
+         for (int64_t t = 0; t < graph_tokens; ++t) {
+@@ -928,7 +1022,8 @@ struct llama_moe_cache::impl {
+             }
+             GGML_ASSERT(l.n_tokens == graph_tokens || l.n_tokens == graph_outputs);
+             line << (first ? "" : ",") << "{\"layer\":" << il << ",\"cache\":" << (l.use_cache ? "true" : "false")
+-                 << ",\"group\":" << l.ig << ",\"n_expert\":" << l.n_expert << ",\"expert_bytes\":" << l.expert_bytes << ",\"rows\":[";
++                 << ",\"group\":" << l.ig << ",\"slots\":" << (l.ig >= 0 ? groups[l.ig].n_slots : 0)
++                 << ",\"n_expert\":" << l.n_expert << ",\"expert_bytes\":" << l.expert_bytes << ",\"rows\":[";
+             first = false;
+             bool first_row = true;
+             for (int64_t t = 0; t < graph_tokens; ++t) {
+@@ -948,10 +1043,14 @@ struct llama_moe_cache::impl {
+             line << "]}";
+         }
+         line << "]}\n";
++        append_trace(line.str());
++    }
++
++    void append_trace(const std::string & line) {
+         // Serialize contexts sharing a trace file. No backend wait or device readback is needed.
+         static std::mutex trace_mutex;
+         std::lock_guard<std::mutex> lock(trace_mutex);
+-        trace << line.str();
++        trace << line;
+         trace.flush();
+         if (!trace) {
+             LLAMA_LOG_WARN("llama_moe_cache: route trace write failed; tracing disabled\n");
+@@ -959,6 +1058,18 @@ struct llama_moe_cache::impl {
+         }
+     }
+ 
++    void trace_speculation(int32_t seq_id, int32_t pos, int32_t n_tokens, int32_t n_accepted) {
++        if (!trace.is_open()) {
++            return;
++        }
++        GGML_ASSERT(seq_id >= 0 && pos >= 0 && n_tokens > 0 && n_accepted >= -1 && n_accepted <= n_tokens);
++        std::ostringstream line;
++        line << "{\"version\":2,\"event\":\"" << (n_accepted < 0 ? "spec_begin" : "spec_accept")
++             << "\",\"context\":" << context_id << ",\"ubatch\":" << trace_ubatch << ",\"seq\":" << seq_id
++             << ",\"pos\":" << pos << ",\"n_tokens\":" << n_tokens << ",\"n_accepted\":" << n_accepted << "}\n";
++        append_trace(line.str());
++    }
++
+     void end_graph(bool success) {
+         if ((!adaptive && !trace.is_open()) || graph_tokens == 0) {
+             return;
+@@ -1006,12 +1117,23 @@ struct llama_moe_cache::impl {
+         const int64_t start_us = burst ? ggml_time_us() : 0;
+         const uint64_t uploads_before = uploads;
+         const uint64_t bytes_before = upload_bytes;
++        std::vector<std::vector<llama_moe_cache_lfu::fill>> plans;
++        if (byte_value) {
++            std::vector<llama_moe_cache_lfu *> policies;
++            std::vector<size_t> expert_sizes;
++            for (group & g : groups) {
++                policies.push_back(&g.lfu);
++                expert_sizes.push_back(layers[g.layers.front()].expert_bytes);
++            }
++            plans = llama_moe_cache_plan(policies, expert_sizes, remaining, burst, next_group, true);
++        }
+         for (size_t i = 0; i < groups.size(); ++i) {
+-            group & g = groups[(next_group + i) % groups.size()];
++            const size_t ig = (next_group + i) % groups.size();
++            group & g = groups[ig];
+             if (!g.n_slots) {
+                 continue;
+             }
+-            const auto admitted = g.lfu.plan(remaining, burst);
++            const auto admitted = byte_value ? std::move(plans[ig]) : g.lfu.plan(remaining, burst);
+             remaining -= admitted.size();
+             const auto backend = devices[g.id].backend;
+             for (const auto & f : admitted) {
+@@ -1221,6 +1343,10 @@ void llama_moe_cache::end_graph(bool success) {
+     pimpl->end_graph(success);
+ }
+ 
++void llama_moe_cache::trace_speculation(int32_t seq_id, int32_t pos, int32_t n_tokens, int32_t n_accepted) {
++    pimpl->trace_speculation(seq_id, pos, n_tokens, n_accepted);
++}
++
+ ggml_tensor * llama_moe_cache::get_slot_map(int32_t il, int64_t n_tokens, int64_t n_expert_used) const {
+     return pimpl->get_slot_map(il, n_tokens, n_expert_used);
+ }
+diff --git a/src/llama-moe-cache.h b/src/llama-moe-cache.h
+index 4507b6899..f472eb35d 100644
+--- a/src/llama-moe-cache.h
++++ b/src/llama-moe-cache.h
+@@ -29,15 +29,25 @@ struct llama_moe_cache_lfu {
+     uint64_t tokens = 0;
+     uint64_t hits = 0;
+     uint64_t misses = 0;
++    int32_t keys_per_layer = 0;
++    double layer_soft_limit = 0;
+ 
+     void init(size_t n_keys, int32_t n_slots, uint64_t decay_interval = 512);
+     void seed(int32_t key, int32_t slot, double count, bool pin = false);
+     void begin_token();
+-    void observe(int32_t key, bool use_cache = true, bool prompt = false);
++    void observe(int32_t key, bool use_cache = true, bool prompt = false, bool admission = true);
++    void learn(int32_t key, double weight, bool prompt = false);
+     void clear_prompt();
++    double score(int32_t key, bool prompt) const;
++    std::vector<fill> propose(size_t limit, bool prompt = false);
++    void apply(const std::vector<fill> & fills);
+     std::vector<fill> plan(size_t limit, bool prompt = false);
+ };
+ 
++std::vector<std::vector<llama_moe_cache_lfu::fill>> llama_moe_cache_plan(
++        const std::vector<llama_moe_cache_lfu *> & policies, const std::vector<size_t> & expert_bytes,
++        size_t limit, bool prompt, size_t first_group, bool byte_value);
++
+ // keeps experts of host-resident MoE layers in device banks
+ // the default policy uploads misses; hybrid mode leaves misses on the CPU
+ class llama_moe_cache {
+@@ -56,6 +66,7 @@ public:
+     void begin_graph(int64_t n_tokens, const int8_t * output = nullptr, const int32_t * positions = nullptr,
+                      const int32_t * n_seq_id = nullptr, int32_t * const * seq_id = nullptr, bool prefill = false, bool prefill_end = false);
+     void end_graph(bool success);
++    void trace_speculation(int32_t seq_id, int32_t pos, int32_t n_tokens, int32_t n_accepted);
+ 
+     // the slot map of layer il, if its experts can be read from the cache for n_tokens tokens, nullptr otherwise
+     ggml_tensor * get_slot_map(int32_t il, int64_t n_tokens, int64_t n_expert_used) const;
+diff --git a/tests/test-moe-cache.cpp b/tests/test-moe-cache.cpp
+index b3b54de1c..f108acff8 100644
+--- a/tests/test-moe-cache.cpp
++++ b/tests/test-moe-cache.cpp
+@@ -1,5 +1,6 @@
+ #include "../src/llama-moe-cache.h"
+ #include "../src/llama-model.h"
++#include "../src/llama-ext.h"
+ #include "../ggml/src/ggml-backend-impl.h"
+ #include "ggml-cpu.h"
+ #include "ggml-cpp.h"
+@@ -9,6 +10,8 @@
+ #include <nlohmann/json.hpp>
+ 
+ #include <algorithm>
++#include <cmath>
++#include <set>
+ #include <cstdio>
+ #include <cstdlib>
+ #include <cstring>
+@@ -112,6 +115,43 @@ static void test_policy() {
+     GGML_ASSERT(policy.plan(10).empty() && policy.plan(10, true).empty());
+     puts("Prompt ranking, cross-ubatch candidates, static pinning and configurable decay passed");
+     puts("LFU policy checks passed");
++
++    llama_moe_cache_lfu small, large;
++    small.init(4, 1);
++    large.init(4, 1);
++    small.observe(0);
++    large.observe(0);
++    auto plans = llama_moe_cache_plan({&small, &large}, {100, 200}, 1, false, 0, true);
++    GGML_ASSERT(plans[0].empty() && plans[1].size() == 1);
++    GGML_ASSERT(small.slot_of[0] == -1 && large.slot_of[0] == 0);
++    small.observe(1);
++    small.observe(1);
++    large.observe(1);
++    large.observe(1);
++    plans = llama_moe_cache_plan({&small, &large}, {100, 200}, 1, false, 1, true);
++    GGML_ASSERT(plans[0].size() == 1 && plans[1].empty());
++    GGML_ASSERT(large.slot_of[0] == 0 && large.slot_of[1] == -1);
++
++    policy.init(8, 2);
++    policy.keys_per_layer = 4;
++    policy.layer_soft_limit = 1;
++    policy.seed(0, 0, 9, true);
++    policy.seed(1, 1, 9);
++    for (int i = 0; i < 6; ++i) {
++        policy.observe(4);
++    }
++    fills = policy.plan(1);
++    GGML_ASSERT(fills.size() == 1 && fills[0].evicted == 1 && policy.slot_of[0] == 0);
++
++    policy.init(4, 1, 2);
++    policy.begin_token();
++    policy.observe(0, true, false, false);
++    GGML_ASSERT(policy.misses == 1 && policy.counts[0] == 0 && policy.plan(1).empty());
++    policy.begin_token();
++    policy.begin_token();
++    policy.learn(0, 0.5);
++    GGML_ASSERT(policy.counts[0] == 0.5 && policy.plan(1).size() == 1);
++    puts("Cross-group byte value, soft layer budgets, pinned survival and delayed feedback passed");
+ }
+ 
+ // Host storage with a deferred stream: async copies retain their source pointers until drain().
+@@ -442,6 +482,45 @@ static void test_ordering(const char * path, const char * profile, const char *
+         puts("JSONL append, independent context IDs, cropped rows, positions and failed-graph exclusion passed");
+     }
+ 
++    {
++        test_env byte_value("GGML_MOE_HYBRID_BYTE_VALUE", "1");
++        test_env cap("GGML_MOE_HYBRID_ADMIT", "1");
++        auto * original = model->layers[1].ffn_down_exps;
++        ggml_context_ptr weights_ctx(ggml_init({ggml_tensor_overhead()*2, nullptr, true}));
++        auto * different = ggml_new_tensor_3d(weights_ctx.get(), original->type == GGML_TYPE_F16 ? GGML_TYPE_F32 : GGML_TYPE_F16, original->ne[0], original->ne[1], original->ne[2]);
++        ggml_backend_buffer_ptr weights_buf(ggml_backend_alloc_ctx_tensors_from_buft(weights_ctx.get(), buft));
++        ggml_backend_buffer_set_usage(weights_buf.get(), GGML_BACKEND_BUFFER_USAGE_WEIGHTS);
++        ggml_backend_buffer_clear(weights_buf.get(), 0);
++        model->layers[1].ffn_down_exps = different;
++        {
++            llama_moe_cache mixed(*model, {&queued.backend}, {buft}, 2*budget, nullptr, true);
++            GGML_ASSERT(mixed.get_slot_map(0, 1, 1) && mixed.get_slot_map(1, 1, 1));
++            const size_t before = queued.syncs;
++            mixed.begin_graph(2);
++            ggml_context_ptr ctx(ggml_init({1024*1024, nullptr, false}));
++            auto * graph = ggml_new_graph(ctx.get());
++            for (int il = 0; il < 2; ++il) {
++                auto * ids = ggml_new_tensor_2d(ctx.get(), GGML_TYPE_I32, 1, 2);
++                ((int32_t *) ids->data)[0] = 0;
++                ((int32_t *) ids->data)[1] = il == 0 ? 1 : 0;
++                ggml_build_forward_expand(graph, mixed.build_observe(ctx.get(), ids, il, true));
++            }
++            GGML_ASSERT(ggml_backend_graph_compute(queued.cpu.get(), graph) == GGML_STATUS_SUCCESS);
++            mixed.end_graph(true);
++            GGML_ASSERT(queued.syncs == before && queued.queue.size() == 4);
++            queued.drain();
++            GGML_ASSERT(((int32_t *) mixed.get_slot_map(0, 1, 1)->data)[0] == -1);
++            const int32_t slot = ((int32_t *) mixed.get_slot_map(1, 1, 1)->data)[0];
++            GGML_ASSERT(slot >= 0);
++            for (const auto * w : {model->layers[1].ffn_gate_exps, model->layers[1].ffn_up_exps, different}) {
++                const auto * bank = mixed.get_experts(w);
++                GGML_ASSERT(memcmp((const char *) bank->data + slot*bank->nb[2], w->data, w->nb[2]) == 0);
++            }
++        }
++        model->layers[1].ffn_down_exps = original;
++        puts("Mixed-layout global admission and deferred bank/map writes passed");
++    }
++
+ }
+ 
+ static void test_contexts(const char * path, const char * trace_path) {
+@@ -451,6 +530,11 @@ static void test_contexts(const char * path, const char * trace_path) {
+     GGML_ASSERT(draft.moe_cache_draft && draft.moe_cache_size == 0);
+     GGML_ASSERT(common_context_params_to_llama(draft).moe_cache_draft);
+     GGML_ASSERT(!common_context_params_to_llama(base).moe_cache_draft && base.moe_cache_size == 1024);
++    base.n_ubatch = 256;
++    base.speculative.draft.n_ubatch = 32;
++    GGML_ASSERT(common_base_params_to_speculative(base).n_ubatch == 32 && base.n_ubatch == 256);
++    base.speculative.draft.n_ubatch = 0;
++    GGML_ASSERT(common_base_params_to_speculative(base).n_ubatch == 256);
+ 
+     auto mp = llama_model_default_params();
+     mp.n_gpu_layers = 0;
+@@ -486,7 +570,9 @@ static void test_contexts(const char * path, const char * trace_path) {
+         batch.n_tokens = 1;
+         batch.pos[0] = 20;
+         batch.logits[0] = 1;
++        llama_moe_cache_trace_speculation(traced.get(), 0, 20, 1, -1);
+         GGML_ASSERT(llama_decode(traced.get(), batch) == 0);
++        llama_moe_cache_trace_speculation(traced.get(), 0, 20, 1, 0);
+     }
+     llama_batch_free(batch);
+     std::ifstream trace(trace_path);
+@@ -495,11 +581,13 @@ static void test_contexts(const char * path, const char * trace_path) {
+     while (std::getline(trace, line)) {
+         records.push_back(nlohmann::json::parse(line));
+     }
+-    GGML_ASSERT(records.size() == 3);
++    GGML_ASSERT(records.size() == 5);
+     GGML_ASSERT(records[0]["trace_only"] == true && records[0]["n_tokens"] == 16 && records[0]["prefill_end"] == false);
+     GGML_ASSERT(records[1]["n_tokens"] == 4 && records[1]["prefill"] == true && records[1]["prefill_end"] == true);
+     GGML_ASSERT(records[1]["positions"][3] == 19);
+-    GGML_ASSERT(records[2]["n_tokens"] == 1 && records[2]["prefill"] == false);
++    GGML_ASSERT(records[2]["event"] == "spec_begin" && records[2]["n_accepted"] == -1);
++    GGML_ASSERT(records[3]["n_tokens"] == 1 && records[3]["prefill"] == false);
++    GGML_ASSERT(records[4]["event"] == "spec_accept" && records[4]["n_accepted"] == 0);
+ 
+     const std::string mismatch = std::string(trace_path) + ".profile";
+     {
+@@ -582,34 +670,71 @@ static void replay(const char * path, int slots, size_t admit, size_t ubatch) {
+ }
+ 
+ struct replay_context {
++    struct group {
++        llama_moe_cache_lfu policy;
++        int n_expert = 0;
++        int slots = 0;
++        size_t bytes = 0;
++        std::set<int> layers;
++    };
+     struct prompt_stats {
+         int seq;
+-        uint64_t tokens = 0;
+-        uint64_t hits = 0;
+-        uint64_t routes = 0;
++        uint64_t tokens = 0, hits = 0, routes = 0;
+     };
+-
+-    llama_moe_cache_lfu policy;
+-    int n_expert = 0;
++    struct vote {
++        int group, key, pos;
++        uint64_t token;
++    };
++    struct span {
++        int pos, n_tokens;
++        std::vector<vote> votes;
++    };
++    std::map<int, group> groups;
++    std::map<int, int> layer_group;
++    std::map<int, size_t> uncached_bytes;
++    std::map<int, span> spans;
+     int n_layer = 0;
+-    int group = -1;
+-    uint64_t uploads = 0;
+-    uint64_t bytes = 0;
+-    uint64_t initial_uploads = 0;
+-    uint64_t initial_bytes = 0;
+-    uint64_t decode_hits = 0;
+-    uint64_t decode_routes = 0;
+-    uint64_t first_hits = 0;
+-    uint64_t first_routes = 0;
++    size_t n_groups = 0;
++    size_t next_group = 0;
++    size_t last_group = 0;
++    size_t admit_remaining = 0;
++    uint64_t tokens = 0, hits = 0, misses = 0;
++    uint64_t uploads = 0, bytes = 0, initial_uploads = 0, initial_bytes = 0;
++    uint64_t decode_hits = 0, decode_routes = 0, decode_hit_bytes = 0, decode_bytes = 0;
++    uint64_t first_hits = 0, first_routes = 0, first_hit_bytes = 0, first_bytes = 0;
++    uint64_t rejected_routes = 0;
+     std::map<int, int> first_left;
+     std::map<int, bool> in_prefill;
+     std::map<int, size_t> prompt_of;
+     std::vector<prompt_stats> prompts;
+-    std::map<int, size_t> expert_bytes;
++
++    size_t plan(size_t limit, bool prompt, bool byte_value, size_t first_group) {
++        llama_moe_cache_lfu empty;
++        std::vector<llama_moe_cache_lfu *> policies(n_groups, &empty);
++        std::vector<size_t> sizes(n_groups, 0);
++        for (auto & entry : groups) {
++            policies[entry.first] = &entry.second.policy;
++            sizes[entry.first] = entry.second.bytes;
++        }
++        const auto plans = llama_moe_cache_plan(policies, sizes, limit, prompt, first_group, byte_value);
++        size_t admitted = 0;
++        for (size_t ig = 0; ig < plans.size(); ++ig) {
++            for (const auto & f : plans[ig]) {
++                ++admitted;
++                ++uploads;
++                bytes += sizes[ig] + sizeof(int32_t)*(f.evicted < 0 ? 1 : 2);
++            }
++        }
++        return admitted;
++    }
+ };
+ 
+ static void replay_log(const char * path, int slots, size_t admit, size_t prefill, int static_pct, uint64_t decay, const char * profile, uint64_t context_id) {
+-    GGML_ASSERT(slots > 0 && static_pct >= 0 && static_pct <= 100 && decay > 0);
++    GGML_ASSERT(slots >= 0 && static_pct >= 0 && static_pct <= 100 && decay > 0);
++    const bool byte_value = llama_moe_cache_env_size("GGML_MOE_HYBRID_BYTE_VALUE", 0, 1);
++    const size_t soft_pct = llama_moe_cache_env_size("GGML_MOE_HYBRID_LAYER_SOFT_PCT", 0, 1000);
++    const bool accepted_only = llama_moe_cache_env_size("GGML_MOE_REPLAY_ACCEPTED_ONLY", 0, 1);
++    const bool warm_start = llama_moe_cache_env_size("GGML_MOE_REPLAY_WARM", 0, 1);
+     std::ifstream input(path);
+     GGML_ASSERT(input.good());
+     std::vector<nlohmann::json> batches;
+@@ -617,40 +742,61 @@ static void replay_log(const char * path, int slots, size_t admit, size_t prefil
+     std::string line;
+     while (std::getline(input, line)) {
+         auto b = nlohmann::json::parse(line);
+-        GGML_ASSERT(b.at("version") == 1);
++        GGML_ASSERT(b.at("version") == 1 || b.at("version") == 2);
+         const uint64_t id = b.at("context");
+         if (context_id != UINT64_MAX && id != context_id) {
+             continue;
+         }
+         auto & c = contexts[id];
+-        const int nt = b.at("n_tokens");
+-        GGML_ASSERT(nt > 0 && b.at("positions").size() == (size_t) nt && b.at("seq_ids").size() == (size_t) nt);
+-        for (const auto & l : b.at("layers")) {
+-            const int group = l.value("group", 0);
+-            if (group >= 0) {
+-                if (c.group >= 0 && group != c.group) {
+-                    throw std::runtime_error("replay-log currently supports one cache group per context");
++        if (!b.contains("event")) {
++            const int nt = b.at("n_tokens");
++            GGML_ASSERT(nt > 0 && nt <= 65536 && b.at("positions").size() == (size_t) nt && b.at("seq_ids").size() == (size_t) nt);
++            const int n_groups = b.value("n_groups", 0);
++            GGML_ASSERT(n_groups >= 0 && n_groups <= 4096);
++            c.n_groups = std::max(c.n_groups, (size_t) n_groups);
++            for (const auto & l : b.at("layers")) {
++                const int ig = l.value("group", 0);
++                const int layer = l.at("layer");
++                GGML_ASSERT(ig >= -1 && ig < 4096);
++                GGML_ASSERT(layer >= 0 && layer < 4096 && l.at("expert_bytes").get<size_t>() > 0);
++                c.n_layer = std::max(c.n_layer, layer + 1);
++                GGML_ASSERT(l.at("rows").size() == l.at("ids").size());
++                for (int row : l.at("rows")) {
++                    GGML_ASSERT(row >= 0 && row < nt);
+                 }
+-                c.group = group;
+-            }
+-            if (group < 0 && !b.value("trace_only", false)) {
+-                continue;
+-            }
+-            const int n_expert = l.value("n_expert", 0);
+-            GGML_ASSERT(n_expert >= 0 && n_expert <= 65536);
+-            c.n_expert = std::max(c.n_expert, n_expert);
+-            const int il = l.at("layer");
+-            GGML_ASSERT(il >= 0 && il < 4096);
+-            c.n_layer = std::max(c.n_layer, il + 1);
+-            c.expert_bytes[il] = l.at("expert_bytes").get<size_t>();
+-            GGML_ASSERT(l.at("rows").size() == l.at("ids").size());
+-            for (int row : l.at("rows")) {
+-                GGML_ASSERT(row >= 0 && row < nt);
+-            }
+-            for (const auto & ids : l.at("ids")) {
+-                for (int id : ids) {
+-                    GGML_ASSERT(id >= 0 && id < 65536);
+-                    c.n_expert = std::max(c.n_expert, id + 1);
++                if (ig < 0 && (!b.value("trace_only", false) || slots == 0)) {
++                    c.uncached_bytes[layer] = l.at("expert_bytes");
++                    continue;
++                }
++                auto & g = c.groups[std::max(0, ig)];
++                c.n_groups = std::max(c.n_groups, (size_t) std::max(0, ig) + 1);
++                int ne = l.value("n_expert", 0);
++                if (!ne) {
++                    for (const auto & ids : l.at("ids")) {
++                        for (int expert : ids) {
++                            GGML_ASSERT(expert >= 0 && expert < 65536);
++                            ne = std::max(ne, expert + 1);
++                        }
++                    }
++                }
++                const int il = l.at("layer");
++                const size_t bytes = l.at("expert_bytes");
++                GGML_ASSERT(ne > 0 && ne <= 65536 && il >= 0 && il < 4096 && bytes > 0);
++                GGML_ASSERT(!g.n_expert || g.bytes == bytes);
++                g.n_expert = std::max(g.n_expert, ne);
++                g.bytes = bytes;
++                g.slots = l.value("slots", 0);
++                g.layers.insert(il);
++                GGML_ASSERT(!c.layer_group.count(il) || c.layer_group.at(il) == std::max(0, ig));
++                c.layer_group[il] = std::max(0, ig);
++                GGML_ASSERT(l.at("rows").size() == l.at("ids").size());
++                for (int row : l.at("rows")) {
++                    GGML_ASSERT(row >= 0 && row < nt);
++                }
++                for (const auto & ids : l.at("ids")) {
++                    for (int expert : ids) {
++                        GGML_ASSERT(expert >= 0 && expert < ne);
++                    }
+                 }
+             }
+         }
+@@ -659,61 +805,119 @@ static void replay_log(const char * path, int slots, size_t admit, size_t prefil
+     GGML_ASSERT(!batches.empty());
+     for (auto & entry : contexts) {
+         auto & c = entry.second;
+-        GGML_ASSERT(c.n_layer > 0 && c.n_expert > 0);
+-        c.policy.init((size_t) c.n_layer*c.n_expert, slots, decay);
+-        if (static_pct) {
+-            GGML_ASSERT(profile);
+-            std::ifstream in(profile);
+-            std::getline(in, line);
+-            GGML_ASSERT(line == "llama-moe-profile-v1");
+-            std::vector<std::pair<double, int>> ranked;
+-            int il, expert;
+-            double count;
+-            while (in >> il >> expert >> count) {
+-                GGML_ASSERT(il >= 0 && il < c.n_layer && expert >= 0 && expert < c.n_expert && count >= 0);
+-                ranked.push_back({count, il*c.n_expert + expert});
++        GGML_ASSERT(!c.groups.empty() || !c.uncached_bytes.empty());
++        c.n_groups = std::max<size_t>(1, c.n_groups);
++        if (slots > 0 && c.groups.size() != 1) {
++            throw std::runtime_error("multi-group replay requires recorded slot counts (slots argument 0)");
++        }
++        for (auto & ge : c.groups) {
++            auto & g = ge.second;
++            if (slots > 0) {
++                g.slots = slots;
+             }
+-            GGML_ASSERT(in.eof());
+-            std::sort(ranked.begin(), ranked.end(), [](const auto & a, const auto & b) {
+-                return a.first == b.first ? a.second < b.second : a.first > b.first;
+-            });
+-            const size_t base = (size_t) slots*static_pct/100;
+-            GGML_ASSERT(ranked.size() >= base);
+-            for (size_t slot = 0; slot < base; ++slot) {
+-                const auto & r = ranked[slot];
+-                c.policy.seed(r.second, slot, r.first, true);
+-                ++c.initial_uploads;
+-                c.initial_bytes += c.expert_bytes.at(r.second/c.n_expert);
++            GGML_ASSERT(g.slots > 0);
++            g.policy.init((size_t) c.n_layer*g.n_expert, g.slots, decay);
++            g.policy.keys_per_layer = g.n_expert;
++            g.policy.layer_soft_limit = (double) g.slots/g.layers.size()*soft_pct/100.0;
++            if (static_pct || warm_start) {
++                GGML_ASSERT(profile);
++                std::ifstream in(profile);
++                std::getline(in, line);
++                GGML_ASSERT(line == "llama-moe-profile-v1");
++                std::vector<std::pair<double, int>> ranked;
++                int il, expert;
++                double count;
++                while (in >> il >> expert >> count) {
++                    GGML_ASSERT(il >= 0 && il < c.n_layer && expert >= 0 && expert < g.n_expert && std::isfinite(count) && count >= 0);
++                    if (g.layers.count(il)) {
++                        ranked.push_back({count, il*g.n_expert + expert});
++                    }
++                }
++                GGML_ASSERT(in.eof());
++                if (static_pct) {
++                    std::sort(ranked.begin(), ranked.end(), [](const auto & a, const auto & b) {
++                        return a.first == b.first ? a.second < b.second : a.first > b.first;
++                    });
++                }
++                const size_t base = static_pct ? (size_t) g.slots*static_pct/100 : ranked.size();
++                GGML_ASSERT(ranked.size() >= base && base <= (size_t) g.slots);
++                for (size_t slot = 0; slot < base; ++slot) {
++                    g.policy.seed(ranked[slot].second, slot, ranked[slot].first, static_pct > 0);
++                    ++c.initial_uploads;
++                    c.initial_bytes += g.bytes;
++                }
+             }
+         }
+     }
+     for (const auto & b : batches) {
+         auto & c = contexts.at(b.at("context").get<uint64_t>());
+-        auto & policy = c.policy;
+-        const int nt = b.at("n_tokens");
+-        const bool prompt = b.at("prefill");
+-        const bool prompt_end = b.at("prefill_end");
+-        std::vector<std::vector<std::pair<int, bool>>> routes(nt);
+-        for (const auto & l : b.at("layers")) {
+-            if (l.value("group", 0) < 0 && !b.value("trace_only", false)) {
++        if (b.contains("event")) {
++            if (!accepted_only) {
+                 continue;
+             }
++            const int seq = b.at("seq"), pos = b.at("pos"), nt = b.at("n_tokens");
++            GGML_ASSERT(seq >= 0 && pos >= 0 && nt > 0 && nt <= 65536);
++            if (b.at("event") == "spec_begin") {
++                if (c.spans.count(seq)) {
++                    throw std::runtime_error("unresolved speculative span");
++                }
++                c.spans[seq] = {pos, nt, {}};
++            } else if (b.at("event") == "spec_accept") {
++                auto it = c.spans.find(seq);
++                if (it == c.spans.end()) {
++                    continue; // A draft may have no evaluated speculative rows.
++                }
++                const int accepted = b.at("n_accepted");
++                GGML_ASSERT(it->second.pos == pos && accepted >= 0 && accepted <= nt && nt <= it->second.n_tokens);
++                for (const auto & v : it->second.votes) {
++                    auto & p = c.groups.at(v.group).policy;
++                    if ((int64_t) v.pos < (int64_t) pos + accepted) {
++                        const uint64_t shifts = (p.tokens - 1)/decay - (v.token - 1)/decay;
++                        p.learn(v.key, shifts > 1074 ? 0 : std::ldexp(1.0, -(int) shifts));
++                    } else {
++                        ++c.rejected_routes;
++                    }
++                }
++                c.spans.erase(it);
++                c.admit_remaining -= c.plan(c.admit_remaining, false, byte_value, c.last_group);
++            } else {
++                throw std::runtime_error("unknown trace event");
++            }
++            continue;
++        }
++        const int nt = b.at("n_tokens");
++        const bool prompt = b.at("prefill"), prompt_end = b.at("prefill_end");
++        struct route { int group, key; bool cache; };
++        std::vector<std::vector<route>> routes(nt);
++        for (const auto & l : b.at("layers")) {
+             const int il = l.at("layer");
+-            // Trace-only logs have no banks; estimate supported GPU windows when replaying them.
++            const int ig = c.uncached_bytes.count(il) ? -1 : c.layer_group.at(il);
+             const bool use_cache = b.value("trace_only", false) ? l.at("ids").size() <= 8 : l.at("cache").get<bool>();
+             for (size_t i = 0; i < l.at("rows").size(); ++i) {
+                 const int row = l.at("rows")[i];
+-                for (int id : l.at("ids")[i]) {
+-                    routes[row].push_back({il*c.n_expert + id, use_cache});
++                for (int expert : l.at("ids")[i]) {
++                    routes[row].push_back({ig, ig < 0 ? il : il*c.groups.at(ig).n_expert + expert, ig >= 0 && use_cache});
+                 }
+             }
+         }
+         for (int t = 0; t < nt; ++t) {
+-            policy.begin_token();
++            ++c.tokens;
++            for (auto & g : c.groups) {
++                g.second.policy.begin_token();
++            }
+             std::vector<size_t> first_prompts;
++            replay_context::span * deferred = nullptr;
++            const int pos = b.at("positions")[t];
+             for (int seq : b.at("seq_ids")[t]) {
++                if (accepted_only && !prompt && c.spans.count(seq)) {
++                    auto & span = c.spans.at(seq);
++                    if (pos >= span.pos && (int64_t) pos < (int64_t) span.pos + span.n_tokens) {
++                        GGML_ASSERT(b.at("seq_ids")[t].size() == 1);
++                        deferred = &span;
++                    }
++                }
+                 if (prompt) {
+-                    if (!c.in_prefill[seq] || b.at("positions")[t] == 0) {
++                    if (!c.in_prefill[seq] || pos == 0) {
+                         c.prompt_of[seq] = c.prompts.size();
+                         c.prompts.push_back({seq});
+                         c.in_prefill[seq] = true;
+@@ -728,13 +932,26 @@ static void replay_log(const char * path, int slots, size_t admit, size_t prefil
+             }
+             const bool first = !first_prompts.empty();
+             for (const auto & r : routes[t]) {
+-                const bool hit = r.second && policy.slot_of[r.first] >= 0;
+-                policy.observe(r.first, r.second, prompt && prefill > 0);
++                auto * policy = r.group < 0 ? nullptr : &c.groups.at(r.group).policy;
++                const size_t bytes = policy ? c.groups.at(r.group).bytes : c.uncached_bytes.at(r.key);
++                const bool hit = policy && r.cache && policy->slot_of[r.key] >= 0;
++                if (policy) {
++                    policy->observe(r.key, r.cache, prompt && prefill > 0, !deferred);
++                }
++                c.hits += hit;
++                c.misses += !hit;
++                if (deferred && policy) {
++                    deferred->votes.push_back({r.group, r.key, pos, policy->tokens});
++                }
+                 if (!prompt) {
+                     c.decode_hits += hit;
+                     ++c.decode_routes;
++                    c.decode_hit_bytes += hit*bytes;
++                    c.decode_bytes += bytes;
+                     c.first_hits += first && hit;
+                     c.first_routes += first;
++                    c.first_hit_bytes += (first && hit)*bytes;
++                    c.first_bytes += first*bytes;
+                     for (size_t ip : first_prompts) {
+                         c.prompts[ip].hits += hit;
+                         ++c.prompts[ip].routes;
+@@ -742,14 +959,14 @@ static void replay_log(const char * path, int slots, size_t admit, size_t prefil
+                 }
+             }
+         }
+-        // Warm once at the prompt boundary; retain candidates from earlier prefill ubatches.
+-        const auto fills = prompt && prefill ? (prompt_end ? policy.plan(prefill, true) : policy.plan(0)) : policy.plan(admit);
+-        for (const auto & f : fills) {
+-            ++c.uploads;
+-            c.bytes += c.expert_bytes.at(f.key/c.n_expert) + sizeof(int32_t)*(f.evicted < 0 ? 1 : 2);
+-        }
++        const size_t limit = prompt && prefill ? (prompt_end ? prefill : 0) : admit;
++        c.admit_remaining = limit - c.plan(limit, prompt && prefill && prompt_end, byte_value, c.next_group);
++        c.last_group = c.next_group;
++        c.next_group = (c.next_group + 1) % c.n_groups;
+         if (prompt_end) {
+-            policy.clear_prompt();
++            for (auto & g : c.groups) {
++                g.second.policy.clear_prompt();
++            }
+             for (auto & seq : c.in_prefill) {
+                 seq.second = false;
+             }
+@@ -758,18 +975,22 @@ static void replay_log(const char * path, int slots, size_t admit, size_t prefil
+     auto pct = [](uint64_t hits, uint64_t routes) { return routes ? 100.0*hits/routes : 0.0; };
+     for (const auto & entry : contexts) {
+         const auto & c = entry.second;
+-        const auto & p = c.policy;
+-        printf("context=%llu slots=%d admit=%zu prefill=%zu static_pct=%d decay=%llu tokens=%llu hits=%llu misses=%llu hit_rate=%.4f%% decode_hit_rate=%.4f%% first32_hit_rate=%.4f%% first32_routes=%llu uploads=%llu uploads/token=%.4f MiB/token=%.4f initial_uploads=%llu initial_MiB=%.4f\n",
+-            (unsigned long long) entry.first, slots, admit, prefill, static_pct, (unsigned long long) decay,
+-            (unsigned long long) p.tokens, (unsigned long long) p.hits, (unsigned long long) p.misses,
+-            pct(p.hits, p.hits + p.misses), pct(c.decode_hits, c.decode_routes), pct(c.first_hits, c.first_routes),
+-            (unsigned long long) c.first_routes, (unsigned long long) c.uploads, (double) c.uploads/p.tokens,
+-            (double) c.bytes/(1024*1024)/p.tokens, (unsigned long long) c.initial_uploads, (double) c.initial_bytes/(1024*1024));
++        int total_slots = 0;
++        for (const auto & g : c.groups) {
++            total_slots += g.second.slots;
++        }
++        printf("context=%llu slots=%d admit=%zu prefill=%zu static_pct=%d decay=%llu tokens=%llu hits=%llu misses=%llu hit_rate=%.4f%% decode_hit_rate=%.4f%% first32_hit_rate=%.4f%% first32_routes=%llu uploads=%llu uploads/token=%.4f MiB/token=%.4f initial_uploads=%llu initial_MiB=%.4f decode_byte_hit_rate=%.4f%% first32_byte_hit_rate=%.4f%% groups=%zu rejected_routes=%llu unresolved_spans=%zu\n",
++            (unsigned long long) entry.first, total_slots, admit, prefill, static_pct, (unsigned long long) decay,
++            (unsigned long long) c.tokens, (unsigned long long) c.hits, (unsigned long long) c.misses,
++            pct(c.hits, c.hits + c.misses), pct(c.decode_hits, c.decode_routes), pct(c.first_hits, c.first_routes),
++            (unsigned long long) c.first_routes, (unsigned long long) c.uploads, (double) c.uploads/c.tokens,
++            (double) c.bytes/(1024*1024)/c.tokens, (unsigned long long) c.initial_uploads, (double) c.initial_bytes/(1024*1024),
++            pct(c.decode_hit_bytes, c.decode_bytes), pct(c.first_hit_bytes, c.first_bytes), c.groups.size(), (unsigned long long) c.rejected_routes, c.spans.size());
+         for (size_t ip = 0; ip < c.prompts.size(); ++ip) {
+-            const auto & prompt = c.prompts[ip];
++            const auto & p = c.prompts[ip];
+             printf("prompt context=%llu index=%zu seq=%d first32_tokens=%llu first32_hits=%llu first32_routes=%llu first32_hit_rate=%.4f%%\n",
+-                (unsigned long long) entry.first, ip, prompt.seq, (unsigned long long) prompt.tokens,
+-                (unsigned long long) prompt.hits, (unsigned long long) prompt.routes, pct(prompt.hits, prompt.routes));
++                (unsigned long long) entry.first, ip, p.seq, (unsigned long long) p.tokens,
++                (unsigned long long) p.hits, (unsigned long long) p.routes, pct(p.hits, p.routes));
+         }
+     }
+ }
+diff --git a/tools/server/server-context.cpp b/tools/server/server-context.cpp
+index a18b7542c..944cec099 100644
+--- a/tools/server/server-context.cpp
++++ b/tools/server/server-context.cpp
+@@ -12,6 +12,7 @@
+ #include "common.h"
+ #include "fit.h"
+ #include "llama.h"
++#include "../../src/llama-ext.h"
+ #include "log.h"
+ #include "sampling.h"
+ #include "speculative.h"
+@@ -571,6 +572,8 @@ struct server_slot {
+ 
+             auto pos0 = prompt.tokens.pos_next();
+ 
++            llama_moe_cache_trace_speculation(ctx_tgt, id, pos0, spec_draft.size() + 1, -1);
++
+             add_ok &= batch.add(id, sampled, pos0++, true, false);
+             for (auto token : spec_draft) {
+                 add_ok &= batch.add(this->id, token, pos0++, true, false);
+@@ -4546,6 +4549,12 @@ private:
+ 
+                 GGML_ASSERT(accepted.size() >= 1);
+ 
++                const llama_pos pos0 = slot.prompt.tokens.pos_next() - n_draft - 1;
++                llama_moe_cache_trace_speculation(slot.ctx_tgt, slot.id, pos0, n_draft + 1, accepted.size());
++                if (slot.ctx_dft) {
++                    llama_moe_cache_trace_speculation(slot.ctx_dft, slot.id, pos0, n_draft + 1, accepted.size());
++                }
++
+                 const uint32_t n_rollback = slot.spec_draft.size() + 1 - accepted.size();
+ 
+                 const bool use_ckpt_tgt =
+diff --git a/NOTES-round8.md b/NOTES-round8.md
+new file mode 100644
+index 000000000..e2a1288ee
+--- /dev/null
++++ b/NOTES-round8.md
+@@ -0,0 +1,219 @@
++# Round 8: cache policy, PCIe bound and draft reservation
++
++Base: `7a0b887761dfb9c29e9c3bcf14767853cba3ee55`, branch `l5-cache`, worktree `/opt/llm-gateway/data/build/llama-l5`. Work started 2026-10-17 17:28 UTC, with a three-hour limit.
++
++## Result and execution boundary
++
++The offline work is complete. Byte-value admission and soft per-layer budgets are opt-in, the production policy now supports multi-group replay with byte metrics, speculative verdicts are recorded, and the standalone mapped-host PCIe harness builds. The existing draft-specific ubatch switch supplies the requested reservation experiment. No new policy default is promoted: real traces from both models and the required GPU comparisons are still missing.
++
++The gateway is reachable at 127.0.0.1:8790, but this sandbox has no usable NVIDIA device nodes (`/dev/nvidia0` and `/dev/nvidiactl` are absent). `nvidia-smi` exits 9 and cannot communicate with the driver. `task-logs/round8/preflight.json` and the final device check record that result; a `/dev/nvidia-caps` directory alone does not provide GPU access. The attempted trace recorder and GPU-step wrapper stopped at device preflight, before freeing or holding the GPU. There are no real route JSONL files in `/opt/llm-gateway/data/moe-quant/traces/`; its benchmark log records the failed attempt. No GPU reservation was taken by Codex, and no foreign process was stopped.
++
++An external Claude attempt appeared in `task-logs/round8/pcie-run/claude-gpu.err`: it reached the RTX 2080 Ti, then failed on a JSON-to-pair conversion before timing. The ambiguous initializer was replaced with explicit integer extraction and `emplace`; the rebuilt harness passes its new host-only manifest check. That external attempt supplies no usable timing or correctness result. A fresh GPU run is required.
++
++The first authorized WIP commit failed because Git could not create `/opt/llm-gateway/data/build/llama-upstream/.git/worktrees/llama-l5/index.lock`: read-only filesystem. No commit, push or PR is claimed. Stage patches replace the unavailable WIP commits. Existing untracked round-5/6/7 files were preserved. German milestones were appended to `moe-quant/NOTE.log`.
++
++## Switches and unchanged defaults
++
++| Setting | Default | Effect |
++| --- | --- | --- |
++| `GGML_MOE_HYBRID_BYTE_VALUE` | `0` | Rank admission proposals across layout groups by marginal saved bytes per uploaded byte. |
++| `GGML_MOE_HYBRID_LAYER_SOFT_PCT` | `0` | Penalize counts in layers exceeding this percentage of their group's mean slot allocation; zero disables it. Valid range 0..1000. |
++| `GGML_MOE_REPLAY_ACCEPTED_ONLY` | `0` | Replay only: defer speculative learning until a verdict and discard rejected routes. |
++| `GGML_MOE_REPLAY_WARM` | `0` | Replay only: load the supplied profile in file order as the ordinary unpinned warm start. |
++| `--spec-draft-n-ubatch 32` | Existing default `0`, inherit target | Existing switch used by the new measurement configs; only the draft ubatch changes. |
++
++The existing runtime decay default remains 512. The measured round-7 benchmark controls explicitly use 128, admission 32 and prefill cap 1024. The new runtime flags default to zero; with them unset, the old admission path and graph construction are retained. The master cache switch still defaults off. Trace version 2 is emitted only when tracing is requested; replay accepts versions 1 and 2.
++
++The LFU planner was separated into proposal and application phases. The old `plan()` calls both, preserving its ordering. Byte-value mode gathers proposals from all groups before applying the common upload cap. Its score is `(new_score - victim_score) * expert_bytes / (expert_bytes + map_write_bytes)`. The victim score is zero for an empty slot. Because each layout group stores equal-sized expert triplets, weight size mostly cancels in this ratio; the useful change is comparing marginal value across groups instead of letting the first group exhaust the allowance. Multiplying frequency by bytes alone would not implement the requested saved-bytes-per-uploaded-byte objective. This score remains a traffic proxy, not a measured CPU-time model.
++
++The optional soft budget divides a layer's score by `max(1, resident_slots / soft_limit)`, with `soft_limit = group_slots / group_layer_count * percentage / 100`. It uses the residency snapshot before planning, has no hard quota, and never evicts pinned slots. The existing queued weight/map upload protocol is unchanged; the mixed-layout host test verifies it without adding synchronization.
++
++## Trace and replay semantics
++
++Version 2 adds actual slot counts per layer, the total group count including dropped groups, and `spec_begin` / `spec_accept` records with context, sequence, position, ubatch watermark and retained input-prefix length. The target span includes the anchor and draft inputs. Draft-MTP spans begin before draft evaluation. Verdicts are emitted before the checkpoint-restore early return, so rejected verification work can be identified even when accepted tokens are replayed. These hooks do nothing when tracing is closed.
++
++`--replay-log TRACE 0 ADMIT PREFILL STATIC_PCT DECAY [PROFILE|-] [CONTEXT_ID]` uses recorded group slot counts. A positive slot argument retains the old single-group override. Groups without cache slots contribute misses and bytes to the denominator; their positions in the production round-robin order are preserved. A trace-only context with no recorded slots can be replayed as entirely uncached. Heterogeneous trace-only layouts need actual grouped cache traces to simulate a cache budget.
++
++Accepted-only replay learns nothing from a marked speculative span until its verdict arrives. Retained votes are discounted by every decay boundary crossed while waiting; rejected votes are discarded. It does not use future verdicts during earlier admissions. Verdicts share the remaining upload allowance of the last ubatch, so several sequence verdicts do not create extra upload budgets. The production policy object implements learning and admission; verdict-dependent learning is an offline experiment, not a new runtime switch. Real GPU traces are needed before wiring that policy into inference.
++
++Metrics use all evaluated tokens, including later-rejected speculative work. Decode byte hits are saved expert-triplet bytes divided by routed expert-triplet bytes during decode. First-32 byte hits cover the first 32 evaluated decode tokens after each recorded prefill. MiB/token includes prompt bursts and map writes, excludes initial profile uploads, and divides by all evaluated tokens. These are not accepted-output-token metrics and cannot predict tok/s on their own.
++
++Hand-calculated fixtures cover unequal layout sizes, causal verdict handling, delayed votes crossing decay, multiple verdicts sharing a cap, dropped-group rotation, and a fully uncached context. The two-group fixture gives 83.3333% weighted decode hits without filtering and 75.0000% with filtering, with two rejected route votes. It deliberately shows that filtering can reduce hits; the replay is not an optimistic acceptance oracle.
++
++## Real-trace results
++
++| Required trace | Decode bytes hit | Upload MiB/token | First-32 bytes hit | Status |
++| --- | --- | --- | --- | --- |
++| Qwen3.8 eight-prompt server session | Unmeasured | Unmeasured | Unmeasured | Device preflight failed; no route file. |
++| Ling eight-prompt server session | Unmeasured | Unmeasured | Unmeasured | Device preflight failed; no route file. |
++| Long German real session | Unmeasured | Unmeasured | Unmeasured | Trace recorder stopped before this step. |
++
++Consequently there is no evidence for a default that wins on both models' real routes. Keep the round-7 control settings. The first candidates to measure are byte-value alone and byte-value plus decay 64; soft budgets and smaller prefill caps are not favored by the available regression data.
++
++## Old-trace regression and tuning
++
++The old workloads are the round-7 synthetic prompt boundaries over the earlier routing trace: long has 4096 evaluated tokens in four topic segments; short has eight 40-token prompts plus 256 evaluated decode tokens each. They are not fresh server traces. All 24 original replay rows (two workloads, three decays, four warming/static combinations) match the saved round-7 binary's original metrics exactly.
++
++Both tuning matrices start empty. They compare policy parameters, not `q-warm-draft`'s preloaded profile. The original one-group, 1501-slot matrix uses 2,050,000 bytes per expert. All 62 rows are in [replay-table.md](task-logs/round8/replay-table.md); raw metrics are in `replay-matrix.json`. Selected rows:
++
++| Workload | Decay / admit / prefill | Decode bytes hit | First-32 bytes hit | MiB/token |
++| --- | --- | ---: | ---: | ---: |
++| Long, round 7 | 128 / 32 / 1024 | 48.6876% | 45.6396% | 16.0790 |
++| Long | 64 / 32 / 1024 | 49.4121% | 46.0254% | 16.9682 |
++| Long | 64 / 32 / 512 | 48.9049% | 39.7591% | 15.9997 |
++| Long | 128 / 16 / 512 | 46.1314% | 37.8564% | 8.4903 |
++| Short, round 7 | 128 / 32 / 1024 | 47.4323% | 44.4963% | 20.0887 |
++| Short | 64 / 32 / 1024 | 49.0104% | 45.3426% | 20.2901 |
++| Short | 64 / 32 / 512 | 46.9379% | 38.2544% | 16.9085 |
++| Short | 128 / 16 / 512 | 41.2550% | 35.2376% | 10.1451 |
++
++A second regression reuses those same routes with the actual Qwen GGUF tensor layouts and the production 2560 MiB slot calculation. It has 1248 slots across five live groups, with two dropped groups still represented in the round-robin schedule and byte denominators. This is a layout-corrected surrogate, not a real Qwen server trace. No Ling routing workload is fabricated.
++
++| Old workload, actual Qwen layouts | Policy | Decode bytes hit | First-32 bytes hit | MiB/token |
++| --- | --- | ---: | ---: | ---: |
++| long | r7 | 43.9394% | 41.4018% | 14.9244 |
++| long | decay64 | 44.2286% | 41.6418% | 16.7128 |
++| long | prefill512 | 43.1251% | 30.8750% | 14.0282 |
++| long | admit16 | 42.1593% | 40.2956% | 9.2792 |
++| long | admit64 | 44.3368% | 42.8324% | 17.4276 |
++| long | byte-value | 44.1655% | 43.1946% | 14.8698 |
++| long | byte-decay64 | 44.9967% | 43.4715% | 16.6656 |
++| long | byte-soft100 | 44.1193% | 43.2894% | 15.8917 |
++| long | byte-soft150 | 44.1637% | 43.1870% | 14.8684 |
++| long | byte-prefill512 | 43.6565% | 37.2293% | 13.9713 |
++| short | r7 | 43.0482% | 40.3315% | 19.6193 |
++| short | decay64 | 43.9755% | 40.7985% | 20.1034 |
++| short | prefill512 | 39.5356% | 28.2917% | 16.2386 |
++| short | admit16 | 40.8812% | 39.4699% | 13.3803 |
++| short | admit64 | 43.9291% | 41.9151% | 25.0855 |
++| short | byte-value | 43.5942% | 41.9733% | 19.5751 |
++| short | byte-decay64 | 45.0775% | 42.5396% | 20.1366 |
++| short | byte-soft100 | 43.5072% | 41.9362% | 19.9409 |
++| short | byte-soft150 | 43.5955% | 41.9717% | 19.5761 |
++| short | byte-prefill512 | 41.1958% | 34.6360% | 16.1322 |
++
++Byte-value alone raises weighted decode hits from 43.9394% to 44.1655% on long and from 43.0482% to 43.5942% on short, while slightly reducing uploads in both. With decay 64 it reaches 44.9967% / 45.0775%, at 16.6656 / 20.1366 MiB/token. A 100% soft budget adds churn and does not improve total hits; 150% is nearly neutral. Smaller prefill caps reduce upload volume but lose substantial first-32 coverage. Admission 64 buys some extra hits at a large short-workload upload cost. These findings justify screening candidates, not changing defaults.
++
++## PCIe harness
++
++`pcie-misses.cpp`, `prepare_pcie.py` and `build-pcie.sh` are standalone artifacts under `task-logs/round8/`; no inference graph path was added. They reuse the existing CUDA masked MMVQ and CPU masked `MUL_MAT_ID` implementation. Expert slices come from the actual GGUF offsets, are held in `cudaHostAllocMapped` storage, and are accessed through `cudaHostGetDevicePointer`. Weight uploads to VRAM are bypassed. Input copies, the GPU kernel and result copies use the same backend stream. CPU and GPU masks are disjoint and their outputs are summed after joining.
++
++The four-token window contains 48 layers with ten routed experts per token. Up/gate shapes are `[2560,640,512]`, down is `[640,2560,512]`; actual quant types include IQ4_NL, IQ2_S, IQ3_XXS, IQ3_S, IQ4_XS and Q2_0. The deterministic surrogate miss mask covers 2335.693 MiB of nominal routed weight bytes, or 1455.640 MiB of distinct expert weights. Split fractions count bytes per missed route, including repeat visits to an expert. They are 9.97073%, 19.95923% and 29.99582%, selecting 63, 134 and 206 distinct expert triplets respectively.
++
++The harness performs 144 independent matmuls, with deterministic F32 activations. It measures CPU-only versus concurrent 10/20/30% splits in three interleaved rounds. Input/mask/ID copies, GPU synchronization, output copy and merge are timed; weight allocation and loading are outside the interval. It checks merged-output NMSE against CPU-only output, with a 5e-4 limit. Start and end load must both be below 3. This is a miss-compute prototype: it omits the full FFN dependency chain, attention, real GPU-hit work and runtime cache-upload contention, so a win would still require end-to-end validation.
++
++| Split | CPU-only / split milliseconds per four-token window | Correctness on GPU | Status |
++| --- | --- | --- | --- |
++| 0% | Unmeasured | Unmeasured | No sandbox CUDA device. |
++| 10% | Unmeasured | Unmeasured | No sandbox CUDA device. |
++| 20% | Unmeasured | Unmeasured | No sandbox CUDA device. |
++| 30% | Unmeasured | Unmeasured | No sandbox CUDA device. |
++
++The >3 ms saving criterion has not been established. Implementing an inference graph path would violate the requested experiment gate, so none is included. The external failed attempt is retained separately; it is not a zero-copy performance result.
++
++## Draft compute reservation and slots
++
++The existing allocation log `moe-quant/qwen38/vram-breakdown.log` shows Qwen's draft CUDA compute buffer at 978.13 MiB with ubatch 512, one maximum output, and graph reservation `pp bs=512, tg bs=1`. Its draft model allocation is 741.18 MiB and KV allocation is separate. In `src/llama-context.cpp::sched_reserve`, prompt reservation uses `min(n_ctx,n_ubatch)`, followed by a generation reservation and another prompt reservation. It reserves for prompt evaluation, not just the three-token draft loop. This is consistent with the owner's observation that lowering ubatch reduces the buffer.
++
++`draft-reserve.cpp` loads only metadata and builds MTP graphs on CPU without allocating model weights. At context 8192 and one output, it reports:
++
++| Draft ubatch | Qwen CPU graph reservation MiB | Ling CPU graph reservation MiB |
++| ---: | ---: | ---: |
++| 512 | 137.99 | 102.01 |
++| 256 | 69.07 | 51.00 |
++| 64 | 17.37 | 12.75 |
++| 32 | 8.89 | 6.38 |
++| 8 | 6.33 | 1.59 |
++
++Qwen's MoE down/weighted intermediates are `[2560,10,ubatch]` F32: 50 MiB each at 512 and 3.125 MiB at 32. Its hyper-connection intermediates also scale with ubatch; a 4 MiB indexer gather creates a floor at small batches. Ling's corresponding `[2560,8,ubatch]` tensors are 40 MiB and 2.5 MiB. The CPU graph does not reproduce the CUDA scheduler's buffer types, copies, fused graph choices or expanded allocations, so these values do not explain every byte of the historical 978.13 MiB or measure CUDA savings.
++
++The safe experiment uses the already implemented `--spec-draft-n-ubatch 32`, leaving target ubatch 256 for Qwen and 512 for Ling. `common_base_params_to_speculative` changes only the draft setting; the ordinary decoder splits the draft prompt pass into bounded ubatches. No allocator is given a false size and no generation-only reservation is substituted for prompt storage. A test confirms explicit draft 32/target 256 and default inheritance. Smaller prompt chunks can change TTFT, kernel rounding and draft acceptance, which still need GPU testing.
++
++`slot_budget.py` uses actual GGUF layouts, 128-byte alignment, map storage, the extra padding expert and the production minimum-slot rule. It reproduces the known control slot counts:
++
++| Model / cache | Budget MiB | Slots by group | Total slots | Allocated MiB | Extra slots |
++| --- | ---: | --- | ---: | ---: | ---: |
++| Qwen target control | 2560 | 381,135,408,80,244,0,0 | 1248 | 2434.392 | 0 |
++| Qwen target candidate | 2944 | 438,156,470,93,281,0,0 | 1438 | 2802.946 | 190 |
++| Qwen target reference | 3072 | 458,162,490,97,294,0,0 | 1501 | 2926.115 | 253 |
++| Qwen draft, unchanged | 512 | 101 | 101 | 508.010 | 0 |
++| Ling target control | 5120 | 1668,0 | 1668 | 4987.520 | 0 |
++| Ling target candidate | 5376 | 1751,0 | 1751 | 5235.547 | 83 |
++
++The candidate budgets require approximately 368.554 MiB more actual Qwen cache storage and 248.027 MiB more Ling storage. Whether ubatch 32 releases that much usable VRAM is unmeasured. The slot counts are allocation calculations, not a claim that those configurations fit or run on the GPU.
++
++## End-to-end measurement status
++
++Existing configurations in `moe-quant/qwen38/stage_b.py` are preserved. Added candidates are `q-r8-byte`, `q-r8-policy` (byte plus decay 64), `q-r8-ub32`, `q-r8-slots`, `q-r8-combined`, and the corresponding `ling-r8-*` names. `slots` changes only draft ubatch and target budget; `combined` also enables byte-value and decay 64. None has been validated as the best configuration.
++
++The new `--load-gate` mode checks load1 <3 at both request boundaries, guards against foreign GPU allocations above 300 MiB, clears inherited cache/draft knobs from control environments, and releases the lease on every exit. It checks GPU ownership during startup and periodically while streaming. A contaminated prompt pass is restarted from a fresh server; partial-pass successes do not enter the summary. The default foreign-process gate remains available for Claude's final comparison. The standalone `gpu_step.py` uses free/hold with reason `codex: round 8`, ttl 900, renewal and finally-release, and stops only its own process group.
++
++Historical results below come from Claude's earlier `run-r7/runs.jsonl`, summarized by the existing `summary.py`; they are not new round-8 measurements. Each class has 12 accepted requests across three rounds.
++
++| Configuration | Code tok/s | English tok/s | Code / English draft acceptance | Round-8 candidate comparison |
++| --- | ---: | ---: | --- | --- |
++| `q-warm-draft`, historical round 7 | 47.0 | 39.8 | 92% / 69% | Unmeasured |
++| `ling-cache-mtp3`, historical round 7 | 50.8 | 47.5 | 68% / 53% | Unmeasured |
++
++The requested best-candidate versus control comparison, with three interleaved rounds on both models, remains blocked by GPU access. No throughput gain is claimed for this round.
++
++## Correctness and checks
++
++| Check | Result / artifact |
++| --- | --- |
++| CPU cache-off logits against saved round-7 libraries | Byte-identical across baseline, new binary and new knobs set with master off. `off-parity.log`. |
++| Trace-only versus cache-off CPU logits | Byte-identical. `contexts.log`. |
++| Perplexity, `test-de.txt`, 12 chunks, ctx 512, ubatch 4 | GPU execution blocked; no new perplexity result for either model. |
++| Production LFU, global byte value, soft budgets, pinning | Pass. `ctest.log`. |
++| Queued host bank/map ordering, mixed layouts, no added sync | Pass. `ordering.log`. |
++| Old replay metric parity | All 24 rows exact. `replay-checks.log`. |
++| Causal replay, decay, verdict caps, dropped/uncached groups | Pass. `replay-checks.log`. |
++| CPU server target-verdict integration | 44 closed spans, 126 rejected input positions, 504 rejected route votes, zero unresolved spans. `server-trace-check.log`. |
++| Original and layout-corrected matrices | 62 + 20 rows, all completed. |
++| CPU masked `MUL_MAT_ID` | 1314/1314 passed. `masked-cpu.out`. |
++| CPU ordinary `MUL_MAT_ID` subset | 427/427 passed. `unmasked-cpu.out`. |
++| CUDA Release server, perplexity and cache test build | Pass, compile only. `cuda-build.log`. |
++| PCIe harness compile and JSON manifest check | Pass; GPU execution not validated. `pcie-build.log`, `pcie-manifest-check.log`. |
++| Gateway/load/cleanup tests with mocks | Pass, including startup failure, busy end load, foreign VRAM and full-pass retry. `gate-checks.log`. |
++| Python type checking | `ty` 0.0.88 passes on all ten round-8 Python scripts and the modified `stage_b.py`. `ty-check.log`. |
++| Local style, script syntax and model naming | Pass. `style-checks.log`. |
++
++The CPU cache-off comparison covers a small two-layer MoE fixture, a 20-token prompt and three four-token decode windows, 16,384 raw F32-logit bytes. SHA256: `c7b6f3986c8c60f65ca5f762760bce44a15615faebf06c9876745532ceb7f2cc`. This is a real bitwise regression check, but it does not substitute for GPU bitwise parity or full-model perplexity.
++
++The CPU server integration uses two different small qwen3moe fixtures with `draft-simple` and two requests. It validates target begin/verdict ordering and replay of actual rejected rows. It does not exercise the MTP-specific draft hook or establish real-model quality.
++
++The pinned CI version of `ty` was installed only under `task-logs/round8/check-tools`. The full repository dependency/type-check job was not run. `editorconfig-checker` is unavailable; local newline, whitespace, tab-indentation, ASCII and syntax checks plus the workflow's 157 model-name mappings passed.
++
++## Reproduction and remaining work
++
++Builds and reads must occur before acquiring a GPU lease. From this worktree:
++
++```sh
++cmake --build build-cpu --target test-moe-cache test-backend-ops -j 8
++cmake --build build-cuda --target llama-server llama-perplexity test-moe-cache -j 8
++bash task-logs/round8/build-pcie.sh
++python3 task-logs/round8/model_inventory.py
++python3 -S task-logs/round8/slot_budget.py
++python3 -S task-logs/round8/prepare_pcie.py
++task-logs/round8/pcie-misses task-logs/round8/pcie-manifest.json --check-manifest
++python3 -S task-logs/round8/replay_checks.py
++python3 -S task-logs/round8/replay_matrix.py
++python3 -S task-logs/round8/legacy_layout_replay.py
++```
++
++The saved baseline libraries and old generated workloads are local artifacts, not embedded in the patch. `replay_checks.py` needs those baseline artifacts to compare against round 7.
++
++After GPU access is available, record the real routes using the updated recorder, then replay each context with its recorded slots and its actual warm profile where applicable. Use `GGML_MOE_REPLAY_WARM=1` only for a profile that was actually loaded at trace start. Check for zero unresolved spans before interpreting accepted-only results.
++
++```sh
++bash /opt/llm-gateway/data/moe-quant/record-traces.sh
++python3 -S task-logs/round8/gpu_step.py task-logs/round8/pcie-run-valid -- task-logs/round8/pcie-misses task-logs/round8/pcie-manifest.json
++```
++
++Screen byte-only, decay 64 and ubatch 32 separately before trying the larger budgets. Then choose the measured winner for each model and run `stage_b.py OUT DEADLINE_HHMM_UTC --load-gate --rounds 3 --only q-warm-draft QWINNER ling-cache-mtp3 LWINNER`; its outer loop interleaves and rotates configurations. Use `summary.py OUT/runs.jsonl` for medians. Claude repeats the selected pair with the full foreign-process gate by omitting `--load-gate` in a fresh output directory. Tracing must be off for timing.
++
++For each model, run `llama-perplexity` through `gpu_step.py` with `-f /opt/llm-gateway/data/build/texts/test-de.txt --chunks 12 -c 512 -b 512 -ub 4 -lm none -fa on -ngl 99 -t 24`, the corresponding model and host-expert placement, and the control/candidate environments. Run cache-off with the new flags both zero and set while the master switch is zero; compare raw logits as well as perplexity. No new switch should become default until these checks and both-model real-trace comparisons pass.
++
++Remaining risks: real GPU output and stream behavior are untested; the PCIe harness is a prototype using surrogate misses and independent matmuls; byte scores ignore quant-specific CPU cost and actual PCIe contention; accepted-only replay currently targets single-sequence route rows and non-shared-memory MTP, and unresolved/cancelled spans require investigation; prefill/request-boundary heuristics are inherited from round 7; smaller draft ubatches can affect TTFT and rounding; slot calculations do not establish VRAM fit. Initial profiles and dropped groups must be represented correctly when comparing real traces.
++
++Final source and reproducibility changes are saved in `task-logs/round8/round8.patch`; stage patches are cumulative snapshots against the starting commit. The external harness edits are also captured in `task-logs/round8/measurement.patch` with paths relative to `/opt/llm-gateway/data`; that patch is embedded as an artifact in the worktree patch. Generated models, large traces, binaries, downloaded checking tools and raw logs remain local and are not embedded.
+diff --git a/task-logs/round8/build-pcie.sh b/task-logs/round8/build-pcie.sh
+new file mode 100644
+index 000000000..6d3ace336
+--- /dev/null
++++ b/task-logs/round8/build-pcie.sh
+@@ -0,0 +1,6 @@
++#!/usr/bin/env bash
++set -euo pipefail
++cd "$(dirname "$0")/../.."
++g++ -O3 -std=c++17 -Wall -Wextra -Iggml/include -Iggml/src -Ivendor \
++    task-logs/round8/pcie-misses.cpp -Lbuild-cuda/bin -lggml-cuda -lggml-cpu -lggml-base -lggml -lcudart \
++    -Wl,-rpath,"$PWD/build-cuda/bin" -o task-logs/round8/pcie-misses
+diff --git a/task-logs/round8/draft-reserve.cpp b/task-logs/round8/draft-reserve.cpp
+new file mode 100644
+index 000000000..993abbbf8
+--- /dev/null
++++ b/task-logs/round8/draft-reserve.cpp
+@@ -0,0 +1,49 @@
++#include "llama-context.h"
++#include "llama-model.h"
++#include "llama-cpp.h"
++#include "ggml-cpu.h"
++#include <algorithm>
++#include <cstdio>
++#include <vector>
++
++int main(int argc, char ** argv) {
++    GGML_ASSERT(argc == 2);
++    ggml_backend_load_all();
++    auto mp = llama_model_default_params();
++    mp.n_gpu_layers = 0;
++    mp.no_alloc = true;
++    mp.load_mtp = true;
++    mp.load_mode = LLAMA_LOAD_MODE_NONE;
++    mp.use_extra_bufts = false;
++    llama_model_ptr model(llama_model_load_from_file(argv[1], mp));
++    GGML_ASSERT(model);
++    for (uint32_t ub : {512, 256, 64, 32, 8}) {
++        auto cp = llama_context_default_params();
++        cp.n_ctx = 8192;
++        cp.n_batch = 2048;
++        cp.n_ubatch = ub;
++        cp.n_seq_max = 1;
++        cp.n_outputs_max = 1;
++        cp.n_outputs_max_per_seq = 1;
++        cp.ctx_type = LLAMA_CONTEXT_TYPE_MTP;
++        cp.flash_attn_type = LLAMA_FLASH_ATTN_TYPE_ENABLED;
++        llama_context_ptr ctx(llama_init_from_model(model.get(), cp));
++        GGML_ASSERT(ctx);
++        auto mctx = ctx->get_memory()->init_full();
++        auto * graph = ctx->graph_reserve(ub, 1, 1, mctx.get(), true);
++        GGML_ASSERT(graph);
++        std::vector<ggml_tensor *> nodes;
++        for (int i = 0; i < ggml_graph_n_nodes(graph); ++i) {
++            auto * node = ggml_graph_node(graph, i);
++            if (!node->view_src) {
++                nodes.push_back(node);
++            }
++        }
++        std::sort(nodes.begin(), nodes.end(), [](auto * a, auto * b) { return ggml_nbytes(a) > ggml_nbytes(b); });
++        printf("ubatch=%u CPU graph, no device allocation; largest owned intermediate tensors:\n", ub);
++        for (size_t i = 0; i < std::min<size_t>(12, nodes.size()); ++i) {
++            const auto * n = nodes[i];
++            printf("%9.3f MiB %-30s %-16s [%lld,%lld,%lld,%lld]\n", ggml_nbytes(n)/1048576.0, n->name, ggml_op_name(n->op), (long long)n->ne[0], (long long)n->ne[1], (long long)n->ne[2], (long long)n->ne[3]);
++        }
++    }
++}
+diff --git a/task-logs/round8/final-device-check.json b/task-logs/round8/final-device-check.json
+new file mode 100644
+index 000000000..4c5b1e882
+--- /dev/null
++++ b/task-logs/round8/final-device-check.json
+@@ -0,0 +1,9 @@
++{
++  "utc": "2026-10-17 18:24:38",
++  "devices": [
++    "/dev/nvidia-caps"
++  ],
++  "exit": 9,
++  "stdout": "NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver. Make sure that the latest NVIDIA driver is installed and running.\n\n",
++  "stderr": ""
++}
+diff --git a/task-logs/round8/gate_checks.py b/task-logs/round8/gate_checks.py
+new file mode 100644
+index 000000000..9358f0d07
+--- /dev/null
++++ b/task-logs/round8/gate_checks.py
+@@ -0,0 +1,108 @@
++#!/usr/bin/env python3
++import importlib.util
++from pathlib import Path
++from unittest.mock import Mock, patch
++import subprocess
++import sys
++
++root = Path(__file__).resolve().parents[2]
++logs = root / 'task-logs/round8/gate-tests'
++logs.mkdir(exist_ok=True)
++
++def module(name, path):
++    spec = importlib.util.spec_from_file_location(name, path)
++    assert spec is not None and spec.loader is not None
++    mod = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(mod)
++    return mod
++
++stage = module('stage_b', '/opt/llm-gateway/data/moe-quant/qwen38/stage_b.py')
++step = module('gpu_step', root / 'task-logs/round8/gpu_step.py')
++run = stage.Run(logs, float('inf'), True)
++run.start = Mock(side_effect=RuntimeError('start failed'))
++run.stop = Mock()
++try:
++    run.one_pass('q-warm-draft', stage.CONFIGS['q-warm-draft'], [], 1)
++except RuntimeError:
++    pass
++run.stop.assert_called_once()
++
++run = stage.Run(logs, float('inf'), True)
++run.start = Mock()
++run.stop = Mock()
++run.quiet = Mock(return_value=(0,0.1))
++run.check_gpu = Mock()
++run.event = Mock()
++run.request = Mock(return_value={'decode_tok_s':42.0})
++with patch.object(stage, 'PROMPTS', [('one','a'),('two','b')]), \
++     patch.object(stage, 'busy_jiffies', return_value=0), patch.object(stage, 'proc_jiffies', return_value=0), \
++     patch.object(stage.os, 'getloadavg', side_effect=[(0.1,0,0),(0.1,0,0),(0.1,0,0),(3.1,0,0)]), \
++     patch.object(stage.subprocess, 'check_output', return_value='100'):
++    try:
++        run.one_pass('candidate', {}, ['one','two'], 1)
++        raise AssertionError('a contaminated pass should be repeated in full')
++    except stage.Requeue:
++        pass
++    assert not run.done
++    assert all(c.kwargs['kind'] == 'request_pending' for c in run.event.call_args_list)
++run.stop.assert_called_once()
++
++run = stage.Run(logs, float('inf'), True)
++run.held = True
++run.renew = Mock()
++with patch.object(stage.os, 'getloadavg', return_value=(3.1, 0, 0)):
++    try:
++        run.quiet()
++        raise AssertionError('busy load should release the lease')
++    except stage.Requeue:
++        pass
++
++run = stage.Run(logs, float('inf'), True)
++run.gpu_apps = Mock(side_effect=[{}, {}, {12345: 1024}, {12345: 1024}])
++child = Mock()
++child.poll.return_value = None
++response = Mock()
++response.__enter__ = Mock(return_value=Mock(status=200))
++response.__exit__ = Mock(return_value=False)
++with patch.object(stage, 'gw') as gateway, patch.object(stage.subprocess, 'check_output', return_value=''), \
++     patch.object(stage.subprocess, 'Popen', return_value=child) as popen, \
++     patch.object(stage.urllib.request, 'urlopen', return_value=response), \
++     patch.dict(stage.os.environ, {'GGML_MOE_HYBRID_BYTE_VALUE':'1', 'LLAMA_ARG_SPEC_DRAFT_N_UBATCH':'8'}):
++    run.start('q-warm-draft', stage.CONFIGS['q-warm-draft'])
++    assert run.gpu_pid == 12345
++    assert 'GGML_MOE_HYBRID_BYTE_VALUE' not in popen.call_args.kwargs['env']
++    assert 'LLAMA_ARG_SPEC_DRAFT_N_UBATCH' not in popen.call_args.kwargs['env']
++    assert gateway.call_args_list[0].args[:2] == ('POST','/api/v1/gpu/free')
++    assert gateway.call_args_list[1].args[2] == {'reason':'codex: round 8','ttlS':900}
++
++with patch.object(step, 'apps', side_effect=RuntimeError('unavailable')), patch.object(step, 'gateway') as gateway, \
++     patch.object(sys, 'argv', ['gpu_step.py',str(logs/'unavailable'),'--','unused']):
++    assert step.main() == 77
++    gateway.assert_not_called()
++
++child = Mock()
++child.poll.return_value = 0
++child.returncode = 0
++with patch.object(step, 'apps', return_value={}), patch.object(step, 'gateway') as gateway, \
++     patch.object(step.subprocess, 'Popen', return_value=child), \
++     patch.object(step.os, 'getloadavg', side_effect=[(0.1,0,0),(0.1,0,0),(3.1,0,0)]*3), \
++     patch.object(sys, 'argv', ['gpu_step.py',str(logs/'busy-end'),'--','unused']):
++    assert step.main() == 75
++    assert sum(c.args == ('DELETE','hold') for c in gateway.call_args_list) == 3
++    assert not (logs/'busy-end/accepted.txt').exists()
++
++child = Mock(pid=98765)
++child.poll.return_value = None
++child.wait.side_effect = [subprocess.TimeoutExpired('unused',5),0]
++with patch.object(step, 'apps', side_effect=[{},{},{1:1024,2:1024}]), \
++     patch.object(step, 'gateway') as gateway, patch.object(step.subprocess, 'Popen', return_value=child), \
++     patch.object(step.os, 'getloadavg', return_value=(0.1,0,0)), patch.object(step.os, 'killpg') as kill, \
++     patch.object(sys, 'argv', ['gpu_step.py',str(logs/'foreign'),'--','unused']):
++    try:
++        step.main()
++        raise AssertionError('foreign GPU process should stop the child')
++    except RuntimeError:
++        pass
++    kill.assert_called_once_with(98765, step.signal.SIGTERM)
++    assert gateway.call_args.args == ('DELETE','hold')
++print('Gate checks passed: no lease without GPU; cleanup after start failure; both load boundaries; foreign VRAM abort; inherited controls isolated')
+diff --git a/task-logs/round8/gpu_step.py b/task-logs/round8/gpu_step.py
+new file mode 100644
+index 000000000..3aa3cf8c9
+--- /dev/null
++++ b/task-logs/round8/gpu_step.py
+@@ -0,0 +1,124 @@
++#!/usr/bin/env python3
++"""Run one local GPU step with a gateway lease and the sandbox load gate."""
++import argparse
++import json
++import os
++from pathlib import Path
++import signal
++import subprocess
++import sys
++import time
++import urllib.request
++
++GW = 'http://127.0.0.1:8790/api/v1/gpu/'
++
++
++def gateway(method, path, data=None):
++    key = Path('/opt/llm-gateway/data/api-key').read_text().strip()
++    request = urllib.request.Request(GW + path, method=method,
++        data=json.dumps(data).encode() if data is not None else None,
++        headers={'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json'})
++    with urllib.request.urlopen(request, timeout=30) as response:
++        response.read()
++
++
++def apps():
++    result = subprocess.run(['nvidia-smi', '--query-compute-apps=pid,used_memory', '--format=csv,noheader,nounits'], capture_output=True, text=True)
++    if result.returncode:
++        raise RuntimeError('GPU unavailable: ' + result.stdout.strip() + result.stderr.strip())
++    return {int(row.split(',')[0]): int(row.split(',')[1]) for row in result.stdout.splitlines() if row.strip()}
++
++
++def main():
++    parser = argparse.ArgumentParser()
++    parser.add_argument('out', type=Path)
++    parser.add_argument('--attempts', type=int, default=3)
++    parser.add_argument('command', nargs=argparse.REMAINDER)
++    args = parser.parse_args()
++    command = args.command[1:] if args.command[:1] == ['--'] else args.command
++    if not command:
++        parser.error('command required after --')
++    args.out.mkdir(parents=True, exist_ok=True)
++    (args.out / 'accepted.txt').unlink(missing_ok=True)
++    log = args.out / 'gate.jsonl'
++
++    def event(**data):
++        data['utc'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())
++        with log.open('a') as stream:
++            stream.write(json.dumps(data) + '\n')
++        print(json.dumps(data), flush=True)
++
++    try:
++        apps()
++    except (OSError, RuntimeError, ValueError) as error:
++        event(kind='unavailable', reason=str(error))
++        return 77
++    for attempt in range(1, args.attempts + 1):
++        deadline = time.monotonic() + 900
++        while os.getloadavg()[0] >= 3:
++            if time.monotonic() >= deadline:
++                event(kind='timeout', reason='no quiet load window')
++                return 75
++            time.sleep(5)
++        held = False
++        child = None
++        try:
++            gateway('POST', 'free', {})
++            gateway('POST', 'hold', {'reason': 'codex: round 8', 'ttlS': 900})
++            held = True
++            before_apps = apps()
++            if any(mib > 300 for mib in before_apps.values()):
++                raise RuntimeError('GPU has another process using more than 300 MiB')
++            start_load = os.getloadavg()[0]
++            if start_load >= 3:
++                continue
++            with (args.out / f'attempt-{attempt}.log').open('w') as output:
++                child = subprocess.Popen(command, stdout=output, stderr=subprocess.STDOUT, start_new_session=True)
++                last_hold = time.monotonic()
++                own_gpu_pid = None
++                while child.poll() is None:
++                    try:
++                        child.wait(timeout=5)
++                    except subprocess.TimeoutExpired:
++                        current = apps()
++                        new_pids = set(current) - set(before_apps)
++                        if own_gpu_pid is None and len(new_pids) == 1:
++                            own_gpu_pid = next(iter(new_pids))
++                        if any(mib > 300 for pid, mib in current.items() if pid != own_gpu_pid):
++                            raise RuntimeError('another process now uses more than 300 MiB of VRAM')
++                        if time.monotonic() - last_hold > 300:
++                            gateway('POST', 'hold', {'reason': 'codex: round 8', 'ttlS': 900})
++                            last_hold = time.monotonic()
++                result = child.returncode
++            end_load = os.getloadavg()[0]
++        finally:
++            if child is not None and child.poll() is None:
++                os.killpg(child.pid, signal.SIGTERM)
++                try:
++                    child.wait(timeout=30)
++                except subprocess.TimeoutExpired:
++                    os.killpg(child.pid, signal.SIGKILL)
++                    child.wait()
++            if held:
++                gateway('DELETE', 'hold')
++        accepted = result == 0 and start_load < 3 and end_load < 3
++        event(kind='step', attempt=attempt, exit=result, load_start=start_load, load_end=end_load, accepted=accepted)
++        if accepted:
++            (args.out / 'accepted.txt').write_text(f'attempt-{attempt}.log\n')
++            return 0
++        if result not in (0, 75):
++            return result
++    return 75
++
++
++def interrupted(*_):
++    raise KeyboardInterrupt
++
++
++if __name__ == '__main__':
++    signal.signal(signal.SIGTERM, interrupted)
++    try:
++        sys.exit(main())
++    except (KeyboardInterrupt, OSError, RuntimeError, ValueError) as error:
++        print(str(error), file=sys.stderr)
++        sys.exit(1)
+diff --git a/task-logs/round8/legacy-layout-table.md b/task-logs/round8/legacy-layout-table.md
+new file mode 100644
+index 000000000..f0fbbbbe8
+--- /dev/null
++++ b/task-logs/round8/legacy-layout-table.md
+@@ -0,0 +1,22 @@
++| Old workload, actual Qwen layouts | Policy | Decode bytes hit | First-32 bytes hit | MiB/token |
++| --- | --- | ---: | ---: | ---: |
++| long | r7 | 43.9394% | 41.4018% | 14.9244 |
++| long | decay64 | 44.2286% | 41.6418% | 16.7128 |
++| long | prefill512 | 43.1251% | 30.8750% | 14.0282 |
++| long | admit16 | 42.1593% | 40.2956% | 9.2792 |
++| long | admit64 | 44.3368% | 42.8324% | 17.4276 |
++| long | byte-value | 44.1655% | 43.1946% | 14.8698 |
++| long | byte-decay64 | 44.9967% | 43.4715% | 16.6656 |
++| long | byte-soft100 | 44.1193% | 43.2894% | 15.8917 |
++| long | byte-soft150 | 44.1637% | 43.1870% | 14.8684 |
++| long | byte-prefill512 | 43.6565% | 37.2293% | 13.9713 |
++| short | r7 | 43.0482% | 40.3315% | 19.6193 |
++| short | decay64 | 43.9755% | 40.7985% | 20.1034 |
++| short | prefill512 | 39.5356% | 28.2917% | 16.2386 |
++| short | admit16 | 40.8812% | 39.4699% | 13.3803 |
++| short | admit64 | 43.9291% | 41.9151% | 25.0855 |
++| short | byte-value | 43.5942% | 41.9733% | 19.5751 |
++| short | byte-decay64 | 45.0775% | 42.5396% | 20.1366 |
++| short | byte-soft100 | 43.5072% | 41.9362% | 19.9409 |
++| short | byte-soft150 | 43.5955% | 41.9717% | 19.5761 |
++| short | byte-prefill512 | 41.1958% | 34.6360% | 16.1322 |
+diff --git a/task-logs/round8/legacy_layout_replay.py b/task-logs/round8/legacy_layout_replay.py
+new file mode 100644
+index 000000000..fee315749
+--- /dev/null
++++ b/task-logs/round8/legacy_layout_replay.py
+@@ -0,0 +1,42 @@
++#!/usr/bin/env python3
++import json
++import os
++from pathlib import Path
++import re
++import subprocess
++
++root = Path(__file__).resolve().parents[2]
++logs = root / 'task-logs/round8'
++model = json.loads((logs/'model-inventory.json').read_text())['qwen38']
++budget = next(r for r in json.loads((logs/'slot-budget.json').read_text()) if r['model']=='qwen38' and r['budget_mib']==2560)
++layer_groups = {il:(ig,g) for ig,g in enumerate(model['groups']) for il in g['layers']}
++rows=[]
++policies=[('r7',128,32,1024,0,0),('decay64',64,32,1024,0,0),('prefill512',128,32,512,0,0),
++          ('admit16',128,16,1024,0,0),('admit64',128,64,1024,0,0),('byte-value',128,32,1024,1,0),
++          ('byte-decay64',64,32,1024,1,0),('byte-soft100',128,32,1024,1,100),
++          ('byte-soft150',128,32,1024,1,150),('byte-prefill512',128,32,512,1,0)]
++for workload in ['long','short']:
++    trace=logs/f'legacy-layout-{workload}.jsonl'
++    with (root/f'task-logs/round7/{workload}.jsonl').open() as source, trace.open('w') as dest:
++        for line in source:
++            b=json.loads(line)
++            b['n_groups']=len(model['groups'])
++            for layer in b['layers']:
++                ig,g=layer_groups[layer['layer']]
++                nslots=budget['slots'][ig]
++                layer.update(n_expert=512,group=ig if nslots else -1,slots=nslots,expert_bytes=g['expert_bytes'])
++                if not nslots:
++                    layer['cache']=False
++            dest.write(json.dumps(b,separators=(',',':'))+'\n')
++    for name,decay,admit,prefill,byte,soft in policies:
++        env={**os.environ,'GGML_MOE_HYBRID_BYTE_VALUE':str(byte),'GGML_MOE_HYBRID_LAYER_SOFT_PCT':str(soft)}
++        out=subprocess.check_output([str(root/'build-cpu/bin/test-moe-cache'),'--replay-log',str(trace),'0',str(admit),str(prefill),'0',str(decay)],text=True,env=env)
++        (logs/f'layout-{workload}-{name}.log').write_text(out)
++        metric=dict(re.findall(r'([\w/]+)=([^\s]+)',next(l for l in out.splitlines() if l.startswith('context='))))
++        rows.append(dict(workload=workload,policy=name,**metric))
++(logs/'legacy-layout-matrix.json').write_text(json.dumps(rows,indent=2)+'\n')
++with (logs/'legacy-layout-table.md').open('w') as f:
++    f.write('| Old workload, actual Qwen layouts | Policy | Decode bytes hit | First-32 bytes hit | MiB/token |\n| --- | --- | ---: | ---: | ---: |\n')
++    for r in rows:
++        f.write(f"| {r['workload']} | {r['policy']} | {r['decode_byte_hit_rate']} | {r['first32_byte_hit_rate']} | {r['MiB/token']} |\n")
++print('Legacy-route mixed-layout replay completed; these are not real server traces')
+diff --git a/task-logs/round8/measurement.patch b/task-logs/round8/measurement.patch
+new file mode 100644
+index 000000000..dfa41cc35
+--- /dev/null
++++ b/task-logs/round8/measurement.patch
+@@ -0,0 +1,259 @@
++--- a/moe-quant/qwen38/stage_b.py
+++++ b/moe-quant/qwen38/stage_b.py
++@@ -79,6 +79,21 @@
++                                   'GGML_MOE_HYBRID_TRACE': '/opt/llm-gateway/data/moe-quant/traces/ling-bench8.jsonl'}),
++     'strata':           dict(gateway_model='iq3_s'),
++ }
+++# Round 8 candidates. The policy and buffer changes are opt-in; existing controls stay intact.
+++for name, control, extra, env in [
+++    ('q-r8-byte', 'q-warm-draft', [], {'GGML_MOE_HYBRID_BYTE_VALUE': '1'}),
+++    ('ling-r8-byte', 'ling-cache-mtp3', [], {'GGML_MOE_HYBRID_BYTE_VALUE': '1'}),
+++    ('q-r8-policy', 'q-warm-draft', [], {'GGML_MOE_HYBRID_BYTE_VALUE': '1', 'GGML_MOE_HYBRID_DECAY': '64'}),
+++    ('ling-r8-policy', 'ling-cache-mtp3', [], {'GGML_MOE_HYBRID_BYTE_VALUE': '1', 'GGML_MOE_HYBRID_DECAY': '64'}),
+++    ('q-r8-ub32', 'q-warm-draft', ['--spec-draft-n-ubatch', '32'], {}),
+++    ('ling-r8-ub32', 'ling-cache-mtp3', ['--spec-draft-n-ubatch', '32'], {}),
+++    ('q-r8-slots', 'q-warm-draft', ['--spec-draft-n-ubatch', '32'], {'GGML_MOE_HYBRID_MIB': '2944'}),
+++    ('ling-r8-slots', 'ling-cache-mtp3', ['--spec-draft-n-ubatch', '32'], {'GGML_MOE_HYBRID_MIB': '5376'}),
+++    ('q-r8-combined', 'q-warm-draft', ['--spec-draft-n-ubatch', '32'], {'GGML_MOE_HYBRID_MIB': '2944', 'GGML_MOE_HYBRID_BYTE_VALUE': '1', 'GGML_MOE_HYBRID_DECAY': '64'}),
+++    ('ling-r8-combined', 'ling-cache-mtp3', ['--spec-draft-n-ubatch', '32'], {'GGML_MOE_HYBRID_MIB': '5376', 'GGML_MOE_HYBRID_BYTE_VALUE': '1', 'GGML_MOE_HYBRID_DECAY': '64'}),
+++]:
+++    CONFIGS[name] = dict(cmd=CONFIGS[control]['cmd'] + extra, env={**CONFIGS[control]['env'], **env})
+++
++ ENGLISH = [
++     'Explain the difference between a process and a thread, and when you would choose one over the other in a web server.',
++     'Summarize the trade-offs of putting a message queue between two services: what it buys you and what it costs.',
++@@ -138,8 +153,11 @@
++ 
++ 
++ class Run:
++-    def __init__(self, out, end):
+++    def __init__(self, out, end, load_gate=False):
++         self.out, self.end = out, end
+++        self.load_gate = load_gate
+++        self.gpu_pid = None
+++        self.previous_gpu_pids = set()
++         self.log = out / 'runs.jsonl'
++         self.done = set()
++         if self.log.exists():
++@@ -159,7 +177,7 @@
++ 
++     def renew(self, force=False):
++         if self.held and (force or time.monotonic() - self.last_hold > 300):
++-            gw('POST', '/api/v1/gpu/hold', {'reason': 'claude: strata-parity stage A (llama.cpp)', 'ttlS': 900})
+++            gw('POST', '/api/v1/gpu/hold', {'reason': 'codex: round 8' if self.load_gate else 'claude: strata-parity stage A (llama.cpp)', 'ttlS': 900})
++             self.last_hold = time.monotonic()
++ 
++     def quiet(self):
++@@ -168,32 +186,65 @@
++             if time.time() > self.end:
++                 raise TimeoutError('deadline')
++             self.renew()
++-            b0 = busy_jiffies(); time.sleep(5)
++-            cores = (busy_jiffies() - b0) / HZ / 5
++-            if cores < 1.0:
++-                return round(time.time() - t0), round(cores, 2)
+++            if self.load_gate:
+++                cores = os.getloadavg()[0]
+++                if cores < 3:
+++                    if self.child is not None:
+++                        self.check_gpu()
+++                    return round(time.time() - t0), round(cores, 2)
+++                if self.held:
+++                    raise Requeue('load gate')
+++            else:
+++                b0 = busy_jiffies(); time.sleep(5)
+++                cores = (busy_jiffies() - b0) / HZ / 5
+++                if cores < 1.0:
+++                    return round(time.time() - t0), round(cores, 2)
++             if self.held and time.time() - t0 > HELD_WAIT_S:
++                 raise Requeue()
++             if time.time() - t0 > MAX_WAIT_S:
++                 raise TimeoutError(f'no quiet window within {MAX_WAIT_S} s')
++             time.sleep(10)
++ 
+++    def gpu_apps(self):
+++        text = subprocess.check_output(['nvidia-smi', '--query-compute-apps=pid,used_memory', '--format=csv,noheader,nounits'], text=True)
+++        return {int(row.split(',')[0]): int(row.split(',')[1]) for row in text.splitlines() if row.strip()}
+++
+++    def check_gpu(self):
+++        current = self.gpu_apps()
+++        new_pids = set(current) - self.previous_gpu_pids
+++        if self.gpu_pid is None and len(new_pids) == 1:
+++            self.gpu_pid = next(iter(new_pids))
+++        foreign = {pid: mib for pid, mib in current.items() if pid != self.gpu_pid and mib > 300}
+++        if foreign:
+++            raise Requeue('foreign GPU process: ' + str(foreign))
+++
++     def start(self, name, cfg):
++         if 'gateway_model' in cfg:
++             return
+++        if self.load_gate:
+++            self.gpu_apps()
++         gw('POST', '/api/v1/gpu/free', {})
++         self.held = True
++         self.renew(force=True)
++         apps = subprocess.check_output(['nvidia-smi', '--query-compute-apps=pid,used_memory', '--format=csv,noheader,nounits'], text=True)
++         if any(int(l.split(',')[1]) > 300 for l in apps.splitlines() if l.strip()):
++             raise RuntimeError('GPU in use: ' + apps.strip())
+++        self.previous_gpu_pids = set(self.gpu_apps()) if self.load_gate else set()
++         log = open(self.out / f'{name}.server.log', 'a')
+++        env = dict(os.environ)
+++        if self.load_gate:
+++            for key in list(env):
+++                if key.startswith('GGML_MOE_HYBRID') or key == 'LLAMA_ARG_SPEC_DRAFT_N_UBATCH':
+++                    del env[key]
++         self.child = subprocess.Popen(cfg['cmd'], stdin=subprocess.DEVNULL, stdout=log, stderr=subprocess.STDOUT,
++-                                      env={**os.environ, **cfg.get('env', {})}, start_new_session=True)
+++                                      env={**env, **cfg.get('env', {})}, start_new_session=True)
+++        log.close()
++         t0 = time.time()
++         while True:
++             if self.child.poll() is not None:
++                 raise RuntimeError(f'{name}: server exited {self.child.returncode}')
+++            if self.load_gate:
+++                self.check_gpu()
++             try:
++                 with urllib.request.urlopen(f'http://127.0.0.1:{PORT}/health', timeout=2) as f:
++                     if f.status == 200:
++@@ -204,6 +255,10 @@
++                 raise RuntimeError(f'{name}: not healthy after 900 s')
++             self.renew()
++             time.sleep(2)
+++        if self.load_gate:
+++            self.check_gpu()
+++            if self.gpu_pid is None:
+++                raise RuntimeError('cannot identify the server GPU PID')
++ 
++     def stop(self):
++         if self.child is not None and self.child.poll() is None:
++@@ -213,6 +268,7 @@
++             except subprocess.TimeoutExpired:
++                 os.killpg(self.child.pid, signal.SIGKILL); self.child.wait()
++         self.child = None
+++        self.gpu_pid = None
++         if self.held:
++             gw('DELETE', '/api/v1/gpu/hold')
++             self.held = False
++@@ -228,8 +284,13 @@
++         r = urllib.request.Request(url, data=json.dumps(body).encode(), headers={'Content-Type': 'application/json', **headers})
++         t_first = t_last = None; pieces = 0; usage = None; timings = None; text_out = []
++         t0 = time.time()
+++        last_gpu_check = time.monotonic()
++         with urllib.request.urlopen(r, timeout=1800) as f:
++             for raw in f:
+++                if self.load_gate and time.monotonic() - last_gpu_check > 5:
+++                    self.check_gpu()
+++                    self.renew()
+++                    last_gpu_check = time.monotonic()
++                 line = raw.decode(errors='replace').strip()
++                 if not line.startswith('data:'):
++                     continue
++@@ -261,31 +322,45 @@
++             self.quiet()                                   # not holding the GPU here
++             try:
++                 self.one_pass(name, cfg, labels, rnd)
++-            except Requeue:
++-                self.event(kind='requeue', config=name, round=rnd, reason=f'waited over {HELD_WAIT_S} s with the GPU held')
+++            except Requeue as error:
+++                self.event(kind='requeue', config=name, round=rnd, reason=str(error) or f'waited over {HELD_WAIT_S} s with the GPU held')
++ 
++     def one_pass(self, name, cfg, labels, rnd):
++-        self.start(name, cfg)
+++        pending = []
++         try:
+++            self.start(name, cfg)
++             self.request(name, cfg, 'Say hello in five words.', 16)   # warm-up, not counted
++             for (pid, text), label in zip(PROMPTS, labels):
++-                if label in self.done:
+++                if not self.load_gate and label in self.done:
++                     continue
++                 for attempt in range(1, 5):
++                     waited, pre = self.quiet()
++-                    pids = engine_pids(name)
+++                    pids = [] if self.load_gate else engine_pids(name)
++                     b0, o0, l0, t0 = busy_jiffies(), proc_jiffies(pids), os.getloadavg()[0], time.time()
++                     res = self.request(name, cfg, text, 256)
++                     wall = time.time() - t0
++                     foreign = max(0.0, ((busy_jiffies() - b0) - (proc_jiffies(pids) - o0)) / HZ / wall)
++-                    ok = foreign < 1.0 and res['decode_tok_s'] is not None
+++                    l1 = os.getloadavg()[0]
+++                    if self.load_gate:
+++                        self.check_gpu()
+++                    ok = ((l0 < 3 and l1 < 3) if self.load_gate else foreign < 1.0) and res['decode_tok_s'] is not None
++                     vram = subprocess.check_output(['nvidia-smi', '--query-gpu=memory.used', '--format=csv,noheader,nounits'], text=True).strip()
++-                    self.event(kind='request', label=label, config=name, round=rnd, prompt=pid, attempt=attempt, waited_s=waited,
++-                               pre_busy_cores=pre, load_start=l0, wall_s=round(wall, 2), foreign_cores=round(foreign, 2),
+++                    record = dict(kind='request', label=label, config=name, round=rnd, prompt=pid, attempt=attempt, waited_s=waited,
+++                               pre_busy_cores=None if self.load_gate else pre, load_start=l0, load_end=l1, gate='load' if self.load_gate else 'foreign', wall_s=round(wall, 2), foreign_cores=None if self.load_gate else round(foreign, 2),
++                                vram_mib=vram, accepted=ok, **res)
+++                    if self.load_gate:
+++                        self.event(**{**record, 'kind':'request_pending'})
+++                        if not ok:
+++                            raise Requeue('request failed the load or result gate; repeat the full prompt pass')
+++                        pending.append(record)
+++                        break
+++                    self.event(**record)
++                     if ok:
++                         self.done.add(label)
++                         break
+++            for record in pending:
+++                self.event(**record)
+++                self.done.add(record['label'])
++         finally:
++             self.stop()
++ 
++@@ -293,12 +368,15 @@
++ def main():
++     ap = argparse.ArgumentParser()
++     ap.add_argument('out'); ap.add_argument('deadline'); ap.add_argument('--only', nargs='*'); ap.add_argument('--rounds', type=int, default=3)
+++    ap.add_argument('--load-gate', action='store_true', help='sandbox: require 1-minute load below 3 before and after each request')
++     a = ap.parse_args()
++     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
++     h, m = map(int, a.deadline.split(':')); t = time.gmtime()
++     end = calendar.timegm((t.tm_year, t.tm_mon, t.tm_mday, h, m, 0)); end = end if end > time.time() else end + 86400
++-    run = Run(out, end)
+++    run = Run(out, end, a.load_gate)
++     names = a.only or list(CONFIGS)
+++    if a.load_gate and any('gateway_model' in CONFIGS[name] for name in names):
+++        ap.error('--load-gate requires --only with local llama.cpp configurations')
++     run.event(kind='start', configs=names, rounds=a.rounds, prompts=[p for p, _ in PROMPTS], pid=os.getpid())
++     def on_term(*_):
++         raise KeyboardInterrupt('SIGTERM')
++--- a/moe-quant/record-traces.sh
+++++ b/moe-quant/record-traces.sh
++@@ -1,19 +1,17 @@
++ #!/usr/bin/env bash
++-# Route traces for round 8: the 8-prompt benchmark on Qwen3.8 and Ling (one round each, server with MTP and the cache),
++-# and a long session (Qwen3.8 perplexity over 6 chunks of test-de in 4-token batches).
++-set -u
++-KEY=$(cat /opt/llm-gateway/data/api-key)
++-T=/opt/llm-gateway/data/moe-quant/traces
++-R=/opt/llm-gateway/data/build/llama-l5/build-cuda/bin
++-gw() { curl -s -X "$1" -H "Authorization: Bearer $KEY" -H 'Content-Type: application/json' ${3:+-d "$3"} "http://127.0.0.1:8790/api/v1/gpu/$2"; }
++-cd /opt/llm-gateway/data/moe-quant/qwen38
++-python3 -u stage_b.py /opt/llm-gateway/data/moe-quant/qwen38/run-traces 23:59 --rounds 1 --only q-trace ling-trace > run-traces.log 2>&1
++-echo "bench traces exit $?" >> $T/record.txt
++-gw POST free '{}' > /dev/null; gw POST hold '{"reason":"claude: long-session trace","ttlS":900}' > /dev/null
++-env LD_LIBRARY_PATH=$R OMP_PLACES=cores OMP_PROC_BIND=close GGML_SCHED_OVERLAP=1 LLAMA_MOE_SHEXP_EARLY=1 GGML_MOE_HYBRID=1 GGML_MOE_HYBRID_ADAPTIVE=1 \
++-  GGML_MOE_HYBRID_ADMIT=32 GGML_MOE_HYBRID_MIB=2560 GGML_MOE_HYBRID_PREFILL=1 GGML_MOE_HYBRID_DECAY=128 GGML_MOE_HYBRID_TRACE=$T/qwen38-long-de.jsonl \
++-  $R/llama-perplexity -m /opt/llm-gateway/models/Qwen3.8-Flash-Next/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf \
++-  -f /opt/llm-gateway/data/build/texts/test-de.txt -c 512 -b 512 -ub 4 --chunks 6 -ngl 99 -ncmoe 48 -fa on -t 24 < /dev/null > $T/long-de.log 2>&1
++-echo "long trace exit $?" >> $T/record.txt
++-gw DELETE hold > /dev/null
++-ls -la $T >> $T/record.txt
+++# Record the real eight-prompt workloads and a long German session.
+++set -euo pipefail
+++base=/opt/llm-gateway/data/build/llama-l5
+++measure=/opt/llm-gateway/data/moe-quant
+++stamp=$(date -u +%Y%m%d-%H%M%S)
+++mkdir -p "$measure/traces"
+++cd "$measure/qwen38"
+++python3 -u stage_b.py "$measure/qwen38/run-traces-$stamp" 23:59 --load-gate --rounds 1 --only q-trace ling-trace > "$measure/traces/bench-$stamp.log" 2>&1
+++python3 "$base/task-logs/round8/gpu_step.py" "$measure/traces/long-$stamp" -- \
+++  env LD_LIBRARY_PATH="$base/build-cuda/bin" OMP_PLACES=cores OMP_PROC_BIND=close GGML_SCHED_OVERLAP=1 LLAMA_MOE_SHEXP_EARLY=1 \
+++  GGML_MOE_HYBRID=1 GGML_MOE_HYBRID_ADAPTIVE=1 GGML_MOE_HYBRID_ADMIT=32 GGML_MOE_HYBRID_MIB=2560 \
+++  GGML_MOE_HYBRID_PREFILL=1 GGML_MOE_HYBRID_DECAY=128 GGML_MOE_HYBRID_BYTE_VALUE=0 GGML_MOE_HYBRID_LAYER_SOFT_PCT=0 \
+++  GGML_MOE_HYBRID_TRACE="$measure/traces/qwen38-long-de.jsonl" \
+++  "$base/build-cuda/bin/llama-perplexity" \
+++  -m /opt/llm-gateway/models/Qwen3.8-Flash-Next/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf \
+++  -f /opt/llm-gateway/data/build/texts/test-de.txt -c 512 -b 512 -ub 4 --chunks 6 -ngl 99 -ncmoe 48 -fa on -t 24 -lm none
+diff --git a/task-logs/round8/model_inventory.py b/task-logs/round8/model_inventory.py
+new file mode 100644
+index 000000000..2d91e08ab
+--- /dev/null
++++ b/task-logs/round8/model_inventory.py
+@@ -0,0 +1,45 @@
++#!/usr/bin/env python3
++import collections
++import json
++from pathlib import Path
++import sys
++from typing import Any
++
++sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'gguf-py'))
++from gguf import GGUFReader
++
++models = {
++    'qwen38': '/opt/llm-gateway/models/Qwen3.8-Flash-Next/IQ3_S/*.gguf',
++    'qwen38_mtp': '/opt/llm-gateway/models/Qwen3.8-Flash-Next/MTP/mtp-Qwen3.8-Flash-Next-Q8_0.gguf',
++    'ling': '/opt/llm-gateway/models/Ling-3.0-flash-GGUF/Ling-3.0-flash-IQ4_XS/*.gguf',
++}
++import glob
++result: dict[str, dict[str, Any]] = {}
++for model, pattern in models.items():
++    layers = collections.defaultdict(list)
++    metadata = {}
++    for filename in sorted(glob.glob(pattern)):
++        reader = GGUFReader(filename)
++        for key, field in reader.fields.items():
++            if key.endswith(('expert_used_count', 'expert_count', 'block_count')):
++                metadata[key] = field.contents()
++        for tensor in reader.tensors:
++            if '_exps.' not in tensor.name:
++                continue
++            shape = list(map(int, tensor.shape))
++            if len(shape) != 3:
++                continue
++            layers[int(tensor.name.split('.')[1])].append(dict(name=tensor.name, type=tensor.tensor_type.name,
++                type_id=int(tensor.tensor_type), file=filename, offset=int(tensor.data_offset),
++                shape=shape, expert_bytes=int(tensor.n_bytes)//shape[2]))
++    result[model] = dict(layers=dict(layers), metadata=metadata)
++    groups = collections.defaultdict(list)
++    for layer, tensors in layers.items():
++        signature = tuple((t['name'].split('.',2)[2], t['type'], tuple(t['shape'])) for t in sorted(tensors,key=lambda t:t['name']))
++        groups[signature].append(layer)
++    result[model]['groups'] = [dict(layers=ids, expert_bytes=sum(t['expert_bytes'] for t in layers[ids[0]]), tensors=layers[ids[0]]) for ids in groups.values()]
++Path('task-logs/round8/model-inventory.json').write_text(json.dumps(result,indent=2)+'\n')
++for model, data in result.items():
++    print(model)
++    for g in data['groups']:
++        print('layers', g['layers'], 'bytes/expert', g['expert_bytes'], [(t['type'],t['shape']) for t in g['tensors']])
+diff --git a/task-logs/round8/off-parity.cpp b/task-logs/round8/off-parity.cpp
+new file mode 100644
+index 000000000..0eedc9dfa
+--- /dev/null
++++ b/task-logs/round8/off-parity.cpp
+@@ -0,0 +1,55 @@
++#include "llama.h"
++#include "ggml-backend.h"
++#include <cstdio>
++#include <vector>
++
++int main(int argc, char ** argv) {
++    if (argc != 4) {
++        return 1;
++    }
++    ggml_backend_load_all_from_path(argv[2]);
++    auto mp = llama_model_default_params();
++    mp.n_gpu_layers = 0;
++    auto * model = llama_model_load_from_file(argv[1], mp);
++    if (!model) {
++        return 2;
++    }
++    auto cp = llama_context_default_params();
++    cp.n_ctx = 64;
++    cp.n_batch = 32;
++    cp.n_ubatch = 4;
++    cp.n_threads = cp.n_threads_batch = 4;
++    auto * ctx = llama_init_from_model(model, cp);
++    if (!ctx) {
++        return 3;
++    }
++    FILE * out = fopen(argv[3], "wb");
++    if (!out) {
++        return 4;
++    }
++    auto batch = llama_batch_init(20, 0, 1);
++    const int nv = llama_vocab_n_tokens(llama_model_get_vocab(model));
++    for (int window = 0; window < 4; ++window) {
++        const int n = window == 0 ? 20 : 4;
++        batch.n_tokens = n;
++        for (int t = 0; t < n; ++t) {
++            batch.token[t] = 1 + (t + window) % 8;
++            batch.pos[t] = window == 0 ? t : 20 + (window-1)*4+t;
++            batch.n_seq_id[t] = 1;
++            batch.seq_id[t][0] = 0;
++            batch.logits[t] = true;
++        }
++        if (llama_decode(ctx, batch)) {
++            return 5;
++        }
++        for (int t = 0; t < n; ++t) {
++            if (fwrite(llama_get_logits_ith(ctx,t), sizeof(float), nv, out) != (size_t) nv) {
++                return 6;
++            }
++        }
++    }
++    fclose(out);
++    llama_batch_free(batch);
++    llama_free(ctx);
++    llama_model_free(model);
++}
+diff --git a/task-logs/round8/pcie-misses.cpp b/task-logs/round8/pcie-misses.cpp
+new file mode 100644
+index 000000000..921432ab2
+--- /dev/null
++++ b/task-logs/round8/pcie-misses.cpp
+@@ -0,0 +1,258 @@
++#include "ggml.h"
++#include "ggml-backend.h"
++#include "ggml-backend-impl.h"
++#include "ggml-cpu.h"
++#include "ggml-cuda.h"
++#include "ggml-cpp.h"
++#include <cuda_runtime_api.h>
++#include <nlohmann/json.hpp>
++
++#include <algorithm>
++#include <chrono>
++#include <cmath>
++#include <cstdio>
++#include <cstdlib>
++#include <cstring>
++#include <fstream>
++#include <map>
++#include <memory>
++#include <set>
++#include <stdexcept>
++#include <vector>
++
++// Call the existing masked MMVQ kernel without a scheduler upload of host weights.
++struct ggml_backend_cuda_context;
++struct ggml_cuda_mm_fusion_args_host;
++void ggml_cuda_mul_mat_vec_q(ggml_backend_cuda_context &, const ggml_tensor *, const ggml_tensor *, const ggml_tensor *, ggml_tensor *, const ggml_cuda_mm_fusion_args_host *, const ggml_tensor *);
++
++static void check(cudaError_t status) {
++    if (status != cudaSuccess) {
++        throw std::runtime_error(cudaGetErrorString(status));
++    }
++}
++
++struct mapped_weights {
++    void * host = nullptr;
++    void * device = nullptr;
++    ggml_backend_buffer_ptr buffer;
++    explicit mapped_weights(size_t size) {
++        check(cudaHostAlloc(&host, size, cudaHostAllocMapped));
++        check(cudaHostGetDevicePointer(&device, host, 0));
++        buffer.reset(ggml_backend_cpu_buffer_from_ptr(host, size));
++        ggml_backend_buffer_set_usage(buffer.get(), GGML_BACKEND_BUFFER_USAGE_WEIGHTS);
++    }
++    ~mapped_weights() {
++        buffer.reset();
++        if (host) {
++            cudaFreeHost(host);
++        }
++    }
++};
++
++struct device_array {
++    ggml_backend_buffer_ptr buffer;
++    void * data = nullptr;
++    explicit device_array(size_t size) : buffer(ggml_backend_buft_alloc_buffer(ggml_backend_cuda_buffer_type(0), size)) {
++        GGML_ASSERT(buffer);
++        data = ggml_backend_buffer_get_base(buffer.get());
++    }
++};
++
++struct operation {
++    int layer;
++    std::vector<int> original_ids;
++    std::vector<int32_t> ids;
++    std::set<int> misses;
++    ggml_context_ptr ctx;
++    std::unique_ptr<mapped_weights> weights;
++    ggml_backend_buffer_ptr buffer;
++    ggml_tensor * w;
++    ggml_tensor * x;
++    ggml_tensor * route;
++    ggml_tensor * mask;
++    ggml_tensor * out;
++    ggml_cgraph * graph;
++    ggml_tensor gpu_w, gpu_x, gpu_ids, gpu_mask, gpu_out;
++    std::unique_ptr<device_array> dx, di, dm, dy;
++    std::vector<float> cpu_mask, cuda_mask, result_gpu, reference;
++
++    operation(const nlohmann::json & l, const nlohmann::json & tensor) : layer(l.at("layer")) {
++        std::set<int> unique;
++        for (const auto & row : l.at("ids")) {
++            for (int id : row) {
++                unique.insert(id);
++            }
++        }
++        original_ids.assign(unique.begin(), unique.end());
++        GGML_ASSERT(!original_ids.empty() && original_ids.size() <= 40);
++        for (int id : l.at("missed")) {
++            misses.insert(id);
++        }
++        for (const auto & row : l.at("ids")) {
++            GGML_ASSERT(row.size() == 10);
++            for (int id : row) {
++                ids.push_back(std::lower_bound(original_ids.begin(), original_ids.end(), id) - original_ids.begin());
++            }
++        }
++        GGML_ASSERT(ids.size() == 40);
++        const int k = tensor.at("shape")[0], m = tensor.at("shape")[1], ne = tensor.at("shape")[2];
++        GGML_ASSERT((k == 2560 && m == 640) || (k == 640 && m == 2560));
++        GGML_ASSERT(ne == 512 && original_ids.back() < ne && original_ids.front() >= 0);
++        const int type = tensor.at("type_id");
++        GGML_ASSERT(type >= 0 && type < GGML_TYPE_COUNT);
++        ctx.reset(ggml_init({ggml_tensor_overhead()*16 + ggml_graph_overhead_custom(16, false), nullptr, true}));
++        w = ggml_new_tensor_3d(ctx.get(), (ggml_type) type, k, m, original_ids.size());
++        const size_t slice = w->nb[2];
++        GGML_ASSERT(slice == tensor.at("expert_bytes").get<size_t>());
++        weights.reset(new mapped_weights(ggml_nbytes(w) + 4096));
++        std::memset((char *) weights->host + ggml_nbytes(w), 0, 4096);
++        GGML_ASSERT(ggml_backend_tensor_alloc(weights->buffer.get(), w, weights->host) == GGML_STATUS_SUCCESS);
++        std::ifstream file(tensor.at("file").get<std::string>(), std::ios::binary);
++        GGML_ASSERT(file.good());
++        const uint64_t offset = tensor.at("offset");
++        for (size_t i = 0; i < original_ids.size(); ++i) {
++            file.seekg(offset + original_ids[i]*slice);
++            file.read((char *) w->data + i*slice, slice);
++            GGML_ASSERT(file.good());
++        }
++        const bool down = tensor.at("name").get<std::string>().find("ffn_down") != std::string::npos;
++        x = ggml_new_tensor_3d(ctx.get(), GGML_TYPE_F32, k, down ? 10 : 1, 4);
++        route = ggml_new_tensor_2d(ctx.get(), GGML_TYPE_I32, 10, 4);
++        mask = ggml_new_tensor_2d(ctx.get(), GGML_TYPE_F32, 10, 4);
++        out = ggml_mul_mat_id_masked(ctx.get(), w, x, route, mask);
++        graph = ggml_new_graph_custom(ctx.get(), 16, false);
++        ggml_build_forward_expand(graph, out);
++        buffer.reset(ggml_backend_alloc_ctx_tensors_from_buft(ctx.get(), ggml_backend_cpu_buffer_type()));
++        GGML_ASSERT(buffer);
++        for (int64_t i = 0; i < ggml_nelements(x); ++i) {
++            ((float *) x->data)[i] = std::sin((float) (i % 1024)*0.13f)*0.2f;
++        }
++        memcpy(route->data, ids.data(), ggml_nbytes(route));
++        dx.reset(new device_array(ggml_nbytes(x)));
++        di.reset(new device_array(ggml_nbytes(route)));
++        dm.reset(new device_array(ggml_nbytes(mask)));
++        dy.reset(new device_array(ggml_nbytes(out)));
++        gpu_w = *w; gpu_w.data = weights->device;
++        gpu_x = *x; gpu_x.data = dx->data; gpu_x.buffer = dx->buffer.get();
++        gpu_ids = *route; gpu_ids.data = di->data; gpu_ids.buffer = di->buffer.get();
++        gpu_mask = *mask; gpu_mask.data = dm->data; gpu_mask.buffer = dm->buffer.get();
++        gpu_out = *out; gpu_out.data = dy->data; gpu_out.buffer = dy->buffer.get();
++        cpu_mask.resize(ids.size()); cuda_mask.resize(ids.size());
++        result_gpu.resize(ggml_nelements(out));
++        reference.resize(ggml_nelements(out));
++    }
++
++    void run(ggml_backend_t cpu, ggml_backend_t gpu, const std::set<std::pair<int, int>> & selected, bool baseline) {
++        bool use_gpu = false;
++        for (size_t i = 0; i < ids.size(); ++i) {
++            const int expert = original_ids[ids[i]];
++            const bool miss = misses.count(expert);
++            const bool on_gpu = miss && selected.count({layer, expert});
++            cpu_mask[i] = miss && !on_gpu;
++            cuda_mask[i] = on_gpu;
++            use_gpu |= on_gpu;
++        }
++        memcpy(mask->data, cpu_mask.data(), ggml_nbytes(mask));
++        if (use_gpu) {
++            ggml_backend_tensor_set_async(gpu, &gpu_x, x->data, 0, ggml_nbytes(x));
++            ggml_backend_tensor_set_async(gpu, &gpu_ids, ids.data(), 0, ggml_nbytes(route));
++            ggml_backend_tensor_set_async(gpu, &gpu_mask, cuda_mask.data(), 0, ggml_nbytes(mask));
++            ggml_cuda_mul_mat_vec_q(*static_cast<ggml_backend_cuda_context *>(gpu->context), &gpu_w, &gpu_x, &gpu_ids, &gpu_out, nullptr, &gpu_mask);
++        }
++        GGML_ASSERT(ggml_backend_graph_compute(cpu, graph) == GGML_STATUS_SUCCESS);
++        if (use_gpu) {
++            ggml_backend_tensor_get_async(gpu, &gpu_out, result_gpu.data(), 0, ggml_nbytes(out));
++            ggml_backend_synchronize(gpu);
++            for (size_t i = 0; i < result_gpu.size(); ++i) {
++                ((float *) out->data)[i] += result_gpu[i];
++            }
++        }
++        if (baseline) {
++            memcpy(reference.data(), out->data, ggml_nbytes(out));
++        }
++    }
++
++    double error() const {
++        double error = 0, scale = 0;
++        for (size_t i = 0; i < reference.size(); ++i) {
++            const double value = ((float *) out->data)[i];
++            if (!std::isfinite(value)) {
++                throw std::runtime_error("non-finite result");
++            }
++            error += (value-reference[i])*(value-reference[i]);
++            scale += reference[i]*reference[i];
++        }
++        return error/std::max(scale, 1e-30);
++    }
++};
++
++int main(int argc, char ** argv) try {
++    if (argc < 2 || argc > 3 || (argc == 3 && std::string(argv[2]) != "--check-manifest")) {
++        fprintf(stderr, "usage: %s pcie-manifest.json [--check-manifest]\n", argv[0]);
++        return 1;
++    }
++    std::ifstream input(argv[1]);
++    nlohmann::json manifest;
++    input >> manifest;
++    std::map<int, std::set<std::pair<int, int>>> selections;
++    for (int pct : {0, 10, 20, 30}) {
++        for (const auto & expert : manifest.at("splits").at(std::to_string(pct)).at("experts")) {
++            selections[pct].emplace(expert.at(0).get<int>(), expert.at(1).get<int>());
++        }
++    }
++    if (argc == 3) {
++        printf("manifest: %zu layers; 10/20/30 percent subsets: %zu/%zu/%zu experts\n", manifest.at("layers").size(), selections[10].size(), selections[20].size(), selections[30].size());
++        return 0;
++    }
++    cudaDeviceProp prop;
++    check(cudaGetDeviceProperties(&prop, 0));
++    if (!prop.canMapHostMemory) {
++        throw std::runtime_error("device cannot map host memory");
++    }
++    ggml_backend_ptr gpu(ggml_backend_cuda_init(0));
++    ggml_backend_ptr cpu(ggml_backend_cpu_init());
++    GGML_ASSERT(gpu && cpu);
++    ggml_backend_cpu_set_n_threads(cpu.get(), 24);
++    std::vector<std::unique_ptr<operation>> ops;
++    for (const auto & layer : manifest.at("layers")) {
++        for (const auto & tensor : layer.at("tensors")) {
++            ops.emplace_back(new operation(layer, tensor));
++        }
++    }
++    for (auto & op : ops) {
++        op->run(cpu.get(), gpu.get(), selections[0], true);
++        op->run(cpu.get(), gpu.get(), selections[30], false);
++        GGML_ASSERT(op->error() < 5e-4);
++    }
++    for (int round = 0; round < 3; ++round) {
++        for (int index = 0; index < 6; ++index) {
++            const int order[] = {0, 10, 0, 20, 0, 30};
++            const int pct = order[(index + 2*round) % 6];
++            double before[3], after[3];
++            GGML_ASSERT(getloadavg(before, 3) == 3);
++            if (before[0] >= 3) {
++                return 75;
++            }
++            const auto start = std::chrono::steady_clock::now();
++            for (auto & op : ops) {
++                op->run(cpu.get(), gpu.get(), selections[pct], false);
++            }
++            const double ms = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now()-start).count();
++            GGML_ASSERT(getloadavg(after, 3) == 3);
++            double worst = 0;
++            for (auto & op : ops) {
++                worst = std::max(worst, op->error());
++            }
++            GGML_ASSERT(worst < 5e-4);
++            printf("{\"round\":%d,\"gpu_pct\":%d,\"gpu_byte_pct\":%.5f,\"ms_per_window\":%.6f,\"load_start\":%.3f,\"load_end\":%.3f,\"nmse\":%.8g,\"accepted\":%s}\n", round+1,pct,manifest["splits"][std::to_string(pct)]["percent"].get<double>(),ms,before[0],after[0],worst,after[0]<3?"true":"false");
++            fflush(stdout);
++            if (after[0] >= 3) {
++                return 75;
++            }
++        }
++    }
++    return 0;
++} catch (const std::exception & e) {
++    fprintf(stderr, "%s\n", e.what());
++    return 1;
++}
+diff --git a/task-logs/round8/preflight.json b/task-logs/round8/preflight.json
+new file mode 100644
+index 000000000..8d772eeaf
+--- /dev/null
++++ b/task-logs/round8/preflight.json
+@@ -0,0 +1,16 @@
++{
++  "base": "7a0b887761dfb9c29e9c3bcf14767853cba3ee55",
++  "nvidia_devices": [],
++  "load": [
++    0.70654296875,
++    5.10595703125,
++    6.2822265625
++  ],
++  "nvidia_smi": {
++    "exit": 9,
++    "stdout": "NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver. Make sure that the latest NVIDIA driver is installed and running.\n\n",
++    "stderr": ""
++  },
++  "gateway_tcp": "reachable",
++  "real_traces": []
++}
+diff --git a/task-logs/round8/prepare_pcie.py b/task-logs/round8/prepare_pcie.py
+new file mode 100644
+index 000000000..4b02f89a2
+--- /dev/null
++++ b/task-logs/round8/prepare_pcie.py
+@@ -0,0 +1,36 @@
++#!/usr/bin/env python3
++import json
++from pathlib import Path
++
++root=Path(__file__).resolve().parents[2]
++logs=root/'task-logs/round8'
++model=json.loads((logs/'model-inventory.json').read_text())['qwen38']['layers']
++with (root/'task-logs/round7/long.jsonl').open() as f:
++    window=next(b for b in map(json.loads,f) if b['n_tokens']==4 and b['positions'][0]>=72)
++misses=[]
++layers=[]
++for route in window['layers']:
++    il=route['layer']
++    tensors=model[str(il)]
++    ids=sorted({e for row in route['ids'] for e in row})
++    # A fixed surrogate miss mask; this is not a measured cache state.
++    missed=[e for e in ids if (il*131+e*71)%10<6]
++    size=sum(t['expert_bytes'] for t in tensors)
++    misses += [(il,e,size*sum(row.count(e) for row in route['ids']),size) for e in missed]
++    layers.append(dict(layer=il,ids=route['ids'],missed=missed,tensors=tensors))
++misses.sort(key=lambda x: ((x[0]*131+x[1]*71)%8191,x[0],x[1]))
++total=sum(x[2] for x in misses)
++splits={}
++for pct in [0,10,20,30]:
++    used=0
++    chosen=[]
++    unique=0
++    for il,e,size,unique_size in misses:
++        if used+size <= total*pct//100:
++            chosen.append([il,e]); used+=size; unique+=unique_size
++    splits[str(pct)]=dict(experts=chosen,bytes=used,percent=100*used/total,unique_bytes=unique)
++manifest=dict(source='round7/long.jsonl, first four-token window at or after position 72; deterministic 60% surrogate misses',
++              fraction_basis='expert triplet bytes per missed route, including repeated experts',
++              miss_bytes=total,unique_miss_bytes=sum(x[3] for x in misses),splits=splits,layers=layers)
++(logs/'pcie-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
++print('miss MiB',total/2**20,'split percentages',[s['percent'] for s in splits.values()])
+diff --git a/task-logs/round8/replay-table.md b/task-logs/round8/replay-table.md
+new file mode 100644
+index 000000000..f39c5ec17
+--- /dev/null
++++ b/task-logs/round8/replay-table.md
+@@ -0,0 +1,64 @@
++| Workload | Policy | Decode bytes hit | First-32 bytes hit | MiB/token |
++| --- | --- | ---: | ---: | ---: |
++| long | r7 | 48.6876% | 45.6396% | 16.0790 |
++| long | d64-a16-p256 | 45.6314% | 32.4170% | 8.0034 |
++| long | d64-a16-p512 | 46.4804% | 38.4261% | 8.4922 |
++| long | d64-a16-p1024 | 47.3224% | 44.9902% | 9.4573 |
++| long | d64-a32-p256 | 48.4599% | 34.4515% | 15.5091 |
++| long | d64-a32-p512 | 48.9049% | 39.7591% | 15.9997 |
++| long | d64-a32-p1024 | 49.4121% | 46.0254% | 16.9682 |
++| long | d64-a64-p256 | 50.1701% | 37.3649% | 27.9681 |
++| long | d64-a64-p512 | 50.4184% | 41.8685% | 28.4354 |
++| long | d64-a64-p1024 | 50.7087% | 47.5146% | 29.4301 |
++| long | d128-a16-p256 | 45.3817% | 31.9792% | 8.0020 |
++| long | d128-a16-p512 | 46.1314% | 37.8564% | 8.4903 |
++| long | d128-a16-p1024 | 47.0883% | 44.7998% | 9.4611 |
++| long | d128-a32-p256 | 47.6374% | 34.0365% | 14.5759 |
++| long | d128-a32-p512 | 48.0668% | 39.1862% | 15.0838 |
++| long | d128-a64-p256 | 48.2794% | 36.5837% | 18.5228 |
++| long | d128-a64-p512 | 48.5934% | 40.6087% | 19.1156 |
++| long | d128-a64-p1024 | 49.1242% | 46.8001% | 20.3575 |
++| long | d256-a16-p256 | 43.9327% | 30.5957% | 7.7152 |
++| long | d256-a16-p512 | 44.6995% | 37.1745% | 8.2244 |
++| long | d256-a16-p1024 | 45.9462% | 44.7249% | 9.2468 |
++| long | d256-a32-p256 | 44.9708% | 32.1029% | 10.7250 |
++| long | d256-a32-p512 | 45.5758% | 37.9867% | 11.3198 |
++| long | d256-a32-p1024 | 46.6298% | 45.5046% | 12.5908 |
++| long | d256-a64-p256 | 45.2142% | 33.4814% | 11.2443 |
++| long | d256-a64-p512 | 45.7387% | 38.7467% | 11.9460 |
++| long | d256-a64-p1024 | 46.7240% | 46.2923% | 13.5707 |
++| long | bytes-soft0 | 48.6876% | 45.6396% | 16.0790 |
++| long | bytes-soft100 | 48.6658% | 45.6950% | 16.6541 |
++| long | bytes-soft150 | 48.6867% | 45.6445% | 16.0785 |
++| long | bytes-soft200 | 48.6876% | 45.6396% | 16.0790 |
++| short | r7 | 47.4323% | 44.4963% | 20.0887 |
++| short | d64-a16-p256 | 39.4874% | 29.8975% | 8.4542 |
++| short | d64-a16-p512 | 42.8686% | 36.3973% | 10.1451 |
++| short | d64-a16-p1024 | 46.4343% | 44.0291% | 13.5268 |
++| short | d64-a32-p256 | 45.1463% | 32.6807% | 15.2176 |
++| short | d64-a32-p512 | 46.9379% | 38.2544% | 16.9085 |
++| short | d64-a32-p1024 | 49.0104% | 45.3426% | 20.2901 |
++| short | d64-a64-p256 | 48.5208% | 36.3737% | 27.2393 |
++| short | d64-a64-p512 | 49.4916% | 41.2174% | 28.8979 |
++| short | d64-a64-p1024 | 50.8059% | 47.2078% | 32.3481 |
++| short | d128-a16-p256 | 38.5163% | 29.0055% | 8.4542 |
++| short | d128-a16-p512 | 41.2550% | 35.2376% | 10.1451 |
++| short | d128-a16-p1024 | 45.1424% | 43.4180% | 13.5268 |
++| short | d128-a32-p256 | 43.3037% | 31.6488% | 14.9295 |
++| short | d128-a32-p512 | 44.8662% | 36.7635% | 16.6500 |
++| short | d128-a64-p256 | 44.7762% | 34.7827% | 20.9440 |
++| short | d128-a64-p512 | 45.9694% | 38.8444% | 22.9081 |
++| short | d128-a64-p1024 | 48.2460% | 45.9229% | 27.2591 |
++| short | d256-a16-p256 | 36.7462% | 27.9769% | 8.4204 |
++| short | d256-a16-p512 | 39.3251% | 34.7664% | 10.1261 |
++| short | d256-a16-p1024 | 43.8398% | 43.4139% | 13.5119 |
++| short | d256-a32-p256 | 39.3510% | 29.5687% | 12.8060 |
++| short | d256-a32-p512 | 41.3511% | 35.3939% | 14.9493 |
++| short | d256-a32-p1024 | 45.0985% | 44.1772% | 18.8379 |
++| short | d256-a64-p256 | 40.0175% | 31.2085% | 14.3301 |
++| short | d256-a64-p512 | 41.8425% | 36.4461% | 17.0884 |
++| short | d256-a64-p1024 | 45.4268% | 45.2743% | 22.4409 |
++| short | bytes-soft0 | 47.4323% | 44.4963% | 20.0887 |
++| short | bytes-soft100 | 47.3295% | 44.3742% | 20.2406 |
++| short | bytes-soft150 | 47.4305% | 44.4881% | 20.0879 |
++| short | bytes-soft200 | 47.4325% | 44.4954% | 20.0887 |
+diff --git a/task-logs/round8/replay_checks.py b/task-logs/round8/replay_checks.py
+new file mode 100644
+index 000000000..4f58378ae
+--- /dev/null
++++ b/task-logs/round8/replay_checks.py
+@@ -0,0 +1,91 @@
++#!/usr/bin/env python3
++import json
++import os
++from pathlib import Path
++import re
++import subprocess
++
++root = Path(__file__).resolve().parents[2]
++logs = root / 'task-logs/round8'
++binary = root / 'build-cpu/bin/test-moe-cache'
++
++def batch(pos, ids, prompt=False):
++    return dict(version=1, context=1, ubatch=pos, n_tokens=len(ids), prefill=prompt, prefill_end=prompt,
++                positions=list(range(pos,pos+len(ids))), seq_ids=[[0] for _ in ids], layers=[
++                    dict(layer=0, group=0, slots=1, n_expert=4, expert_bytes=100, cache=not prompt, rows=list(range(len(ids))), ids=[[x] for x in ids]),
++                    dict(layer=1, group=1, slots=1, n_expert=4, expert_bytes=200, cache=not prompt, rows=list(range(len(ids))), ids=[[0] for _ in ids])])
++
++records = [batch(0,[0],True),
++           dict(version=1,event='spec_begin',context=1,seq=0,pos=1,n_tokens=2,n_accepted=-1),
++           batch(1,[1,1]),
++           dict(version=1,event='spec_accept',context=1,seq=0,pos=1,n_tokens=2,n_accepted=1),
++           batch(3,[1]),batch(4,[1])]
++fixture = logs / 'replay-fixture.jsonl'
++fixture.write_text(''.join(json.dumps(r)+'\n' for r in records))
++for accepted, expected in [(0, (75.0,83.3333,0)), (1,(62.5,75.0,2))]:
++    env = {**os.environ,'GGML_MOE_REPLAY_ACCEPTED_ONLY':str(accepted)}
++    out = subprocess.check_output([str(binary),'--replay-log',str(fixture),'0','2','2','0','128'],text=True,env=env)
++    (logs/f'replay-fixture-{accepted}.log').write_text(out)
++    metrics = dict(re.findall(r'([\w/]+)=([^\s]+)',next(x for x in out.splitlines() if x.startswith('context='))))
++    for key, value in zip(['decode_hit_rate','decode_byte_hit_rate','rejected_routes'], expected):
++        assert abs(float(metrics[key].rstrip('%'))-value)<0.0001,(key,metrics,expected)
++print('Multi-group weighting and causal rejected-route feedback passed')
++
++def check_fixture(name, records, expected, admit=1, prefill=1, decay=128, accepted=0):
++    path = logs / f'{name}.jsonl'
++    path.write_text(''.join(json.dumps(r)+'\n' for r in records))
++    env = {**os.environ, 'GGML_MOE_REPLAY_ACCEPTED_ONLY':str(accepted),
++           'GGML_MOE_HYBRID_BYTE_VALUE':'0', 'GGML_MOE_HYBRID_LAYER_SOFT_PCT':'0'}
++    out = subprocess.check_output([str(binary),'--replay-log',str(path),'0',str(admit),str(prefill),'0',str(decay)],text=True,env=env)
++    (logs/f'{name}.log').write_text(out)
++    metrics = dict(re.findall(r'([\w/]+)=([^\s]+)',next(x for x in out.splitlines() if x.startswith('context='))))
++    for key, value in expected.items():
++        assert abs(float(metrics[key].rstrip('%'))-value)<0.0001,(name,key,metrics,expected)
++
++def single(pos, ids, prompt=False):
++    b = batch(pos, ids, prompt)
++    b['layers'] = b['layers'][:1]
++    return b
++
++def event(seq, pos, nt, accepted=-1):
++    return dict(version=2,event='spec_begin' if accepted<0 else 'spec_accept',
++                context=1,seq=seq,pos=pos,n_tokens=nt,n_accepted=accepted)
++
++check_fixture('replay-decayed-verdict', [single(0,[0],True),event(0,1,4),
++              single(1,[1,1,2,2]),event(0,1,4,4),single(5,[2])],
++              {'decode_hit_rate':20,'uploads':2,'unresolved_spans':0},decay=2,accepted=1)
++mixed = single(0,[0,1,1])
++mixed['positions'] = [0,0,1]
++mixed['seq_ids'] = [[0],[1],[1]]
++tail = single(2,[1])
++tail['seq_ids'] = [[1]]
++check_fixture('replay-verdict-cap', [event(0,0,1),event(1,0,2),mixed,
++              event(0,0,1,1),event(1,0,2,2),tail],
++              {'decode_hit_rate':0,'uploads':2,'unresolved_spans':0},prefill=0,accepted=1)
++
++records = []
++for pos, ids, prompt in [(0,[0],True),(1,[1,1],False),(3,[2,2,2],False),(6,[2],False)]:
++    b = batch(pos,ids,prompt)
++    b['n_groups'] = 3
++    b['layers'][1].update(layer=2,group=2,ids=[[x] for x in ids])
++    b['layers'].append(dict(layer=1,group=-1,slots=0,n_expert=4,expert_bytes=300,
++                            cache=False,rows=list(range(len(ids))),ids=[[0] for _ in ids]))
++    records.append(b)
++check_fixture('replay-dropped-group',records,{'decode_byte_hit_rate':5.5556,'groups':2},prefill=2)
++uncached = single(0,[0,1])
++uncached['trace_only'] = True
++uncached['layers'][0].update(group=-1,slots=0)
++check_fixture('replay-uncached-context',[uncached],{'decode_byte_hit_rate':0,'groups':0,'uploads':0})
++print('Delayed decay, per-ubatch verdict cap, and dropped-group rotation passed')
++
++for work in ['short','long']:
++    for decay in [64,128,512]:
++        for prefill,static in [(0,0),(1024,0),(0,25),(1024,25)]:
++            args = ['--replay-log',str(root/f'task-logs/round7/{work}.jsonl'),'1501','32',str(prefill),str(static),str(decay),str(root/'task-logs/round7/base.profile')]
++            before = subprocess.check_output([str(logs/'baseline/test-moe-cache')]+args,text=True,env={**os.environ,'LD_LIBRARY_PATH':str(logs/'baseline')})
++            after = subprocess.check_output([str(binary)]+args,text=True)
++            a = next(x for x in before.splitlines() if x.startswith('context='))
++            b = next(x for x in after.splitlines() if x.startswith('context='))
++            assert b.startswith(a+' '),(work,decay,prefill,static,a,b)
++            (logs/f'parity-{work}-{decay}-{prefill}-{static}.log').write_text(after)
++print('All 24 round-7 replay rows match the saved round-7 binary')
+diff --git a/task-logs/round8/replay_matrix.py b/task-logs/round8/replay_matrix.py
+new file mode 100644
+index 000000000..031ee4ede
+--- /dev/null
++++ b/task-logs/round8/replay_matrix.py
+@@ -0,0 +1,27 @@
++#!/usr/bin/env python3
++import itertools
++import json
++import os
++from pathlib import Path
++import re
++import subprocess
++
++root=Path(__file__).resolve().parents[2]
++logs=root/'task-logs/round8'
++rows=[]
++policies=[('r7',128,32,1024,0,0)]
++policies += [(f'd{d}-a{a}-p{p}',d,a,p,0,0) for d,a,p in itertools.product([64,128,256],[16,32,64],[256,512,1024]) if (d,a,p)!=(128,32,1024)]
++policies += [(f'bytes-soft{s}',128,32,1024,1,s) for s in [0,100,150,200]]
++for workload in ['long','short']:
++    for name,decay,admit,prefill,byte,soft in policies:
++        env={**os.environ,'GGML_MOE_HYBRID_BYTE_VALUE':str(byte),'GGML_MOE_HYBRID_LAYER_SOFT_PCT':str(soft)}
++        out=subprocess.check_output([str(root/'build-cpu/bin/test-moe-cache'),'--replay-log',str(root/f'task-logs/round7/{workload}.jsonl'),'1501',str(admit),str(prefill),'0',str(decay)],text=True,env=env)
++        (logs/f'matrix-{workload}-{name}.log').write_text(out)
++        metric=dict(re.findall(r'([\w/]+)=([^\s]+)',next(l for l in out.splitlines() if l.startswith('context='))))
++        rows.append(dict(workload=workload,policy=name,**metric))
++(logs/'replay-matrix.json').write_text(json.dumps(rows,indent=2)+'\n')
++with (logs/'replay-table.md').open('w') as f:
++    f.write('| Workload | Policy | Decode bytes hit | First-32 bytes hit | MiB/token |\n| --- | --- | ---: | ---: | ---: |\n')
++    for r in rows:
++        f.write(f"| {r['workload']} | {r['policy']} | {r['decode_byte_hit_rate']} | {r['first32_byte_hit_rate']} | {r['MiB/token']} |\n")
++print(f'{len(rows)} replay rows completed; real traces unavailable')
+diff --git a/task-logs/round8/save_patch.py b/task-logs/round8/save_patch.py
+new file mode 100644
+index 000000000..dbd8a9636
+--- /dev/null
++++ b/task-logs/round8/save_patch.py
+@@ -0,0 +1,31 @@
++#!/usr/bin/env python3
++import difflib
++import json
++from pathlib import Path
++import subprocess
++import sys
++
++root=Path(__file__).resolve().parents[2]
++logs=root/'task-logs/round8'
++external=[]
++for before, after, label in [
++    (logs/'stage_b.before.py',Path('/opt/llm-gateway/data/moe-quant/qwen38/stage_b.py'),'moe-quant/qwen38/stage_b.py'),
++    (logs/'record-traces.before.sh',Path('/opt/llm-gateway/data/moe-quant/record-traces.sh'),'moe-quant/record-traces.sh'),
++]:
++    external.extend(difflib.unified_diff(before.read_text().splitlines(True),after.read_text().splitlines(True),fromfile='a/'+label,tofile='b/'+label))
++(logs/'measurement.patch').write_text(''.join(external))
++files=['NOTES-round8.md']
++for path in sorted(logs.iterdir()):
++    if path.is_file() and (path.suffix in ('.cpp','.sh','.py','.md') or path.name in ('preflight.json','final-device-check.json','measurement.patch')):
++        if '.before.' not in path.name and path.name not in ('rewrite_replay.py','edit_stage_b.py'):
++            files.append(str(path.relative_to(root)))
++base=json.loads((logs/'preflight.json').read_text())['base']
++patch=subprocess.check_output(['git','diff','--binary',base],cwd=root)
++for file in files:
++    if subprocess.run(['git','ls-files','--error-unmatch',file],cwd=root,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode:
++        result=subprocess.run(['git','diff','--no-index','--binary','--','/dev/null',file],cwd=root,capture_output=True)
++        assert result.returncode in (0,1),result.stderr.decode()
++        patch+=result.stdout
++out=logs/(sys.argv[1] if len(sys.argv)>1 else 'round8.patch')
++out.write_bytes(patch)
++print(out, len(patch), 'bytes')
+diff --git a/task-logs/round8/server_trace_check.py b/task-logs/round8/server_trace_check.py
+new file mode 100644
+index 000000000..4b8bdc147
+--- /dev/null
++++ b/task-logs/round8/server_trace_check.py
+@@ -0,0 +1,86 @@
++#!/usr/bin/env python3
++"""Exercise server verdict records with two small CPU-only MoE fixtures."""
++import json
++import os
++from pathlib import Path
++import re
++import signal
++import socket
++import subprocess
++import time
++import urllib.request
++
++root = Path(__file__).resolve().parents[2]
++logs = root / 'task-logs/round8'
++trace = logs / 'server-cpu-trace.jsonl'
++trace.unlink(missing_ok=True)
++with socket.socket() as listener:
++    listener.bind(('127.0.0.1', 0))
++    port = listener.getsockname()[1]
++command = [str(root/'build-cpu/bin/llama-server'),
++           '-m', str(root/'task-logs/round7/models/qwen3moe-moe.gguf'),
++           '-md', str(logs/'models/qwen3moe-moe.gguf'),
++           '--host', '127.0.0.1', '--port', str(port), '--no-webui',
++           '-ngl', '0', '-ngld', '0', '-t', '4', '-tb', '4', '-c', '128', '-b', '64', '-ub', '16',
++           '--spec-type', 'draft-simple', '--spec-draft-n-max', '3', '--spec-draft-n-min', '1',
++           '--spec-draft-p-min', '0', '--spec-draft-n-ubatch', '4']
++env = {k:v for k,v in os.environ.items() if not k.startswith('GGML_MOE_HYBRID')}
++env.update(GGML_MOE_HYBRID_TRACE=str(trace), GGML_BACKEND_PATH=str(root/'build-cpu/bin'))
++with (logs/'server-cpu.log').open('w') as output:
++    child = subprocess.Popen(command, stdout=output, stderr=subprocess.STDOUT, env=env, start_new_session=True)
++    try:
++        deadline = time.monotonic() + 90
++        while True:
++            if child.poll() is not None:
++                raise RuntimeError(f'CPU server exited: {child.returncode}')
++            try:
++                with urllib.request.urlopen(f'http://127.0.0.1:{port}/health', timeout=1) as response:
++                    if response.status == 200:
++                        break
++            except OSError:
++                pass
++            if time.monotonic() > deadline:
++                raise RuntimeError('CPU server startup timeout')
++            time.sleep(0.2)
++        responses = []
++        for start in [1,40]:
++            body = dict(prompt=list(range(start,start+20)), n_predict=24, temperature=0,
++                        cache_prompt=False, ignore_eos=True, seed=17)
++            request = urllib.request.Request(f'http://127.0.0.1:{port}/completion',
++                data=json.dumps(body).encode(), headers={'Content-Type':'application/json'})
++            with urllib.request.urlopen(request, timeout=90) as response:
++                responses.append(json.load(response))
++        (logs/'server-cpu-responses.json').write_text(json.dumps(responses,indent=2)+'\n')
++    finally:
++        if child.poll() is None:
++            os.killpg(child.pid, signal.SIGTERM)
++            try:
++                child.wait(timeout=10)
++            except subprocess.TimeoutExpired:
++                os.killpg(child.pid, signal.SIGKILL)
++                child.wait()
++
++records = [json.loads(line) for line in trace.read_text().splitlines()]
++target = next(r['context'] for r in records if 'layers' in r and not r['draft'])
++spans = {}
++begins = rejected = 0
++for record in records:
++    if record['context'] != target or 'event' not in record:
++        continue
++    seq = record['seq']
++    if record['event'] == 'spec_begin':
++        assert seq not in spans
++        spans[seq] = record
++        begins += 1
++    else:
++        begin = spans.pop(seq)
++        assert begin['pos'] == record['pos'] and begin['n_tokens'] == record['n_tokens']
++        assert 1 <= record['n_accepted'] <= record['n_tokens']
++        rejected += record['n_tokens'] - record['n_accepted']
++assert not spans and begins > 0 and rejected > 0
++replay = subprocess.check_output([str(root/'build-cpu/bin/test-moe-cache'), '--replay-log', str(trace),
++    '2','1','2','0','64','-',str(target)], text=True, env={**env,'GGML_MOE_REPLAY_ACCEPTED_ONLY':'1'})
++(logs/'server-cpu-replay.log').write_text(replay)
++metrics = dict(re.findall(r'([\w/]+)=([^\s]+)',next(line for line in replay.splitlines() if line.startswith('context='))))
++assert metrics['unresolved_spans'] == '0' and int(metrics['rejected_routes']) > 0
++print(f'CPU server: {begins} closed target spans, {rejected} rejected input positions; causal replay passed')
+diff --git a/task-logs/round8/slot_budget.py b/task-logs/round8/slot_budget.py
+new file mode 100644
+index 000000000..e52a07fd3
+--- /dev/null
++++ b/task-logs/round8/slot_budget.py
+@@ -0,0 +1,35 @@
++#!/usr/bin/env python3
++import json
++from pathlib import Path
++
++root=Path(__file__).resolve().parents[2]
++data=json.loads((root/'task-logs/round8/model-inventory.json').read_text())
++
++def slots(model, mib):
++    groups=data[model]['groups']
++    total=sum(g['expert_bytes']*len(g['layers'])*g['tensors'][0]['shape'][2] for g in groups)
++    used=next(v for k,v in data[model]['metadata'].items() if k.endswith('expert_used_count'))
++    out=[]
++    allocated=0
++    for g in groups:
++        ne=g['tensors'][0]['shape'][2]
++        budget=int(mib*2**20*(g['expert_bytes']*len(g['layers'])*ne)/total)
++        def size(n):
++            pad=lambda v:(v+127)//128*128
++            return len(g['layers'])*pad(ne*4)+sum(pad(t['expert_bytes']*(n+1)) for t in g['tensors'])
++        n=0
++        while n<len(g['layers'])*ne and size(n+1)<=budget:
++            n+=1
++        if n<min(8*used,ne):
++            n=0
++        out.append(n)
++        allocated+=size(n) if n else 0
++    return out,allocated/2**20
++
++rows=[]
++for model,budgets in [('qwen38',[2560,2944,3072]),('qwen38_mtp',[512]),('ling',[5120,5376])]:
++    for budget in budgets:
++        counts,mib=slots(model,budget)
++        rows.append(dict(model=model,budget_mib=budget,slots=counts,total_slots=sum(counts),allocated_mib=mib))
++        print(model,budget,'slots',counts,'total',sum(counts),'allocated MiB',round(mib,3))
++(root/'task-logs/round8/slot-budget.json').write_text(json.dumps(rows,indent=2)+'\n')

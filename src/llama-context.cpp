@@ -4217,6 +4217,16 @@ uint32_t llama_n_batch(const llama_context * ctx) {
     return ctx->n_batch();
 }
 
+void llama_context::moe_cache_trace_speculation(llama_seq_id seq_id, llama_pos pos, int32_t n_tokens, int32_t n_accepted) {
+    if (moe_cache) {
+        moe_cache->trace_speculation(seq_id, pos, n_tokens, n_accepted);
+    }
+}
+
+void llama_moe_cache_trace_speculation(llama_context * ctx, llama_seq_id seq_id, llama_pos pos, int32_t n_tokens, int32_t n_accepted) {
+    ctx->moe_cache_trace_speculation(seq_id, pos, n_tokens, n_accepted);
+}
+
 uint32_t llama_n_ubatch(const llama_context * ctx) {
     return ctx->n_ubatch();
 }

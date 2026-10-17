@@ -10,6 +10,9 @@
 #include <map>
 #include <vector>
 
+// Trace a speculative input span: -1 starts it, otherwise n_accepted is the retained input prefix.
+LLAMA_API void llama_moe_cache_trace_speculation(struct llama_context * ctx, llama_seq_id seq_id, llama_pos pos, int32_t n_tokens, int32_t n_accepted);
+
 // Reserve a new compute graph. It is valid until the next call to llama_graph_reserve.
 LLAMA_API struct ggml_cgraph * llama_graph_reserve(
         struct llama_context * ctx,

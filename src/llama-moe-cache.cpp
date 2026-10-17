@@ -45,6 +45,8 @@ void llama_moe_cache_lfu::init(size_t n_keys, int32_t n_slots, uint64_t decay_in
     pending.assign(n_keys, false);
     candidates.clear();
     tokens = hits = misses = 0;
+    keys_per_layer = 0;
+    layer_soft_limit = 0;
 }
 
 void llama_moe_cache_lfu::seed(int32_t key, int32_t slot, double count, bool pin) {
@@ -66,18 +68,25 @@ void llama_moe_cache_lfu::begin_token() {
     ++tokens;
 }
 
-void llama_moe_cache_lfu::observe(int32_t key, bool use_cache, bool prompt) {
+void llama_moe_cache_lfu::observe(int32_t key, bool use_cache, bool prompt, bool admission) {
     GGML_ASSERT(key >= 0 && (size_t) key < counts.size());
-    ++counts[key];
-    if (prompt) {
-        ++prompt_counts[key];
+    if (admission) {
+        learn(key, 1.0, prompt);
     }
     if (use_cache && slot_of[key] >= 0) {
         ++hits;
     } else {
         ++misses;
     }
-    if (slot_of[key] < 0 && !pending[key]) {
+}
+
+void llama_moe_cache_lfu::learn(int32_t key, double weight, bool prompt) {
+    GGML_ASSERT(key >= 0 && (size_t) key < counts.size() && weight >= 0);
+    counts[key] += weight;
+    if (prompt) {
+        prompt_counts[key] += weight;
+    }
+    if (weight > 0 && slot_of[key] < 0 && !pending[key]) {
         candidates.push_back(key);
         pending[key] = true;
     }
@@ -87,8 +96,37 @@ void llama_moe_cache_lfu::clear_prompt() {
     std::fill(prompt_counts.begin(), prompt_counts.end(), 0.0);
 }
 
-std::vector<llama_moe_cache_lfu::fill> llama_moe_cache_lfu::plan(size_t limit, bool prompt) {
-    const auto & rank = prompt ? prompt_counts : counts;
+double llama_moe_cache_lfu::score(int32_t key, bool prompt) const {
+    const double count = (prompt ? prompt_counts : counts)[key];
+    if (layer_soft_limit == 0) {
+        return count;
+    }
+    int resident = 0;
+    const int32_t begin = key/keys_per_layer*keys_per_layer;
+    for (int32_t k = begin; k < begin + keys_per_layer; ++k) {
+        resident += slot_of[k] >= 0;
+    }
+    return count/std::max(1.0, resident/layer_soft_limit);
+}
+
+std::vector<llama_moe_cache_lfu::fill> llama_moe_cache_lfu::propose(size_t limit, bool prompt) {
+    const auto & counts_rank = prompt ? prompt_counts : counts;
+    std::vector<double> adjusted;
+    if (layer_soft_limit > 0) {
+        GGML_ASSERT(keys_per_layer > 0 && counts.size() % keys_per_layer == 0);
+        adjusted.resize(counts.size());
+        for (size_t begin = 0; begin < counts.size(); begin += keys_per_layer) {
+            int resident = 0;
+            for (int32_t k = 0; k < keys_per_layer; ++k) {
+                resident += slot_of[begin + k] >= 0;
+            }
+            const double penalty = std::max(1.0, resident/layer_soft_limit);
+            for (int32_t k = 0; k < keys_per_layer; ++k) {
+                adjusted[begin + k] = counts_rank[begin + k]/penalty;
+            }
+        }
+    }
+    const auto & rank = adjusted.empty() ? counts_rank : adjusted;
     if (prompt) {
         for (size_t key = 0; key < counts.size(); ++key) {
             if (prompt_counts[key] > 0 && slot_of[key] < 0 && !pending[key]) {
@@ -99,10 +137,6 @@ std::vector<llama_moe_cache_lfu::fill> llama_moe_cache_lfu::plan(size_t limit, b
     }
     std::vector<int32_t> cold;
     if (limit == 0 || candidates.empty()) {
-        for (int32_t key : candidates) {
-            pending[key] = false;
-        }
-        candidates.clear();
         return {};
     }
     for (size_t slot = 0; slot < key_of.size(); ++slot) {
@@ -131,18 +165,71 @@ std::vector<llama_moe_cache_lfu::fill> llama_moe_cache_lfu::plan(size_t limit, b
         if (evicted >= 0 && rank[key] <= rank[evicted]) {
             break;
         }
-        if (evicted >= 0) {
-            slot_of[evicted] = -1;
-        }
-        slot_of[key] = slot;
-        key_of[slot] = key;
         fills.push_back({key, slot, evicted});
+    }
+    return fills;
+}
+
+void llama_moe_cache_lfu::apply(const std::vector<fill> & fills) {
+    for (const auto & f : fills) {
+        GGML_ASSERT(key_of[f.slot] == f.evicted && slot_of[f.key] < 0);
+        if (f.evicted >= 0) {
+            slot_of[f.evicted] = -1;
+        }
+        slot_of[f.key] = f.slot;
+        key_of[f.slot] = f.key;
     }
     for (int32_t key : candidates) {
         pending[key] = false;
     }
     candidates.clear();
+}
+
+std::vector<llama_moe_cache_lfu::fill> llama_moe_cache_lfu::plan(size_t limit, bool prompt) {
+    auto fills = propose(limit, prompt);
+    apply(fills);
     return fills;
+}
+
+std::vector<std::vector<llama_moe_cache_lfu::fill>> llama_moe_cache_plan(
+        const std::vector<llama_moe_cache_lfu *> & policies, const std::vector<size_t> & expert_bytes,
+        size_t limit, bool prompt, size_t first_group, bool byte_value) {
+    GGML_ASSERT(policies.size() == expert_bytes.size());
+    std::vector<std::vector<llama_moe_cache_lfu::fill>> result(policies.size());
+    if (!byte_value) {
+        for (size_t i = 0; i < policies.size(); ++i) {
+            const size_t ig = (first_group + i) % policies.size();
+            result[ig] = policies[ig]->plan(limit, prompt);
+            limit -= result[ig].size();
+        }
+        return result;
+    }
+    struct candidate {
+        size_t group;
+        llama_moe_cache_lfu::fill fill;
+        double value;
+        size_t order;
+    };
+    std::vector<candidate> candidates;
+    for (size_t i = 0; i < policies.size(); ++i) {
+        const size_t ig = (first_group + i) % policies.size();
+        auto & policy = *policies[ig];
+        for (const auto & f : policy.propose(limit, prompt)) {
+            const double gain = policy.score(f.key, prompt) - (f.evicted < 0 ? 0 : policy.score(f.evicted, prompt));
+            const double upload = (double) expert_bytes[ig] + sizeof(int32_t)*(f.evicted < 0 ? 1 : 2);
+            candidates.push_back({ig, f, gain*expert_bytes[ig]/upload, candidates.size()});
+        }
+    }
+    std::sort(candidates.begin(), candidates.end(), [](const candidate & a, const candidate & b) {
+        return a.value == b.value ? a.order < b.order : a.value > b.value;
+    });
+    for (size_t i = 0; i < std::min(limit, candidates.size()); ++i) {
+        result[candidates[i].group].push_back(candidates[i].fill);
+    }
+    for (size_t ig = 0; ig < policies.size(); ++ig) {
+        policies[ig]->apply(result[ig]);
+    }
+    return result;
 }
 
 namespace {
@@ -346,6 +433,8 @@ struct llama_moe_cache::impl {
     size_t admit = 8;
     size_t admit_prefill = 1024;
     size_t static_pct = 0;
+    size_t layer_soft_pct = 0;
+    bool byte_value = false;
     uint64_t decay = 512;
     bool warm_prompt = false;
     bool prompt_pending = false;
@@ -397,6 +486,8 @@ struct llama_moe_cache::impl {
             admit_prefill = llama_moe_cache_env_size("GGML_MOE_HYBRID_ADMIT_PREFILL", 1024);
             static_pct = llama_moe_cache_env_size(draft ? "GGML_MOE_HYBRID_DRAFT_STATIC_PCT" : "GGML_MOE_HYBRID_STATIC_PCT", 0, 100);
             decay = llama_moe_cache_env_size("GGML_MOE_HYBRID_DECAY", 512);
+            byte_value = llama_moe_cache_env_size("GGML_MOE_HYBRID_BYTE_VALUE", 0, 1) != 0;
+            layer_soft_pct = llama_moe_cache_env_size("GGML_MOE_HYBRID_LAYER_SOFT_PCT", 0, 1000);
             if (!decay || (static_pct && !profile)) {
                 throw std::runtime_error("hybrid MoE needs positive decay and a profile for a static base");
             }
@@ -539,6 +630,8 @@ struct llama_moe_cache::impl {
             g.lru.init(model.layers.size(), n_expert, g.n_slots);
             if (adaptive) {
                 g.lfu.init(model.layers.size()*n_expert, g.n_slots, decay);
+                g.lfu.keys_per_layer = n_expert;
+                g.lfu.layer_soft_limit = (double) g.n_slots/g.layers.size()*layer_soft_pct/100.0;
                 for (int32_t slot = -1; slot < g.n_slots; ++slot) {
                     g.slot_values.push_back(slot);
                 }
@@ -905,7 +998,8 @@ struct llama_moe_cache::impl {
             return;
         }
         std::ostringstream line;
-        line << "{\"version\":1,\"context\":" << context_id << ",\"ubatch\":" << trace_ubatch++
+        line << "{\"version\":2,\"context\":" << context_id << ",\"ubatch\":" << trace_ubatch++
+             << ",\"n_groups\":" << groups.size()
              << ",\"draft\":" << (draft_context ? "true" : "false") << ",\"trace_only\":" << (trace_only ? "true" : "false") << ",\"n_tokens\":" << graph_tokens << ",\"prefill\":" << (graph_prefill ? "true" : "false")
              << ",\"prefill_end\":" << (graph_prefill_end ? "true" : "false") << ",\"positions\":[";
         for (int64_t t = 0; t < graph_tokens; ++t) {
@@ -928,7 +1022,8 @@ struct llama_moe_cache::impl {
             }
             GGML_ASSERT(l.n_tokens == graph_tokens || l.n_tokens == graph_outputs);
             line << (first ? "" : ",") << "{\"layer\":" << il << ",\"cache\":" << (l.use_cache ? "true" : "false")
-                 << ",\"group\":" << l.ig << ",\"n_expert\":" << l.n_expert << ",\"expert_bytes\":" << l.expert_bytes << ",\"rows\":[";
+                 << ",\"group\":" << l.ig << ",\"slots\":" << (l.ig >= 0 ? groups[l.ig].n_slots : 0)
+                 << ",\"n_expert\":" << l.n_expert << ",\"expert_bytes\":" << l.expert_bytes << ",\"rows\":[";
             first = false;
             bool first_row = true;
             for (int64_t t = 0; t < graph_tokens; ++t) {
@@ -948,15 +1043,31 @@ struct llama_moe_cache::impl {
             line << "]}";
         }
         line << "]}\n";
+        append_trace(line.str());
+    }
+
+    void append_trace(const std::string & line) {
         // Serialize contexts sharing a trace file. No backend wait or device readback is needed.
         static std::mutex trace_mutex;
         std::lock_guard<std::mutex> lock(trace_mutex);
-        trace << line.str();
+        trace << line;
         trace.flush();
         if (!trace) {
             LLAMA_LOG_WARN("llama_moe_cache: route trace write failed; tracing disabled\n");
             trace.close();
         }
+    }
+
+    void trace_speculation(int32_t seq_id, int32_t pos, int32_t n_tokens, int32_t n_accepted) {
+        if (!trace.is_open()) {
+            return;
+        }
+        GGML_ASSERT(seq_id >= 0 && pos >= 0 && n_tokens > 0 && n_accepted >= -1 && n_accepted <= n_tokens);
+        std::ostringstream line;
+        line << "{\"version\":2,\"event\":\"" << (n_accepted < 0 ? "spec_begin" : "spec_accept")
+             << "\",\"context\":" << context_id << ",\"ubatch\":" << trace_ubatch << ",\"seq\":" << seq_id
+             << ",\"pos\":" << pos << ",\"n_tokens\":" << n_tokens << ",\"n_accepted\":" << n_accepted << "}\n";
+        append_trace(line.str());
     }
 
     void end_graph(bool success) {
@@ -1006,12 +1117,23 @@ struct llama_moe_cache::impl {
         const int64_t start_us = burst ? ggml_time_us() : 0;
         const uint64_t uploads_before = uploads;
         const uint64_t bytes_before = upload_bytes;
+        std::vector<std::vector<llama_moe_cache_lfu::fill>> plans;
+        if (byte_value) {
+            std::vector<llama_moe_cache_lfu *> policies;
+            std::vector<size_t> expert_sizes;
+            for (group & g : groups) {
+                policies.push_back(&g.lfu);
+                expert_sizes.push_back(layers[g.layers.front()].expert_bytes);
+            }
+            plans = llama_moe_cache_plan(policies, expert_sizes, remaining, burst, next_group, true);
+        }
         for (size_t i = 0; i < groups.size(); ++i) {
-            group & g = groups[(next_group + i) % groups.size()];
+            const size_t ig = (next_group + i) % groups.size();
+            group & g = groups[ig];
             if (!g.n_slots) {
                 continue;
             }
-            const auto admitted = g.lfu.plan(remaining, burst);
+            const auto admitted = byte_value ? std::move(plans[ig]) : g.lfu.plan(remaining, burst);
             remaining -= admitted.size();
             const auto backend = devices[g.id].backend;
             for (const auto & f : admitted) {
@@ -1219,6 +1341,10 @@ void llama_moe_cache::begin_graph(int64_t n_tokens, const int8_t * output, const
 
 void llama_moe_cache::end_graph(bool success) {
     pimpl->end_graph(success);
+}
+
+void llama_moe_cache::trace_speculation(int32_t seq_id, int32_t pos, int32_t n_tokens, int32_t n_accepted) {
+    pimpl->trace_speculation(seq_id, pos, n_tokens, n_accepted);
 }
 
 ggml_tensor * llama_moe_cache::get_slot_map(int32_t il, int64_t n_tokens, int64_t n_expert_used) const {
