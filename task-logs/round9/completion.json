@@ -1,0 +1,16 @@
+{
+  "completed_utc": "2026-10-17T22:45:28.541717+00:00",
+  "deadline_utc": "2026-10-17T22:56:00+00:00",
+  "mandatory_tasks": {
+    "1": "completed; round-7 policy retained",
+    "2": "completed; larger cache fits and quality-qualified final budgets",
+    "3": "completed; DSpark code-specific gain and English regression measured",
+    "4": "completed; all relevant decode multiplicities below 1.6; kernel direction stopped",
+    "5": "completed; five full OpenMP variants; native rejected after five requests and source/affinity diagnosis"
+  },
+  "optional_confidence_test": "not run; start deadline expired",
+  "restoration": "restoration.json",
+  "production_source_changed": false,
+  "live_runtime_changed": false,
+  "pushed": false
+}

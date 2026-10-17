@@ -1,0 +1,50 @@
+0.00.123.284 I srv  llama_server: initializing ...
+0.00.123.298 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.126.460 I srv  init_listene: The UI is disabled
+0.00.126.462 I srv  init_listene: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
+0.00.126.545 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.130.378 I srv    load_model: loading model '/opt/llm-gateway/models/Ling-3.0-flash-GGUF/Ling-3.0-flash-IQ4_XS/Ling-3.0-flash-IQ4_XS-00001-of-00002.gguf'
+0.00.886.727 E llama_init_from_model: failed to initialize the context: dflash requires ctx_other to be set (this warning is normal during memory fitting)
+0.00.910.162 W operator(): failed to measure the memory of the extra model, fitting without it: failed to create llama_context from model
+0.01.087.352 W load: special_eos_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.01.155.008 W model has unused tensor blk.42.attn_norm.weight (size = 10240 bytes) -- ignoring
+0.01.155.018 W model has unused tensor blk.42.attn_q.weight (size = 8847360 bytes) -- ignoring
+0.01.155.023 W model has unused tensor blk.42.attn_kv_a_mqa.weight (size = 829440 bytes) -- ignoring
+0.01.155.032 W model has unused tensor blk.42.attn_kv_a_norm.weight (size = 2048 bytes) -- ignoring
+0.01.155.037 W model has unused tensor blk.42.attn_k_b.weight (size = 1179648 bytes) -- ignoring
+0.01.155.041 W model has unused tensor blk.42.attn_v_b.weight (size = 1179648 bytes) -- ignoring
+0.01.155.046 W model has unused tensor blk.42.attn_gate.weight (size = 46080 bytes) -- ignoring
+0.01.155.051 W model has unused tensor blk.42.attn_output.weight (size = 5898240 bytes) -- ignoring
+0.01.155.055 W model has unused tensor blk.42.ffn_norm.weight (size = 10240 bytes) -- ignoring
+0.01.155.060 W model has unused tensor blk.42.ffn_gate_inp.weight (size = 5242880 bytes) -- ignoring
+0.01.155.066 W model has unused tensor blk.42.exp_probs_b.bias (size = 2048 bytes) -- ignoring
+0.01.155.072 W model has unused tensor blk.42.ffn_gate_exps.weight (size = 566231040 bytes) -- ignoring
+0.01.155.077 W model has unused tensor blk.42.ffn_up_exps.weight (size = 566231040 bytes) -- ignoring
+0.01.155.083 W model has unused tensor blk.42.ffn_down_exps.weight (size = 566231040 bytes) -- ignoring
+0.01.155.089 W model has unused tensor blk.42.ffn_gate_shexp.weight (size = 1105920 bytes) -- ignoring
+0.01.155.094 W model has unused tensor blk.42.ffn_up_shexp.weight (size = 1105920 bytes) -- ignoring
+0.01.155.100 W model has unused tensor blk.42.ffn_down_shexp.weight (size = 1105920 bytes) -- ignoring
+0.01.155.106 W model has unused tensor blk.42.nextn.eh_proj.weight (size = 7372800 bytes) -- ignoring
+0.01.155.112 W model has unused tensor blk.42.nextn.enorm.weight (size = 10240 bytes) -- ignoring
+0.01.155.118 W model has unused tensor blk.42.nextn.hnorm.weight (size = 10240 bytes) -- ignoring
+0.01.155.123 W model has unused tensor blk.42.layer_output_norm.weight (size = 10240 bytes) -- ignoring
+2.51.582.807 I cmn          init: llama threadpool init, n_threads = 24
+2.51.741.624 I common_speculative_init_result: loading draft model '/opt/llm-gateway/models/Ling-3.0-flash-GGUF/dspark/Ling-3.0-flash-DSpark-Q8_0.gguf'
+2.51.936.389 W load: special_eos_id is not in special_eog_ids - the tokenizer config may be incorrect
+2.54.177.794 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 8192, kv_unified = 'false'
+2.54.177.824 I common_speculative_impl_draft_dflash: adding speculative implementation 'draft-dspark'
+2.54.177.825 I common_speculative_impl_draft_dflash: - n_max=7, n_min=0, p_min=0.00
+2.54.177.826 I common_speculative_impl_draft_dflash: - block_size=8, mask_token_id=156892, n_extract=5, sample_from_anchor=true
+2.54.214.866 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+2.54.221.755 I srv  llama_server: model loaded
+2.54.221.762 I srv  llama_server: listening on http://127.0.0.1:8799
+2.54.565.336 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 0, t_last = -1
+2.54.566.515 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+2.55.659.538 I slot print_timing: id  0 | task 0 | prompt eval time =     634.92 ms /    27 tokens (   23.52 ms per token,    42.52 tokens per second)
+2.55.659.545 I slot print_timing: id  0 | task 0 |        eval time =     458.05 ms /     7 tokens (   76.34 ms per token,    13.10 tokens per second)
+2.55.659.545 I slot print_timing: id  0 | task 0 |       total time =    1092.97 ms /    34 tokens
+2.55.659.549 I slot print_timing: id  0 | task 0 |    graphs reused =          2
+2.55.659.550 I slot print_timing: id  0 | task 0 |   graph reallocs =          1    /     0        (same size) / (changed size)
+2.55.659.555 I slot print_timing: id  0 | task 0 | draft acceptance = 0.14286 (    3 accepted /    21 generated), mean len =  2.00
+2.55.659.600 I slot      release: id  0 | task 0 | stop processing: n_tokens = 33, truncated = 0
+2.55.698.710 I srv    operator(): operator(): cleaning up before exit...

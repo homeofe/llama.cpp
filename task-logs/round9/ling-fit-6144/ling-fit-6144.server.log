@@ -1,0 +1,30 @@
+0.00.120.958 I srv  llama_server: initializing ...
+0.00.120.971 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.121.075 I srv  init_listene: The UI is disabled
+0.00.121.077 I srv  init_listene: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
+0.00.121.159 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.124.880 I srv    load_model: loading model '/opt/llm-gateway/models/Ling-3.0-flash-GGUF/Ling-3.0-flash-IQ4_XS/Ling-3.0-flash-IQ4_XS-00001-of-00002.gguf'
+0.00.920.453 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 99, abort
+0.01.098.086 W load: special_eos_id is not in special_eog_ids - the tokenizer config may be incorrect
+2.47.562.173 W impl: MoE cache budget is too small for 1 layers, they are not cached
+2.47.573.851 W llama_moe_cache: adaptive LFU: 2001 slots, admit <= 32 experts/ubatch, decay every 128 tokens
+2.47.573.854 W llama_moe_cache: context = 622791257752 (target), prefill 1024, static 0%
+2.47.615.063 I cmn          init: llama threadpool init, n_threads = 24
+2.47.734.467 I common_speculative_init_result: creating MTP draft context against the target model '/opt/llm-gateway/models/Ling-3.0-flash-GGUF/Ling-3.0-flash-IQ4_XS/Ling-3.0-flash-IQ4_XS-00001-of-00002.gguf'
+2.47.749.337 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 8192, kv_unified = 'false'
+2.47.773.207 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+2.47.774.156 I srv  llama_server: model loaded
+2.47.774.162 I srv  llama_server: listening on http://127.0.0.1:8799
+2.49.338.248 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 0, t_last = -1
+2.49.339.181 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+2.50.105.041 W llama_moe_cache: prefill burst: context = 622791257752, uploads = 1024, MiB = 3060.00, enqueue = 175.950 ms (device completion not timed)
+2.50.498.700 I slot print_timing: id  0 | task 0 | prompt eval time =     856.80 ms /    27 tokens (   31.73 ms per token,    31.51 tokens per second)
+2.50.498.708 I slot print_timing: id  0 | task 0 |        eval time =     302.67 ms /     8 tokens (   43.24 ms per token,    23.13 tokens per second)
+2.50.498.709 I slot print_timing: id  0 | task 0 |       total time =    1159.47 ms /    35 tokens
+2.50.498.713 I slot print_timing: id  0 | task 0 |    graphs reused =          3
+2.50.498.713 I slot print_timing: id  0 | task 0 |   graph reallocs =          1    /     0        (same size) / (changed size)
+2.50.498.717 I slot print_timing: id  0 | task 0 | draft acceptance = 0.25000 (    3 accepted /    12 generated), mean len =  1.75
+2.50.498.772 I slot      release: id  0 | task 0 | stop processing: n_tokens = 34, truncated = 0
+2.50.537.526 I srv    operator(): operator(): cleaning up before exit...
+2.50.564.923 W llama_moe_cache: context = 622791257752 (target) statistics follow
+2.50.564.937 W llama_moe_cache: adaptive: tokens = 45, hits = 2824, misses = 11568, hit rate = 19.62%, uploads = 1216, uploaded = 3633.75 MiB, hits/token = 62.76, misses/token = 257.07, uploads/token = 27.022, MiB/token = 80.750

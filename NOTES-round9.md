@@ -2,6 +2,8 @@
 
 Started 2026-10-17 18:56 UTC; deadline 22:56 UTC. Worktree `llama-l5`, branch `l5-cache`. The handoff authorizes local stage commits, no push or PR, and no live runtime/settings changes.
 
+**Result:** Ling DSpark with expert cache reaches 76.46 code tok/s versus 50.67 for MTP (+50.9%) in the screening pass, with identical outputs for all four code prompts. English regresses to 41.14 versus 47.45, so retain MTP as the general default. Qwen's tested CPU changes do not improve throughput; the native-MTP path exposes a missing draft-threadpool integration. The five mandatory tasks have measured decisions. System settings and GPU ownership were restored and verified at 22:41 UTC. Exact profiles and the consolidated table are at the end of this report.
+
 ## Initial state
 
 The three real traces are present. The announced `data/moe-quant/qwen38/smoke-r8/` directory is absent at the start, so its claimed smoke results cannot inform selection. Gateway access works outside the command sandbox. GPU preflight reports no compute allocation. Historical round-7 and Strata figures remain historical controls until explicitly remeasured.

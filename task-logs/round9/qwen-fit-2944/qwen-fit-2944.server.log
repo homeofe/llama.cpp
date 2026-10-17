@@ -1,0 +1,37 @@
+0.00.121.296 I srv  llama_server: initializing ...
+0.00.121.309 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.121.415 I srv  init_listene: The UI is disabled
+0.00.121.417 I srv  init_listene: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
+0.00.121.504 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.125.200 I srv    load_model: loading model '/opt/llm-gateway/models/Qwen3.8-Flash-Next/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf'
+0.01.493.120 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 99, abort
+0.38.452.372 W impl: MoE cache budget is too small for 1 layers, they are not cached
+0.38.452.377 W impl: MoE cache budget is too small for 1 layers, they are not cached
+0.38.458.034 W llama_moe_cache: 40 profile entries name layers without a cache group, skipped
+0.38.619.603 W llama_moe_cache: adaptive warm start: 998 experts, 1939.26 MiB (excluded from runtime uploads)
+0.38.619.626 W llama_moe_cache: adaptive LFU: 1438 slots, admit <= 32 experts/ubatch, decay every 128 tokens
+0.38.619.627 W llama_moe_cache: context = 622599289184 (target), prefill 1024, static 0%
+0.38.661.851 I cmn          init: llama threadpool init, n_threads = 24
+0.38.780.374 I common_speculative_init_result: loading draft model '/opt/llm-gateway/models/Qwen3.8-Flash-Next/MTP/mtp-Qwen3.8-Flash-Next-Q8_0.gguf'
+0.41.801.290 W llama_moe_cache: adaptive LFU: 101 slots, admit <= 32 experts/ubatch, decay every 128 tokens
+0.41.801.296 W llama_moe_cache: context = 622599289185 (draft), prefill 1024, static 0%
+0.41.807.165 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 8192, kv_unified = 'false'
+0.41.831.550 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.41.831.592 I srv  llama_server: model loaded
+0.41.831.596 I srv  llama_server: listening on http://127.0.0.1:8799
+0.43.151.587 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 0, t_last = -1
+0.43.151.673 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.43.870.095 W llama_moe_cache: prefill burst: context = 622599289184, uploads = 1024, MiB = 2038.58, enqueue = 118.858 ms (device completion not timed)
+0.43.944.455 W llama_moe_cache: prefill burst: context = 622599289185, uploads = 99, MiB = 493.07, enqueue = 0.904 ms (device completion not timed)
+0.44.338.976 I slot print_timing: id  0 | task 0 | prompt eval time =     788.14 ms /    18 tokens (   43.79 ms per token,    22.84 tokens per second)
+0.44.338.984 I slot print_timing: id  0 | task 0 |        eval time =     399.09 ms /     8 tokens (   57.01 ms per token,    17.54 tokens per second)
+0.44.338.985 I slot print_timing: id  0 | task 0 |       total time =    1187.23 ms /    26 tokens
+0.44.338.991 I slot print_timing: id  0 | task 0 |    graphs reused =          2
+0.44.338.991 I slot print_timing: id  0 | task 0 |   graph reallocs =          1    /     0        (same size) / (changed size)
+0.44.338.995 I slot print_timing: id  0 | task 0 | draft acceptance = 0.44444 (    4 accepted /     9 generated), mean len =  2.33
+0.44.339.038 I slot      release: id  0 | task 0 | stop processing: n_tokens = 25, truncated = 0
+0.44.378.878 I srv    operator(): operator(): cleaning up before exit...
+0.44.385.980 W llama_moe_cache: context = 622599289185 (draft) statistics follow
+0.44.385.987 W llama_moe_cache: adaptive: tokens = 41, hits = 127, misses = 283, hit rate = 30.98%, uploads = 143, uploaded = 712.21 MiB, hits/token = 3.10, misses/token = 6.90, uploads/token = 3.488, MiB/token = 17.371
+0.45.330.662 W llama_moe_cache: context = 622599289184 (target) statistics follow
+0.45.330.677 W llama_moe_cache: adaptive: tokens = 32, hits = 2719, misses = 12001, hit rate = 18.47%, uploads = 1152, uploaded = 2307.72 MiB, hits/token = 84.97, misses/token = 375.03, uploads/token = 36.000, MiB/token = 72.116
