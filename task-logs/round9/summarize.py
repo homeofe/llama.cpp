@@ -27,6 +27,9 @@ def main():
         summary.append(dict(config=config, category=category, n=len(rows), median=statistics.median(rates),
                             minimum=min(rates), maximum=max(rates), acceptance=accepted / drafted if drafted else None,
                             vram_mib=max(int(r['vram_mib']) for r in rows), ttft=statistics.median(r['ttft_s'] for r in rows)))
+        if all('engine_cpu_s' in r for r in rows):
+            summary[-1]['cpu_s_per_token'] = sum(r['engine_cpu_s'] for r in rows) / sum(r['tokens'] for r in rows)
+            summary[-1]['median_engine_busy_cores'] = statistics.median(r['engine_busy_cores'] for r in rows)
     hashes = collections.defaultdict(dict)
     for row in records:
         hashes[row['config']][row['round'], row['prompt']] = row

@@ -46,6 +46,7 @@ def main():
             subprocess.run(['sudo', '-n', 'kill', '-INT', '--', '-' + str(proc.pid)], check=False)
             proc.wait(timeout=15)
     command(['python3', '-S', 'task-logs/round9/summarize.py',
+             '--control', 'qwen-cpu-control',
              '/opt/llm-gateway/data/moe-quant/qwen38/round9-cpu-screen/runs.jsonl'], 'cpu-screen-summary.log')
     (OUT / 'cpu-screen-complete.txt').write_text(time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime()) + '\n')
 

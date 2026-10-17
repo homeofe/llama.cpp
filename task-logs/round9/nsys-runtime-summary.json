@@ -1,0 +1,83 @@
+{
+  "source": "task-logs/round9/gpu-nsys/trace.sqlite",
+  "diagnostic_only": true,
+  "window_ms": 1905.649452,
+  "kernels": 79652,
+  "kernel_union_ms": 621.971391,
+  "copy_union_ms": 135.345714,
+  "combined_union_ms": 751.382987,
+  "graph_launches": 0,
+  "runtime": [
+    {
+      "name": "cudaLaunchKernel_v7000",
+      "calls": 79651,
+      "total_ms": 338.480165
+    },
+    {
+      "name": "cudaMemcpyAsync_v3020",
+      "calls": 7504,
+      "total_ms": 31.897383
+    },
+    {
+      "name": "cudaStreamSynchronize_v3020",
+      "calls": 7237,
+      "total_ms": 160.383436
+    },
+    {
+      "name": "cudaEventSynchronize_v3020",
+      "calls": 2840,
+      "total_ms": 74.527977
+    },
+    {
+      "name": "cudaMemcpy2DAsync_v3020",
+      "calls": 2236,
+      "total_ms": 15.313789
+    },
+    {
+      "name": "cudaEventRecord_v3020",
+      "calls": 960,
+      "total_ms": 1.503053
+    },
+    {
+      "name": "cudaMemsetAsync_v3020",
+      "calls": 9,
+      "total_ms": 0.14337
+    },
+    {
+      "name": "cudaMallocHost_v3020",
+      "calls": 1,
+      "total_ms": 2.633901
+    },
+    {
+      "name": "cudaFreeHost_v3020",
+      "calls": 1,
+      "total_ms": 0.01497
+    },
+    {
+      "name": "cuMemSetAccess",
+      "calls": 1,
+      "total_ms": 0.13491
+    },
+    {
+      "name": "cuMemRelease",
+      "calls": 1,
+      "total_ms": 0.00036
+    },
+    {
+      "name": "cuMemMap",
+      "calls": 1,
+      "total_ms": 0.00276
+    },
+    {
+      "name": "cuMemCreate",
+      "calls": 1,
+      "total_ms": 0.088009
+    },
+    {
+      "name": "cuMemAddressReserve",
+      "calls": 1,
+      "total_ms": 0.01517
+    }
+  ],
+  "caveat": "Instrumented target-only four-token windows; not end-to-end MTP performance."
+}

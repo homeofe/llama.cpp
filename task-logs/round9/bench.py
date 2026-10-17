@@ -48,10 +48,18 @@ class Run(stage.Run):
                     yield line
 
         stage.urllib.request.urlopen = lambda *a, **kw: Capture(original(*a, **kw))
+        own_pids = [self.child.pid] if self.child is not None else []
+        cpu_start = stage.proc_jiffies(own_pids)
+        wall_start = time.monotonic()
         try:
             result = super().request(*args, **kwargs)
         finally:
             stage.urllib.request.urlopen = original
+        measured_wall = time.monotonic() - wall_start
+        if own_pids:
+            result['engine_cpu_s'] = (stage.proc_jiffies(own_pids) - cpu_start) / stage.HZ
+            result['engine_busy_cores'] = result['engine_cpu_s'] / measured_wall
+            result['engine_cpu_s_per_token'] = result['engine_cpu_s'] / result['tokens']
         output = []
         for raw in chunks:
             line = raw.decode().strip()
