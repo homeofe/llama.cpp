@@ -17,6 +17,7 @@
 #include <cinttypes>
 #include <cmath>
 #include <cstring>
+#include <fstream>
 #include <limits>
 #include <stdexcept>
 #include <string>
@@ -379,7 +380,26 @@ llama_context::llama_context(
         if (mib == 0) {
             throw std::runtime_error("GGML_MOE_HYBRID_MIB must be positive");
         }
-        cparams.moe_cache_size = mib*1024*1024;
+        // the environment reaches every context of the process, a draft model's too: a profile that names layers
+        // without routed experts in this model belongs to another model, so this context runs without the cache
+        bool profile_fits = true;
+        {
+            std::ifstream input(hybrid_profile);
+            std::string header;
+            std::getline(input, header);
+            int64_t il, expert, count;
+            while (profile_fits && input >> il >> expert >> count) {
+                profile_fits = il >= 0 && il < (int64_t) model.layers.size() &&
+                    (model.layers[il].ffn_up_exps || model.layers[il].ffn_gate_up_exps);
+            }
+        }
+        if (profile_fits) {
+            cparams.moe_cache_size = mib*1024*1024;
+        } else {
+            LLAMA_LOG_WARN("%s: hybrid MoE off for this context: %s names layers without routed experts in this model (a draft model?)\n",
+                __func__, hybrid_profile);
+            hybrid_profile = nullptr;
+        }
     }
 
     // initialized later
