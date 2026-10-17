@@ -3,7 +3,9 @@
 You continue rounds 5-7 in `/opt/llm-gateway/data/build/llama-l5` (branch `l5-cache`). Read `NOTES-round7.md`,
 `AGENTS.md`, `CONTRIBUTING.md`, `skills/code-review/SKILL.md`. Wall-clock budget: **3 hours**.
 
-**This round you run without a sandbox and measure on the GPU yourself (the owner asked for it).** Rules:
+**This round you measure on the GPU yourself (the owner asked for it).** Your sandbox now allows local network (the
+gateway on 127.0.0.1:8790) and writes to `/opt/llm-gateway/data/moe-quant/` and this worktree's git metadata. If the
+GPU device itself is not reachable from the sandbox, say so in the notes and do the offline parts. Rules:
 - Work only in this worktree and in `/opt/llm-gateway/data/moe-quant/` (traces, harness output). Do not touch other
   worktrees, `/opt/agent-tools`, Strata, the gateway's code or configuration, or anything under `/home`. No push, no PR.
   Commit WIP to `l5-cache` at each stage, without a `Co-Authored-By` line.
@@ -11,9 +13,9 @@ You continue rounds 5-7 in `/opt/llm-gateway/data/build/llama-l5` (branch `l5-ca
   http://127.0.0.1:8790/api/v1/gpu/free -H "Authorization: Bearer $(cat /opt/llm-gateway/data/api-key)"`, then
   `.../gpu/hold` with `{"reason":"codex: round 8","ttlS":900}`, `DELETE .../gpu/hold`; never print the key). Never hold
   it while building or reading code. Do not run anything while another process uses more than 300 MiB of VRAM.
-- Measure only on a quiet machine: 1-minute load below 3 and no foreign process above half a core; repeat a step that
-  saw foreign load (`/opt/llm-gateway/data/moe-quant/qwen38/qbound.sh` has the clean/watch pattern). Interleave
-  control and candidate.
+- Measure only on a quiet machine: you cannot see other processes from the sandbox, so gate on the 1-minute load
+  (below 3 at the start and at the end of each step; repeat a step otherwise). Interleave control and candidate.
+  Claude repeats the final end-to-end comparison with the full foreign-process gate.
 - End-to-end numbers: `/opt/llm-gateway/data/moe-quant/qwen38/stage_b.py` (configs at the top, `--only`, `--rounds`;
   `summary.py` prints medians). Add your configs there; keep the existing ones. Correctness: perplexity on
   `/opt/llm-gateway/data/build/texts/test-de.txt` (12 chunks, ctx 512, `-ub 4`), the cache off must stay bit-exact.
