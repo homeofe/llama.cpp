@@ -1,5 +1,8 @@
 #include "llama-graph.h"
 
+#include <atomic>
+#include <mutex>
+
 #include "llama-impl.h"
 #include "llama-model.h"
 #include "llama-moe-cache.h"
@@ -2074,6 +2077,33 @@ ggml_tensor * llm_graph_context::build_ffn(
     return cur;
 }
 
+// measurement only (LLAMA_MOE_SKIP_STATS): counts the expert slots LLAMA_MOE_SKIP keeps and drops, printed at exit
+static std::atomic<int64_t> moe_skip_kept{0}, moe_skip_total{0};
+static void llm_moe_skip_count(ggml_tensor * dst, const ggml_tensor * a, int ith, int nth, void * userdata) {
+    GGML_UNUSED(userdata);
+    if (ith != 0) {
+        return;
+    }
+    GGML_UNUSED(nth);
+    static std::once_flag once;
+    std::call_once(once, [] {
+        atexit([] {
+            const int64_t t = moe_skip_total.load();
+            fprintf(stderr, "moe skip stats: %lld of %lld expert slots kept (%.2f %%)\n", (long long) moe_skip_kept.load(),
+                    (long long) t, t > 0 ? 100.0 * moe_skip_kept.load() / t : 0.0);
+        });
+    });
+    const int64_t n = ggml_nelements(a);
+    int64_t kept = 0;
+    for (int64_t i = 0; i < n; ++i) {
+        const float v = ((const float *) a->data)[i];
+        ((float *) dst->data)[i] = v;
+        kept += v > 0.5f;
+    }
+    moe_skip_kept += kept;
+    moe_skip_total += n;
+}
+
 ggml_tensor * llm_graph_context::build_moe_ffn(
          ggml_tensor * cur,
          ggml_tensor * gate_inp,
@@ -2280,6 +2310,22 @@ ggml_tensor * llm_graph_context::build_moe_ffn(
     if (w_scale != 0.0f && w_scale != 1.0f) {
         weights = ggml_scale(ctx0, weights, w_scale);
         cb(weights, "ffn_moe_weights_scaled", il);
+    }
+
+    // measurement only: LLAMA_MOE_SKIP=t zeroes the routed experts whose share of the token's weight sum is below t and
+    // rescales the rest to the same sum, the outputs of a top-k that skips them; LLAMA_MOE_SKIP_STATS=1 counts them
+    static const float moe_skip = getenv("LLAMA_MOE_SKIP") ? (float) atof(getenv("LLAMA_MOE_SKIP")) : 0.0f;
+    if (moe_skip > 0.0f && n_expert_used > 1) {
+        ggml_tensor * w2    = ggml_reshape_2d(ctx0, weights, n_expert_used, n_tokens);
+        ggml_tensor * w_sum = ggml_clamp(ctx0, ggml_sum_rows(ctx0, w2), 6.103515625e-5, INFINITY); // [1, n_tokens]
+        ggml_tensor * keep  = ggml_step(ctx0, ggml_scale_bias(ctx0, ggml_div(ctx0, w2, w_sum), 1.0f, -moe_skip));
+        if (getenv("LLAMA_MOE_SKIP_STATS")) {
+            keep = ggml_map_custom1(ctx0, keep, llm_moe_skip_count, 1, nullptr);
+        }
+        ggml_tensor * w_kept = ggml_mul(ctx0, w2, keep);
+        ggml_tensor * k_sum  = ggml_clamp(ctx0, ggml_sum_rows(ctx0, w_kept), 6.103515625e-5, INFINITY);
+        weights = ggml_reshape_3d(ctx0, ggml_mul(ctx0, w_kept, ggml_div(ctx0, w_sum, k_sum)), 1, n_expert_used, n_tokens);
+        cb(weights, "ffn_moe_weights_skip", il);
     }
 
     //call early so that topk-moe can be used
