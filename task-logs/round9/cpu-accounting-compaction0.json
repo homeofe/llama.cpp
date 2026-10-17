@@ -1,0 +1,617 @@
+{
+  "own_pid": 3987785,
+  "wall_s": 87.07502927293535,
+  "signed_foreign_cores": 0.34487499172548564,
+  "per_interval_clamped_foreign_cores": 0.3488945137735682,
+  "top_processes": [
+    {
+      "pid": 3987785,
+      "name": "llama-perplexit",
+      "cores": 23.369156657090873
+    },
+    {
+      "pid": 3908179,
+      "name": "codex",
+      "cores": 0.07051390107207732
+    },
+    {
+      "pid": 3473089,
+      "name": "htop",
+      "cores": 0.06385297882096903
+    },
+    {
+      "pid": 3987824,
+      "name": "python3",
+      "cores": 0.03525695053603866
+    },
+    {
+      "pid": 1888,
+      "name": "MainThread",
+      "cores": 0.017456210037387218
+    },
+    {
+      "pid": 2642740,
+      "name": "node",
+      "cores": 0.0144702793730973
+    },
+    {
+      "pid": 3890338,
+      "name": "nvidia-smi",
+      "cores": 0.012747627066776193
+    },
+    {
+      "pid": 429444,
+      "name": "claude",
+      "cores": 0.011024974760455084
+    },
+    {
+      "pid": 3988873,
+      "name": "claude",
+      "cores": 0.008383574557429387
+    },
+    {
+      "pid": 2896754,
+      "name": "MainThread",
+      "cores": 0.005857017841491764
+    },
+    {
+      "pid": 2436,
+      "name": "python3",
+      "cores": 0.0052828004060513955
+    },
+    {
+      "pid": 2647892,
+      "name": "claude",
+      "cores": 0.004019522048082583
+    },
+    {
+      "pid": 2654005,
+      "name": "sshd",
+      "cores": 0.003674991586818362
+    },
+    {
+      "pid": 1745,
+      "name": "dockerd",
+      "cores": 0.0028710871772018452
+    },
+    {
+      "pid": 1891,
+      "name": "MainThread",
+      "cores": 0.001952339280497255
+    },
+    {
+      "pid": 3987698,
+      "name": "python3",
+      "cores": 0.001837495793409181
+    },
+    {
+      "pid": 17,
+      "name": "rcu_preempt",
+      "cores": 0.0013781218450568855
+    },
+    {
+      "pid": 353,
+      "name": "kswapd0",
+      "cores": 0.0010335913837926643
+    },
+    {
+      "pid": 1819099,
+      "name": "python3",
+      "cores": 0.0010335913837926643
+    },
+    {
+      "pid": 1631,
+      "name": "containerd",
+      "cores": 0.0009187478967045905
+    }
+  ],
+  "samples": [
+    {
+      "wall_s": 1.0352169789839536,
+      "busy_ticks": 2435,
+      "own_ticks": 2470,
+      "foreign_signed_ticks": -35
+    },
+    {
+      "wall_s": 1.0373264020308852,
+      "busy_ticks": 2522,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 33
+    },
+    {
+      "wall_s": 1.0364207410020754,
+      "busy_ticks": 2535,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 46
+    },
+    {
+      "wall_s": 1.037325594923459,
+      "busy_ticks": 2517,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 30
+    },
+    {
+      "wall_s": 1.0375881920335814,
+      "busy_ticks": 2520,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 31
+    },
+    {
+      "wall_s": 1.0364296189509332,
+      "busy_ticks": 2527,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 38
+    },
+    {
+      "wall_s": 1.0376257940661162,
+      "busy_ticks": 2246,
+      "own_ticks": 2224,
+      "foreign_signed_ticks": 22
+    },
+    {
+      "wall_s": 1.0373540020082146,
+      "busy_ticks": 2531,
+      "own_ticks": 2491,
+      "foreign_signed_ticks": 40
+    },
+    {
+      "wall_s": 1.0368926279479638,
+      "busy_ticks": 2521,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 32
+    },
+    {
+      "wall_s": 1.0358623870415613,
+      "busy_ticks": 2518,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 32
+    },
+    {
+      "wall_s": 1.0368607719428837,
+      "busy_ticks": 2522,
+      "own_ticks": 2485,
+      "foreign_signed_ticks": 37
+    },
+    {
+      "wall_s": 1.0370490580098704,
+      "busy_ticks": 2529,
+      "own_ticks": 2491,
+      "foreign_signed_ticks": 38
+    },
+    {
+      "wall_s": 1.0368405040353537,
+      "busy_ticks": 2516,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 29
+    },
+    {
+      "wall_s": 1.035226623993367,
+      "busy_ticks": 2282,
+      "own_ticks": 2224,
+      "foreign_signed_ticks": 58
+    },
+    {
+      "wall_s": 1.0385053750360385,
+      "busy_ticks": 2519,
+      "own_ticks": 2491,
+      "foreign_signed_ticks": 28
+    },
+    {
+      "wall_s": 1.0354779169429094,
+      "busy_ticks": 2549,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 63
+    },
+    {
+      "wall_s": 1.036913241026923,
+      "busy_ticks": 2524,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 35
+    },
+    {
+      "wall_s": 1.0370104470057413,
+      "busy_ticks": 2537,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 50
+    },
+    {
+      "wall_s": 1.0377372530056164,
+      "busy_ticks": 2511,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 22
+    },
+    {
+      "wall_s": 1.0387095180340111,
+      "busy_ticks": 2531,
+      "own_ticks": 2494,
+      "foreign_signed_ticks": 37
+    },
+    {
+      "wall_s": 1.0360699580051005,
+      "busy_ticks": 2255,
+      "own_ticks": 2222,
+      "foreign_signed_ticks": 33
+    },
+    {
+      "wall_s": 1.036879073944874,
+      "busy_ticks": 2545,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 56
+    },
+    {
+      "wall_s": 1.035990832024254,
+      "busy_ticks": 2519,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 33
+    },
+    {
+      "wall_s": 1.0368988569825888,
+      "busy_ticks": 2511,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 22
+    },
+    {
+      "wall_s": 1.0386646109400317,
+      "busy_ticks": 2530,
+      "own_ticks": 2490,
+      "foreign_signed_ticks": 40
+    },
+    {
+      "wall_s": 1.0361762910615653,
+      "busy_ticks": 2530,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 41
+    },
+    {
+      "wall_s": 1.0361222689971328,
+      "busy_ticks": 2509,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 23
+    },
+    {
+      "wall_s": 1.0360195450484753,
+      "busy_ticks": 2261,
+      "own_ticks": 2224,
+      "foreign_signed_ticks": 37
+    },
+    {
+      "wall_s": 1.0380066289799288,
+      "busy_ticks": 2521,
+      "own_ticks": 2491,
+      "foreign_signed_ticks": 30
+    },
+    {
+      "wall_s": 1.0385356639744714,
+      "busy_ticks": 2518,
+      "own_ticks": 2491,
+      "foreign_signed_ticks": 27
+    },
+    {
+      "wall_s": 1.0370398829691112,
+      "busy_ticks": 2528,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 39
+    },
+    {
+      "wall_s": 1.0371054999995977,
+      "busy_ticks": 2576,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 88
+    },
+    {
+      "wall_s": 1.0364122879691422,
+      "busy_ticks": 2519,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 31
+    },
+    {
+      "wall_s": 1.0359333450905979,
+      "busy_ticks": 2530,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 43
+    },
+    {
+      "wall_s": 1.0369158309185877,
+      "busy_ticks": 2255,
+      "own_ticks": 2225,
+      "foreign_signed_ticks": 30
+    },
+    {
+      "wall_s": 1.0364660180639476,
+      "busy_ticks": 2520,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 34
+    },
+    {
+      "wall_s": 1.0382586609339342,
+      "busy_ticks": 2527,
+      "own_ticks": 2492,
+      "foreign_signed_ticks": 35
+    },
+    {
+      "wall_s": 1.0359671619953588,
+      "busy_ticks": 2513,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 27
+    },
+    {
+      "wall_s": 1.037407816038467,
+      "busy_ticks": 2520,
+      "own_ticks": 2490,
+      "foreign_signed_ticks": 30
+    },
+    {
+      "wall_s": 1.036675304058008,
+      "busy_ticks": 2531,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 42
+    },
+    {
+      "wall_s": 1.0364486419130117,
+      "busy_ticks": 2516,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 30
+    },
+    {
+      "wall_s": 1.0369150370825082,
+      "busy_ticks": 2256,
+      "own_ticks": 2225,
+      "foreign_signed_ticks": 31
+    },
+    {
+      "wall_s": 1.036970943911001,
+      "busy_ticks": 2530,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 41
+    },
+    {
+      "wall_s": 1.0366736210417002,
+      "busy_ticks": 2512,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 24
+    },
+    {
+      "wall_s": 1.0363621689612046,
+      "busy_ticks": 2540,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 54
+    },
+    {
+      "wall_s": 1.036333475029096,
+      "busy_ticks": 2562,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 76
+    },
+    {
+      "wall_s": 1.0364285520045087,
+      "busy_ticks": 2523,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 34
+    },
+    {
+      "wall_s": 1.037979666958563,
+      "busy_ticks": 2523,
+      "own_ticks": 2491,
+      "foreign_signed_ticks": 32
+    },
+    {
+      "wall_s": 1.03671724407468,
+      "busy_ticks": 2264,
+      "own_ticks": 2222,
+      "foreign_signed_ticks": 42
+    },
+    {
+      "wall_s": 1.036527722957544,
+      "busy_ticks": 2507,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 18
+    },
+    {
+      "wall_s": 1.0358970110537484,
+      "busy_ticks": 2527,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 41
+    },
+    {
+      "wall_s": 1.0373712140135467,
+      "busy_ticks": 2509,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 21
+    },
+    {
+      "wall_s": 1.0369335520081222,
+      "busy_ticks": 2524,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 35
+    },
+    {
+      "wall_s": 1.0366399489575997,
+      "busy_ticks": 2521,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 33
+    },
+    {
+      "wall_s": 1.0367011759663,
+      "busy_ticks": 2520,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 33
+    },
+    {
+      "wall_s": 1.036540393019095,
+      "busy_ticks": 2255,
+      "own_ticks": 2225,
+      "foreign_signed_ticks": 30
+    },
+    {
+      "wall_s": 1.036550970049575,
+      "busy_ticks": 2526,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 38
+    },
+    {
+      "wall_s": 1.0359395479317755,
+      "busy_ticks": 2508,
+      "own_ticks": 2484,
+      "foreign_signed_ticks": 24
+    },
+    {
+      "wall_s": 1.0362531540449709,
+      "busy_ticks": 2522,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 34
+    },
+    {
+      "wall_s": 1.0374735889490694,
+      "busy_ticks": 2525,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 36
+    },
+    {
+      "wall_s": 1.0369891760637984,
+      "busy_ticks": 2534,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 45
+    },
+    {
+      "wall_s": 1.0363063849508762,
+      "busy_ticks": 2521,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 33
+    },
+    {
+      "wall_s": 1.0365874910494313,
+      "busy_ticks": 2256,
+      "own_ticks": 2223,
+      "foreign_signed_ticks": 33
+    },
+    {
+      "wall_s": 1.036971717956476,
+      "busy_ticks": 2509,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 20
+    },
+    {
+      "wall_s": 1.0371453929692507,
+      "busy_ticks": 2528,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 39
+    },
+    {
+      "wall_s": 1.0366462910315022,
+      "busy_ticks": 2519,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 32
+    },
+    {
+      "wall_s": 1.0372243280289695,
+      "busy_ticks": 2512,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 23
+    },
+    {
+      "wall_s": 1.0355509970104322,
+      "busy_ticks": 2518,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 32
+    },
+    {
+      "wall_s": 1.037024721968919,
+      "busy_ticks": 2519,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 30
+    },
+    {
+      "wall_s": 1.038451956002973,
+      "busy_ticks": 2268,
+      "own_ticks": 2227,
+      "foreign_signed_ticks": 41
+    },
+    {
+      "wall_s": 1.0370122350286692,
+      "busy_ticks": 2535,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 46
+    },
+    {
+      "wall_s": 1.0373383719706908,
+      "busy_ticks": 2512,
+      "own_ticks": 2489,
+      "foreign_signed_ticks": 23
+    },
+    {
+      "wall_s": 1.0361218709731475,
+      "busy_ticks": 2531,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 44
+    },
+    {
+      "wall_s": 1.0382772440789267,
+      "busy_ticks": 2530,
+      "own_ticks": 2492,
+      "foreign_signed_ticks": 38
+    },
+    {
+      "wall_s": 1.0368400739971548,
+      "busy_ticks": 2528,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 40
+    },
+    {
+      "wall_s": 1.0368581298971549,
+      "busy_ticks": 2530,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 43
+    },
+    {
+      "wall_s": 1.0374911660328507,
+      "busy_ticks": 2257,
+      "own_ticks": 2227,
+      "foreign_signed_ticks": 30
+    },
+    {
+      "wall_s": 1.0370066240429878,
+      "busy_ticks": 2509,
+      "own_ticks": 2488,
+      "foreign_signed_ticks": 21
+    },
+    {
+      "wall_s": 1.0363270930247381,
+      "busy_ticks": 2528,
+      "own_ticks": 2487,
+      "foreign_signed_ticks": 41
+    },
+    {
+      "wall_s": 1.0377477559959516,
+      "busy_ticks": 2524,
+      "own_ticks": 2490,
+      "foreign_signed_ticks": 34
+    },
+    {
+      "wall_s": 1.0377895039273426,
+      "busy_ticks": 2520,
+      "own_ticks": 2491,
+      "foreign_signed_ticks": 29
+    },
+    {
+      "wall_s": 1.0360773740103468,
+      "busy_ticks": 2523,
+      "own_ticks": 2486,
+      "foreign_signed_ticks": 37
+    },
+    {
+      "wall_s": 1.0272548970533535,
+      "busy_ticks": 2374,
+      "own_ticks": 2260,
+      "foreign_signed_ticks": 114
+    },
+    {
+      "wall_s": 1.0244122599251568,
+      "busy_ticks": 125,
+      "own_ticks": 104,
+      "foreign_signed_ticks": 21
+    }
+  ],
+  "vmstat_start": "nr_free_pages 261453\nnr_zone_inactive_anon 103988\nnr_zone_active_anon 16129388\nnr_zone_inactive_file 15246717\nnr_zone_active_file 113741\nnr_zone_unevictable 6879\nnr_zone_write_pending 236\nnr_mlock 6879\nnr_bounce 0\nnr_zspages 0\nnr_free_cma 0\nnr_unaccepted 0\nnuma_hit 89230961775\nnuma_miss 0\nnuma_foreign 0\nnuma_interleave 231\nnuma_local 89229928369\nnuma_other 0\nnr_inactive_anon 103988\nnr_active_anon 16129388\nnr_inactive_file 15246717\nnr_active_file 113741\nnr_unevictable 6879\nnr_slab_reclaimable 358282\nnr_slab_unreclaimable 198611\nnr_isolated_anon 0\nnr_isolated_file 0\nworkingset_nodes 360480\nworkingset_refault_anon 2556521\nworkingset_refault_file 1055896013\nworkingset_activate_anon 689085\nworkingset_activate_file 395355555\nworkingset_restore_anon 688796\nworkingset_restore_file 133644751\nworkingset_nodereclaim 10760557\nnr_anon_pages 461180\nnr_mapped 15923877\nnr_file_pages 31268875\nnr_dirty 221\nnr_writeback 15\nnr_writeback_temp 0\nnr_shmem 15772181\nnr_shmem_hugepages 0\nnr_shmem_pmdmapped 0\nnr_file_hugepages 0\nnr_file_pmdmapped 0\nnr_anon_transparent_hugepages 0\nnr_vmscan_write 4854864\nnr_vmscan_immediate_reclaim 0\nnr_dirtied 6354375040\nnr_written 2801597008\nnr_throttled_written 0\nnr_kernel_misc_reclaimable 0\nnr_foll_pin_acquired 2096794718\nnr_foll_pin_released 2081032448\nnr_kernel_stack 28624\nnr_page_table_pages 49569\nnr_sec_page_table_pages 0\nnr_swapcached 134094\npgpromote_success 0\npgpromote_candidate 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\nnr_dirty_threshold 3081178\nnr_dirty_background_threshold 1538708\npgpgin 5906910649\npgpgout 16728032567\npswpin 4045588\npswpout 4854864\npgalloc_dma 1024\npgalloc_dma32 312834181\npgalloc_normal 90759500492\npgalloc_movable 0\npgalloc_device 0\nallocstall_dma 0\nallocstall_dma32 0\nallocstall_normal 97134\nallocstall_movable 590737\nallocstall_device 0\npgskip_dma 0\npgskip_dma32 306\npgskip_normal 16950\npgskip_movable 0\npgskip_device 0\npgfree 91993046947\npgactivate 17599814\npgdeactivate 0\npglazyfree 0\npgfault 90461447265\npgmajfault 270665897\npglazyfreed 0\npgrefill 919418446\npgreuse 9263975809\npgsteal_kswapd 1732074026\npgsteal_direct 89293105\npgsteal_khugepaged 16456\npgscan_kswapd 1769134060\npgscan_direct 109989913\npgscan_khugepaged 16462\npgscan_direct_throttle 0\npgscan_anon 30021544\npgscan_file 1849118891\npgsteal_anon 5365237\npgsteal_file 1816018350\nzone_reclaim_failed 0\npginodesteal 7807\nslabs_scanned 195154357\nkswapd_inodesteal 2497908\nkswapd_low_wmark_hit_quickly 25790\nkswapd_high_wmark_hit_quickly 1921\npageoutrun 42564\npgrotated 5367029\ndrop_pagecache 0\ndrop_slab 0\noom_kill 0\nnuma_pte_updates 0\nnuma_huge_pte_updates 0\nnuma_hint_faults 0\nnuma_hint_faults_local 0\nnuma_pages_migrated 0\npgmigrate_success 897419366\npgmigrate_fail 1190746141\nthp_migration_success 0\nthp_migration_fail 0\nthp_migration_split 0\ncompact_migrate_scanned 15974384105\ncompact_free_scanned 50414269295\ncompact_isolated 2990839021\ncompact_stall 301589\ncompact_fail 251903\ncompact_success 49686\ncompact_daemon_wake 38290\ncompact_daemon_migrate_scanned 10668262206\ncompact_daemon_free_scanned 45848128411\nhtlb_buddy_alloc_success 0\nhtlb_buddy_alloc_fail 0\nunevictable_pgs_culled 129677\nunevictable_pgs_scanned 0\nunevictable_pgs_rescued 40789\nunevictable_pgs_mlocked 47682\nunevictable_pgs_munlocked 22135\nunevictable_pgs_cleared 0\nunevictable_pgs_stranded 18668\nthp_fault_alloc 1059548\nthp_fault_fallback 76326\nthp_fault_fallback_charge 0\nthp_collapse_alloc 738\nthp_collapse_alloc_failed 8\nthp_file_alloc 0\nthp_file_fallback 0\nthp_file_fallback_charge 0\nthp_file_mapped 0\nthp_split_page 0\nthp_split_page_failed 0\nthp_deferred_split_page 2201\nthp_split_pmd 2201\nthp_scan_exceed_none_pte 1214\nthp_scan_exceed_swap_pte 0\nthp_scan_exceed_share_pte 0\nthp_split_pud 0\nthp_zero_page_alloc 12\nthp_zero_page_alloc_failed 1\nthp_swpout 0\nthp_swpout_fallback 0\nballoon_inflate 0\nballoon_deflate 0\nballoon_migrate 0\nswap_ra 2055987\nswap_ra_hit 1841786\nksm_swpin_copy 0\ncow_ksm 0\nzswpin 0\nzswpout 0\nzswpwb 0\ndirect_map_level2_splits 44094\ndirect_map_level3_splits 122\nnr_unstable 0\n",
+  "vmstat_end": "nr_free_pages 415489\nnr_zone_inactive_anon 103891\nnr_zone_active_anon 16096931\nnr_zone_inactive_file 15154031\nnr_zone_active_file 116067\nnr_zone_unevictable 6879\nnr_zone_write_pending 2\nnr_mlock 6879\nnr_bounce 0\nnr_zspages 0\nnr_free_cma 0\nnr_unaccepted 0\nnuma_hit 89232076582\nnuma_miss 0\nnuma_foreign 0\nnuma_interleave 231\nnuma_local 89231043176\nnuma_other 0\nnr_inactive_anon 103891\nnr_active_anon 16096931\nnr_inactive_file 15154031\nnr_active_file 116067\nnr_unevictable 6879\nnr_slab_reclaimable 358240\nnr_slab_unreclaimable 198039\nnr_isolated_anon 0\nnr_isolated_file 0\nworkingset_nodes 361941\nworkingset_refault_anon 2556926\nworkingset_refault_file 1055897192\nworkingset_activate_anon 689204\nworkingset_activate_file 395355937\nworkingset_restore_anon 688915\nworkingset_restore_file 133644905\nworkingset_nodereclaim 10760557\nnr_anon_pages 468332\nnr_mapped 15884874\nnr_file_pages 31139000\nnr_dirty 2\nnr_writeback 0\nnr_writeback_temp 0\nnr_shmem 15732377\nnr_shmem_hugepages 0\nnr_shmem_pmdmapped 0\nnr_file_hugepages 0\nnr_file_pmdmapped 0\nnr_anon_transparent_hugepages 0\nnr_vmscan_write 4854864\nnr_vmscan_immediate_reclaim 0\nnr_dirtied 6354376880\nnr_written 2801598911\nnr_throttled_written 0\nnr_kernel_misc_reclaimable 0\nnr_foll_pin_acquired 2096794718\nnr_foll_pin_released 2088331668\nnr_kernel_stack 28336\nnr_page_table_pages 49235\nnr_sec_page_table_pages 0\nnr_swapcached 134326\npgpromote_success 0\npgpromote_candidate 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\nnr_dirty_threshold 3093910\nnr_dirty_background_threshold 1545066\npgpgin 5906928149\npgpgout 16728041359\npswpin 4046638\npswpout 4854864\npgalloc_dma 1024\npgalloc_dma32 312834181\npgalloc_normal 90760618171\npgalloc_movable 0\npgalloc_device 0\nallocstall_dma 0\nallocstall_dma32 0\nallocstall_normal 97134\nallocstall_movable 590737\nallocstall_device 0\npgskip_dma 0\npgskip_dma32 306\npgskip_normal 16950\npgskip_movable 0\npgskip_device 0\npgfree 91994350838\npgactivate 17599814\npgdeactivate 0\npglazyfree 0\npgfault 90462566371\npgmajfault 270666791\npglazyfreed 0\npgrefill 919418446\npgreuse 9263995851\npgsteal_kswapd 1732167978\npgsteal_direct 89293105\npgsteal_khugepaged 16456\npgscan_kswapd 1769227948\npgscan_direct 109989913\npgscan_khugepaged 16462\npgscan_direct_throttle 0\npgscan_anon 30021544\npgscan_file 1849212779\npgsteal_anon 5365237\npgsteal_file 1816112302\nzone_reclaim_failed 0\npginodesteal 7807\nslabs_scanned 195154357\nkswapd_inodesteal 2497908\nkswapd_low_wmark_hit_quickly 25790\nkswapd_high_wmark_hit_quickly 1921\npageoutrun 42568\npgrotated 5367035\ndrop_pagecache 0\ndrop_slab 0\noom_kill 0\nnuma_pte_updates 0\nnuma_huge_pte_updates 0\nnuma_hint_faults 0\nnuma_hint_faults_local 0\nnuma_pages_migrated 0\npgmigrate_success 897419366\npgmigrate_fail 1190746141\nthp_migration_success 0\nthp_migration_fail 0\nthp_migration_split 0\ncompact_migrate_scanned 15974384105\ncompact_free_scanned 50414269295\ncompact_isolated 2990839021\ncompact_stall 301589\ncompact_fail 251903\ncompact_success 49686\ncompact_daemon_wake 38294\ncompact_daemon_migrate_scanned 10668262206\ncompact_daemon_free_scanned 45848128411\nhtlb_buddy_alloc_success 0\nhtlb_buddy_alloc_fail 0\nunevictable_pgs_culled 129677\nunevictable_pgs_scanned 0\nunevictable_pgs_rescued 40789\nunevictable_pgs_mlocked 47682\nunevictable_pgs_munlocked 22135\nunevictable_pgs_cleared 0\nunevictable_pgs_stranded 18668\nthp_fault_alloc 1059548\nthp_fault_fallback 76326\nthp_fault_fallback_charge 0\nthp_collapse_alloc 738\nthp_collapse_alloc_failed 8\nthp_file_alloc 0\nthp_file_fallback 0\nthp_file_fallback_charge 0\nthp_file_mapped 0\nthp_split_page 0\nthp_split_page_failed 0\nthp_deferred_split_page 2201\nthp_split_pmd 2201\nthp_scan_exceed_none_pte 1214\nthp_scan_exceed_swap_pte 0\nthp_scan_exceed_share_pte 0\nthp_split_pud 0\nthp_zero_page_alloc 12\nthp_zero_page_alloc_failed 1\nthp_swpout 0\nthp_swpout_fallback 0\nballoon_inflate 0\nballoon_deflate 0\nballoon_migrate 0\nswap_ra 2056587\nswap_ra_hit 1842281\nksm_swpin_copy 0\ncow_ksm 0\nzswpin 0\nzswpout 0\nzswpwb 0\ndirect_map_level2_splits 44094\ndirect_map_level3_splits 122\nnr_unstable 0\n",
+  "process_status": "Name:\tllama-perplexit\nUmask:\t0002\nState:\tD (disk sleep)\nTgid:\t3987785\nNgid:\t0\nPid:\t3987785\nPPid:\t3987698\nTracerPid:\t0\nUid:\t1001\t1001\t1001\t1001\nGid:\t1001\t1001\t1001\t1001\nFDSize:\t64\nGroups:\t4 24 27 30 46 988 1001 \nNStgid:\t3987785\nNSpid:\t3987785\nNSpgid:\t3987785\nNSsid:\t3987785\nKthread:\t0\nVmPeak:\t106228816 kB\nVmSize:\t106200980 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t63419664 kB\nVmRSS:\t63419664 kB\nRssAnon:\t  217116 kB\nRssFile:\t  153468 kB\nRssShmem:\t63049080 kB\nVmData:\t 1119852 kB\nVmStk:\t     136 kB\nVmExe:\t       4 kB\nVmLib:\t  677136 kB\nVmPTE:\t  124608 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t28\nSigQ:\t14/513523\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000000000000\nSigCgt:\t0000000100000000\nCapInh:\t0000000000000000\nCapPrm:\t0000000000000000\nCapEff:\t0000000000000000\nCapBnd:\t000001ffffffffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tthread vulnerable\nSpeculationIndirectBranch:\tconditional enabled\nCpus_allowed:\t0000,01000001\nCpus_allowed_list:\t0,24\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t449120\nnonvoluntary_ctxt_switches:\t320\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n"
+}

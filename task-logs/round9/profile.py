@@ -29,6 +29,15 @@ class ProfileRun(bench.Run):
         prefix.with_suffix('.memory.txt').write_text('\n'.join(line for line in status.splitlines()
             if line.startswith(('VmRSS:', 'VmLck:', 'VmSwap:', 'Threads:', 'Cpus_allowed_list:', 'Mems_allowed_list:'))) + '\n'
             + Path(f'/proc/{self.child.pid}/smaps_rollup').read_text())
+        threads = []
+        for directory in Path(f'/proc/{self.child.pid}/task').iterdir():
+            try:
+                lines = (directory / 'status').read_text().splitlines()
+                threads.append(dict(tid=int(directory.name), status=[line for line in lines
+                    if line.startswith(('Name:', 'Cpus_allowed_list:'))]))
+            except FileNotFoundError:
+                pass
+        prefix.with_suffix('.affinity.json').write_text(json.dumps(threads, indent=2) + '\n')
         fields = 'timestamp,pcie.link.gen.current,pcie.link.width.current,clocks.current.sm,clocks.current.memory,power.draw,utilization.gpu,utilization.memory,memory.used'
         with prefix.with_suffix('.gpu.csv').open('w') as stream:
             self.telemetry.append(subprocess.Popen(['nvidia-smi', '--query-gpu=' + fields,

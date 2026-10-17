@@ -16,6 +16,12 @@ spec.loader.exec_module(stage)
 
 
 class Run(stage.Run):
+    def start(self, name, cfg):
+        self.event(kind='system_state', config=name,
+                   compaction_proactiveness=int(Path('/proc/sys/vm/compaction_proactiveness').read_text()),
+                   transparent_hugepage=Path('/sys/kernel/mm/transparent_hugepage/enabled').read_text().strip())
+        super().start(name, cfg)
+
     def renew(self, force=False):
         if self.held and (force or time.monotonic() - self.last_hold > 300):
             stage.gw('POST', '/api/v1/gpu/hold', {'reason': 'codex: round 9', 'ttlS': 900})
