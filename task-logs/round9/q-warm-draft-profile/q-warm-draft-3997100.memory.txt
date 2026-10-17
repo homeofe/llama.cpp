@@ -1,0 +1,29 @@
+VmLck:	       0 kB
+VmRSS:	53289732 kB
+VmSwap:	       0 kB
+Threads:	78
+Cpus_allowed_list:	0,24
+Mems_allowed_list:	0
+200000000-7ffc5475b000 ---p 00000000 00:00 0                             [rollup]
+Rss:            53289732 kB
+Pss:            53283403 kB
+Pss_Dirty:      53133080 kB
+Pss_Anon:         356372 kB
+Pss_File:         158375 kB
+Pss_Shmem:      52768656 kB
+Shared_Clean:       7976 kB
+Shared_Dirty:          0 kB
+Private_Clean:    148676 kB
+Private_Dirty:  53133080 kB
+Referenced:     53289480 kB
+Anonymous:        356372 kB
+KSM:                   0 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+FilePmdMapped:         0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB

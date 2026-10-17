@@ -1,0 +1,270 @@
+{
+  "summary": [
+    {
+      "config": "ling-cache-mtp3",
+      "samples": 36,
+      "mean_gb_s": 33.10971340050632,
+      "max_gb_s": 38.17171530363857,
+      "min_gb_s": 27.97183227650015
+    }
+  ],
+  "samples": [
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "code-duration",
+      "epoch_end": 1792271501.0822966,
+      "gb_s": 30.543449194044452,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "code-duration",
+      "epoch_end": 1792271502.0834992,
+      "gb_s": 35.898472845306976,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "code-duration",
+      "epoch_end": 1792271503.0847375,
+      "gb_s": 34.41131819478582,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "code-duration",
+      "epoch_end": 1792271504.0859935,
+      "gb_s": 37.29915900480432,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "code-intervals",
+      "epoch_end": 1792271511.0943232,
+      "gb_s": 35.12473934457814,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "code-intervals",
+      "epoch_end": 1792271512.0955837,
+      "gb_s": 36.10815561925357,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "code-intervals",
+      "epoch_end": 1792271513.096827,
+      "gb_s": 36.2574391240932,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "code-roman",
+      "epoch_end": 1792271520.1053934,
+      "gb_s": 30.869382186801715,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "code-roman",
+      "epoch_end": 1792271521.1095073,
+      "gb_s": 37.18756527527362,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "code-roman",
+      "epoch_end": 1792271522.1108487,
+      "gb_s": 34.85876319929416,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "code-roman",
+      "epoch_end": 1792271523.112082,
+      "gb_s": 35.196988367215354,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "code-roman",
+      "epoch_end": 1792271524.113388,
+      "gb_s": 34.818268744918534,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "code-bugfix",
+      "epoch_end": 1792271531.122304,
+      "gb_s": 31.17592379783089,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "code-bugfix",
+      "epoch_end": 1792271532.1235702,
+      "gb_s": 38.17171530363857,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "en-1",
+      "epoch_end": 1792271539.1313162,
+      "gb_s": 32.361346226095435,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "en-1",
+      "epoch_end": 1792271540.1325953,
+      "gb_s": 36.53834133581619,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "en-1",
+      "epoch_end": 1792271541.1333141,
+      "gb_s": 33.40136834375273,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "en-1",
+      "epoch_end": 1792271542.1346736,
+      "gb_s": 32.81925652306938,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "en-1",
+      "epoch_end": 1792271543.135904,
+      "gb_s": 31.826793649126607,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "en-1",
+      "epoch_end": 1792271544.1371317,
+      "gb_s": 27.97183227650015,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "en-2",
+      "epoch_end": 1792271551.145843,
+      "gb_s": 32.83835750078542,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "en-2",
+      "epoch_end": 1792271552.1463215,
+      "gb_s": 32.253756269564875,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "en-2",
+      "epoch_end": 1792271553.1485314,
+      "gb_s": 30.834489217457737,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "en-2",
+      "epoch_end": 1792271554.149782,
+      "gb_s": 30.24871483209185,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "en-2",
+      "epoch_end": 1792271555.151085,
+      "gb_s": 30.793942767349968,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "en-2",
+      "epoch_end": 1792271556.1524613,
+      "gb_s": 28.948406388862004,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "en-3",
+      "epoch_end": 1792271563.160767,
+      "gb_s": 32.41167423666527,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "en-3",
+      "epoch_end": 1792271564.1620054,
+      "gb_s": 30.077321423947804,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "en-3",
+      "epoch_end": 1792271565.1632993,
+      "gb_s": 32.06074977494536,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "en-3",
+      "epoch_end": 1792271566.1645665,
+      "gb_s": 31.883716680293006,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "en-3",
+      "epoch_end": 1792271567.1658685,
+      "gb_s": 29.475570493299053,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "en-4",
+      "epoch_end": 1792271574.1747973,
+      "gb_s": 34.12800183430924,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "en-4",
+      "epoch_end": 1792271575.1760716,
+      "gb_s": 35.08494892968594,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "en-4",
+      "epoch_end": 1792271576.1773376,
+      "gb_s": 32.81363977935741,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "en-4",
+      "epoch_end": 1792271577.178292,
+      "gb_s": 32.85995275196294,
+      "counter_run_pct": 100.0
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "prompt": "en-4",
+      "epoch_end": 1792271578.179605,
+      "gb_s": 32.39616098144999,
+      "counter_run_pct": 100.0
+    }
+  ],
+  "caveats": [
+    "Only full one-second samples inside request boundaries; 1-second timestamp accuracy.",
+    "Whole-system traffic including reads and writes; not isolated kernel peak.",
+    "Four channels sampled concurrently without multiplexing."
+  ]
+}

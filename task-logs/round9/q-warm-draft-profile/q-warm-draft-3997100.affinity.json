@@ -1,0 +1,548 @@
+[
+  {
+    "tid": 3997100,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997102,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997103,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997104,
+    "status": [
+      "Name:\tcuda00001400006",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997115,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997116,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997117,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997118,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997119,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997120,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997121,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997122,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997123,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997124,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997125,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997126,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997127,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997128,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997129,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997130,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997131,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997132,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997133,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997134,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997135,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997136,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997137,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997138,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997139,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997140,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997141,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997142,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997143,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997144,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997145,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997146,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997147,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997148,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997149,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997150,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997151,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997152,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997153,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997154,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997155,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997156,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997157,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997158,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997159,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997160,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997161,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997162,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997163,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997164,
+    "status": [
+      "Name:\tcuda-EvtHandlr",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  },
+  {
+    "tid": 3997594,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t1,25"
+    ]
+  },
+  {
+    "tid": 3997595,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t2,26"
+    ]
+  },
+  {
+    "tid": 3997596,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t3,27"
+    ]
+  },
+  {
+    "tid": 3997597,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t4,28"
+    ]
+  },
+  {
+    "tid": 3997598,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t5,29"
+    ]
+  },
+  {
+    "tid": 3997599,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t6,30"
+    ]
+  },
+  {
+    "tid": 3997600,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t7,31"
+    ]
+  },
+  {
+    "tid": 3997601,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t8,32"
+    ]
+  },
+  {
+    "tid": 3997602,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t9,33"
+    ]
+  },
+  {
+    "tid": 3997603,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t10,34"
+    ]
+  },
+  {
+    "tid": 3997604,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t11,35"
+    ]
+  },
+  {
+    "tid": 3997605,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t12,36"
+    ]
+  },
+  {
+    "tid": 3997606,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t13,37"
+    ]
+  },
+  {
+    "tid": 3997607,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t14,38"
+    ]
+  },
+  {
+    "tid": 3997608,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t15,39"
+    ]
+  },
+  {
+    "tid": 3997609,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t16,40"
+    ]
+  },
+  {
+    "tid": 3997610,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t17,41"
+    ]
+  },
+  {
+    "tid": 3997611,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t18,42"
+    ]
+  },
+  {
+    "tid": 3997612,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t19,43"
+    ]
+  },
+  {
+    "tid": 3997613,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t20,44"
+    ]
+  },
+  {
+    "tid": 3997614,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t21,45"
+    ]
+  },
+  {
+    "tid": 3997615,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t22,46"
+    ]
+  },
+  {
+    "tid": 3997616,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t23,47"
+    ]
+  },
+  {
+    "tid": 3997673,
+    "status": [
+      "Name:\tllama-server",
+      "Cpus_allowed_list:\t0,24"
+    ]
+  }
+]
