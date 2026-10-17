@@ -46,7 +46,8 @@ def main():
     # libggml-base still links libgomp, whose binding can narrow inherited masks.
     # Use the same explicit physical-core placement as the OpenMP comparison.
     base = extra['qwen-cpu-t24-physical']
-    extra['qwen-cpu-native-pool'] = dict(cmd=base['cmd'], env={**base['env'],
+    cmd = base['cmd'] + ['--poll', '1', '--poll-batch', '1', '--poll-draft', '1', '--poll-batch-draft', '1']
+    extra['qwen-cpu-native-pool'] = dict(cmd=cmd, env={**base['env'],
         'LD_PRELOAD': str(library), 'LD_LIBRARY_PATH': str(ROOT / 'build-cuda/bin')})
     path.write_text(json.dumps(extra, indent=2) + '\n')
     print(json.dumps(result), flush=True)

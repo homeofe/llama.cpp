@@ -1,0 +1,214 @@
+{
+  "summary": [
+    {
+      "config": "ling-cache-mtp3",
+      "category": "code",
+      "n": 4,
+      "median": 50.66587216497453,
+      "minimum": 48.64051645040926,
+      "maximum": 51.23001113757518,
+      "acceptance": 0.6787878787878788,
+      "vram_mib": 9938,
+      "ttft": 1.1697195768356323,
+      "cpu_s_per_token": 0.5431797919762259,
+      "median_engine_busy_cores": 19.783258015204765
+    },
+    {
+      "config": "ling-cache-mtp3",
+      "category": "english",
+      "n": 4,
+      "median": 47.451881113530845,
+      "minimum": 41.72497871613478,
+      "maximum": 49.27097264317972,
+      "acceptance": 0.530161427357689,
+      "vram_mib": 9940,
+      "ttft": 0.8702257871627808,
+      "cpu_s_per_token": 0.5071386718750001,
+      "median_engine_busy_cores": 20.317160907101183
+    },
+    {
+      "config": "ling-dspark-off",
+      "category": "code",
+      "n": 4,
+      "median": 64.09445905017648,
+      "minimum": 50.60243982766473,
+      "maximum": 67.2497084615813,
+      "acceptance": 0.8187221396731055,
+      "vram_mib": 5860,
+      "ttft": 0.9159121513366699,
+      "cpu_s_per_token": 0.4784969325153374,
+      "median_engine_busy_cores": 20.978393163204878
+    },
+    {
+      "config": "ling-dspark-off",
+      "category": "english",
+      "n": 4,
+      "median": 32.71393748860291,
+      "minimum": 25.483140667191176,
+      "maximum": 35.25022610062581,
+      "acceptance": 0.3344308560677328,
+      "vram_mib": 5862,
+      "ttft": 0.6108311414718628,
+      "cpu_s_per_token": 0.7537109375,
+      "median_engine_busy_cores": 21.820034188327398
+    },
+    {
+      "config": "ling-dspark-cache",
+      "category": "code",
+      "n": 4,
+      "median": 76.45831578263025,
+      "minimum": 56.21481192491328,
+      "maximum": 82.14648837494323,
+      "acceptance": 0.7828492392807745,
+      "vram_mib": 10474,
+      "ttft": 1.1634807586669922,
+      "cpu_s_per_token": 0.39793462109955424,
+      "median_engine_busy_cores": 18.286404328580232
+    },
+    {
+      "config": "ling-dspark-cache",
+      "category": "english",
+      "n": 4,
+      "median": 41.14130894899278,
+      "minimum": 35.11571929409607,
+      "maximum": 44.515042335899125,
+      "acceptance": 0.3286908077994429,
+      "vram_mib": 10476,
+      "ttft": 0.8743641376495361,
+      "cpu_s_per_token": 0.534873046875,
+      "median_engine_busy_cores": 18.988154853120925
+    }
+  ],
+  "output_comparisons": [
+    {
+      "control": "ling-cache-mtp3",
+      "candidate": "ling-dspark-off",
+      "requests": 8,
+      "same_hash": 3,
+      "same_work": 0,
+      "pairs": [
+        {
+          "round": 1,
+          "prompt": "code-bugfix",
+          "same_hash": true,
+          "same_work": false,
+          "gain_percent": 31.27014218479509
+        },
+        {
+          "round": 1,
+          "prompt": "code-duration",
+          "same_hash": false,
+          "same_work": false,
+          "gain_percent": 4.033516747824262
+        },
+        {
+          "round": 1,
+          "prompt": "code-intervals",
+          "same_hash": true,
+          "same_work": false,
+          "gain_percent": 25.371428347287516
+        },
+        {
+          "round": 1,
+          "prompt": "code-roman",
+          "same_hash": true,
+          "same_work": false,
+          "gain_percent": 27.620889863966024
+        },
+        {
+          "round": 1,
+          "prompt": "en-1",
+          "same_hash": false,
+          "same_work": false,
+          "gain_percent": -27.978698801403844
+        },
+        {
+          "round": 1,
+          "prompt": "en-2",
+          "same_hash": false,
+          "same_work": false,
+          "gain_percent": -38.92593489247962
+        },
+        {
+          "round": 1,
+          "prompt": "en-3",
+          "same_hash": false,
+          "same_work": false,
+          "gain_percent": -30.38476846824476
+        },
+        {
+          "round": 1,
+          "prompt": "en-4",
+          "same_hash": false,
+          "same_work": false,
+          "gain_percent": -32.271436907971044
+        }
+      ]
+    },
+    {
+      "control": "ling-cache-mtp3",
+      "candidate": "ling-dspark-cache",
+      "requests": 8,
+      "same_hash": 4,
+      "same_work": 0,
+      "pairs": [
+        {
+          "round": 1,
+          "prompt": "code-bugfix",
+          "same_hash": true,
+          "same_work": false,
+          "gain_percent": 60.348371102914
+        },
+        {
+          "round": 1,
+          "prompt": "code-duration",
+          "same_hash": true,
+          "same_work": false,
+          "gain_percent": 15.571988184431152
+        },
+        {
+          "round": 1,
+          "prompt": "code-intervals",
+          "same_hash": true,
+          "same_work": false,
+          "gain_percent": 49.40664828775563
+        },
+        {
+          "round": 1,
+          "prompt": "code-roman",
+          "same_hash": true,
+          "same_work": false,
+          "gain_percent": 52.38591180800947
+        },
+        {
+          "round": 1,
+          "prompt": "en-1",
+          "same_hash": false,
+          "same_work": false,
+          "gain_percent": -17.111550479116577
+        },
+        {
+          "round": 1,
+          "prompt": "en-2",
+          "same_hash": false,
+          "same_work": false,
+          "gain_percent": -15.840054627716215
+        },
+        {
+          "round": 1,
+          "prompt": "en-3",
+          "same_hash": false,
+          "same_work": false,
+          "gain_percent": -9.65260081574405
+        },
+        {
+          "round": 1,
+          "prompt": "en-4",
+          "same_hash": false,
+          "same_work": false,
+          "gain_percent": -9.238633297616106
+        }
+      ]
+    }
+  ]
+}

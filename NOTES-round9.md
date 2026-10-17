@@ -113,3 +113,23 @@ DSpark's actual fit leaves room for a 4608 MiB target cache (1540 slots): 10440 
 For the later CPU experiment, the wrapper additionally samples the owned server's aggregate `/proc/PID/stat` user+system ticks before and after each request. `engine_cpu_s_per_token` includes prompt work and waiting spins across all threads; it is CPU resource cost, not energy in joules or decoded-token latency. Thread affinity is archived after the uncounted warmup. The original benchmark harness and its acceptance gates remain unchanged.
 
 Native-pool comparison detail: `libggml-base` still links libgomp, so `OMP_PROC_BIND=close` can narrow inherited masks even when only `libggml-cpu` is rebuilt without OpenMP. The native candidate therefore uses the same explicit 24-physical-core masks as the OpenMP physical-core variant. The parity probe also uses explicit physical masks. This avoids accidentally benchmarking all native workers on one inherited core pair. The untouched OpenMP variant with those masks is the appropriate control for isolating the threadpool difference.
+
+Task 3 finished at 22:06 UTC: 24 accepted requests, all first-attempt foreign-CPU gates passed. One screening round, four requests per category, same compaction setting. The new drafter changes verification width and numerical execution, so output differences are disclosed rather than treated as identical-work kernel gains. Full output hashes, draft counts, CPU ticks and server logs are in `task-logs/round9/dspark-results/`; per-request observed mean lengths are in `dspark-lengths.json`.
+
+| Ling configuration | Code tok/s | English tok/s | Code / English acceptance | Median accepted length incl. bonus (code / English) | Peak VRAM MiB |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| MTP3, 5120 MiB cache | 50.6659 | 47.4519 | 67.88% / 53.02% | 3.045 / 2.665 | 9940 |
+| DSpark7, cache off | 64.0945 | 32.7139 | 81.87% / 33.44% | 7.135 / 3.510 | 5862 |
+| DSpark7, 4608 MiB cache | 76.4582 | 41.1410 | 78.28% / 32.87% | 7.135 / 3.425 | 10476 |
+
+DSpark with cache improves the code median by about 50.9%, but loses about 13.3% on English. Its CPU cost per generated token, including prompt work, is 0.3979 CPU-seconds for code versus MTP's 0.5432; English rises from 0.5071 to 0.5349. This is a promising code-specific profile, not a universal replacement. The vendor's math acceptance length cannot be substituted for actual English behavior. The general-purpose default remains MTP3 pending any bounded confidence/shorter-window follow-up. These Ling results must not be presented as beating Strata's Qwen result: they are different models.
+
+## Task 4: four-token CPU-miss multiplicity
+
+The six real-trace replays finished after the drafter comparison, using the production cache policy, actual slot layouts and all missed experts including uncached groups. The selected round-7 policy gives Qwen decode means IQ4_NL 1.2664, IQ3_XXS 1.2441, IQ2_S 1.2686 and IQ3_S 1.3316; all expert triplets together are 1.2743. Every relevant IQ type fails the handoff's approximately 1.6 gate. Byte/decay64 is slightly lower. Therefore no new Qwen multi-token IQ kernel family is built. This is an evidence-based stop, not an untested implementation omission. Full per-type integer histograms and byte-weighted means are in `multiplicity.json`.
+
+Qwen benchmark prefill means are higher (about 1.92-2.02 for these types), but do not describe the generation bottleneck. The long German trace is overwhelmingly perplexity prefill; it cannot establish generated-token reuse. Keep those phases separate. Existing CPU graph timing and the large OpenMP spin fraction still justify task 5.
+
+## Task 5: CPU screen
+
+The bounded screen compares the unchanged round-7 Qwen configuration, a shorter OpenMP spin count, 16 physical cores spread across all eight CCX groups, all 24 physical cores, all 48 SMT threads, and the existing native ggml threadpool. Both target and draft batch threads are set explicitly: four-token verification uses `-tb`, so changing only `-t` would not test the intended work. Native polling is explicitly 1 for target/draft and their batch pools; its CPU library and wait policy form one candidate, not an isolated compiler-flag comparison. The native variant is admitted only after full-vocabulary cache-off logits are bit-identical and mapped-library inspection proves that only `libggml-cpu` was replaced.

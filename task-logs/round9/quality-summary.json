@@ -25,6 +25,14 @@
       "within_half_percent": true
     },
     {
+      "name": "ling-slots-4608-dspark-ppl",
+      "ppl": 4.542,
+      "stderr": 0.20838,
+      "log": "/opt/llm-gateway/data/build/llama-l5/task-logs/round9/ling-slots-4608-dspark-ppl/attempt-1.log",
+      "relative_percent": -0.30509888276740726,
+      "within_half_percent": true
+    },
+    {
       "name": "ling-slots-6144-compaction0-ppl",
       "ppl": 4.5513,
       "stderr": 0.20908,
