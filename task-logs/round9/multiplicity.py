@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import re
 import subprocess
+from typing import TypedDict
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'task-logs/round9'
@@ -12,9 +13,22 @@ TRACES = Path('/opt/llm-gateway/data/moe-quant/traces')
 PROFILE = '/opt/llm-gateway/data/build/llama-codex2/task-logs/round4-hitmiss/qwen-routes-r1-2048mib.profile'
 
 
+class Result(TypedDict, total=False):
+    trace: str
+    policy: str
+    phase: str
+    quant: str
+    histogram: dict[int, int]
+    unique_matrices: int
+    mean: float
+    distinct_weight_bytes: int
+    routed_weight_bytes: int
+    byte_weighted_mean: float
+
+
 def main():
     inventory = json.loads((ROOT / 'task-logs/round8/model-inventory.json').read_text())
-    results = []
+    results: list[Result] = []
     for trace, model in [('qwen38-bench8', 'qwen38'), ('ling-bench8', 'ling'), ('qwen38-long-de', 'qwen38')]:
         source = TRACES / f'{trace}.jsonl'
         with source.open() as stream:
@@ -28,9 +42,9 @@ def main():
                    '128' if policy == 'r7' else '64', PROFILE if warm else '-', str(target)]
             result = subprocess.check_output(cmd, env=env, text=True)
             (OUT / f'multiplicity-{trace}-{policy}.log').write_text(result)
-            histograms = collections.defaultdict(collections.Counter)
-            weights = collections.defaultdict(collections.Counter)
-            triplets = collections.defaultdict(collections.Counter)
+            histograms: dict[tuple[str, str], collections.Counter[int]] = collections.defaultdict(collections.Counter)
+            weights: dict[tuple[str, str], collections.Counter[int]] = collections.defaultdict(collections.Counter)
+            triplets: dict[str, collections.Counter[int]] = collections.defaultdict(collections.Counter)
             for line in result.splitlines():
                 if not line.startswith('miss_histogram '):
                     continue

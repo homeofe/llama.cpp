@@ -22,14 +22,18 @@ def main():
     parser.add_argument('model', choices=['qwen', 'ling'])
     parser.add_argument('policy', choices=['off', 'off-knobs', 'r7', 'policy', 'slots'])
     parser.add_argument('--probe', action='store_true')
+    parser.add_argument('--budget-mib', type=int)
     args = parser.parse_args()
-    name = f'{args.model}-{args.policy}-' + ('probe' if args.probe else 'ppl')
+    if args.budget_mib is not None and args.budget_mib <= 0:
+        parser.error('--budget-mib must be positive')
+    budget_tag = f'-{args.budget_mib}' if args.budget_mib is not None else ''
+    name = f'{args.model}-{args.policy}{budget_tag}-' + ('probe' if args.probe else 'ppl')
     out = ROOT / 'task-logs/round9' / name
     out.mkdir(exist_ok=True)
     cfg = stage.CONFIGS['q-warm-draft' if args.model == 'qwen' else 'ling-cache-mtp3']
     env = {k: v for k, v in os.environ.items() if not k.startswith('GGML_MOE_')}
     env.update(cfg['env'])
-    if args.policy in ['policy', 'off-knobs', 'slots']:
+    if args.policy in ['policy', 'off-knobs']:
         env.update(GGML_MOE_HYBRID_BYTE_VALUE='1', GGML_MOE_HYBRID_DECAY='64')
     if args.policy == 'off-knobs':
         env.update(GGML_MOE_HYBRID_LAYER_SOFT_PCT='100', GGML_MOE_HYBRID_ADMIT_PREFILL='512')
@@ -37,6 +41,8 @@ def main():
         env['GGML_MOE_HYBRID'] = '0'
     if args.policy == 'slots':
         env['GGML_MOE_HYBRID_MIB'] = '2944' if args.model == 'qwen' else '5376'
+    if args.budget_mib is not None:
+        env['GGML_MOE_HYBRID_MIB'] = str(args.budget_mib)
     model = cfg['cmd'][cfg['cmd'].index('-m') + 1]
     placement = ['-ncmoe', '48'] if args.model == 'qwen' else ['-cmoe']
     flags = ['-m', model, '-c', '512', '-b', '512', '-ub', '4', '-lm', 'none', '-fa', 'on', '-ngl', '99', '-t', '24'] + placement
@@ -63,6 +69,10 @@ def main():
                 own = stage.proc_jiffies([pid])
                 t0 = last = time.monotonic()
                 foreign_ticks = 0
+                evaluation_ticks = 0
+                evaluation_s = 0.0
+                evaluation_started = False
+                evaluation_finished = False
                 peak_vram = 0
                 while run.child.poll() is None:
                     time.sleep(1)
@@ -70,8 +80,19 @@ def main():
                     busy_next = stage.busy_jiffies()
                     own_next = stage.proc_jiffies([pid])
                     if own_next >= own:
-                        foreign_ticks += max(0, busy_next - busy - own_next + own)
+                        interval_foreign = max(0, busy_next - busy - own_next + own)
+                        foreign_ticks += interval_foreign
+                        if evaluation_started and not evaluation_finished:
+                            evaluation_ticks += interval_foreign
+                            evaluation_s += now - last
                     busy, own = busy_next, own_next
+                    log = (out / f'attempt-{attempt}.log').read_text()
+                    ready = 'llama threadpool init' if args.probe else 'calculating perplexity over'
+                    done = 'TOPIC agent' if args.probe else 'Final estimate: PPL ='
+                    if ready in log:
+                        evaluation_started = True
+                    if done in log:
+                        evaluation_finished = True
                     run.check_gpu()
                     peak_vram = max(peak_vram, sum(run.gpu_apps().values()))
                     run.renew()
@@ -79,11 +100,13 @@ def main():
                         raise TimeoutError('quality deadline')
                     last = now
                 code = run.child.returncode
-                foreign = foreign_ticks / stage.HZ / (last - t0)
+                total_foreign = foreign_ticks / stage.HZ / (last - t0)
+                foreign = evaluation_ticks / stage.HZ / evaluation_s if evaluation_s > 0 else None
         finally:
             run.stop()
-        accepted = code == 0 and foreign < 1.0
+        accepted = code == 0 and foreign is not None and foreign < 1.0
         run.event(kind='quality', name=name, attempt=attempt, exit=code, foreign_cores=foreign,
+                  whole_process_foreign_cores=total_foreign, evaluation_wall_s=evaluation_s,
                   wall_s=last - t0, peak_vram_mib=peak_vram, accepted=accepted)
         if code:
             return code

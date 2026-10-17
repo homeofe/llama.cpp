@@ -62,7 +62,7 @@ if __name__ == '__main__':
     for key in list(os.environ):
         if key.startswith('GGML_MOE_HYBRID') or key == 'LLAMA_ARG_SPEC_DRAFT_N_UBATCH':
             del os.environ[key]
-    stage.Run = Run
+    setattr(stage, 'Run', Run)
     extra = Path(__file__).with_name('extra-configs.json')
     if extra.exists():
         stage.CONFIGS.update(json.loads(extra.read_text()))

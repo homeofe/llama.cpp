@@ -1,0 +1,290 @@
+[
+  {
+    "cpu": 0,
+    "siblings": "0,24",
+    "l3_shared": "0-2,24-26",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 1,
+    "siblings": "1,25",
+    "l3_shared": "0-2,24-26",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 2,
+    "siblings": "2,26",
+    "l3_shared": "0-2,24-26",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 3,
+    "siblings": "3,27",
+    "l3_shared": "3-5,27-29",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 4,
+    "siblings": "4,28",
+    "l3_shared": "3-5,27-29",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 5,
+    "siblings": "5,29",
+    "l3_shared": "3-5,27-29",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 6,
+    "siblings": "6,30",
+    "l3_shared": "6-8,30-32",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 7,
+    "siblings": "7,31",
+    "l3_shared": "6-8,30-32",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 8,
+    "siblings": "8,32",
+    "l3_shared": "6-8,30-32",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 9,
+    "siblings": "9,33",
+    "l3_shared": "9-11,33-35",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 10,
+    "siblings": "10,34",
+    "l3_shared": "9-11,33-35",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 11,
+    "siblings": "11,35",
+    "l3_shared": "9-11,33-35",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 12,
+    "siblings": "12,36",
+    "l3_shared": "12-14,36-38",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 13,
+    "siblings": "13,37",
+    "l3_shared": "12-14,36-38",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 14,
+    "siblings": "14,38",
+    "l3_shared": "12-14,36-38",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 15,
+    "siblings": "15,39",
+    "l3_shared": "15-17,39-41",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 16,
+    "siblings": "16,40",
+    "l3_shared": "15-17,39-41",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 17,
+    "siblings": "17,41",
+    "l3_shared": "15-17,39-41",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 18,
+    "siblings": "18,42",
+    "l3_shared": "18-20,42-44",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 19,
+    "siblings": "19,43",
+    "l3_shared": "18-20,42-44",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 20,
+    "siblings": "20,44",
+    "l3_shared": "18-20,42-44",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 21,
+    "siblings": "21,45",
+    "l3_shared": "21-23,45-47",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 22,
+    "siblings": "22,46",
+    "l3_shared": "21-23,45-47",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 23,
+    "siblings": "23,47",
+    "l3_shared": "21-23,45-47",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 24,
+    "siblings": "0,24",
+    "l3_shared": "0-2,24-26",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 25,
+    "siblings": "1,25",
+    "l3_shared": "0-2,24-26",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 26,
+    "siblings": "2,26",
+    "l3_shared": "0-2,24-26",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 27,
+    "siblings": "3,27",
+    "l3_shared": "3-5,27-29",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 28,
+    "siblings": "4,28",
+    "l3_shared": "3-5,27-29",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 29,
+    "siblings": "5,29",
+    "l3_shared": "3-5,27-29",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 30,
+    "siblings": "6,30",
+    "l3_shared": "6-8,30-32",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 31,
+    "siblings": "7,31",
+    "l3_shared": "6-8,30-32",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 32,
+    "siblings": "8,32",
+    "l3_shared": "6-8,30-32",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 33,
+    "siblings": "9,33",
+    "l3_shared": "9-11,33-35",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 34,
+    "siblings": "10,34",
+    "l3_shared": "9-11,33-35",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 35,
+    "siblings": "11,35",
+    "l3_shared": "9-11,33-35",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 36,
+    "siblings": "12,36",
+    "l3_shared": "12-14,36-38",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 37,
+    "siblings": "13,37",
+    "l3_shared": "12-14,36-38",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 38,
+    "siblings": "14,38",
+    "l3_shared": "12-14,36-38",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 39,
+    "siblings": "15,39",
+    "l3_shared": "15-17,39-41",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 40,
+    "siblings": "16,40",
+    "l3_shared": "15-17,39-41",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 41,
+    "siblings": "17,41",
+    "l3_shared": "15-17,39-41",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 42,
+    "siblings": "18,42",
+    "l3_shared": "18-20,42-44",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 43,
+    "siblings": "19,43",
+    "l3_shared": "18-20,42-44",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 44,
+    "siblings": "20,44",
+    "l3_shared": "18-20,42-44",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 45,
+    "siblings": "21,45",
+    "l3_shared": "21-23,45-47",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 46,
+    "siblings": "22,46",
+    "l3_shared": "21-23,45-47",
+    "l3_bytes": "16384K"
+  },
+  {
+    "cpu": 47,
+    "siblings": "23,47",
+    "l3_shared": "21-23,45-47",
+    "l3_bytes": "16384K"
+  }
+]

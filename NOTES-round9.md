@@ -36,3 +36,15 @@ The three interleaved rounds finished at 19:55 UTC: 96 accepted requests, 12 obs
 Only 9/24 output hashes match the control for either candidate. These are end-to-end observations with changed numerical/cache paths, not equal-work kernel comparisons. The policy is not a universal speed win; the conservative default remains decay 128 and byte ranking off pending all quality and subsequent slot experiments.
 
 The replay metric checker passes against the new binary (exit 0) and fails against the pre-histogram binary (exit 1, missing histogram), as intended. The synthetic trace covers cache hits, misses, a dropped group and expert multiplicities 1, 2 and 4. Quality runs started after GPU release and the CPU-only checker/probe builds.
+
+Qwen quality: cache-off 3.8093, round 7 3.8025 (-0.1785%), byte/decay64 3.8117 (+0.0630%). Both pass the owner's +0.5% limit. The two disabled-cache probe runs are byte-identical over four topics, 128 positions and 127139840 bytes of full-vocabulary F32 logits (SHA256 `b7facadb625ef4a18eb43b74959a4daa766b477a0dd2bb0bdeec6f0b984fd5a0`). These use the unchanged production CUDA libraries; the new C++ instrumentation is confined to the replay test executable.
+
+Quality scheduling initially counted the entire model load, inference and teardown as foreign-process observation. Ling's first probe was discarded at 2.59 foreign cores; the second passed at 0.60. Subsequent quality jobs gate the actual evaluation phase (after model/threadpool readiness), retaining whole-process CPU figures separately. This avoids confusing loading/teardown activity with inference load. Quality-job elapsed times are not throughput benchmarks. The required end-to-end harness remains unchanged.
+
+## Hardware audit requested during the run
+
+MSI Creator TRX40 (MS-7C59), BIOS 1.98 dated 2026-06-15; Threadripper 3960X, 24 physical cores plus SMT, eight 16 MiB L3 groups, one NUMA node. DMI reports eight dual-rank 16 GiB DIMMs, two in each of channels A/B/C/D, all configured at 3200 MT/s. Thus all four memory channels are populated; there is no missing-channel explanation for the performance gap. This is firmware-reported configuration, not a measured DRAM bandwidth result.
+
+The RTX 2080 Ti has a full x16 link, with device capability 8 GT/s (PCIe 3.0). Initial idle samples show Gen1 and low clocks, which is expected power management; an active decode sample is still needed. CPU governor is `schedutil`, boost is enabled. Transparent hugepages are `madvise`; the snapshot reports no hugepage use. No system, firmware, governor or memory settings were changed.
+
+The actual compiler command uses `-O3 -march=native -fopenmp`; disassembly confirms AVX2 instructions in the IQ3 kernel. The separate CMake AVX2/FMA booleans being OFF does not disable those instructions when native compilation is enabled. CUDA is built with `-O3` and `sm_75`; CUDA Graphs and Flash Attention are enabled. Merely enabling these basic features is therefore not an unexplored source of a large gain. Exact compiler flags, topology and hardware facts are archived in `task-logs/round9/hardware.json` and `cpu-topology.json`.
