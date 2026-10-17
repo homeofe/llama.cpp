@@ -48,6 +48,9 @@ def main():
     command(['python3', '-S', 'task-logs/round9/summarize.py',
              '--control', 'qwen-cpu-control',
              '/opt/llm-gateway/data/moe-quant/qwen38/round9-cpu-screen/runs.jsonl'], 'cpu-screen-summary.log')
+    rows = Path('/opt/llm-gateway/data/moe-quant/qwen38/round9-cpu-screen/runs.jsonl').read_text().splitlines()
+    if json.loads(rows[-1])['kind'] != 'all_complete':
+        raise RuntimeError('screen stopped early; inspect completed variants and the stop record')
     (OUT / 'cpu-screen-complete.txt').write_text(time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime()) + '\n')
 
 

@@ -1,0 +1,20 @@
+{
+  "complete_openmp_variants": {
+    "qwen-cpu-control": 8,
+    "qwen-cpu-spin1000": 8,
+    "qwen-cpu-t16-spread": 8,
+    "qwen-cpu-t24-physical": 8,
+    "qwen-cpu-t48-smt": 8
+  },
+  "native_accepted_requests": 5,
+  "native_status": "aborted for catastrophic regression; remaining prompts intentionally not measured",
+  "stop": {
+    "kind": "stop",
+    "reason": "SIGTERM",
+    "epoch": 1792276800.6,
+    "utc": "2026-10-17 22:40:00"
+  },
+  "native_cause": "Draft context has no attached persistent CPU threadpool; native fallback creates disposable workers that inherit the calling thread affinity.",
+  "confidence_followup": "Skipped after its 22:31 UTC start deadline; no confidence-filter results exist.",
+  "chosen_cpu_default": "Original 24-thread OpenMP configuration"
+}

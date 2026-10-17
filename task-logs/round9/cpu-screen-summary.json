@@ -1,0 +1,466 @@
+{
+  "summary": [
+    {
+      "config": "qwen-cpu-control",
+      "category": "code",
+      "n": 4,
+      "median": 46.972293884605065,
+      "minimum": 43.8950784106999,
+      "maximum": 48.403382166442896,
+      "acceptance": 0.9194395796847635,
+      "vram_mib": 10694,
+      "ttft": 1.458528757095337,
+      "cpu_s_per_token": 0.6483310152990264,
+      "median_engine_busy_cores": 21.372633049584394
+    },
+    {
+      "config": "qwen-cpu-control",
+      "category": "english",
+      "n": 4,
+      "median": 39.87873308613936,
+      "minimum": 38.138176586924274,
+      "maximum": 40.27809366359024,
+      "acceptance": 0.6956521739130435,
+      "vram_mib": 10696,
+      "ttft": 0.9351146221160889,
+      "cpu_s_per_token": 0.6284375,
+      "median_engine_busy_cores": 21.748028078037528
+    },
+    {
+      "config": "qwen-cpu-spin1000",
+      "category": "code",
+      "n": 4,
+      "median": 39.787571670923114,
+      "minimum": 36.54969169865494,
+      "maximum": 40.71803995703455,
+      "acceptance": 0.9194395796847635,
+      "vram_mib": 10694,
+      "ttft": 1.5601192712783813,
+      "cpu_s_per_token": 0.4377051460361613,
+      "median_engine_busy_cores": 12.419029312805222
+    },
+    {
+      "config": "qwen-cpu-spin1000",
+      "category": "english",
+      "n": 4,
+      "median": 33.992671536268205,
+      "minimum": 32.222457214274066,
+      "maximum": 34.23442378118623,
+      "acceptance": 0.6956521739130435,
+      "vram_mib": 10696,
+      "ttft": 1.0619035959243774,
+      "cpu_s_per_token": 0.388896484375,
+      "median_engine_busy_cores": 11.516132211381827
+    },
+    {
+      "config": "qwen-cpu-t16-spread",
+      "category": "code",
+      "n": 4,
+      "median": 44.544169084676255,
+      "minimum": 41.49426139729775,
+      "maximum": 46.45756098153573,
+      "acceptance": 0.9194395796847635,
+      "vram_mib": 10694,
+      "ttft": 1.6269679069519043,
+      "cpu_s_per_token": 0.4713769123783032,
+      "median_engine_busy_cores": 14.457223159269429
+    },
+    {
+      "config": "qwen-cpu-t16-spread",
+      "category": "english",
+      "n": 4,
+      "median": 37.60576378527032,
+      "minimum": 35.83313256614638,
+      "maximum": 38.48976264585335,
+      "acceptance": 0.6956521739130435,
+      "vram_mib": 10696,
+      "ttft": 1.0332655906677246,
+      "cpu_s_per_token": 0.450224609375,
+      "median_engine_busy_cores": 14.651796977197275
+    },
+    {
+      "config": "qwen-cpu-t24-physical",
+      "category": "code",
+      "n": 4,
+      "median": 47.012421058275365,
+      "minimum": 44.08696257865562,
+      "maximum": 49.04853207214972,
+      "acceptance": 0.9194395796847635,
+      "vram_mib": 10694,
+      "ttft": 1.4525165557861328,
+      "cpu_s_per_token": 0.648414464534075,
+      "median_engine_busy_cores": 21.447433431548667
+    },
+    {
+      "config": "qwen-cpu-t24-physical",
+      "category": "english",
+      "n": 4,
+      "median": 39.76471024582747,
+      "minimum": 38.11581732932142,
+      "maximum": 40.19083617500045,
+      "acceptance": 0.6956521739130435,
+      "vram_mib": 10696,
+      "ttft": 0.9269405603408813,
+      "cpu_s_per_token": 0.630126953125,
+      "median_engine_busy_cores": 21.816814505607574
+    },
+    {
+      "config": "qwen-cpu-t48-smt",
+      "category": "code",
+      "n": 4,
+      "median": 41.276060655002624,
+      "minimum": 37.972605156092904,
+      "maximum": 44.198834448756266,
+      "acceptance": 0.9194395796847635,
+      "vram_mib": 10694,
+      "ttft": 1.6687874794006348,
+      "cpu_s_per_token": 1.4405563282336578,
+      "median_engine_busy_cores": 42.13754823947323
+    },
+    {
+      "config": "qwen-cpu-t48-smt",
+      "category": "english",
+      "n": 4,
+      "median": 34.804899823669565,
+      "minimum": 33.39142840310739,
+      "maximum": 35.955404773307464,
+      "acceptance": 0.6956521739130435,
+      "vram_mib": 10696,
+      "ttft": 1.016890048980713,
+      "cpu_s_per_token": 1.4151464843750001,
+      "median_engine_busy_cores": 43.32021782402735
+    },
+    {
+      "config": "qwen-cpu-native-pool",
+      "category": "code",
+      "n": 4,
+      "median": 1.5432784662837844,
+      "minimum": 1.477136084968335,
+      "maximum": 1.6451710036541607,
+      "acceptance": 0.9194395796847635,
+      "vram_mib": 10694,
+      "ttft": 2.77976131439209,
+      "cpu_s_per_token": 1.2405841446453407,
+      "median_engine_busy_cores": 1.8355419214582998
+    },
+    {
+      "config": "qwen-cpu-native-pool",
+      "category": "english",
+      "n": 1,
+      "median": 1.2651306331345114,
+      "minimum": 1.2651306331345114,
+      "maximum": 1.2651306331345114,
+      "acceptance": 0.7090163934426229,
+      "vram_mib": 10696,
+      "ttft": 2.094311475753784,
+      "cpu_s_per_token": 1.337265625,
+      "median_engine_busy_cores": 1.680981342486168
+    }
+  ],
+  "output_comparisons": [
+    {
+      "control": "qwen-cpu-control",
+      "candidate": "qwen-cpu-spin1000",
+      "requests": 8,
+      "same_hash": 8,
+      "same_work": 8,
+      "pairs": [
+        {
+          "round": 1,
+          "prompt": "code-bugfix",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -15.877696692725006
+        },
+        {
+          "round": 1,
+          "prompt": "code-duration",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -16.73396421192961
+        },
+        {
+          "round": 1,
+          "prompt": "code-intervals",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -14.812561405292934
+        },
+        {
+          "round": 1,
+          "prompt": "code-roman",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -15.768686569250889
+        },
+        {
+          "round": 1,
+          "prompt": "en-1",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -14.924201853344465
+        },
+        {
+          "round": 1,
+          "prompt": "en-2",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -14.593237452402452
+        },
+        {
+          "round": 1,
+          "prompt": "en-3",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -15.004855822824714
+        },
+        {
+          "round": 1,
+          "prompt": "en-4",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -15.511280040269204
+        }
+      ]
+    },
+    {
+      "control": "qwen-cpu-control",
+      "candidate": "qwen-cpu-t16-spread",
+      "requests": 8,
+      "same_hash": 8,
+      "same_work": 8,
+      "pairs": [
+        {
+          "round": 1,
+          "prompt": "code-bugfix",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -4.020010788122496
+        },
+        {
+          "round": 1,
+          "prompt": "code-duration",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -5.4694446401009955
+        },
+        {
+          "round": 1,
+          "prompt": "code-intervals",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -5.395127086142992
+        },
+        {
+          "round": 1,
+          "prompt": "code-roman",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -4.948121898752255
+        },
+        {
+          "round": 1,
+          "prompt": "en-1",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -5.950276752171302
+        },
+        {
+          "round": 1,
+          "prompt": "en-2",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -5.445525493133074
+        },
+        {
+          "round": 1,
+          "prompt": "en-3",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -4.439959429742013
+        },
+        {
+          "round": 1,
+          "prompt": "en-4",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -6.043928229039086
+        }
+      ]
+    },
+    {
+      "control": "qwen-cpu-control",
+      "candidate": "qwen-cpu-t24-physical",
+      "requests": 8,
+      "same_hash": 8,
+      "same_work": 8,
+      "pairs": [
+        {
+          "round": 1,
+          "prompt": "code-bugfix",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": 1.3328612109963167
+        },
+        {
+          "round": 1,
+          "prompt": "code-duration",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": 0.4371427843467446
+        },
+        {
+          "round": 1,
+          "prompt": "code-intervals",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": 0.010964105410260494
+        },
+        {
+          "round": 1,
+          "prompt": "code-roman",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": 0.15833817328396727
+        },
+        {
+          "round": 1,
+          "prompt": "en-1",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": 0.06822180568069047
+        },
+        {
+          "round": 1,
+          "prompt": "en-2",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -0.02834883785307607
+        },
+        {
+          "round": 1,
+          "prompt": "en-3",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -0.8229757490189726
+        },
+        {
+          "round": 1,
+          "prompt": "en-4",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -0.05862697067304801
+        }
+      ]
+    },
+    {
+      "control": "qwen-cpu-control",
+      "candidate": "qwen-cpu-t48-smt",
+      "requests": 8,
+      "same_hash": 8,
+      "same_work": 8,
+      "pairs": [
+        {
+          "round": 1,
+          "prompt": "code-bugfix",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -8.68647505504596
+        },
+        {
+          "round": 1,
+          "prompt": "code-duration",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -13.492340073285602
+        },
+        {
+          "round": 1,
+          "prompt": "code-intervals",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -11.235532436247775
+        },
+        {
+          "round": 1,
+          "prompt": "code-roman",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -12.999474654817
+        },
+        {
+          "round": 1,
+          "prompt": "en-1",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -14.474804222542003
+        },
+        {
+          "round": 1,
+          "prompt": "en-2",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -10.946316345334672
+        },
+        {
+          "round": 1,
+          "prompt": "en-3",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -10.732108938388784
+        },
+        {
+          "round": 1,
+          "prompt": "en-4",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -12.446185446223756
+        }
+      ]
+    },
+    {
+      "control": "qwen-cpu-control",
+      "candidate": "qwen-cpu-native-pool",
+      "requests": 5,
+      "same_hash": 5,
+      "same_work": 5,
+      "pairs": [
+        {
+          "round": 1,
+          "prompt": "code-bugfix",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -96.60112386775582
+        },
+        {
+          "round": 1,
+          "prompt": "code-duration",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -96.63484805483735
+        },
+        {
+          "round": 1,
+          "prompt": "code-intervals",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -96.70208123345168
+        },
+        {
+          "round": 1,
+          "prompt": "code-roman",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -96.72664406336968
+        },
+        {
+          "round": 1,
+          "prompt": "en-1",
+          "same_hash": true,
+          "same_work": true,
+          "gain_percent": -96.85004381948109
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "start_epoch": 1792275009.5119066,
+  "command": [
+    "sudo",
+    "-n",
+    "perf",
+    "stat",
+    "-a",
+    "-I",
+    "1000",
+    "-x",
+    ",",
+    "-e",
+    "amd_df/dram_channel_data_controller_2/,amd_df/dram_channel_data_controller_3/,amd_df/dram_channel_data_controller_4/,amd_df/dram_channel_data_controller_5/",
+    "--",
+    "sleep",
+    "1500"
+  ],
+  "owned_process_group": 4030615,
+  "channels": [
+    2,
+    3,
+    4,
+    5
+  ],
+  "bytes_per_event": 64
+}

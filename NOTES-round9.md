@@ -120,7 +120,7 @@ Task 3 finished at 22:06 UTC: 24 accepted requests, all first-attempt foreign-CP
 | --- | ---: | ---: | ---: | ---: | ---: |
 | MTP3, 5120 MiB cache | 50.6659 | 47.4519 | 67.88% / 53.02% | 3.045 / 2.665 | 9940 |
 | DSpark7, cache off | 64.0945 | 32.7139 | 81.87% / 33.44% | 7.135 / 3.510 | 5862 |
-| DSpark7, 4608 MiB cache | 76.4582 | 41.1410 | 78.28% / 32.87% | 7.135 / 3.425 | 10476 |
+| DSpark7, 4608 MiB cache | 76.4583 | 41.1413 | 78.28% / 32.87% | 7.135 / 3.425 | 10476 |
 
 DSpark with cache improves the code median by about 50.9%, but loses about 13.3% on English. Its CPU cost per generated token, including prompt work, is 0.3979 CPU-seconds for code versus MTP's 0.5432; English rises from 0.5071 to 0.5349. This is a promising code-specific profile, not a universal replacement. The vendor's math acceptance length cannot be substituted for actual English behavior. The general-purpose default remains MTP3 pending any bounded confidence/shorter-window follow-up. These Ling results must not be presented as beating Strata's Qwen result: they are different models.
 
@@ -139,3 +139,51 @@ The graph-enabled Nsight check completed successfully at 22:08 UTC and records 1
 The DSpark-cache code gain is especially useful because all four generated code outputs have exactly the same text hashes as the MTP control. Their individual speed gains are +15.57%, +49.41%, +52.39% and +60.35%. Draft counts intentionally differ between these two algorithms; that does not invalidate an end-to-end drafter comparison with identical final code. All four English outputs differ and all four English rates decline.
 
 The native-pool correctness gate passes: 128 positions across four topics, 127139840 bytes of complete F32 vocabulary logits, SHA256 identical to the original disabled-cache run (`b7facadb625ef4a18eb43b74959a4daa766b477a0dd2bb0bdeec6f0b984fd5a0`). Mapped libraries show the new native CPU library and the original CUDA/base/llama libraries. Compiler command comparison finds only `-DGGML_USE_OPENMP` and `-fopenmp` removed from both CPU core and x86 quantizer sources. Evidence: `native-pool-proof.json`, `native-compile-comparison.json` and `qwen-off-nativepool-probe/`.
+
+The CPU screen completed all eight requests for each of the five OpenMP variants. Every output hash and draft count matches the control, so these comparisons use identical generated work. One screening round, four requests per category. The native variant was stopped after a catastrophic regression; its incomplete English category must not be presented as an eight-prompt result. Full records, flags and observed thread masks are in `cpu-results/`; `cpu-screen-outcome.json` records completion and the intentional stop.
+
+| Qwen CPU configuration | Code tok/s | English tok/s | CPU s/token code / English (includes prompt) | Request-phase DRAM GB/s |
+| --- | ---: | ---: | ---: | ---: |
+| qwen-cpu-control | 46.9723 | 39.8787 | 0.6483 / 0.6284 | 27.656 |
+| qwen-cpu-spin1000 | 39.7876 | 33.9927 | 0.4377 / 0.3889 | 24.279 |
+| qwen-cpu-t16-spread | 44.5442 | 37.6058 | 0.4714 / 0.4502 | 25.978 |
+| qwen-cpu-t24-physical | 47.0124 | 39.7647 | 0.6484 / 0.6301 | 27.585 |
+| qwen-cpu-t48-smt | 41.2761 | 34.8049 | 1.4406 / 1.4151 | 24.388 |
+
+The 48-thread variant really uses masks 0 through 47; it loses throughput and more than doubles CPU seconds per token. Sixteen physical cores and shorter spin waiting reduce CPU cost but also lose speed. Strict physical placement at 24 threads is essentially neutral. Retain the original 24-thread OpenMP setup. The DF intervals use all four controllers without multiplexing; they measure complete request phases, not isolated peak RAM bandwidth. No BIOS, governor, channel or PCIe configuration switch was found to explain the performance gap.
+
+### Native threadpool integration failure
+
+The isolated target-only native library passes bitwise correctness, but the server with MTP does not have equivalent threadpool integration. `common_speculative_init_result::impl` owns only the draft model and context (`common/speculative.cpp`); its constructor never attaches `common_threadpools`, unlike `common_init_result`. The CPU backend starts with a null threadpool, passes it through `ggml_graph_plan`, and `ggml_graph_compute` creates a disposable native pool when the pointer is null. The target's explicit native placement moves the caller to CPU 23. The draft fallback workers inherit this placement instead of the requested draft mask. The warmup thread snapshot shows the persistent target workers on CPUs 0-22, the caller on 23 and a transient extra worker on 23. This source/affinity evidence explains the observed approximately 1.7-2.2 busy cores and 1.3-1.6 tok/s despite correct output.
+
+Four code requests and one English request completed before SIGTERM stopped our benchmark at 22:40 UTC; the remaining native requests are deliberately incomplete. The command to stop it required sandbox escalation, and the stop occurred substantially later than the decision to reject the candidate. The already queued optional confidence screen reached its 22:31 start cutoff and skipped itself. No confidence-threshold or fixed-shorter-DSpark result is claimed. The driver originally stamped a generic completion marker even after the benchmark's graceful stop; that marker is preserved as `cpu-screen-stopped.txt`, and the driver now checks `all_complete` before issuing a success marker.
+
+A proper C++ follow-up is to give the speculative-init owner persistent draft threadpools with context-before-pool destruction, propagate the draft CPU parameters, and verify both external-draft and same-model MTP contexts. Test pool reuse/placement and teardown, use a mutation removing the attach call, recheck output hashes and 12-chunk PPL, and require at least 3% end-to-end gain before adoption. Merely disabling OpenMP is not a valid optimization of this server path. No production-source change or runtime installation was made for this unsuccessful experiment.
+
+## Final decisions and end-to-end table
+
+All five mandatory directions have a measured decision. Retain round-7 policy defaults and the original 24-thread OpenMP build for general use. More slots fit, but their gains are small and output/acceptance changes prevent a universal recommendation from the single screening rounds. Ling DSpark with 4608 MiB cache is a substantial code-specific candidate with identical code outputs and a passing target-cache PPL gate; keep MTP3 for English. The CPU multi-token rewrite is stopped by the predeclared multiplicity bound. The native-threadpool build is rejected in the current MTP integration.
+
+| Model / engine / configuration | Code tok/s | English tok/s | Evidence |
+| --- | ---: | ---: | --- |
+| Qwen, no cache | 40.1 | 32.8 | Historical handoff |
+| Qwen, round 7 | 47.0 | 39.8 | Historical handoff |
+| Qwen, round-7 settings, fresh CPU control | 46.97 | 39.88 | Round 9, one eight-prompt pass |
+| Qwen, target cache 3456 MiB, draft ubatch 32 | 48.37 | 40.12 | Round 9 screening pass; separate fresh 2944 control |
+| Qwen, Strata | 70.8 | 61.0 | Historical separate engine; not rerun or modified |
+| Ling, round 7 | 50.8 | 47.5 | Historical handoff |
+| Ling, MTP3 with 5120 MiB cache | 50.67 | 47.45 | Round 9 drafter control |
+| Ling, DSpark7 without cache | 64.09 | 32.71 | Round 9 screening pass |
+| Ling, DSpark7 with 4608 MiB cache | 76.46 | 41.14 | Round 9 screening pass; four identical code hashes |
+
+The new slot, drafter and CPU rows use compaction 0. Historical rows and the earlier three-round policy comparison must not be pooled as same-condition repetitions. Four prompts contribute to each category in each screening pass. The policy experiment has three interleaved rounds and twelve observations per category; it is reported separately above. No new default is justified by a single small or mixed gain.
+
+Exact engine arguments and environment are exported in `task-logs/round9/tested-engine-profiles.json`. This is a reviewable profile artifact, not an applied gateway configuration. For the Ling code candidate the decisive additions are the pinned Q8_0 DSpark model, `--spec-type draft-dspark --spec-draft-n-max 7 --spec-draft-p-min 0 --spec-draft-n-ubatch 32 -ngld 99`, with adaptive target cache 4608 MiB, decay 128, admit 32, prefill warming 1024. Its GGUF size and SHA256 are in `dspark-artifact.json`.
+
+Quality evidence is consolidated in `quality-summary.json`: Qwen cache-off 3.8093, retained R7 3.8025, byte/decay64 3.8117, 3456-MiB slots 3.8126; Ling cache-off 4.5559, R7 and byte/decay64 4.5498, 6144-MiB slots 4.5513, DSpark's 4608-MiB target-cache budget 4.5420. Every listed candidate passes the +0.5% limit. The intermediate Qwen 2944-MiB allocation is only a screening control, not separately quality-qualified for deployment. Cache-off logit parity passes for both models and for the isolated native CPU library.
+
+## Restoration and scope
+
+At 22:41:04 UTC the guard restored `vm.compaction_proactiveness` from 0 to its original 20. At 22:41:05 UTC restoration verified the temporary `amd_uncore` module unloaded, zero GPU compute processes, no gateway GPU hold, no loaded gateway model and no active request. All owned orchestration sessions have exited. Evidence: `compaction-restored.json` and `restoration.json`. No toolkit installation, BIOS change, governor change, permanent sysctl, live runtime change, gateway settings edit, push or PR occurred.
+
+The production `src/` and `ggml/` trees remain unchanged from the starting runtime source. The C++ source change is confined to replay instrumentation in `tests/test-moe-cache.cpp`, with the positive metric checker and old-binary negative cut archived. Python helper type checking and `git diff --check` pass. Native compilation changes only OpenMP build flags; that build remains a rejected worktree artifact. Small raw logs/configurations supporting the report are committed; large profiler captures, full logit dumps and model/build binaries remain local with their summaries or hashes. Pre-existing unrelated worktree files are preserved.

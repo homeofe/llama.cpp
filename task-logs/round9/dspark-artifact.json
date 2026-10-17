@@ -1,0 +1,8 @@
+{
+  "path": "/opt/llm-gateway/models/Ling-3.0-flash-GGUF/dspark/Ling-3.0-flash-DSpark-Q8_0.gguf",
+  "bytes": 1027972384,
+  "sha256": "2a82ca4259e9d4d117b54ad7d36716577d34cc599814cccedf3b1bd18a3b1160",
+  "draft_revision": "d60b0e1291dacb256194c6d48154398730cf8986",
+  "quant": "Q8_0",
+  "conversion": "existing LingDSparkModel converter; target tokenizer metadata"
+}
