@@ -12045,6 +12045,16 @@ static std::vector<std::unique_ptr<test_case>> make_test_cases_eval() {
 static std::vector<std::unique_ptr<test_case>> make_test_cases_perf() {
     std::vector<std::unique_ptr<test_case>> test_cases;
 
+    // Qwen3.8-Flash-Next dense GPU matrices, stored as BF16 (hyper-connection down/up 320 <-> 10240, router 2560 -> 512):
+    // one token and a verify window of four, against F16 and Q8_0 copies of the same shapes
+    for (ggml_type type : {GGML_TYPE_BF16, GGML_TYPE_F16, GGML_TYPE_Q8_0}) {
+        for (int n : {1, 4}) {
+            test_cases.emplace_back(new test_mul_mat(type, GGML_TYPE_F32, 320, n, 10240, {1, 1}, {1, 1}));     // hc_*_down
+            test_cases.emplace_back(new test_mul_mat(type, GGML_TYPE_F32, 10240, n, 320, {1, 1}, {1, 1}));     // hc_*_up
+            test_cases.emplace_back(new test_mul_mat(type, GGML_TYPE_F32, 512, n, 2560, {1, 1}, {1, 1}));      // ffn_gate_inp
+        }
+    }
+
     // Nemotron 3.5 Bolt up/down shapes; 16/64 experts increase token sharing in seven-token windows.
     for (ggml_type type : {GGML_TYPE_IQ2_XXS, GGML_TYPE_IQ2_XS, GGML_TYPE_Q2_K, GGML_TYPE_Q4_K, GGML_TYPE_Q4_0}) {
         for (int n_mats : {16, 64, 240, 496}) {
