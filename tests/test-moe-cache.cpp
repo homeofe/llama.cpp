@@ -708,6 +708,7 @@ struct replay_context {
     std::map<int, bool> in_prefill;
     std::map<int, size_t> prompt_of;
     std::vector<prompt_stats> prompts;
+    std::map<bool, std::map<int, std::map<int, uint64_t>>> miss_histogram;
 
     size_t plan(size_t limit, bool prompt, bool byte_value, size_t first_group) {
         llama_moe_cache_lfu empty;
@@ -736,6 +737,7 @@ static void replay_log(const char * path, int slots, size_t admit, size_t prefil
     const size_t soft_pct = llama_moe_cache_env_size("GGML_MOE_HYBRID_LAYER_SOFT_PCT", 0, 1000);
     const bool accepted_only = llama_moe_cache_env_size("GGML_MOE_REPLAY_ACCEPTED_ONLY", 0, 1);
     const bool warm_start = llama_moe_cache_env_size("GGML_MOE_REPLAY_WARM", 0, 1);
+    const bool histogram = llama_moe_cache_env_size("GGML_MOE_REPLAY_MISS_HISTOGRAM", 0, 1);
     std::ifstream input(path);
     GGML_ASSERT(input.good());
     std::vector<nlohmann::json> batches;
@@ -888,7 +890,7 @@ static void replay_log(const char * path, int slots, size_t admit, size_t prefil
         }
         const int nt = b.at("n_tokens");
         const bool prompt = b.at("prefill"), prompt_end = b.at("prefill_end");
-        struct route { int group, key; bool cache; };
+        struct route { int group, key, layer, expert; bool cache; };
         std::vector<std::vector<route>> routes(nt);
         for (const auto & l : b.at("layers")) {
             const int il = l.at("layer");
@@ -897,10 +899,11 @@ static void replay_log(const char * path, int slots, size_t admit, size_t prefil
             for (size_t i = 0; i < l.at("rows").size(); ++i) {
                 const int row = l.at("rows")[i];
                 for (int expert : l.at("ids")[i]) {
-                    routes[row].push_back({ig, ig < 0 ? il : il*c.groups.at(ig).n_expert + expert, ig >= 0 && use_cache});
+                    routes[row].push_back({ig, ig < 0 ? il : il*c.groups.at(ig).n_expert + expert, il, expert, ig >= 0 && use_cache});
                 }
             }
         }
+        std::map<std::pair<int, int>, std::set<int>> miss_tokens;
         for (int t = 0; t < nt; ++t) {
             ++c.tokens;
             for (auto & g : c.groups) {
@@ -936,6 +939,9 @@ static void replay_log(const char * path, int slots, size_t admit, size_t prefil
                 auto * policy = r.group < 0 ? nullptr : &c.groups.at(r.group).policy;
                 const size_t bytes = policy ? c.groups.at(r.group).bytes : c.uncached_bytes.at(r.key);
                 const bool hit = policy && r.cache && policy->slot_of[r.key] >= 0;
+                if (histogram && nt == 4 && !hit) {
+                    miss_tokens[{r.layer, r.expert}].insert(t);
+                }
                 if (policy) {
                     policy->observe(r.key, r.cache, prompt && prefill > 0, !deferred);
                 }
@@ -961,6 +967,9 @@ static void replay_log(const char * path, int slots, size_t admit, size_t prefil
                     }
                 }
             }
+        }
+        for (const auto & missed : miss_tokens) {
+            ++c.miss_histogram[prompt][missed.first.first][(int) missed.second.size()];
         }
         const size_t limit = prompt && prefill ? (prompt_end ? prefill : 0) : admit;
         c.admit_remaining = limit - c.plan(limit, prompt && prefill && prompt_end, byte_value, c.next_group);
@@ -994,6 +1003,14 @@ static void replay_log(const char * path, int slots, size_t admit, size_t prefil
             printf("prompt context=%llu index=%zu seq=%d first32_tokens=%llu first32_hits=%llu first32_routes=%llu first32_hit_rate=%.4f%%\n",
                 (unsigned long long) entry.first, ip, p.seq, (unsigned long long) p.tokens,
                 (unsigned long long) p.hits, (unsigned long long) p.routes, pct(p.hits, p.routes));
+        }
+        for (const auto & phase : c.miss_histogram) {
+            for (const auto & layer : phase.second) {
+                for (const auto & count : layer.second) {
+                    printf("miss_histogram context=%llu prefill=%d layer=%d multiplicity=%d experts=%llu\n",
+                        (unsigned long long) entry.first, phase.first, layer.first, count.first, (unsigned long long) count.second);
+                }
+            }
         }
     }
 }
