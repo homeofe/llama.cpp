@@ -1,0 +1,52 @@
+{
+  "build_commands": [
+    [
+      "cmake",
+      "-S",
+      ".",
+      "-B",
+      "build-cpu-native",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+      "-DGGML_NATIVE=ON",
+      "-DGGML_OPENMP=OFF",
+      "-DGGML_CUDA=OFF",
+      "-DLLAMA_BUILD_TESTS=OFF",
+      "-DLLAMA_BUILD_EXAMPLES=OFF",
+      "-DLLAMA_BUILD_SERVER=OFF",
+      "-DBUILD_SHARED_LIBS=ON"
+    ],
+    [
+      "nice",
+      "-n",
+      "10",
+      "cmake",
+      "--build",
+      "build-cpu-native",
+      "--target",
+      "ggml-cpu",
+      "-j",
+      "16"
+    ]
+  ],
+  "quality_command": [
+    "python3",
+    "-S",
+    "task-logs/round9/quality.py",
+    "qwen",
+    "off",
+    "--probe",
+    "--tag",
+    "nativepool",
+    "--cpu-library",
+    "/opt/llm-gateway/data/build/llama-l5/build-cpu-native/bin/libggml-cpu.so.0.27.0"
+  ],
+  "cpu_library": "/opt/llm-gateway/data/build/llama-l5/build-cpu-native/bin/libggml-cpu.so.0.27.0",
+  "cpu_library_sha256": "32a87658688e5daa2dce82554dada6e5ec31b3fe6d5aafa1dcfa0d2eb363186c",
+  "control_sha256": "b7facadb625ef4a18eb43b74959a4daa766b477a0dd2bb0bdeec6f0b984fd5a0",
+  "candidate_sha256": "b7facadb625ef4a18eb43b74959a4daa766b477a0dd2bb0bdeec6f0b984fd5a0",
+  "bytes": 127139840,
+  "production_source_changed": false,
+  "runtime_installed": false,
+  "bit_exact": true
+}

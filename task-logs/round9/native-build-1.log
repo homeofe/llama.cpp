@@ -1,0 +1,33 @@
+[  0%] Building CXX object ggml/src/CMakeFiles/ggml-base.dir/ggml.cpp.o
+[  9%] Building C object ggml/src/CMakeFiles/ggml-base.dir/ggml-alloc.c.o
+[  9%] Building CXX object ggml/src/CMakeFiles/ggml-base.dir/ggml-opt.cpp.o
+[  9%] Building CXX object ggml/src/CMakeFiles/ggml-base.dir/ggml-backend.cpp.o
+[ 18%] Building CXX object ggml/src/CMakeFiles/ggml-base.dir/ggml-backend-meta.cpp.o
+[ 18%] Building C object ggml/src/CMakeFiles/ggml-base.dir/ggml.c.o
+[ 18%] Building CXX object ggml/src/CMakeFiles/ggml-base.dir/ggml-threading.cpp.o
+[ 18%] Building CXX object ggml/src/CMakeFiles/ggml-base.dir/gguf.cpp.o
+[ 27%] Building C object ggml/src/CMakeFiles/ggml-base.dir/ggml-quants.c.o
+[ 36%] Linking CXX shared library ../../bin/libggml-base.so
+[ 36%] Built target ggml-base
+[ 36%] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/ggml-cpu.cpp.o
+[ 45%] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/hbm.cpp.o
+[ 45%] Building C object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/quants.c.o
+[ 45%] Building C object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/ggml-cpu.c.o
+[ 54%] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/traits.cpp.o
+[ 54%] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/repack.cpp.o
+[ 63%] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/amx/mmq.cpp.o
+[ 63%] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/tiled/tiled.cpp.o
+[ 72%] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/tiled/tiled-kernel.cpp.o
+[ 72%] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/binary-ops.cpp.o
+[ 72%] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/amx/amx.cpp.o
+[ 72%] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/ops.cpp.o
+[ 81%] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/vec.cpp.o
+[ 90%] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/llamafile/sgemm.cpp.o
+[ 90%] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/unary-ops.cpp.o
+[ 90%] Building C object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/arch/x86/quants.c.o
+[ 90%] Building CXX object ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/arch/x86/repack.cpp.o
+/opt/llm-gateway/data/build/llama-l5/ggml/src/ggml-cpu/arch/x86/quants.c:2688:21: warning: ‘keven_signs_q2xs’ defined but not used [-Wunused-const-variable=]
+ 2688 | static const int8_t keven_signs_q2xs[1024] = {
+      |                     ^~~~~~~~~~~~~~~~
+[100%] Linking CXX shared library ../../bin/libggml-cpu.so
+[100%] Built target ggml-cpu

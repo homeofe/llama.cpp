@@ -1,0 +1,1 @@
+{"kind": "quality", "name": "qwen-off-nativepool-probe", "attempt": 1, "exit": 0, "foreign_cores": 0.29602653631968057, "whole_process_foreign_cores": 0.28896817733167596, "evaluation_wall_s": 5.236017078976147, "wall_s": 56.92668359505478, "peak_vram_mib": 4328, "accepted": true, "epoch": 1792275009.3, "utc": "2026-10-17 22:10:09"}
