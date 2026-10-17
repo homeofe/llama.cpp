@@ -627,6 +627,7 @@ struct llama_moe_cache::impl {
         }
         std::vector<int32_t> next_slot(groups.size(), 0);
         size_t uploaded = 0;
+        size_t skipped_uncached = 0;
         while (input >> std::ws && input.peek() != std::char_traits<char>::eof()) {
             int64_t il;
             int64_t expert;
@@ -635,6 +636,11 @@ struct llama_moe_cache::impl {
                 throw std::runtime_error("invalid MoE hybrid profile entry");
             }
             layer & l = layers[il];
+            if (adaptive && l.ig < 0 && expert >= 0) {
+                // adaptive mode drops groups smaller than one window's working set; their layers stay on the CPU
+                skipped_uncached++;
+                continue;
+            }
             if (l.ig < 0 || l.slot_map == nullptr || expert < 0 || expert >= l.slot_map->ne[1]) {
                 throw std::runtime_error("MoE hybrid profile references an uncached layer or invalid expert");
             }
@@ -652,6 +658,9 @@ struct llama_moe_cache::impl {
         }
         if (!input.eof()) {
             throw std::runtime_error("invalid MoE hybrid profile data");
+        }
+        if (skipped_uncached > 0) {
+            LLAMA_LOG_WARN("llama_moe_cache: %zu profile entries name layers without a cache group, skipped\n", skipped_uncached);
         }
         size_t resident = 0;
         for (size_t ig = 0; ig < groups.size(); ++ig) {
@@ -709,7 +718,12 @@ struct llama_moe_cache::impl {
 
     template<bool use_cache>
     static void collect_routes(ggml_tensor * dst, const ggml_tensor * src, int ith, int nth, void * userdata) {
-        GGML_ASSERT(ith == 0 && nth == 1 && src->type == GGML_TYPE_I32);
+        GGML_ASSERT(src->type == GGML_TYPE_I32);
+        GGML_UNUSED(nth);
+        // the CPU backend runs a custom op on every thread of its pool, whatever n_tasks says: thread 0 does the work
+        if (ith != 0) {
+            return;
+        }
         layer & l = *static_cast<layer *>(userdata);
         l.use_cache = use_cache;
         l.n_selected = src->ne[0];
