@@ -1,0 +1,90 @@
+{
+  "perplexity": [
+    {
+      "name": "ling-off-compaction0-ppl",
+      "ppl": 4.5559,
+      "stderr": 0.20935,
+      "log": "/opt/llm-gateway/data/build/llama-l5/task-logs/round9/ling-off-compaction0-ppl/attempt-1.log",
+      "relative_percent": 0.0,
+      "within_half_percent": true
+    },
+    {
+      "name": "ling-policy-compaction0-ppl",
+      "ppl": 4.5498,
+      "stderr": 0.20871,
+      "log": "/opt/llm-gateway/data/build/llama-l5/task-logs/round9/ling-policy-compaction0-ppl/attempt-1.log",
+      "relative_percent": -0.1338923154590721,
+      "within_half_percent": true
+    },
+    {
+      "name": "ling-r7-compaction0-ppl",
+      "ppl": 4.5498,
+      "stderr": 0.20871,
+      "log": "/opt/llm-gateway/data/build/llama-l5/task-logs/round9/ling-r7-compaction0-ppl/attempt-1.log",
+      "relative_percent": -0.1338923154590721,
+      "within_half_percent": true
+    },
+    {
+      "name": "qwen-off-ppl",
+      "ppl": 3.8093,
+      "stderr": 0.15977,
+      "log": "/opt/llm-gateway/data/build/llama-l5/task-logs/round9/qwen-off-ppl/attempt-1.log",
+      "relative_percent": 0.0,
+      "within_half_percent": true
+    },
+    {
+      "name": "qwen-policy-ppl",
+      "ppl": 3.8117,
+      "stderr": 0.15979,
+      "log": "/opt/llm-gateway/data/build/llama-l5/task-logs/round9/qwen-policy-ppl/attempt-1.log",
+      "relative_percent": 0.06300370146745671,
+      "within_half_percent": true
+    },
+    {
+      "name": "qwen-r7-ppl",
+      "ppl": 3.8025,
+      "stderr": 0.15898,
+      "log": "/opt/llm-gateway/data/build/llama-l5/task-logs/round9/qwen-r7-ppl/attempt-1.log",
+      "relative_percent": -0.17851048749113474,
+      "within_half_percent": true
+    }
+  ],
+  "probes": [
+    {
+      "model": "qwen",
+      "bit_exact": true,
+      "runs": [
+        {
+          "mode": "off",
+          "bytes": 127139840,
+          "positions": 128,
+          "sha256": "b7facadb625ef4a18eb43b74959a4daa766b477a0dd2bb0bdeec6f0b984fd5a0"
+        },
+        {
+          "mode": "off-knobs",
+          "bytes": 127139840,
+          "positions": 128,
+          "sha256": "b7facadb625ef4a18eb43b74959a4daa766b477a0dd2bb0bdeec6f0b984fd5a0"
+        }
+      ]
+    },
+    {
+      "model": "ling",
+      "bit_exact": true,
+      "runs": [
+        {
+          "mode": "off",
+          "bytes": 80478208,
+          "positions": 128,
+          "sha256": "83429a23024228e61b2f64515128019cc75b04e30bc97c7dfd853580094a0552"
+        },
+        {
+          "mode": "off-knobs",
+          "bytes": 80478208,
+          "positions": 128,
+          "sha256": "83429a23024228e61b2f64515128019cc75b04e30bc97c7dfd853580094a0552"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+Prompt ranking, cross-ubatch candidates, static pinning and configurable decay passed
+LFU policy checks passed
+Cross-group byte value, soft layer budgets, pinned survival and delayed feedback passed

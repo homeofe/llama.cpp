@@ -1,0 +1,1 @@
+{"kind": "quality", "name": "qwen-policy-ppl", "attempt": 1, "exit": 0, "foreign_cores": 0.28181049936999963, "wall_s": 142.61356510792393, "peak_vram_mib": 6806, "accepted": true, "epoch": 1792267531.1, "utc": "2026-10-17 20:05:31"}

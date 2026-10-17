@@ -41,6 +41,10 @@ Qwen quality: cache-off 3.8093, round 7 3.8025 (-0.1785%), byte/decay64 3.8117 (
 
 Quality scheduling initially counted the entire model load, inference and teardown as foreign-process observation. Ling's first probe was discarded at 2.59 foreign cores; the second passed at 0.60. Subsequent quality jobs gate the actual evaluation phase (after model/threadpool readiness), retaining whole-process CPU figures separately. This avoids confusing loading/teardown activity with inference load. Quality-job elapsed times are not throughput benchmarks. The required end-to-end harness remains unchanged.
 
+Task 1 completed at 20:52 UTC. All six quality checks pass. Ling cache-off is 4.5559; both round 7 and byte/decay64 are 4.5498 (-0.1339%). Ling's single-size expert layout and prefill-only quality workload make the two policy runs identical here. Its disabled-cache runs are byte-identical over 128 positions, 80478208 bytes, SHA256 `83429a23024228e61b2f64515128019cc75b04e30bc97c7dfd853580094a0552`. The normal cache policy unit suite also passes. Full quality evidence is indexed in `task-logs/round9/quality-summary.json`.
+
+Chosen policy defaults remain round 7: adaptive LFU, decay 128, admission 32, prefill warming enabled (cap 1024), byte ranking off, no soft per-layer budget, no accepted-only learning. The small aggregate policy gains do not establish a robust cross-model win. In particular, Ling's pooled English median rises, but three of its four per-prompt medians decline slightly; changed outputs/cache history prevent treating the pooled change as a uniform speedup.
+
 ## Hardware audit requested during the run
 
 MSI Creator TRX40 (MS-7C59), BIOS 1.98 dated 2026-06-15; Threadripper 3960X, 24 physical cores plus SMT, eight 16 MiB L3 groups, one NUMA node. DMI reports eight dual-rank 16 GiB DIMMs, two in each of channels A/B/C/D, all configured at 3200 MT/s. Thus all four memory channels are populated; there is no missing-channel explanation for the performance gap. This is firmware-reported configuration, not a measured DRAM bandwidth result.

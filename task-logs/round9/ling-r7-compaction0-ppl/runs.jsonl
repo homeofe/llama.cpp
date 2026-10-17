@@ -1,0 +1,1 @@
+{"kind": "quality", "name": "ling-r7-compaction0-ppl", "attempt": 1, "exit": 0, "foreign_cores": 0.2827949628674847, "whole_process_foreign_cores": 0.35384311644091077, "evaluation_wall_s": 60.96289631607942, "wall_s": 240.36075890203938, "peak_vram_mib": 7940, "accepted": true, "epoch": 1792270145.7, "utc": "2026-10-17 20:49:05"}

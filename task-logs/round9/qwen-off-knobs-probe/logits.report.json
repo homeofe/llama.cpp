@@ -1,0 +1,2318 @@
+{
+  "trace": false,
+  "memory_initial": [
+    {
+      "name": "CUDA0",
+      "free": 6758137856,
+      "total": 11346575360,
+      "alignment": 128
+    }
+  ],
+  "layers": [
+    {
+      "layer": 0,
+      "tensors": [
+        {
+          "name": "blk.0.ffn_gate_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.0.ffn_up_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.0.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 1,
+      "tensors": [
+        {
+          "name": "blk.1.ffn_gate_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.1.ffn_up_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.1.ffn_down_exps.weight",
+          "type": "q2_0",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 460800,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 2,
+      "tensors": [
+        {
+          "name": "blk.2.ffn_gate_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.2.ffn_up_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.2.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 3,
+      "tensors": [
+        {
+          "name": "blk.3.ffn_gate_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.3.ffn_up_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.3.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 4,
+      "tensors": [
+        {
+          "name": "blk.4.ffn_gate_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.4.ffn_up_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.4.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 5,
+      "tensors": [
+        {
+          "name": "blk.5.ffn_gate_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.5.ffn_up_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.5.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 6,
+      "tensors": [
+        {
+          "name": "blk.6.ffn_gate_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.6.ffn_up_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.6.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 7,
+      "tensors": [
+        {
+          "name": "blk.7.ffn_gate_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.7.ffn_up_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.7.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 8,
+      "tensors": [
+        {
+          "name": "blk.8.ffn_gate_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.8.ffn_up_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.8.ffn_down_exps.weight",
+          "type": "q2_0",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 460800,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 9,
+      "tensors": [
+        {
+          "name": "blk.9.ffn_gate_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.9.ffn_up_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.9.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 10,
+      "tensors": [
+        {
+          "name": "blk.10.ffn_gate_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.10.ffn_up_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.10.ffn_down_exps.weight",
+          "type": "q2_0",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 460800,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 11,
+      "tensors": [
+        {
+          "name": "blk.11.ffn_gate_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.11.ffn_up_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.11.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 12,
+      "tensors": [
+        {
+          "name": "blk.12.ffn_gate_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.12.ffn_up_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.12.ffn_down_exps.weight",
+          "type": "q2_0",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 460800,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 13,
+      "tensors": [
+        {
+          "name": "blk.13.ffn_gate_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.13.ffn_up_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.13.ffn_down_exps.weight",
+          "type": "q2_0",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 460800,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 14,
+      "tensors": [
+        {
+          "name": "blk.14.ffn_gate_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.14.ffn_up_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.14.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 15,
+      "tensors": [
+        {
+          "name": "blk.15.ffn_gate_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.15.ffn_up_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.15.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 16,
+      "tensors": [
+        {
+          "name": "blk.16.ffn_gate_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.16.ffn_up_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.16.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 17,
+      "tensors": [
+        {
+          "name": "blk.17.ffn_gate_exps.weight",
+          "type": "iq3_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 704000,
+          "host": true
+        },
+        {
+          "name": "blk.17.ffn_up_exps.weight",
+          "type": "iq3_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 704000,
+          "host": true
+        },
+        {
+          "name": "blk.17.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 18,
+      "tensors": [
+        {
+          "name": "blk.18.ffn_gate_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.18.ffn_up_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.18.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 19,
+      "tensors": [
+        {
+          "name": "blk.19.ffn_gate_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.19.ffn_up_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.19.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 20,
+      "tensors": [
+        {
+          "name": "blk.20.ffn_gate_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.20.ffn_up_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.20.ffn_down_exps.weight",
+          "type": "q2_0",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 460800,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 21,
+      "tensors": [
+        {
+          "name": "blk.21.ffn_gate_exps.weight",
+          "type": "iq3_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 704000,
+          "host": true
+        },
+        {
+          "name": "blk.21.ffn_up_exps.weight",
+          "type": "iq3_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 704000,
+          "host": true
+        },
+        {
+          "name": "blk.21.ffn_down_exps.weight",
+          "type": "q2_0",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 460800,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 22,
+      "tensors": [
+        {
+          "name": "blk.22.ffn_gate_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.22.ffn_up_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.22.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 23,
+      "tensors": [
+        {
+          "name": "blk.23.ffn_gate_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.23.ffn_up_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.23.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 24,
+      "tensors": [
+        {
+          "name": "blk.24.ffn_gate_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.24.ffn_up_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.24.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 25,
+      "tensors": [
+        {
+          "name": "blk.25.ffn_gate_exps.weight",
+          "type": "iq3_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 704000,
+          "host": true
+        },
+        {
+          "name": "blk.25.ffn_up_exps.weight",
+          "type": "iq3_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 704000,
+          "host": true
+        },
+        {
+          "name": "blk.25.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 26,
+      "tensors": [
+        {
+          "name": "blk.26.ffn_gate_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.26.ffn_up_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.26.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 27,
+      "tensors": [
+        {
+          "name": "blk.27.ffn_gate_exps.weight",
+          "type": "iq3_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 704000,
+          "host": true
+        },
+        {
+          "name": "blk.27.ffn_up_exps.weight",
+          "type": "iq3_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 704000,
+          "host": true
+        },
+        {
+          "name": "blk.27.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 28,
+      "tensors": [
+        {
+          "name": "blk.28.ffn_gate_exps.weight",
+          "type": "iq3_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 704000,
+          "host": true
+        },
+        {
+          "name": "blk.28.ffn_up_exps.weight",
+          "type": "iq3_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 704000,
+          "host": true
+        },
+        {
+          "name": "blk.28.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 29,
+      "tensors": [
+        {
+          "name": "blk.29.ffn_gate_exps.weight",
+          "type": "iq3_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 704000,
+          "host": true
+        },
+        {
+          "name": "blk.29.ffn_up_exps.weight",
+          "type": "iq3_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 704000,
+          "host": true
+        },
+        {
+          "name": "blk.29.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 30,
+      "tensors": [
+        {
+          "name": "blk.30.ffn_gate_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.30.ffn_up_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.30.ffn_down_exps.weight",
+          "type": "q2_0",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 460800,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 31,
+      "tensors": [
+        {
+          "name": "blk.31.ffn_gate_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.31.ffn_up_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.31.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 32,
+      "tensors": [
+        {
+          "name": "blk.32.ffn_gate_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.32.ffn_up_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.32.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 33,
+      "tensors": [
+        {
+          "name": "blk.33.ffn_gate_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.33.ffn_up_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.33.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 34,
+      "tensors": [
+        {
+          "name": "blk.34.ffn_gate_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.34.ffn_up_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.34.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 35,
+      "tensors": [
+        {
+          "name": "blk.35.ffn_gate_exps.weight",
+          "type": "iq3_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 704000,
+          "host": true
+        },
+        {
+          "name": "blk.35.ffn_up_exps.weight",
+          "type": "iq3_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 704000,
+          "host": true
+        },
+        {
+          "name": "blk.35.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 36,
+      "tensors": [
+        {
+          "name": "blk.36.ffn_gate_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.36.ffn_up_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.36.ffn_down_exps.weight",
+          "type": "q2_0",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 460800,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 37,
+      "tensors": [
+        {
+          "name": "blk.37.ffn_gate_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.37.ffn_up_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.37.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 38,
+      "tensors": [
+        {
+          "name": "blk.38.ffn_gate_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.38.ffn_up_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.38.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 39,
+      "tensors": [
+        {
+          "name": "blk.39.ffn_gate_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.39.ffn_up_exps.weight",
+          "type": "iq2_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 524800,
+          "host": true
+        },
+        {
+          "name": "blk.39.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 40,
+      "tensors": [
+        {
+          "name": "blk.40.ffn_gate_exps.weight",
+          "type": "iq3_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 704000,
+          "host": true
+        },
+        {
+          "name": "blk.40.ffn_up_exps.weight",
+          "type": "iq3_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 704000,
+          "host": true
+        },
+        {
+          "name": "blk.40.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 41,
+      "tensors": [
+        {
+          "name": "blk.41.ffn_gate_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.41.ffn_up_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.41.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 42,
+      "tensors": [
+        {
+          "name": "blk.42.ffn_gate_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.42.ffn_up_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.42.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 43,
+      "tensors": [
+        {
+          "name": "blk.43.ffn_gate_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.43.ffn_up_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.43.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 44,
+      "tensors": [
+        {
+          "name": "blk.44.ffn_gate_exps.weight",
+          "type": "iq3_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 704000,
+          "host": true
+        },
+        {
+          "name": "blk.44.ffn_up_exps.weight",
+          "type": "iq3_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 704000,
+          "host": true
+        },
+        {
+          "name": "blk.44.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 45,
+      "tensors": [
+        {
+          "name": "blk.45.ffn_gate_exps.weight",
+          "type": "iq3_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 704000,
+          "host": true
+        },
+        {
+          "name": "blk.45.ffn_up_exps.weight",
+          "type": "iq3_s",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 704000,
+          "host": true
+        },
+        {
+          "name": "blk.45.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 46,
+      "tensors": [
+        {
+          "name": "blk.46.ffn_gate_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.46.ffn_up_exps.weight",
+          "type": "iq3_xxs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 627200,
+          "host": true
+        },
+        {
+          "name": "blk.46.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    },
+    {
+      "layer": 47,
+      "tensors": [
+        {
+          "name": "blk.47.ffn_gate_exps.weight",
+          "type": "iq4_xs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 870400,
+          "host": true
+        },
+        {
+          "name": "blk.47.ffn_up_exps.weight",
+          "type": "iq4_xs",
+          "ne": [
+            2560,
+            640,
+            512,
+            1
+          ],
+          "expert_bytes": 870400,
+          "host": true
+        },
+        {
+          "name": "blk.47.ffn_down_exps.weight",
+          "type": "iq4_nl",
+          "ne": [
+            640,
+            2560,
+            512,
+            1
+          ],
+          "expert_bytes": 921600,
+          "host": true
+        }
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "topic": "de",
+      "prefix_ids": [
+        21483,
+        174073,
+        55620,
+        458,
+        2204,
+        268,
+        220,
+        5810,
+        4227,
+        196079,
+        185847,
+        55620,
+        712,
+        214240,
+        2607,
+        52277,
+        458,
+        2204,
+        268,
+        318,
+        46,
+        267,
+        69,
+        212103,
+        553,
+        271,
+        18871,
+        5810,
+        6954,
+        174073,
+        165430,
+        14410
+      ],
+      "tokens": [
+        220,
+        16,
+        19,
+        29713,
+        12137,
+        228863,
+        26395,
+        13,
+        43964,
+        40900,
+        59756,
+        1435,
+        179772,
+        62663,
+        22619,
+        18794,
+        88401,
+        163951,
+        16802,
+        87645,
+        13,
+        8963,
+        26416,
+        10609,
+        4227,
+        154379,
+        35588,
+        1473,
+        163926,
+        195072,
+        6954,
+        15341
+      ],
+      "times_us": [
+        85266,
+        80593,
+        78781,
+        79458,
+        78929,
+        79887,
+        84762,
+        83534
+      ]
+    },
+    {
+      "topic": "en",
+      "prefix_ids": [
+        283,
+        8137,
+        211388,
+        455,
+        283,
+        695,
+        8137,
+        211388,
+        455,
+        369,
+        449,
+        6163,
+        4383,
+        1116,
+        12069,
+        321,
+        32385,
+        11745,
+        641,
+        1216,
+        995,
+        264,
+        8376,
+        554,
+        12,
+        31,
+        38095,
+        3364,
+        383,
+        279,
+        12069,
+        3878
+      ],
+      "tokens": [
+        561,
+        8333,
+        303,
+        220,
+        17,
+        15,
+        15,
+        15,
+        641,
+        1061,
+        557,
+        7854,
+        539,
+        264,
+        38095,
+        3364,
+        303,
+        279,
+        1432,
+        6056,
+        2305,
+        5158,
+        539,
+        20660,
+        73326,
+        1116,
+        864,
+        557,
+        10345,
+        303,
+        220,
+        17
+      ],
+      "times_us": [
+        86000,
+        81266,
+        79718,
+        80744,
+        81197,
+        80782,
+        81427,
+        82418
+      ]
+    },
+    {
+      "topic": "code",
+      "prefix_ids": [
+        320,
+        561,
+        8057,
+        43166,
+        6729,
+        55686,
+        7838,
+        1590,
+        1204,
+        1575,
+        264,
+        1558,
+        4138,
+        430,
+        264,
+        3669,
+        314,
+        8057,
+        43166,
+        11,
+        279,
+        27853,
+        579,
+        2849,
+        13,
+        6983,
+        3274,
+        198,
+        320,
+        5891,
+        8057,
+        43166
+      ],
+      "tokens": [
+        6,
+        1865,
+        5224,
+        7099,
+        11,
+        279,
+        2444,
+        7141,
+        264,
+        3669,
+        5055,
+        888,
+        76433,
+        318,
+        7838,
+        43166,
+        13779,
+        3082,
+        4520,
+        4317,
+        11,
+        198,
+        320,
+        6631,
+        20633,
+        506,
+        1141,
+        5099,
+        220,
+        24,
+        65,
+        18
+      ],
+      "times_us": [
+        85695,
+        83846,
+        82809,
+        81533,
+        79915,
+        83354,
+        81692,
+        80807
+      ]
+    },
+    {
+      "topic": "agent",
+      "prefix_ids": [
+        2,
+        561,
+        14193,
+        1500,
+        25,
+        264,
+        1542,
+        314,
+        7840,
+        16827,
+        888,
+        279,
+        6149,
+        5171,
+        271,
+        1851,
+        25,
+        220,
+        17,
+        15,
+        17,
+        21,
+        12,
+        16,
+        15,
+        12,
+        15,
+        16,
+        13,
+        8483,
+        25,
+        25499
+      ],
+      "tokens": [
+        80287,
+        82,
+        14,
+        17,
+        15,
+        17,
+        21,
+        12,
+        15,
+        24,
+        12,
+        18,
+        15,
+        80279,
+        85,
+        3485,
+        44199,
+        20668,
+        11,
+        3644,
+        220,
+        17,
+        13,
+        17,
+        318,
+        1719,
+        6171,
+        579,
+        5307,
+        25,
+        3019,
+        424
+      ],
+      "times_us": [
+        82526,
+        81331,
+        80995,
+        80648,
+        81165,
+        80316,
+        83192,
+        85660
+      ]
+    }
+  ],
+  "n_vocab": 248320,
+  "prefix_tokens": 32,
+  "window_tokens": 4,
+  "memory_steady": [
+    {
+      "name": "CUDA0",
+      "free": 6705709056,
+      "total": 11346575360,
+      "alignment": 128
+    }
+  ]
+}

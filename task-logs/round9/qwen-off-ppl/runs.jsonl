@@ -1,0 +1,1 @@
+{"kind": "quality", "name": "qwen-off-ppl", "attempt": 1, "exit": 0, "foreign_cores": 0.2555993128352302, "wall_s": 173.90500587399583, "peak_vram_mib": 4364, "accepted": true, "epoch": 1792267235.4, "utc": "2026-10-17 20:00:35"}

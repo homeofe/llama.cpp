@@ -1,0 +1,1 @@
+{"kind": "quality", "name": "ling-policy-compaction0-ppl", "attempt": 1, "exit": 0, "foreign_cores": 0.3195066302748222, "whole_process_foreign_cores": 0.32425976457843264, "evaluation_wall_s": 61.0315973199904, "wall_s": 211.62045833596494, "peak_vram_mib": 7940, "accepted": true, "epoch": 1792270362.5, "utc": "2026-10-17 20:52:42"}

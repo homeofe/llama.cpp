@@ -1,0 +1,1 @@
+{"kind": "quality", "name": "qwen-off-probe", "attempt": 1, "exit": 0, "foreign_cores": 0.36784361275034194, "wall_s": 57.660373226040974, "peak_vram_mib": 4328, "accepted": true, "epoch": 1792266993.8, "utc": "2026-10-17 19:56:33"}

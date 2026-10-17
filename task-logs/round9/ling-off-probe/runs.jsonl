@@ -1,0 +1,2 @@
+{"kind": "quality", "name": "ling-off-probe", "attempt": 1, "exit": 0, "foreign_cores": 2.589251729658565, "wall_s": 202.49479569494724, "peak_vram_mib": 2786, "accepted": false, "epoch": 1792267738.8, "utc": "2026-10-17 20:08:58"}
+{"kind": "quality", "name": "ling-off-probe", "attempt": 2, "exit": 0, "foreign_cores": 0.6002495354288797, "wall_s": 222.20758555806242, "peak_vram_mib": 2786, "accepted": true, "epoch": 1792267966.1, "utc": "2026-10-17 20:12:46"}
