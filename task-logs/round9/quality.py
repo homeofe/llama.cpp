@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Run one quality check with a gateway lease and foreign-process CPU gating."""
 import argparse
+import hashlib
 import importlib.util
 import json
 import os
@@ -25,8 +26,13 @@ def main():
     parser.add_argument('--budget-mib', type=int)
     parser.add_argument('--disable-thp', action='store_true')
     parser.add_argument('--tag', default='')
+    parser.add_argument('--cpu-library', type=Path)
     parser.add_argument('--attempts', type=int, default=3, choices=[1, 2, 3])
     args = parser.parse_args()
+    if args.cpu_library:
+        args.cpu_library = args.cpu_library.resolve()
+        if not args.tag or not args.cpu_library.is_relative_to(ROOT) or not args.cpu_library.is_file():
+            parser.error('--cpu-library requires an existing worktree library and a distinct --tag')
     if args.budget_mib is not None and args.budget_mib <= 0:
         parser.error('--budget-mib must be positive')
     budget_tag = f'-{args.budget_mib}' if args.budget_mib is not None else ''
@@ -42,6 +48,10 @@ def main():
     cfg = stage.CONFIGS['q-warm-draft' if args.model == 'qwen' else 'ling-cache-mtp3']
     env = {k: v for k, v in os.environ.items() if not k.startswith('GGML_MOE_')}
     env.update(cfg['env'])
+    library_hash = None
+    if args.cpu_library:
+        env.update(LD_PRELOAD=str(args.cpu_library), LD_LIBRARY_PATH=str(ROOT / 'build-cuda/bin'))
+        library_hash = hashlib.sha256(args.cpu_library.read_bytes()).hexdigest()
     if args.policy in ['policy', 'off-knobs']:
         env.update(GGML_MOE_HYBRID_BYTE_VALUE='1', GGML_MOE_HYBRID_DECAY='64')
     if args.policy == 'off-knobs':
@@ -62,7 +72,8 @@ def main():
         cmd = [str(ROOT / 'build-cuda/bin/llama-perplexity')] + flags + ['-f', '/opt/llm-gateway/data/build/texts/test-de.txt', '--chunks', '12']
     if args.disable_thp:
         cmd = [str(ROOT / 'task-logs/round9/no-thp')] + cmd
-    (out / 'command.json').write_text(json.dumps(dict(command=cmd, env={k: v for k, v in env.items() if k.startswith(('GGML_', 'LLAMA_', 'OMP_'))}), indent=2) + '\n')
+    (out / 'command.json').write_text(json.dumps(dict(command=cmd, cpu_library_sha256=library_hash,
+        env={k: v for k, v in env.items() if k.startswith(('GGML_', 'LLAMA_', 'OMP_', 'LD_'))}), indent=2) + '\n')
     run = bench.Run(out, min(time.time() + 1800, 1792277760))
     for attempt in range(1, args.attempts + 1):
         run.quiet()
@@ -102,7 +113,13 @@ def main():
                     log = (out / f'attempt-{attempt}.log').read_text()
                     ready = 'llama threadpool init' if args.probe else 'calculating perplexity over'
                     done = 'TOPIC agent' if args.probe else 'Final estimate: PPL ='
-                    if ready in log:
+                    if ready in log and not evaluation_started:
+                        if args.cpu_library:
+                            libraries = sorted({line.split()[-1] for line in Path(f'/proc/{pid}/maps').read_text().splitlines()
+                                                if '/libggml' in line or '/libllama' in line})
+                            (out / 'mapped-libraries.json').write_text(json.dumps(libraries, indent=2) + '\n')
+                            assert str(args.cpu_library) in libraries, 'requested CPU library was not loaded'
+                            assert all('/build-cuda/bin/' in p or p == str(args.cpu_library) for p in libraries), 'unexpected library replacement'
                         evaluation_started = True
                     if done in log:
                         evaluation_finished = True
