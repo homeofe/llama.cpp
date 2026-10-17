@@ -1,0 +1,18 @@
+1.05.029.942 W impl: MoE cache budget is too small for 1 layers, they are not cached
+1.05.029.946 W impl: MoE cache budget is too small for 1 layers, they are not cached
+1.05.035.051 W llama_moe_cache: 40 profile entries name layers without a cache group, skipped
+1.05.201.858 W llama_moe_cache: adaptive warm start: 998 experts, 1939.26 MiB (excluded from runtime uploads)
+1.05.201.889 W llama_moe_cache: adaptive LFU: 1248 slots, admit <= 32 experts/ubatch, decay every 128 tokens
+1.05.201.891 W llama_moe_cache: context = 626874554802 (target), prefill 1024, static 0%
+1.05.231.134 I cmn          init: llama threadpool init, n_threads = 24
+TOPIC de tokens 16 callbacks 0
+TOPIC en tokens 16 callbacks 0
+TOPIC code tokens 16 callbacks 0
+TOPIC agent tokens 16 callbacks 0
+1.07.240.266 W llama_moe_cache: context = 626874554802 (target) statistics follow
+1.07.240.328 W llama_moe_cache: adaptive: tokens = 80, hits = 11712, misses = 25088, hit rate = 31.83%, uploads = 515, uploaded = 996.61 MiB, hits/token = 146.40, misses/token = 313.60, uploads/token = 6.438, MiB/token = 12.458
+Importer error status: The importer binary and its dependencies were not found.
+Unable to retrieve the importer version: skipping importation of the QDSTRM file.
+Generating '/tmp/nsys-report-0378.qdstrm'
+Generated:
+    /opt/llm-gateway/data/build/llama-l5/task-logs/round9/gpu-nsys-graphs/trace.qdstrm

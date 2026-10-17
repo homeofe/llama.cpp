@@ -69,10 +69,14 @@ def nsys(path):
         join StringIds s on r.nameId=s.id where r.start>=? and r.end<=?
         group by s.value order by count(*) desc''', (lo, hi))]
     graph_calls = sum(r['calls'] for r in runtime if r['name'].startswith('cudaGraphLaunch'))
-    return dict(source=str(path), diagnostic_only=True, window_ms=(hi-lo)/1e6,
-                kernels=len(kernels), kernel_union_ms=union(kernels)/1e6, copy_union_ms=union(copies)/1e6,
-                combined_union_ms=union(kernels+copies)/1e6, graph_launches=graph_calls, runtime=runtime,
-                caveat='Instrumented target-only four-token windows; not end-to-end MTP performance.')
+    return dict(source=str(path), diagnostic_only=True, captured_kernel_span_ms=(hi-lo)/1e6,
+                captured_kernels=len(kernels), captured_kernel_union_ms=union(kernels)/1e6,
+                captured_copy_union_ms=union(copies)/1e6,
+                captured_combined_union_ms=union(kernels+copies)/1e6, graph_launches=graph_calls, runtime=runtime,
+                kernel_timeline_complete=not bool(graph_calls),
+                caveat='Instrumented target-only four-token windows; not end-to-end MTP performance. '
+                       'With graph launches, default graph-level tracing omits individual graph nodes; '
+                       'the captured kernel intervals cannot quantify total GPU activity or idle time.')
 
 
 def main():

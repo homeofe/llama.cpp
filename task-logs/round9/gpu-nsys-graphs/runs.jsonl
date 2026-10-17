@@ -1,0 +1,2 @@
+{"kind": "profiler_start", "profiler": "nsys", "pid": 4028550, "epoch": 1792274824.4, "utc": "2026-10-17 22:07:04"}
+{"kind": "profiler_complete", "exit": 0, "performance_comparison": false, "epoch": 1792274929.1, "utc": "2026-10-17 22:08:49"}

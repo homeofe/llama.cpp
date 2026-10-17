@@ -1,0 +1,78 @@
+{
+  "threshold": 1.6,
+  "selected_policy": "r7",
+  "measurements": [
+    {
+      "trace": "qwen38-bench8",
+      "policy": "r7",
+      "phase": "decode",
+      "quant": "IQ4_NL",
+      "histogram": {
+        "1": 280652,
+        "2": 54009,
+        "3": 14152,
+        "4": 3882
+      },
+      "unique_matrices": 352695,
+      "mean": 1.2664029827471328,
+      "distinct_weight_bytes": 325043712000,
+      "routed_weight_bytes": 411636326400,
+      "byte_weighted_mean": 1.2664029827471328
+    },
+    {
+      "trace": "qwen38-bench8",
+      "policy": "r7",
+      "phase": "decode",
+      "quant": "IQ3_XXS",
+      "histogram": {
+        "1": 263626,
+        "2": 47440,
+        "3": 11718,
+        "4": 2876
+      },
+      "unique_matrices": 325660,
+      "mean": 1.2441319167229625,
+      "distinct_weight_bytes": 204253952000,
+      "routed_weight_bytes": 254118860800,
+      "byte_weighted_mean": 1.2441319167229625
+    },
+    {
+      "trace": "qwen38-bench8",
+      "policy": "r7",
+      "phase": "decode",
+      "quant": "IQ2_S",
+      "histogram": {
+        "1": 285486,
+        "2": 55786,
+        "3": 14270,
+        "4": 4088
+      },
+      "unique_matrices": 359630,
+      "mean": 1.2685815977532464,
+      "distinct_weight_bytes": 188733824000,
+      "routed_weight_bytes": 239424256000,
+      "byte_weighted_mean": 1.2685815977532464
+    },
+    {
+      "trace": "qwen38-bench8",
+      "policy": "r7",
+      "phase": "decode",
+      "quant": "IQ3_S",
+      "histogram": {
+        "1": 134606,
+        "2": 30674,
+        "3": 9584,
+        "4": 3052
+      },
+      "unique_matrices": 177916,
+      "mean": 1.33160592639223,
+      "distinct_weight_bytes": 125252864000,
+      "routed_weight_bytes": 166787456000,
+      "byte_weighted_mean": 1.33160592639223
+    }
+  ],
+  "qualifying_types": [],
+  "proceed_to_cpu_sweep": true,
+  "reason": "No Qwen type clears the specified multiplicity gate.",
+  "cpu_evidence": "cpu-profile-summary.json: CPU graph work and substantial OpenMP spin waiting; graph durations can overlap GPU work."
+}

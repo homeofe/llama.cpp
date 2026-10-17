@@ -1,11 +1,11 @@
 {
   "source": "task-logs/round9/gpu-nsys/trace.sqlite",
   "diagnostic_only": true,
-  "window_ms": 1905.649452,
-  "kernels": 79652,
-  "kernel_union_ms": 621.971391,
-  "copy_union_ms": 135.345714,
-  "combined_union_ms": 751.382987,
+  "captured_kernel_span_ms": 1905.649452,
+  "captured_kernels": 79652,
+  "captured_kernel_union_ms": 621.971391,
+  "captured_copy_union_ms": 135.345714,
+  "captured_combined_union_ms": 751.382987,
   "graph_launches": 0,
   "runtime": [
     {
@@ -79,5 +79,6 @@
       "total_ms": 0.01517
     }
   ],
-  "caveat": "Instrumented target-only four-token windows; not end-to-end MTP performance."
+  "kernel_timeline_complete": true,
+  "caveat": "Instrumented target-only four-token windows; not end-to-end MTP performance. With graph launches, default graph-level tracing omits individual graph nodes; the captured kernel intervals cannot quantify total GPU activity or idle time."
 }

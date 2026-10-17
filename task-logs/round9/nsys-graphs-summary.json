@@ -1,0 +1,114 @@
+{
+  "source": "task-logs/round9/gpu-nsys-graphs/trace.sqlite",
+  "diagnostic_only": true,
+  "captured_kernel_span_ms": 1660.250867,
+  "captured_kernels": 21179,
+  "captured_kernel_union_ms": 181.812504,
+  "captured_copy_union_ms": 111.765657,
+  "captured_combined_union_ms": 293.287612,
+  "graph_launches": 1279,
+  "runtime": [
+    {
+      "name": "cudaLaunchKernel_v7000",
+      "calls": 29980,
+      "total_ms": 114.256514
+    },
+    {
+      "name": "cudaMemcpyAsync_v3020",
+      "calls": 6184,
+      "total_ms": 24.564876
+    },
+    {
+      "name": "cudaStreamSynchronize_v3020",
+      "calls": 6151,
+      "total_ms": 141.507109
+    },
+    {
+      "name": "cudaEventSynchronize_v3020",
+      "calls": 2414,
+      "total_ms": 274.594419
+    },
+    {
+      "name": "cudaGraphLaunch_v10000",
+      "calls": 1279,
+      "total_ms": 31.607246
+    },
+    {
+      "name": "cudaMemcpy2DAsync_v3020",
+      "calls": 931,
+      "total_ms": 5.139277
+    },
+    {
+      "name": "cudaEventRecord_v3020",
+      "calls": 816,
+      "total_ms": 1.085718
+    },
+    {
+      "name": "cudaStreamEndCapture_v10000",
+      "calls": 175,
+      "total_ms": 0.27372
+    },
+    {
+      "name": "cudaStreamBeginCapture_v10000",
+      "calls": 175,
+      "total_ms": 0.723016
+    },
+    {
+      "name": "cudaGraphExecUpdate_v10020",
+      "calls": 175,
+      "total_ms": 1.350834
+    },
+    {
+      "name": "cudaGraphInstantiate_v12000",
+      "calls": 97,
+      "total_ms": 23.15581
+    },
+    {
+      "name": "cudaGraphDestroy_v10000",
+      "calls": 78,
+      "total_ms": 2.256874
+    },
+    {
+      "name": "cudaMemsetAsync_v3020",
+      "calls": 9,
+      "total_ms": 0.14601
+    },
+    {
+      "name": "cudaMallocHost_v3020",
+      "calls": 1,
+      "total_ms": 2.70661
+    },
+    {
+      "name": "cudaFreeHost_v3020",
+      "calls": 1,
+      "total_ms": 0.01097
+    },
+    {
+      "name": "cuMemSetAccess",
+      "calls": 1,
+      "total_ms": 0.1332
+    },
+    {
+      "name": "cuMemRelease",
+      "calls": 1,
+      "total_ms": 0.00028
+    },
+    {
+      "name": "cuMemMap",
+      "calls": 1,
+      "total_ms": 0.0024
+    },
+    {
+      "name": "cuMemCreate",
+      "calls": 1,
+      "total_ms": 0.08316
+    },
+    {
+      "name": "cuMemAddressReserve",
+      "calls": 1,
+      "total_ms": 0.0183
+    }
+  ],
+  "kernel_timeline_complete": false,
+  "caveat": "Instrumented target-only four-token windows; not end-to-end MTP performance. With graph launches, default graph-level tracing omits individual graph nodes; the captured kernel intervals cannot quantify total GPU activity or idle time."
+}
