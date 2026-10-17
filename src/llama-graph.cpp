@@ -2424,7 +2424,7 @@ ggml_tensor * llm_graph_context::build_moe_ffn(
         }
     }
 
-    auto build_experts = [&](ggml_tensor * cur, ggml_tensor * branch_slots, ggml_tensor * active, ggml_backend_t backend, const char * suffix) {
+    auto build_experts = [&](ggml_tensor * cur, ggml_tensor * branch_ids, ggml_tensor * branch_slots, ggml_tensor * active, ggml_backend_t backend, const char * suffix) {
         auto cb_expert = [&](ggml_tensor * t, const char * name, int layer) {
             cb(t, (std::string(name) + suffix).c_str(), layer);
         };
@@ -2434,7 +2434,7 @@ ggml_tensor * llm_graph_context::build_moe_ffn(
 
         if (gate_up_exps) {
             // merged gate_up path: one mul_mat_id, then split into gate and up views
-            ggml_tensor * gate_up = build_lora_mm_id(gate_up_exps, cur, selected_experts, up_exps_s, branch_slots, active); // [n_ff*2, n_expert_used, n_tokens]
+            ggml_tensor * gate_up = build_lora_mm_id(gate_up_exps, cur, branch_ids, up_exps_s, branch_slots, active); // [n_ff*2, n_expert_used, n_tokens]
             first = gate_up;
             cb_expert(gate_up, "ffn_moe_gate_up", il);
 
@@ -2443,7 +2443,7 @@ ggml_tensor * llm_graph_context::build_moe_ffn(
             }
 
             if (gate_up_exps_b) {
-                gate_up = ggml_add_id(ctx0, gate_up, gate_up_exps_b, selected_experts);
+                gate_up = ggml_add_id(ctx0, gate_up, gate_up_exps_b, branch_ids);
                 cb_expert(gate_up, "ffn_moe_gate_up_biased", il);
             }
 
@@ -2454,7 +2454,7 @@ ggml_tensor * llm_graph_context::build_moe_ffn(
             cb_expert(up, "ffn_moe_up", il);
         } else {
             // separate gate and up path
-            up = build_lora_mm_id(up_exps, cur, selected_experts, up_exps_s, branch_slots, active); // [n_ff, n_expert_used, n_tokens]
+            up = build_lora_mm_id(up_exps, cur, branch_ids, up_exps_s, branch_slots, active); // [n_ff, n_expert_used, n_tokens]
             first = up;
             cb_expert(up, "ffn_moe_up", il);
 
@@ -2463,12 +2463,12 @@ ggml_tensor * llm_graph_context::build_moe_ffn(
             }
 
             if (up_exps_b) {
-                up = ggml_add_id(ctx0, up, up_exps_b, selected_experts);
+                up = ggml_add_id(ctx0, up, up_exps_b, branch_ids);
                 cb_expert(up, "ffn_moe_up_biased", il);
             }
 
             if (gate_exps) {
-                cur = build_lora_mm_id(gate_exps, cur, selected_experts, gate_exps_s, branch_slots, active); // [n_ff, n_expert_used, n_tokens]
+                cur = build_lora_mm_id(gate_exps, cur, branch_ids, gate_exps_s, branch_slots, active); // [n_ff, n_expert_used, n_tokens]
                 cb_expert(cur, "ffn_moe_gate", il);
             } else {
                 cur = up;
@@ -2479,7 +2479,7 @@ ggml_tensor * llm_graph_context::build_moe_ffn(
             }
 
             if (gate_exps_b) {
-                cur = ggml_add_id(ctx0, cur, gate_exps_b, selected_experts);
+                cur = ggml_add_id(ctx0, cur, gate_exps_b, branch_ids);
                 cb_expert(cur, "ffn_moe_gate_biased", il);
             }
         }
@@ -2569,7 +2569,7 @@ ggml_tensor * llm_graph_context::build_moe_ffn(
                 GGML_ABORT("fatal error");
         }
 
-        experts = build_lora_mm_id(down_exps, cur, selected_experts, down_exps_s, branch_slots, active); // [n_embd, n_expert_used, n_tokens]
+        experts = build_lora_mm_id(down_exps, cur, branch_ids, down_exps_s, branch_slots, active); // [n_embd, n_expert_used, n_tokens]
         if (down_prec == GGML_PREC_F32) {
             // src1 can exceed F16 range
             ggml_prec_set_src(experts, GGML_PREC_F32, 1);
@@ -2590,17 +2590,28 @@ ggml_tensor * llm_graph_context::build_moe_ffn(
         return experts;
     };
 
+    auto observe = [&]() {
+        ggml_tensor * ids = selected_experts;
+        if (moe_cache && !cparams.warmup) {
+            ids = moe_cache->build_observe(ctx0, ids, il, hybrid_slots != nullptr);
+            if (ids != selected_experts) {
+                ggml_backend_sched_set_tensor_backend(sched, ids, backend_cpu);
+            }
+        }
+        return ids;
+    };
+
     ggml_tensor * experts;
     if (hybrid_slots) {
         ggml_build_forward_expand(gf, cur);
-        ggml_tensor * hits = build_experts(cur, hybrid_slots, hit_mask, moe_cache->backend(il), "_gpu");
+        ggml_tensor * hits = build_experts(cur, selected_experts, hybrid_slots, hit_mask, moe_cache->backend(il), "_gpu");
         ggml_build_forward_expand(gf, hits);
-        ggml_tensor * misses = build_experts(cur, nullptr, miss_mask, backend_cpu, "_cpu");
+        ggml_tensor * misses = build_experts(cur, observe(), nullptr, miss_mask, backend_cpu, "_cpu");
         ggml_build_forward_expand(gf, misses);
         experts = ggml_add(ctx0, hits, misses);
         cb(experts, "ffn_moe_join", il);
     } else {
-        experts = build_experts(cur, slots, nullptr, nullptr, "");
+        experts = build_experts(cur, observe(), slots, nullptr, nullptr, "");
     }
 
     if (down_exps_b) {

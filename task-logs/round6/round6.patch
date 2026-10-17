@@ -1,0 +1,1188 @@
+diff --git a/src/llama-context.cpp b/src/llama-context.cpp
+index 310906f68..4791552ab 100644
+--- a/src/llama-context.cpp
++++ b/src/llama-context.cpp
+@@ -362,12 +362,18 @@ llama_context::llama_context(
+     cparams.moe_cache_size = params.moe_cache_size;
+ 
+     const char * hybrid_profile = nullptr;
++    bool hybrid_adaptive = false;
+     const char * hybrid = getenv("GGML_MOE_HYBRID");
+     if (hybrid && std::strcmp(hybrid, "1") == 0) {
++        const char * adaptive = getenv("GGML_MOE_HYBRID_ADAPTIVE");
++        hybrid_adaptive = adaptive && std::strcmp(adaptive, "1") == 0;
+         const char * value = getenv("GGML_MOE_HYBRID_MIB");
+         hybrid_profile = getenv("GGML_MOE_HYBRID_PROFILE");
+-        if (params.moe_cache_size || !value || !hybrid_profile || !*hybrid_profile) {
+-            throw std::runtime_error("hybrid MoE needs GGML_MOE_HYBRID_MIB and GGML_MOE_HYBRID_PROFILE, without --moe-cache-mib");
++        if (params.moe_cache_size || !value || (!hybrid_adaptive && (!hybrid_profile || !*hybrid_profile))) {
++            throw std::runtime_error("hybrid MoE needs GGML_MOE_HYBRID_MIB and a profile or GGML_MOE_HYBRID_ADAPTIVE=1, without --moe-cache-mib");
++        }
++        if (hybrid_profile && !*hybrid_profile) {
++            hybrid_profile = nullptr;
+         }
+         size_t mib = 0;
+         const size_t limit = std::numeric_limits<size_t>::max() / (1024*1024);
+@@ -383,7 +389,7 @@ llama_context::llama_context(
+         // the environment reaches every context of the process, a draft model's too: a profile that names layers
+         // without routed experts in this model belongs to another model, so this context runs without the cache
+         bool profile_fits = true;
+-        {
++        if (hybrid_profile) {
+             std::ifstream input(hybrid_profile);
+             std::string header;
+             std::getline(input, header);
+@@ -393,12 +399,20 @@ llama_context::llama_context(
+                     (model.layers[il].ffn_up_exps || model.layers[il].ffn_gate_up_exps);
+             }
+         }
+-        if (profile_fits) {
++        const bool has_experts = std::any_of(model.layers.begin(), model.layers.end(), [](const llama_layer & l) {
++            return l.ffn_up_exps || l.ffn_gate_up_exps;
++        });
++        if (hybrid_adaptive && !has_experts) {
++            LLAMA_LOG_WARN("%s: hybrid MoE off for this context: model has no routed experts (a draft model?)\n", __func__);
++            hybrid_profile = nullptr;
++            hybrid_adaptive = false;
++        } else if (profile_fits) {
+             cparams.moe_cache_size = mib*1024*1024;
+         } else {
+             LLAMA_LOG_WARN("%s: hybrid MoE off for this context: %s names layers without routed experts in this model (a draft model?)\n",
+                 __func__, hybrid_profile);
+             hybrid_profile = nullptr;
++            hybrid_adaptive = false;
+         }
+     }
+ 
+@@ -591,7 +605,7 @@ llama_context::llama_context(
+         }
+ 
+         if (cparams.moe_cache_size > 0) {
+-            moe_cache = std::make_unique<llama_moe_cache>(model, backend_ptrs, backend_buft, cparams.moe_cache_size, hybrid_profile);
++            moe_cache = std::make_unique<llama_moe_cache>(model, backend_ptrs, backend_buft, cparams.moe_cache_size, hybrid_profile, hybrid_adaptive);
+         }
+ 
+         sched_reserve();
+@@ -1609,7 +1623,14 @@ llm_graph_result * llama_context::process_ubatch(const llama_ubatch & ubatch, ll
+         //LLAMA_LOG_INFO("graph set inputs time: %.3f ms\n", (ggml_time_us() - t_start_us)/1000.0);
+     }
+ 
++    if (moe_cache) {
++        moe_cache->begin_graph(cparams.warmup ? 0 : ubatch.n_tokens, ubatch.output);
++    }
+     const auto status = graph_compute(res->get_gf(), ubatch.n_tokens > 1);
++    if (moe_cache) {
++        // CPU route collectors finish before the scheduler returns; GPU tails may still be in flight.
++        moe_cache->end_graph(status == GGML_STATUS_SUCCESS);
++    }
+     if (status != GGML_STATUS_SUCCESS) {
+         LLAMA_LOG_ERROR("%s: failed to compute graph, compute status: %d\n", __func__, status);
+         ret = status;
+diff --git a/src/llama-graph.cpp b/src/llama-graph.cpp
+index 96568124d..5129cda6b 100644
+--- a/src/llama-graph.cpp
++++ b/src/llama-graph.cpp
+@@ -2424,7 +2424,7 @@ ggml_tensor * llm_graph_context::build_moe_ffn(
+         }
+     }
+ 
+-    auto build_experts = [&](ggml_tensor * cur, ggml_tensor * branch_slots, ggml_tensor * active, ggml_backend_t backend, const char * suffix) {
++    auto build_experts = [&](ggml_tensor * cur, ggml_tensor * branch_ids, ggml_tensor * branch_slots, ggml_tensor * active, ggml_backend_t backend, const char * suffix) {
+         auto cb_expert = [&](ggml_tensor * t, const char * name, int layer) {
+             cb(t, (std::string(name) + suffix).c_str(), layer);
+         };
+@@ -2434,7 +2434,7 @@ ggml_tensor * llm_graph_context::build_moe_ffn(
+ 
+         if (gate_up_exps) {
+             // merged gate_up path: one mul_mat_id, then split into gate and up views
+-            ggml_tensor * gate_up = build_lora_mm_id(gate_up_exps, cur, selected_experts, up_exps_s, branch_slots, active); // [n_ff*2, n_expert_used, n_tokens]
++            ggml_tensor * gate_up = build_lora_mm_id(gate_up_exps, cur, branch_ids, up_exps_s, branch_slots, active); // [n_ff*2, n_expert_used, n_tokens]
+             first = gate_up;
+             cb_expert(gate_up, "ffn_moe_gate_up", il);
+ 
+@@ -2443,7 +2443,7 @@ ggml_tensor * llm_graph_context::build_moe_ffn(
+             }
+ 
+             if (gate_up_exps_b) {
+-                gate_up = ggml_add_id(ctx0, gate_up, gate_up_exps_b, selected_experts);
++                gate_up = ggml_add_id(ctx0, gate_up, gate_up_exps_b, branch_ids);
+                 cb_expert(gate_up, "ffn_moe_gate_up_biased", il);
+             }
+ 
+@@ -2454,7 +2454,7 @@ ggml_tensor * llm_graph_context::build_moe_ffn(
+             cb_expert(up, "ffn_moe_up", il);
+         } else {
+             // separate gate and up path
+-            up = build_lora_mm_id(up_exps, cur, selected_experts, up_exps_s, branch_slots, active); // [n_ff, n_expert_used, n_tokens]
++            up = build_lora_mm_id(up_exps, cur, branch_ids, up_exps_s, branch_slots, active); // [n_ff, n_expert_used, n_tokens]
+             first = up;
+             cb_expert(up, "ffn_moe_up", il);
+ 
+@@ -2463,12 +2463,12 @@ ggml_tensor * llm_graph_context::build_moe_ffn(
+             }
+ 
+             if (up_exps_b) {
+-                up = ggml_add_id(ctx0, up, up_exps_b, selected_experts);
++                up = ggml_add_id(ctx0, up, up_exps_b, branch_ids);
+                 cb_expert(up, "ffn_moe_up_biased", il);
+             }
+ 
+             if (gate_exps) {
+-                cur = build_lora_mm_id(gate_exps, cur, selected_experts, gate_exps_s, branch_slots, active); // [n_ff, n_expert_used, n_tokens]
++                cur = build_lora_mm_id(gate_exps, cur, branch_ids, gate_exps_s, branch_slots, active); // [n_ff, n_expert_used, n_tokens]
+                 cb_expert(cur, "ffn_moe_gate", il);
+             } else {
+                 cur = up;
+@@ -2479,7 +2479,7 @@ ggml_tensor * llm_graph_context::build_moe_ffn(
+             }
+ 
+             if (gate_exps_b) {
+-                cur = ggml_add_id(ctx0, cur, gate_exps_b, selected_experts);
++                cur = ggml_add_id(ctx0, cur, gate_exps_b, branch_ids);
+                 cb_expert(cur, "ffn_moe_gate_biased", il);
+             }
+         }
+@@ -2569,7 +2569,7 @@ ggml_tensor * llm_graph_context::build_moe_ffn(
+                 GGML_ABORT("fatal error");
+         }
+ 
+-        experts = build_lora_mm_id(down_exps, cur, selected_experts, down_exps_s, branch_slots, active); // [n_embd, n_expert_used, n_tokens]
++        experts = build_lora_mm_id(down_exps, cur, branch_ids, down_exps_s, branch_slots, active); // [n_embd, n_expert_used, n_tokens]
+         if (down_prec == GGML_PREC_F32) {
+             // src1 can exceed F16 range
+             ggml_prec_set_src(experts, GGML_PREC_F32, 1);
+@@ -2590,17 +2590,28 @@ ggml_tensor * llm_graph_context::build_moe_ffn(
+         return experts;
+     };
+ 
++    auto observe = [&]() {
++        ggml_tensor * ids = selected_experts;
++        if (moe_cache && !cparams.warmup) {
++            ids = moe_cache->build_observe(ctx0, ids, il, hybrid_slots != nullptr);
++            if (ids != selected_experts) {
++                ggml_backend_sched_set_tensor_backend(sched, ids, backend_cpu);
++            }
++        }
++        return ids;
++    };
++
+     ggml_tensor * experts;
+     if (hybrid_slots) {
+         ggml_build_forward_expand(gf, cur);
+-        ggml_tensor * hits = build_experts(cur, hybrid_slots, hit_mask, moe_cache->backend(il), "_gpu");
++        ggml_tensor * hits = build_experts(cur, selected_experts, hybrid_slots, hit_mask, moe_cache->backend(il), "_gpu");
+         ggml_build_forward_expand(gf, hits);
+-        ggml_tensor * misses = build_experts(cur, nullptr, miss_mask, backend_cpu, "_cpu");
++        ggml_tensor * misses = build_experts(cur, observe(), nullptr, miss_mask, backend_cpu, "_cpu");
+         ggml_build_forward_expand(gf, misses);
+         experts = ggml_add(ctx0, hits, misses);
+         cb(experts, "ffn_moe_join", il);
+     } else {
+-        experts = build_experts(cur, slots, nullptr, nullptr, "");
++        experts = build_experts(cur, observe(), slots, nullptr, nullptr, "");
+     }
+ 
+     if (down_exps_b) {
+diff --git a/src/llama-moe-cache.cpp b/src/llama-moe-cache.cpp
+index 6eee245df..bb4aaae3f 100644
+--- a/src/llama-moe-cache.cpp
++++ b/src/llama-moe-cache.cpp
+@@ -6,11 +6,100 @@
+ #include "ggml-cpp.h"
+ 
+ #include <algorithm>
++#include <cstring>
+ #include <fstream>
+ #include <stdexcept>
+ #include <unordered_map>
+ #include <vector>
+ 
++void llama_moe_cache_lfu::init(size_t n_keys, int32_t n_slots) {
++    counts.assign(n_keys, 0.0);
++    slot_of.assign(n_keys, -1);
++    key_of.assign(n_slots, -1);
++    pending.assign(n_keys, false);
++    candidates.clear();
++    tokens = hits = misses = 0;
++}
++
++void llama_moe_cache_lfu::seed(int32_t key, int32_t slot, double count) {
++    GGML_ASSERT(key >= 0 && (size_t) key < counts.size());
++    GGML_ASSERT(slot >= 0 && (size_t) slot < key_of.size());
++    GGML_ASSERT(slot_of[key] == -1 && key_of[slot] == -1);
++    counts[key] = count;
++    slot_of[key] = slot;
++    key_of[slot] = key;
++}
++
++void llama_moe_cache_lfu::begin_token() {
++    if (tokens && tokens % 512 == 0) {
++        for (double & count : counts) {
++            count *= 0.5;
++        }
++    }
++    ++tokens;
++}
++
++void llama_moe_cache_lfu::observe(int32_t key, bool use_cache) {
++    GGML_ASSERT(key >= 0 && (size_t) key < counts.size());
++    ++counts[key];
++    if (use_cache && slot_of[key] >= 0) {
++        ++hits;
++    } else {
++        ++misses;
++    }
++    if (slot_of[key] < 0 && !pending[key]) {
++        candidates.push_back(key);
++        pending[key] = true;
++    }
++}
++
++std::vector<llama_moe_cache_lfu::fill> llama_moe_cache_lfu::plan(size_t limit) {
++    std::vector<int32_t> cold;
++    if (limit == 0 || candidates.empty()) {
++        for (int32_t key : candidates) {
++            pending[key] = false;
++        }
++        candidates.clear();
++        return {};
++    }
++    for (size_t slot = 0; slot < key_of.size(); ++slot) {
++        cold.push_back(slot);
++    }
++    std::sort(cold.begin(), cold.end(), [&](int32_t a, int32_t b) {
++        const int32_t ka = key_of[a];
++        const int32_t kb = key_of[b];
++        if (ka < 0 || kb < 0) {
++            return ka == kb ? a < b : ka < kb;
++        }
++        return counts[ka] == counts[kb] ? ka < kb : counts[ka] < counts[kb];
++    });
++    std::sort(candidates.begin(), candidates.end(), [&](int32_t a, int32_t b) {
++        return counts[a] == counts[b] ? a < b : counts[a] > counts[b];
++    });
++    std::vector<fill> fills;
++    for (int32_t key : candidates) {
++        if (fills.size() >= limit || fills.size() >= cold.size()) {
++            break;
++        }
++        const int32_t slot = cold[fills.size()];
++        const int32_t evicted = key_of[slot];
++        if (evicted >= 0 && counts[key] <= counts[evicted]) {
++            break;
++        }
++        if (evicted >= 0) {
++            slot_of[evicted] = -1;
++        }
++        slot_of[key] = slot;
++        key_of[slot] = key;
++        fills.push_back({key, slot, evicted});
++    }
++    for (int32_t key : candidates) {
++        pending[key] = false;
++    }
++    candidates.clear();
++    return fills;
++}
++
+ namespace {
+ 
+ // LRU of the experts of a group of layers, the slot of each expert is kept in the slot map of its layer
+@@ -174,11 +263,17 @@ struct llama_moe_cache::impl {
+         size_t host_bytes = 0;
+         int32_t n_slots = 0;
+         moe_cache_lru lru;
++        llama_moe_cache_lfu lfu;
++        std::vector<int32_t> slot_values; // immutable sources for async device map writes: -1, 0, ..., n_slots-1
+     };
+ 
+     struct layer {
+         int32_t ig = -1;                    // -1 if the layer is not cached
+         bool has_resident = false;
++        bool use_cache = false;
++        int64_t n_selected = 0;
++        int64_t n_tokens = 0;
++        std::vector<int32_t> routes;
+         ggml_tensor * slot_map_device = nullptr;
+         ggml_tensor * slot_map = nullptr;   // I32 [1, n_expert] in host memory
+         std::vector<ggml_tensor *> experts; // host expert tensors, in the order of the banks
+@@ -200,6 +295,15 @@ struct llama_moe_cache::impl {
+ 
+     int32_t n_expert_used;
+     bool hybrid;
++    bool adaptive;
++    size_t admit = 8;
++    uint64_t tokens = 0;
++    uint64_t uploads = 0;
++    uint64_t upload_bytes = 0;
++    size_t next_group = 0;
++    int64_t graph_tokens = 0;
++    int64_t graph_outputs = 0;
++    std::vector<int64_t> output_rows;
+ 
+     stats stats_small; // up to 8 tokens per ubatch
+     stats stats_large;
+@@ -222,8 +326,23 @@ struct llama_moe_cache::impl {
+     // views used by copy_experts
+     ggml_context_ptr ctx_views;
+ 
+-    impl(const llama_model & model, const std::vector<ggml_backend_t> & backends, const std::vector<ggml_backend_buffer_type_t> & bufts, size_t size, const char * profile) :
+-            n_expert_used(model.hparams.n_expert_used_max()), hybrid(profile != nullptr), layers(model.layers.size()) {
++    impl(const llama_model & model, const std::vector<ggml_backend_t> & backends, const std::vector<ggml_backend_buffer_type_t> & bufts, size_t size, const char * profile, bool adaptive) :
++            n_expert_used(model.hparams.n_expert_used_max()), hybrid(profile != nullptr || adaptive), adaptive(adaptive), layers(model.layers.size()) {
++        if (adaptive) {
++            const char * value = getenv("GGML_MOE_HYBRID_ADMIT");
++            if (value) {
++                admit = 0;
++                if (!*value) {
++                    throw std::runtime_error("invalid GGML_MOE_HYBRID_ADMIT");
++                }
++                for (const char * p = value; *p; ++p) {
++                    if (*p < '0' || *p > '9' || admit > (SIZE_MAX - (*p - '0')) / 10) {
++                        throw std::runtime_error("invalid GGML_MOE_HYBRID_ADMIT");
++                    }
++                    admit = admit*10 + (*p - '0');
++                }
++            }
++        }
+         for (size_t i = 0; i < backends.size(); ++i) {
+             const auto dev_type = ggml_backend_dev_type(ggml_backend_get_device(backends[i]));
+             if (dev_type == GGML_BACKEND_DEVICE_TYPE_GPU || dev_type == GGML_BACKEND_DEVICE_TYPE_IGPU) {
+@@ -318,6 +437,9 @@ struct llama_moe_cache::impl {
+             const device & d = devices[g.id];
+             const int32_t n_expert  = g.ref[0]->ne[2];
+             const size_t  budget    = (size_t) ((double) size*d.split/split_sum*g.host_bytes/d.host_bytes);
++            if (adaptive && model.layers.size() > (size_t) INT32_MAX / n_expert) {
++                throw std::runtime_error("too many MoE hybrid cache keys");
++            }
+             const int32_t max_slots = g.layers.size()*n_expert;
+             while (g.n_slots < max_slots && alloc_size(g, g.n_slots + 1) <= budget) {
+                 g.n_slots++;
+@@ -325,12 +447,20 @@ struct llama_moe_cache::impl {
+             if (hybrid && g.n_slots >= (1 << 24)) {
+                 throw std::runtime_error("MoE hybrid slots must be exactly representable as F32");
+             }
+-            if (g.n_slots < n_expert_used) {
++            const int64_t min_slots = adaptive ? std::min<int64_t>(8LL*n_expert_used, n_expert) : n_expert_used;
++            // A group must hold at least one layer's largest supported routing window.
++            if (g.n_slots < min_slots) {
+                 LLAMA_LOG_WARN("%s: MoE cache budget is too small for %zu layers, they are not cached\n", __func__, g.layers.size());
+                 g.n_slots = 0;
+                 continue;
+             }
+             g.lru.init(model.layers.size(), n_expert, g.n_slots);
++            if (adaptive) {
++                g.lfu.init(model.layers.size()*n_expert, g.n_slots);
++                for (int32_t slot = -1; slot < g.n_slots; ++slot) {
++                    g.slot_values.push_back(slot);
++                }
++            }
+             n_tensors[g.id] += g.ref.size()*(1 + g.layers.size()) + (hybrid ? g.layers.size() : 0);
+             n_tensors_host  += g.layers.size();
+         }
+@@ -447,9 +577,24 @@ struct llama_moe_cache::impl {
+         ggml_backend_buffer_set_usage(buf_host.get(), GGML_BACKEND_BUFFER_USAGE_WEIGHTS);
+ 
+         if (hybrid && !model.hparams.no_alloc) {
+-            load_profile(profile);
++            if (profile) {
++                load_profile(profile);
++            } else {
++                for (const layer & l : layers) {
++                    if (l.slot_map_device) {
++                        ggml_backend_tensor_set(l.slot_map_device, l.slot_map->data, 0, ggml_nbytes(l.slot_map));
++                    }
++                }
++            }
+         }
+ 
++        if (adaptive) {
++            size_t slots = 0;
++            for (const group & g : groups) {
++                slots += g.n_slots;
++            }
++            LLAMA_LOG_WARN("llama_moe_cache: adaptive LFU: %zu slots, admit <= %zu experts/ubatch, decay every 512 tokens\n", slots, admit);
++        }
+         for (size_t id = 0; id < devices.size(); ++id) {
+             const device & d = devices[id];
+             if (d.host_bytes == 0) {
+@@ -501,6 +646,9 @@ struct llama_moe_cache::impl {
+             slot = next_slot[l.ig]++;
+             l.has_resident = true;
+             g.lru.key_of[slot] = il*g.lru.n_expert + expert;
++            if (adaptive) {
++                g.lfu.seed(g.lru.key_of[slot], slot, (double) count);
++            }
+         }
+         if (!input.eof()) {
+             throw std::runtime_error("invalid MoE hybrid profile data");
+@@ -529,8 +677,12 @@ struct llama_moe_cache::impl {
+         for (const device & d : devices) {
+             ggml_backend_synchronize(d.backend);
+         }
+-        LLAMA_LOG_INFO("llama_moe_cache: frozen hybrid profile: %zu resident experts, %.2f MiB uploaded at initialization\n",
+-            resident, uploaded/1024.0/1024.0);
++        if (adaptive) {
++            LLAMA_LOG_WARN("llama_moe_cache: adaptive warm start: %zu experts, %.2f MiB (excluded from runtime uploads)\n", resident, uploaded/1024.0/1024.0);
++        } else {
++            LLAMA_LOG_INFO("llama_moe_cache: frozen hybrid profile: %zu resident experts, %.2f MiB uploaded at initialization\n",
++                resident, uploaded/1024.0/1024.0);
++        }
+     }
+ 
+     ggml_tensor * get_slot_map(int32_t il, int64_t n_tokens, int64_t n_expert_used) const {
+@@ -540,7 +692,7 @@ struct llama_moe_cache::impl {
+         const layer & l = layers[il];
+ 
+         if (hybrid) {
+-            return n_tokens >= 1 && n_tokens <= 8 && l.has_resident ? l.slot_map_device : nullptr;
++            return n_tokens >= 1 && n_tokens <= 8 && (adaptive || l.has_resident) ? l.slot_map_device : nullptr;
+         }
+ 
+         // large batches use most experts of a layer, so they gain little from the cache and would evict the experts used in generation
+@@ -555,6 +707,120 @@ struct llama_moe_cache::impl {
+         return it != bindings.end() ? it->second.cached : nullptr;
+     }
+ 
++    template<bool use_cache>
++    static void collect_routes(ggml_tensor * dst, const ggml_tensor * src, int ith, int nth, void * userdata) {
++        GGML_ASSERT(ith == 0 && nth == 1 && src->type == GGML_TYPE_I32);
++        layer & l = *static_cast<layer *>(userdata);
++        l.use_cache = use_cache;
++        l.n_selected = src->ne[0];
++        l.n_tokens = src->ne[1];
++        l.routes.resize(l.n_selected*l.n_tokens);
++        for (int64_t t = 0; t < l.n_tokens; ++t) {
++            for (int64_t e = 0; e < l.n_selected; ++e) {
++                int32_t id;
++                memcpy(&id, (const char *) src->data + t*src->nb[1] + e*src->nb[0], sizeof(id));
++                l.routes[t*l.n_selected + e] = id;
++                memcpy((char *) dst->data + t*dst->nb[1] + e*dst->nb[0], &id, sizeof(id));
++            }
++        }
++    }
++
++    ggml_tensor * build_observe(ggml_context * ctx, ggml_tensor * ids, int32_t il, bool use_cache) {
++        if (!adaptive || il < 0 || il >= (int32_t) layers.size() || layers[il].ig < 0) {
++            return ids;
++        }
++        layer & l = layers[il];
++        ggml_tensor * result = ggml_map_custom1(ctx, ids, use_cache ? collect_routes<true> : collect_routes<false>, 1, &l);
++        ggml_format_name(result, "ffn_moe_observe-%d", il);
++        return result;
++    }
++
++    void begin_graph(int64_t n_tokens, const int8_t * output) {
++        if (!adaptive) {
++            return;
++        }
++        graph_tokens = n_tokens;
++        graph_outputs = 0;
++        output_rows.resize(n_tokens);
++        for (int64_t t = 0; t < n_tokens; ++t) {
++            output_rows[t] = !output || output[t] ? graph_outputs++ : -1;
++        }
++        for (layer & l : layers) {
++            l.n_tokens = 0;
++        }
++    }
++
++    void end_graph(bool success) {
++        if (!adaptive || !success || groups.empty()) {
++            return;
++        }
++        if (graph_tokens == 0) {
++            return;
++        }
++        for (int64_t t = 0; t < graph_tokens; ++t) {
++            for (group & g : groups) {
++                if (g.n_slots) {
++                    g.lfu.begin_token();
++                }
++            }
++            for (size_t il = 0; il < layers.size(); ++il) {
++                const layer & l = layers[il];
++                if (l.n_tokens == 0) {
++                    continue;
++                }
++                // The final FFN may only evaluate the requested output rows.
++                GGML_ASSERT(l.n_tokens == graph_tokens || l.n_tokens == graph_outputs);
++                const int64_t row = l.n_tokens == graph_tokens ? t : output_rows[t];
++                if (row < 0) {
++                    continue;
++                }
++                group & g = groups[l.ig];
++                for (int64_t e = 0; e < l.n_selected; ++e) {
++                    const int32_t expert = l.routes[row*l.n_selected + e];
++                    GGML_ASSERT(expert >= 0 && expert < g.lru.n_expert);
++                    g.lfu.observe(il*g.lru.n_expert + expert, l.use_cache);
++                }
++            }
++        }
++        tokens += graph_tokens;
++        size_t remaining = admit;
++        for (size_t i = 0; i < groups.size(); ++i) {
++            group & g = groups[(next_group + i) % groups.size()];
++            if (!g.n_slots) {
++                continue;
++            }
++            const auto admitted = g.lfu.plan(remaining);
++            remaining -= admitted.size();
++            const auto backend = devices[g.id].backend;
++            for (const auto & f : admitted) {
++                const int32_t il = f.key / g.lru.n_expert;
++                const int32_t expert = f.key % g.lru.n_expert;
++                const layer & l = layers[il];
++                // All graph reads are already submitted. CUDA joins its worker streams to this stream before returning.
++                // These writes and the next graph's reads use that same stream; no slot can change under a reader.
++                for (size_t ip = 0; ip < l.experts.size(); ++ip) {
++                    const ggml_tensor * w = l.experts[ip];
++                    ggml_backend_tensor_set_async(backend, g.banks[ip], (const char *) w->data + expert*w->nb[2], f.slot*w->nb[2], w->nb[2]);
++                    upload_bytes += w->nb[2];
++                }
++                if (f.evicted >= 0) {
++                    const int32_t old_layer = f.evicted / g.lru.n_expert;
++                    const int32_t old_expert = f.evicted % g.lru.n_expert;
++                    g.lru.slot_map[old_layer][old_expert] = -1;
++                    ggml_backend_tensor_set_async(backend, layers[old_layer].slot_map_device, &g.slot_values[0], old_expert*sizeof(int32_t), sizeof(int32_t));
++                    upload_bytes += sizeof(int32_t);
++                }
++                g.lru.key_of[f.slot] = f.key;
++                g.lru.slot_map[il][expert] = f.slot;
++                // The upload sources are immutable until context teardown, which synchronizes all backends.
++                ggml_backend_tensor_set_async(backend, l.slot_map_device, &g.slot_values[f.slot + 1], expert*sizeof(int32_t), sizeof(int32_t));
++                upload_bytes += sizeof(int32_t);
++                ++uploads;
++            }
++        }
++        next_group = (next_group + 1) % groups.size();
++    }
++
+     int64_t copy_experts(ggml_backend_t backend, const ggml_tensor * w, ggml_tensor * dst, int64_t e, int64_t last) {
+         if (hybrid) {
+             return 0;
+@@ -667,6 +933,18 @@ struct llama_moe_cache::impl {
+     }
+ 
+     void log_stats() const {
++        if (adaptive) {
++            uint64_t hits = 0, misses = 0;
++            for (const group & g : groups) {
++                hits += g.lfu.hits;
++                misses += g.lfu.misses;
++            }
++            const double per_token = tokens ? 1.0/tokens : 0.0;
++            LLAMA_LOG_WARN("llama_moe_cache: adaptive: tokens = %llu, hits = %llu, misses = %llu, hit rate = %.2f%%, uploads = %llu, uploaded = %.2f MiB, hits/token = %.2f, misses/token = %.2f, uploads/token = %.3f, MiB/token = %.3f\n",
++                (unsigned long long) tokens, (unsigned long long) hits, (unsigned long long) misses, hits + misses ? 100.0*hits/(hits + misses) : 0.0,
++                (unsigned long long) uploads, upload_bytes/1024.0/1024.0, hits*per_token, misses*per_token, uploads*per_token, upload_bytes/1024.0/1024.0*per_token);
++            return;
++        }
+         auto log = [](const char * name, const stats & st) {
+             const size_t n = st.hits + st.misses;
+             if (n == 0) {
+@@ -683,8 +961,8 @@ struct llama_moe_cache::impl {
+     }
+ };
+ 
+-llama_moe_cache::llama_moe_cache(const llama_model & model, const std::vector<ggml_backend_t> & backends, const std::vector<ggml_backend_buffer_type_t> & bufts, size_t size, const char * profile) :
+-    pimpl(new impl(model, backends, bufts, size, profile)) {
++llama_moe_cache::llama_moe_cache(const llama_model & model, const std::vector<ggml_backend_t> & backends, const std::vector<ggml_backend_buffer_type_t> & bufts, size_t size, const char * profile, bool adaptive) :
++    pimpl(new impl(model, backends, bufts, size, profile, adaptive)) {
+ }
+ 
+ llama_moe_cache::~llama_moe_cache() = default;
+@@ -697,6 +975,18 @@ bool llama_moe_cache::is_hybrid() const {
+     return pimpl->hybrid;
+ }
+ 
++ggml_tensor * llama_moe_cache::build_observe(ggml_context * ctx, ggml_tensor * ids, int32_t il, bool use_cache) const {
++    return pimpl->build_observe(ctx, ids, il, use_cache);
++}
++
++void llama_moe_cache::begin_graph(int64_t n_tokens, const int8_t * output) {
++    pimpl->begin_graph(n_tokens, output);
++}
++
++void llama_moe_cache::end_graph(bool success) {
++    pimpl->end_graph(success);
++}
++
+ ggml_tensor * llama_moe_cache::get_slot_map(int32_t il, int64_t n_tokens, int64_t n_expert_used) const {
+     return pimpl->get_slot_map(il, n_tokens, n_expert_used);
+ }
+diff --git a/src/llama-moe-cache.h b/src/llama-moe-cache.h
+index c3455cdb8..ab63cd29b 100644
+--- a/src/llama-moe-cache.h
++++ b/src/llama-moe-cache.h
+@@ -8,12 +8,36 @@
+ 
+ struct llama_model;
+ 
++// Host policy shared by the hybrid cache and routing replay tests.
++struct llama_moe_cache_lfu {
++    struct fill {
++        int32_t key;
++        int32_t slot;
++        int32_t evicted;
++    };
++
++    std::vector<double> counts;
++    std::vector<int32_t> slot_of;
++    std::vector<int32_t> key_of;
++    std::vector<int32_t> candidates;
++    std::vector<bool> pending;
++    uint64_t tokens = 0;
++    uint64_t hits = 0;
++    uint64_t misses = 0;
++
++    void init(size_t n_keys, int32_t n_slots);
++    void seed(int32_t key, int32_t slot, double count);
++    void begin_token();
++    void observe(int32_t key, bool use_cache = true);
++    std::vector<fill> plan(size_t limit);
++};
++
+ // keeps experts of host-resident MoE layers in device banks
+-// the default policy uploads misses; a hybrid profile freezes the banks and leaves misses on the CPU
++// the default policy uploads misses; hybrid mode leaves misses on the CPU
+ class llama_moe_cache {
+ public:
+     // backends are all the backends of the context, each GPU gets its own cache of the given size for the layers assigned to it
+-    llama_moe_cache(const llama_model & model, const std::vector<ggml_backend_t> & backends, const std::vector<ggml_backend_buffer_type_t> & bufts, size_t size, const char * profile = nullptr);
++    llama_moe_cache(const llama_model & model, const std::vector<ggml_backend_t> & backends, const std::vector<ggml_backend_buffer_type_t> & bufts, size_t size, const char * profile = nullptr, bool adaptive = false);
+     ~llama_moe_cache();
+ 
+     // the device that caches layer il
+@@ -21,6 +45,11 @@ public:
+ 
+     bool is_hybrid() const;
+ 
++    // Collect routes on the CPU branch, using the IDs already copied for the expert matmuls.
++    ggml_tensor * build_observe(ggml_context * ctx, ggml_tensor * ids, int32_t il, bool use_cache) const;
++    void begin_graph(int64_t n_tokens, const int8_t * output = nullptr);
++    void end_graph(bool success);
++
+     // the slot map of layer il, if its experts can be read from the cache for n_tokens tokens, nullptr otherwise
+     ggml_tensor * get_slot_map(int32_t il, int64_t n_tokens, int64_t n_expert_used) const;
+ 
+diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
+index 991bf5479..ea6a188bb 100644
+--- a/tests/CMakeLists.txt
++++ b/tests/CMakeLists.txt
+@@ -182,6 +182,9 @@ if (NOT WIN32 OR NOT BUILD_SHARED_LIBS)
+     # these tests are disabled on Windows because they use internal functions not exported with LLAMA_API (when building with shared libraries)
+     llama_build_and_test(test-unicode.cpp LINK llama)
+     llama_build_and_test(test-sampling.cpp LINK llama)
++    if (NOT LLAMA_USE_SYSTEM_GGML AND NOT GGML_BACKEND_DL AND GGML_CPU)
++        llama_build_and_test(test-moe-cache.cpp)
++    endif()
+     llama_build_and_test(test-reasoning-budget.cpp)
+     llama_build_and_test(test-grammar-parser.cpp LINK llama)
+     llama_build_and_test(test-grammar-integration.cpp)
+diff --git a/tests/test-moe-cache.cpp b/tests/test-moe-cache.cpp
+new file mode 100644
+index 000000000..8af9bbc44
+--- /dev/null
++++ b/tests/test-moe-cache.cpp
+@@ -0,0 +1,294 @@
++#include "../src/llama-moe-cache.h"
++#include "../src/llama-model.h"
++#include "../ggml/src/ggml-backend-impl.h"
++#include "ggml-cpu.h"
++#include "ggml-cpp.h"
++#include "llama-cpp.h"
++#include <nlohmann/json.hpp>
++
++#include <algorithm>
++#include <cstdio>
++#include <cstring>
++#include <functional>
++#include <fstream>
++#include <map>
++#include <string>
++#include <stdexcept>
++#include <vector>
++
++static void test_policy() {
++    llama_moe_cache_lfu policy;
++    policy.init(6, 2);
++    policy.begin_token();
++    policy.observe(0);
++    policy.observe(1);
++    GGML_ASSERT(policy.hits == 0 && policy.misses == 2);
++    GGML_ASSERT(policy.slot_of[0] == -1 && policy.slot_of[1] == -1);
++    auto fills = policy.plan(1);
++    GGML_ASSERT(fills.size() == 1 && fills[0].key == 0 && fills[0].evicted == -1);
++
++    policy.begin_token();
++    policy.observe(1);
++    fills = policy.plan(8);
++    GGML_ASSERT(fills.size() == 1 && fills[0].key == 1);
++    policy.begin_token();
++    policy.observe(2);
++    GGML_ASSERT(policy.plan(8).empty()); // Equal counts cannot evict a resident.
++    policy.begin_token();
++    policy.observe(2);
++    fills = policy.plan(8);
++    GGML_ASSERT(fills.size() == 1 && fills[0].key == 2 && fills[0].evicted == 0);
++    GGML_ASSERT(policy.slot_of[0] == -1 && policy.slot_of[2] >= 0);
++
++    const auto hits = policy.hits;
++    policy.begin_token();
++    policy.observe(2);
++    policy.observe(2);
++    GGML_ASSERT(policy.hits == hits + 2); // Repeated routes count separately.
++    policy.observe(2, false);
++    GGML_ASSERT(policy.hits == hits + 2); // Ordinary fallback does not use the cache.
++    policy.plan(0);
++
++    policy.init(4, 2);
++    policy.seed(0, 0, 9);
++    policy.seed(1, 1, 4);
++    for (int t = 0; t < 512; ++t) {
++        policy.begin_token();
++    }
++    GGML_ASSERT(policy.counts[0] == 9 && policy.counts[1] == 4);
++    policy.begin_token();
++    GGML_ASSERT(policy.counts[0] == 4.5 && policy.counts[1] == 2);
++    policy.observe(2);
++    policy.observe(2);
++    GGML_ASSERT(policy.plan(8).empty());
++    policy.observe(2);
++    fills = policy.plan(8);
++    GGML_ASSERT(fills.size() == 1 && fills[0].evicted == 1);
++
++    policy.init(10, 3);
++    policy.seed(0, 0, 1);
++    policy.seed(1, 1, 2);
++    policy.seed(2, 2, 3);
++    for (int t = 0; t < 4; ++t) {
++        policy.begin_token();
++        policy.observe(3);
++        policy.observe(4);
++        policy.observe(5);
++    }
++    // One ubatch: all four tokens see the old residency, then at most two uploads.
++    GGML_ASSERT(policy.hits == 0 && policy.misses == 12);
++    fills = policy.plan(2);
++    GGML_ASSERT(fills.size() == 2 && fills[0].evicted == 0 && fills[1].evicted == 1);
++    GGML_ASSERT(policy.slot_of[2] >= 0 && policy.slot_of[5] < 0);
++    GGML_ASSERT(policy.plan(8).empty());
++    puts("LFU policy checks passed");
++}
++
++// Host storage with a deferred stream: async copies retain their source pointers until drain().
++struct queued_backend {
++    ggml_backend_ptr cpu{ggml_backend_cpu_init()};
++    ggml_backend_device device = *ggml_backend_get_device(cpu.get());
++    ggml_backend backend = {};
++    std::vector<std::function<void()>> queue;
++    size_t syncs = 0;
++
++    queued_backend() {
++        device.iface.get_type = [](ggml_backend_dev_t) { return GGML_BACKEND_DEVICE_TYPE_GPU; };
++        backend.device = &device;
++        backend.context = this;
++        backend.iface.get_name = [](ggml_backend_t) { return "queued-host-test"; };
++        backend.iface.set_tensor_async = [](ggml_backend_t b, ggml_tensor * t, const void * data, size_t offset, size_t size) {
++            auto * self = static_cast<queued_backend *>(b->context);
++            self->queue.push_back([=]() { memcpy((char *) t->data + offset, data, size); });
++        };
++        backend.iface.synchronize = [](ggml_backend_t b) {
++            auto * self = static_cast<queued_backend *>(b->context);
++            ++self->syncs;
++            self->drain();
++        };
++    }
++
++    void drain() {
++        for (const auto & operation : queue) {
++            operation();
++        }
++        queue.clear();
++    }
++};
++
++static void test_ordering(const char * path, const char * profile) {
++    queued_backend queued;
++    ggml_backend_dev_t devices[] = {&queued.device, nullptr};
++    auto params = llama_model_default_params();
++    params.devices = devices;
++    params.n_gpu_layers = 99;
++    params.use_extra_bufts = false;
++    llama_model_ptr model(llama_model_load_from_file(path, params));
++    GGML_ASSERT(model && model->layers.size() == 2 && model->hparams.n_expert == 2);
++    const auto & layer = model->layers[0];
++    std::vector<ggml_tensor *> weights = {layer.ffn_gate_exps, layer.ffn_up_exps, layer.ffn_down_exps};
++    const auto buft = ggml_backend_cpu_buffer_type();
++    const size_t alignment = ggml_backend_buft_get_alignment(buft);
++    auto padded = [&](size_t n) { return (n + alignment - 1)/alignment*alignment; };
++    size_t budget = 2*padded(2*sizeof(int32_t));
++    for (const auto * w : weights) {
++        GGML_ASSERT(w);
++        budget += padded(3*w->nb[2]); // Two slots plus the bank's padding expert.
++    }
++    bool rejected = false;
++    try {
++        llama_moe_cache too_small(*model, {&queued.backend}, {buft}, 1, nullptr, true);
++    } catch (const std::runtime_error &) {
++        rejected = true;
++    }
++    GGML_ASSERT(rejected);
++    llama_moe_cache cache(*model, {&queued.backend}, {buft}, budget, nullptr, true);
++    auto map0 = cache.get_slot_map(0, 1, 1);
++    auto map1 = cache.get_slot_map(1, 1, 1);
++    GGML_ASSERT(map0 && map1);
++    GGML_ASSERT(((int32_t *) map0->data)[0] == -1 && ((int32_t *) map1->data)[0] == -1);
++    const size_t syncs = queued.syncs;
++
++    auto collect = [&](llama_moe_cache & cache, int il, const std::vector<int32_t> & ids, bool success, const std::vector<int8_t> & output = {}) {
++        cache.begin_graph(output.empty() ? ids.size() : output.size(), output.empty() ? nullptr : output.data());
++        ggml_context_ptr ctx(ggml_init({1024*1024, nullptr, false}));
++        // Use a strided view, as top-k IDs need not be contiguous.
++        auto src = ggml_new_tensor_2d(ctx.get(), GGML_TYPE_I32, 2, ids.size());
++        for (size_t t = 0; t < ids.size(); ++t) {
++            ((int32_t *) src->data)[2*t] = ids[t];
++            ((int32_t *) src->data)[2*t + 1] = -999;
++        }
++        auto view = ggml_view_2d(ctx.get(), src, 1, ids.size(), src->nb[1], 0);
++        auto observed = cache.build_observe(ctx.get(), view, il, true);
++        auto graph = ggml_new_graph(ctx.get());
++        ggml_build_forward_expand(graph, observed);
++        GGML_ASSERT(ggml_backend_graph_compute(queued.cpu.get(), graph) == GGML_STATUS_SUCCESS);
++        GGML_ASSERT(memcmp(observed->data, ids.data(), ids.size()*sizeof(int32_t)) == 0);
++        cache.end_graph(success);
++    };
++    auto expect_resident = [&](int il) {
++        queued.queue.push_back([&, il]() {
++            const auto * map = (const int32_t *) cache.get_slot_map(il, 1, 1)->data;
++            const auto & l = model->layers[il];
++            for (int e = 0; e < 2; ++e) {
++                GGML_ASSERT(map[e] >= 0 && map[e] < 2);
++                for (const auto * w : {l.ffn_gate_exps, l.ffn_up_exps, l.ffn_down_exps}) {
++                    const auto * bank = cache.get_experts(w);
++                    GGML_ASSERT(memcmp((const char *) bank->data + map[e]*bank->nb[2], (const char *) w->data + e*w->nb[2], w->nb[2]) == 0);
++                }
++            }
++        });
++    };
++
++    collect(cache, 0, {0, 1}, true);
++    GGML_ASSERT(!queued.queue.empty());
++    expect_resident(0); // A submitted graph must see the old weights and maps before the eviction writes.
++    collect(cache, 1, {0, 1, 0, 1}, true);
++    expect_resident(1);
++    queued.queue.push_back([&]() {
++        GGML_ASSERT(((int32_t *) map0->data)[0] == -1 && ((int32_t *) map0->data)[1] == -1);
++    });
++    const size_t n_pending = queued.queue.size();
++    collect(cache, 0, {0, 0, 0, 0}, false);
++    GGML_ASSERT(queued.queue.size() == n_pending);
++    GGML_ASSERT(queued.syncs == syncs); // Neither routing nor admission synchronizes the cache backend.
++    queued.drain();
++    // No stale routes from the aborted graph are counted or uploaded on the next evaluation.
++    cache.begin_graph(0);
++    cache.end_graph(true);
++    GGML_ASSERT(queued.queue.empty());
++    puts("Deferred backend ordering, async source lifetime, strided IDs and abort checks passed");
++
++    if (profile) {
++        llama_moe_cache frozen(*model, {&queued.backend}, {buft}, budget, profile, false);
++        GGML_ASSERT(frozen.get_slot_map(0, 1, 1) && !frozen.get_slot_map(1, 1, 1));
++        ggml_context_ptr ctx(ggml_init({1024*1024, nullptr, false}));
++        auto ids = ggml_new_tensor_2d(ctx.get(), GGML_TYPE_I32, 1, 1);
++        GGML_ASSERT(frozen.build_observe(ctx.get(), ids, 0, true) == ids);
++        frozen.begin_graph(1);
++        frozen.end_graph(true);
++        GGML_ASSERT(queued.queue.empty());
++
++        llama_moe_cache warm(*model, {&queued.backend}, {buft}, budget, profile, true);
++        auto warm0 = warm.get_slot_map(0, 1, 1);
++        auto warm1 = warm.get_slot_map(1, 1, 1);
++        GGML_ASSERT(warm0 && warm1);
++        GGML_ASSERT(memcmp(warm0->data, frozen.get_slot_map(0, 1, 1)->data, 2*sizeof(int32_t)) == 0);
++        for (const auto * w : weights) {
++            const auto * a = warm.get_experts(w);
++            const auto * b = frozen.get_experts(w);
++            GGML_ASSERT(memcmp(a->data, b->data, ggml_nbytes(a)) == 0);
++        }
++        collect(warm, 1, {0}, true);
++        GGML_ASSERT(queued.queue.empty()); // Profile counts are one, so the new count ties.
++        collect(warm, 1, {0}, true);
++        GGML_ASSERT(!queued.queue.empty());
++        queued.drain();
++        GGML_ASSERT(((int32_t *) warm0->data)[0] == -1 && ((int32_t *) warm1->data)[0] >= 0);
++        puts("Frozen mode and adaptive warm-start checks passed");
++
++        llama_moe_cache cropped(*model, {&queued.backend}, {buft}, budget, profile, true);
++        cropped.begin_graph(511);
++        cropped.end_graph(true);
++        collect(cropped, 1, {0}, true, {0, 1});
++        GGML_ASSERT(!queued.queue.empty()); // Count after decay: 1 > 0.5. Counting before decay would tie at 0.5.
++        queued.drain();
++        GGML_ASSERT(((int32_t *) cropped.get_slot_map(1, 1, 1)->data)[0] >= 0);
++        puts("Cropped output rows across the 512-token decay boundary passed");
++    }
++}
++
++static void replay(const char * path, int slots, size_t admit, size_t ubatch) {
++    using token_key = std::pair<int, int>;
++    std::map<token_key, std::map<int, std::vector<int>>> rows;
++    const std::vector<std::string> topics = {"de", "en", "code", "agent"};
++    int n_expert = 0, n_layer = 0;
++    std::ifstream input(path);
++    GGML_ASSERT(input.good());
++    std::string line;
++    while (std::getline(input, line)) {
++        auto r = nlohmann::json::parse(line);
++        const auto topic = std::find(topics.begin(), topics.end(), r.at("topic").get<std::string>());
++        GGML_ASSERT(topic != topics.end());
++        const int il = r.at("layer");
++        const int token = r.at("token");
++        GGML_ASSERT(il >= 0 && token >= 0);
++        auto ids = r.at("ids").get<std::vector<int>>();
++        for (int id : ids) {
++            GGML_ASSERT(id >= 0);
++            n_expert = std::max(n_expert, id + 1);
++        }
++        n_layer = std::max(n_layer, il + 1);
++        rows[{topic - topics.begin(), token}][il] = std::move(ids);
++    }
++    GGML_ASSERT(!rows.empty() && slots > 0 && ubatch > 0);
++    llama_moe_cache_lfu policy;
++    policy.init((size_t) n_layer*n_expert, slots);
++    size_t uploads = 0, n = 0;
++    for (const auto & token : rows) {
++        policy.begin_token();
++        for (const auto & layer : token.second) {
++            for (int id : layer.second) {
++                policy.observe(layer.first*n_expert + id);
++            }
++        }
++        if (++n % ubatch == 0 || n == rows.size()) {
++            uploads += policy.plan(admit).size();
++        }
++    }
++    printf("slots=%d admit=%zu ubatch=%zu tokens=%llu hits=%llu misses=%llu hit_rate=%.4f%% uploads=%zu uploads/token=%.4f\n",
++        slots, admit, ubatch, (unsigned long long) policy.tokens, (unsigned long long) policy.hits, (unsigned long long) policy.misses,
++        100.0*policy.hits/(policy.hits + policy.misses), uploads, (double) uploads/policy.tokens);
++}
++
++int main(int argc, char ** argv) {
++    test_policy();
++    if (argc >= 3 && std::string(argv[1]) == "--ordering") {
++        GGML_ASSERT(argc <= 4);
++        test_ordering(argv[2], argc == 4 ? argv[3] : nullptr);
++    } else if (argc > 1) {
++        GGML_ASSERT(argc >= 2 && argc <= 5);
++        replay(argv[1], argc > 2 ? std::stoi(argv[2]) : 1805, argc > 3 ? std::stoull(argv[3]) : 8, argc > 4 ? std::stoull(argv[4]) : 1);
++    }
++    return 0;
++}
+diff --git a/NOTES-round6.md b/NOTES-round6.md
+new file mode 100644
+index 000000000..d4a25a42b
+--- /dev/null
++++ b/NOTES-round6.md
+@@ -0,0 +1,98 @@
++# Round 6: adaptive GPU-hit / CPU-miss cache
++
++Worktree `/opt/llm-gateway/data/build/llama-l5`, branch `l5-cache`, base `004054e83`. Started 2026-10-17 14:18 UTC. The supplied round-5 GPU results are the starting point; no GPU execution or measurement was attempted here. No Git metadata, other worktrees, gateway configuration, Strata, or `/opt/agent-tools` was modified.
++
++## Status
++
++Adaptive LFU admission is implemented and disabled by default. CUDA compilation, CPU operator tests, C++ trace replay, and deferred-backend ordering checks pass. GPU correctness, overlap logging, throughput, perplexity, and the MTP server comparison remain for Claude. There is no new GPU performance claim.
++
++The source diff and new test/documentation files are saved in `task-logs/round6/round6.patch`. No commit or PR was made.
++
++## Design
++
++- Enable with both `GGML_MOE_HYBRID=1` and `GGML_MOE_HYBRID_ADAPTIVE=1`, plus `GGML_MOE_HYBRID_MIB`. `GGML_MOE_HYBRID_ADMIT` is a nonnegative integer, default 8, limiting expert uploads across all cache groups/devices per ubatch. Zero collects statistics without runtime admissions. Invalid/overflowing values throw during initialization. Existing `--moe-cache-mib` remains mutually exclusive with hybrid mode.
++- `llama_moe_cache_lfu`, declared in the existing internal cache header and implemented in the cache source, is the same policy object used by production and replay. Keys are `(layer, expert)`. Counts are doubles so halving retains fractional history, as in the Python reference. Counts halve before tokens 513, 1025, etc. Each selected route counts, including duplicate IDs and speculative tokens that are evaluated but later rejected.
++- A small `MAP_CUSTOM1` node passes routing IDs through on the CPU branch. It records the IDs already copied for the CPU expert matmuls, handles strided IDs, and uses one CPU task. It does not read back from a device, synchronize a backend, install an eval callback, or mutate residency. The CPU backend finishes these nodes before scheduler submission returns.
++- At the successful ubatch boundary, the cache processes routes in token/layer order, then chooses admissions. Candidates are nonresident experts observed in that ubatch, hottest first; residents are coldest first. Equal counts do not evict. Empty slots fill first. Tie order is deterministic by key. Candidates not admitted must be observed again to compete on a later ubatch. Groups receive the remaining global upload allowance in rotating order, avoiding permanent priority for the first layout/device.
++- The token clock comes from the actual ubatch. If the final FFN has been cropped to output rows, the existing host output flags place those rows at the correct token indices before decay. Warmup is excluded. Failed/aborted evaluations discard their collected routes and do not upload.
++- Layout/device grouping and memory budgeting reuse the existing cache. In adaptive mode a group must have at least `min(8*n_expert_used_max, n_expert)` slots: the maximum distinct working set of one layer's supported eight-token window. Smaller groups are disabled; if none fit, initialization fails. This is a per-layer window bound, not the sum of all layers' eight-token routes, which would exceed the requested 1805-slot budget for this model.
++- A supplied frozen profile populates the same banks/maps at initialization and seeds LFU from its training counts. Without a profile, all maps start at -1 and all counts at zero. Adaptive graphs include eligible empty layers so later admissions do not require graph rebuilding. Existing LoRA, bias/scale, precision, layout, warmup and token-window gates remain. Ordinary fallback routes in eligible groups are counted as misses and can train admission for later supported windows.
++- With adaptation off, observation returns the original ID tensor, boundary hooks do nothing, profile loading and static residency retain their previous behavior, and no extra graph nodes or runtime uploads are created. The host test checks frozen no-op behavior and equal initial bank/map contents between frozen and adaptive warm starts. GPU bitwise parity still needs the requested runtime check.
++- The existing draft-profile mismatch guard remains. Adaptive no-profile contexts with no routed experts now also disable the cache with a warning, rather than trying to allocate a MoE cache for a dense/draft context.
++- Teardown prints WARN-level evaluated tokens, hits, misses, hit rate, runtime uploads, total runtime MiB, and hits/misses/uploads/MiB per token. Runtime MiB includes weight slices and map updates. Warm-start uploads are logged separately and excluded from runtime admission rates. Statistics cover eligible cache groups; layers not assigned a cache are outside the denominator.
++
++## Upload ordering and overlap
++
++`process_ubatch()` begins collection immediately before `graph_compute()` and calls `end_graph()` after it returns successfully. At that point all graph operations have been submitted and CPU collectors/misses have completed. GPU tails may still be running.
++
++Only the owning cache backend reads a group's banks in the masked GPU branch. Every new weight slice and both map changes (old expert -> -1, new expert -> slot) are enqueued with `ggml_backend_tensor_set_async` on that same backend, after graph submission. CUDA's setter uses `cuda_ctx->stream()`, as do graph launches; CUDA's concurrent worker streams join the main stream. Thus the device order is:
++
++```
++current graph's bank/map reads -> weight uploads -> map changes -> next graph's reads
++```
++
++No slot is overwritten while an earlier reader is executing, and the next lookup cannot see a new map entry before its weights. This requires neither a host wait nor an upload triggered synchronously by a miss. The ordering argument is also beside the upload loop in the source.
++
++Weight upload sources are immutable model storage. Map upload sources are an immutable per-group array `[-1, 0, ..., n_slots-1]`; each map update copies one scalar from it. Unlike a mutable host map or a temporary fill object, these pointers remain valid through any number of in-flight evaluations. Context teardown already synchronizes backends before freeing cache storage. No staging-buffer reuse event or new synchronization is required.
++
++The observation node is constructed only after the GPU hit branch has been expanded and is pinned to the CPU. It consumes the same selected IDs needed by the old CPU branch and adds no later GPU input producer. The existing miss-mask producer remains the last input producer for the CPU split; the scheduler itself is unchanged. This is a graph/dependency argument, not a new GPU overlap trace. Claude should verify `GGML_SCHED_DEBUG=2` still reports part A ending at `ffn_moe_miss_mask-N` with adaptation enabled.
++
++The host test uses the actual cache, a generated two-layer MoE model, a real CPU collector, and a backend whose async writes are queued with their original source pointers. It queues a reader of the old residency, forces cross-layer evictions without draining the stream, and queues a reader of the new residency. Both observe the expected maps and all expert weight bytes when the queue is drained. It asserts no backend synchronization was added, checks strided IDs, excludes aborted evaluations, tests warm starts and frozen mode, rejects an undersized budget, and tests cropped output rows across the 512-token decay boundary. It does not emulate CUDA kernels or validate CUDA's stream implementation.
++
++## Replay
++
++Trace: `/opt/llm-gateway/data/build/llama-codex2/task-logs/round4-hitmiss/qwen-routes-r1.routes.jsonl`. Topic order is `de, en, code, agent`; 4096 evaluated tokens and 1,966,080 routes. One group, empty start, no device. Python was run directly from `/opt/llm-gateway/data/moe-quant/cache/sim_lfu.py`; exact results were also collected through its existing `lfu()` function.
++
++| Policy | Slots | Tokens/ubatch | Admission cap | Hit rate | Uploads/token |
++| --- | ---: | ---: | ---: | ---: | ---: |
++| Python immediate LFU | 1805 | 1 | unlimited | 44.1656% | 5.3113 |
++| C++ deferred LFU | 1805 | 1 | unlimited | 44.1848% | 5.1196 |
++| C++ default | 1805 | 1 | 8 | 43.2629% | 4.2390 |
++| Python immediate LFU | 3000 | 1 | unlimited | 56.0845% | 7.7791 |
++| C++ deferred LFU | 3000 | 1 | unlimited | 56.1058% | 7.5525 |
++| C++ default | 3000 | 1 | 8 | 54.3998% | 5.9399 |
++| C++ deferred LFU | 1805 | 4 | unlimited | 43.8102% | 4.6738 |
++| C++ default | 1805 | 4 | 8 | 38.9340% | 1.9839 |
++| C++ cap ablation | 1805 | 4 | 32 | 42.9538% | 3.9067 |
++
++Unlimited C++ admission matches Python within 0.022 percentage points. Python replaces entries immediately as each route arrives; C++ keeps residency fixed during the ubatch, then chooses the hottest candidates. This changes within-ubatch churn and reduces uploads slightly.
++
++At 1805 slots the default cap loses 0.903 points versus Python. At 3000 slots it loses 1.685 points: even one-token ubatches are throttled during cold fill and bursts, so the larger cache takes longer to populate and uploads fall from 7.779 to 5.940/token. This is throttling, not a group-boundary discrepancy. Four-token ubatches with cap 8 permit only two uploads/token; the cold-start result falls 5.232 points below Python's one-token unthrottled reference. Unlimited four-token admission reaches 43.810%, isolating a 0.355-point loss from deferred window updates. Cap 32 recovers to 42.954%, still 1.212 points below the Python reference: 0.355 points from the window and another 0.856 from burst throttling. A warm profile should avoid much of the initial fill cost, but this has not been measured on the gateway workload.
++
++Raw results are `task-logs/round6/replay-*.log` and `sim-lfu-exact.log`. Reproduce, for example:
++
++```sh
++build-cpu/bin/test-moe-cache /opt/llm-gateway/data/build/llama-codex2/task-logs/round4-hitmiss/qwen-routes-r1.routes.jsonl 1805 8 1
++```
++
++Arguments after the trace are slots, admissions/ubatch, and tokens/ubatch. Use 100000 for the unlimited replay rows.
++
++## Validation
++
++| Check | Result | Log under `task-logs/round6/` |
++| --- | --- | --- |
++| CPU policy CTest | Pass | `ctest.log` |
++| Deferred backend, strided collector, abort, budget, warm/frozen and cropped-row checks | Pass | `ordering.log` |
++| CPU no-expert context, adaptive enabled without a profile | Cache disabled with WARN; context created | `no-experts-context.log` |
++| CPU context with a profile naming another model's layers | Cache disabled with WARN; context created | `profile-mismatch-context.log` |
++| CPU `MUL_MAT_ID_MASKED` | 1314/1314 | `masked-cpu.out` |
++| CPU ordinary `MUL_MAT_ID` regression subset | 122/122 | `unmasked-cpu.out` |
++| Full CUDA build, Release, architecture 75 | Pass; no runtime execution | `build-cuda.log` |
++| Diff whitespace, changed-source ASCII, and local EditorConfig rules | Pass | `checks.log` |
++
++The standalone `editorconfig-checker` executable is unavailable; LF endings, UTF-8/ASCII, final newlines, spaces instead of tabs, and trailing whitespace were checked locally on the changed/new source files. Indent-size enforcement is disabled by the repository's `.ecrc`. No model naming mappings changed.
++
++`bash task-logs/round6/check-host.sh` rebuilds the relevant CPU targets, generates the tiny MoE fixture, runs the host tests/replays/operator checks, and builds the CUDA tree. It does not run a CUDA binary. The new test is excluded from system-ggml, dynamically loaded CPU backend, and Windows shared-library configurations because its deferred backend uses internal interfaces/direct CPU symbols.
++
++## GPU handoff and open risks
++
++`task-logs/round6/adaptive.env` contains the requested default switches and overlap/CPU-affinity settings. Source it, choose the actual cache budget beside the MTP head, and either set `GGML_MOE_HYBRID_PROFILE` to a profile that fits that budget or unset it for cold start. Do not reuse the 4096 MiB profile unchanged if its residents exceed the smaller budget.
++
++- Baseline: override `GGML_MOE_HYBRID=0`.
++- Adaptive: `GGML_MOE_HYBRID=1 GGML_MOE_HYBRID_ADAPTIVE=1 GGML_MOE_HYBRID_ADMIT=8`.
++- Frozen comparison: `GGML_MOE_HYBRID=1 GGML_MOE_HYBRID_ADAPTIVE=0` with a profile.
++- Optional pp4 throttle comparison: adaptive with `GGML_MOE_HYBRID_ADMIT=32`.
++
++Use the planned pp4/pp1 off/on/on/off sequence, test-de perplexity at `-ub 4` and `-ub 1`, and the MTP-3 `stage_b.py` comparison against Strata. Capture WARN teardown summaries and an untimed `GGML_SCHED_DEBUG=2` run for overlap. Routing eval callbacks should remain off during timing because they disable scheduler overlap.
++
++The main remaining risk is GPU runtime correctness/order under real CUDA graph reuse and multiple streams/devices; the host test proves the enqueue protocol only. PCIe uploads consume bandwidth and may delay output copies because they are submitted before the context extracts outputs. Pageable model-memory staging and many small map writes can add host overhead even without an explicit synchronization. The default eight-upload budget can also limit adaptation during multi-token prefill/verification; the replay quantifies this but does not predict wall-clock speed. Ordinary fallback windows still train the policy while reporting actual cache hits as zero. Mixed layout groups share one cap in rotating order, which is fair over time but is not a globally optimized allocation of upload bandwidth. Warm-profile count magnitudes influence how quickly old residents age out. Non-CUDA adaptive runtime behavior has not been tested.
+diff --git a/task-logs/round6/check-host.sh b/task-logs/round6/check-host.sh
+new file mode 100755
+index 000000000..c08877841
+--- /dev/null
++++ b/task-logs/round6/check-host.sh
+@@ -0,0 +1,27 @@
++#!/usr/bin/env bash
++set -euo pipefail
++unset GGML_MOE_HYBRID GGML_MOE_HYBRID_ADAPTIVE GGML_MOE_HYBRID_PROFILE GGML_MOE_HYBRID_ADMIT
++cd "$(dirname "$0")/../.."
++trace=${1:-/opt/llm-gateway/data/build/llama-codex2/task-logs/round4-hitmiss/qwen-routes-r1.routes.jsonl}
++logs=task-logs/round6
++mkdir -p "$logs/models"
++cmake -S . -B build-cpu > "$logs/configure-cpu.log" 2>&1
++nice -n 10 cmake --build build-cpu -j 16 --target test-moe-cache test-backend-ops test-llama-archs > "$logs/build-cpu.log" 2>&1
++# Use a CPU-only binary even on hosts with CUDA installed.
++build-cpu/bin/test-llama-archs -a qwen3moe -s 6 -o "$logs/models" > "$logs/model-gen.log" 2>&1
++env -u GGML_MOE_HYBRID -u GGML_MOE_HYBRID_ADMIT build-cpu/bin/test-moe-cache --ordering "$logs/models/qwen3moe-moe.gguf" "$logs/warm.profile" > "$logs/ordering.log" 2>&1
++env -u GGML_MOE_HYBRID_PROFILE GGML_MOE_HYBRID=1 GGML_MOE_HYBRID_ADAPTIVE=1 GGML_MOE_HYBRID_MIB=1 build-cpu/bin/test-llama-archs -a qwen3 -s 6 -v 2 -o "$logs/models" > "$logs/no-experts-context.log" 2>&1
++env GGML_MOE_HYBRID=1 GGML_MOE_HYBRID_ADAPTIVE=1 GGML_MOE_HYBRID_MIB=1 GGML_MOE_HYBRID_PROFILE="$logs/draft-mismatch.profile" build-cpu/bin/test-llama-archs -a qwen3moe -s 6 -v 2 -o "$logs/models" > "$logs/profile-mismatch-context.log" 2>&1
++ctest --test-dir build-cpu -R '^test-moe-cache$' --output-on-failure > "$logs/ctest.log" 2>&1
++for slots in 1805 3000; do
++    for admit in 8 100000; do
++        build-cpu/bin/test-moe-cache "$trace" "$slots" "$admit" 1 > "$logs/replay-$slots-admit$admit-ub1.log"
++    done
++done
++for admit in 8 32 100000; do
++    build-cpu/bin/test-moe-cache "$trace" 1805 "$admit" 4 > "$logs/replay-1805-admit$admit-ub4.log"
++done
++nice -n 10 build-cpu/bin/test-backend-ops test -b CPU -o MUL_MAT_ID_MASKED > "$logs/masked-cpu.out" 2> "$logs/masked-cpu.err"
++nice -n 10 build-cpu/bin/test-backend-ops test -b CPU -o MUL_MAT_ID -p 'type_a=(iq3_s|iq3_xxs|iq2_s|iq4_nl|iq4_xs|q2_0|q4_K|q5_K|q6_K|iq2_xxs),.*n=(1|4|5|8),' > "$logs/unmasked-cpu.out" 2> "$logs/unmasked-cpu.err"
++nice -n 10 cmake --build build-cuda -j 16 > "$logs/build-cuda.log" 2>&1
++git diff --check
+diff --git a/task-logs/round6/adaptive.env b/task-logs/round6/adaptive.env
+new file mode 100644
+index 000000000..34f805c70
+--- /dev/null
++++ b/task-logs/round6/adaptive.env
+@@ -0,0 +1,14 @@
++# Source this before a GPU run managed by the caller. No command is run here.
++export GGML_MOE_HYBRID=1
++export GGML_MOE_HYBRID_ADAPTIVE=1
++export GGML_MOE_HYBRID_ADMIT=8
++export GGML_MOE_HYBRID_MIB=2048
++export GGML_SCHED_OVERLAP=1
++export LLAMA_MOE_SHEXP_EARLY=1
++export OMP_PLACES=cores
++export OMP_PROC_BIND=close
++# Optional: export GGML_MOE_HYBRID_PROFILE=/path/to/profile
++# With no profile, unset GGML_MOE_HYBRID_PROFILE to start empty.
++# For the baseline, override GGML_MOE_HYBRID=0.
++# For frozen round 5, override GGML_MOE_HYBRID_ADAPTIVE=0 and supply a profile.
++# For the pp4 cap ablation, override GGML_MOE_HYBRID_ADMIT=32.
+diff --git a/task-logs/round6/warm.profile b/task-logs/round6/warm.profile
+new file mode 100644
+index 000000000..bb05afd2d
+--- /dev/null
++++ b/task-logs/round6/warm.profile
+@@ -0,0 +1,3 @@
++llama-moe-profile-v1
++0 0 1
++0 1 1
+diff --git a/task-logs/round6/draft-mismatch.profile b/task-logs/round6/draft-mismatch.profile
+new file mode 100644
+index 000000000..d34220782
+--- /dev/null
++++ b/task-logs/round6/draft-mismatch.profile
+@@ -0,0 +1,2 @@
++llama-moe-profile-v1
++48 0 1
+diff --git a/task-logs/round6/results.txt b/task-logs/round6/results.txt
+new file mode 100644
+index 000000000..ed93cfbd1
+--- /dev/null
++++ b/task-logs/round6/results.txt
+@@ -0,0 +1,27 @@
++Round 6 host validation
++Base: 004054e83825ee757c390930f2b3def147dd521f
++Branch: l5-cache
++Final CUDA build: exit 0; Release, CUDA architecture 75; no CUDA binary run
++Final CPU policy/ordering build and runs: exit 0
++masked-cpu.out: 1314/1314 tests passed
++unmasked-cpu.out: 122/122 tests passed
++LFU policy checks passed
++Deferred backend ordering, async source lifetime, strided IDs and abort checks passed
++Frozen mode and adaptive warm-start checks passed
++Cropped output rows across the 512-token decay boundary passed
++Exact Python reference:
++slots=1805 hit_rate=44.165599% uploads/token=5.311279
++slots=3000 hit_rate=56.084544% uploads/token=7.779053
++C++ replay:
++slots=1805 admit=100000 ubatch=1 tokens=4096 hits=868709 misses=1097371 hit_rate=44.1848% uploads=20970 uploads/token=5.1196
++slots=1805 admit=100000 ubatch=4 tokens=4096 hits=861343 misses=1104737 hit_rate=43.8102% uploads=19144 uploads/token=4.6738
++slots=1805 admit=32 ubatch=4 tokens=4096 hits=844506 misses=1121574 hit_rate=42.9538% uploads=16002 uploads/token=3.9067
++slots=1805 admit=8 ubatch=1 tokens=4096 hits=850584 misses=1115496 hit_rate=43.2629% uploads=17363 uploads/token=4.2390
++slots=1805 admit=8 ubatch=4 tokens=4096 hits=765473 misses=1200607 hit_rate=38.9340% uploads=8126 uploads/token=1.9839
++slots=3000 admit=100000 ubatch=1 tokens=4096 hits=1103084 misses=862996 hit_rate=56.1058% uploads=30935 uploads/token=7.5525
++slots=3000 admit=8 ubatch=1 tokens=4096 hits=1069543 misses=896537 hit_rate=54.3998% uploads=24330 uploads/token=5.9399
++git diff --check: PASS
++Added/changed source lines and new files: ASCII, no trailing whitespace, final newline: PASS
++Shell syntax: PASS
++EditorConfig local rule check on changed/new source: PASS (checker executable unavailable)
++Final diff and shell syntax checks: PASS

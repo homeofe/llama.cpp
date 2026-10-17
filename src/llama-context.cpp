@@ -362,12 +362,18 @@ llama_context::llama_context(
     cparams.moe_cache_size = params.moe_cache_size;
 
     const char * hybrid_profile = nullptr;
+    bool hybrid_adaptive = false;
     const char * hybrid = getenv("GGML_MOE_HYBRID");
     if (hybrid && std::strcmp(hybrid, "1") == 0) {
+        const char * adaptive = getenv("GGML_MOE_HYBRID_ADAPTIVE");
+        hybrid_adaptive = adaptive && std::strcmp(adaptive, "1") == 0;
         const char * value = getenv("GGML_MOE_HYBRID_MIB");
         hybrid_profile = getenv("GGML_MOE_HYBRID_PROFILE");
-        if (params.moe_cache_size || !value || !hybrid_profile || !*hybrid_profile) {
-            throw std::runtime_error("hybrid MoE needs GGML_MOE_HYBRID_MIB and GGML_MOE_HYBRID_PROFILE, without --moe-cache-mib");
+        if (params.moe_cache_size || !value || (!hybrid_adaptive && (!hybrid_profile || !*hybrid_profile))) {
+            throw std::runtime_error("hybrid MoE needs GGML_MOE_HYBRID_MIB and a profile or GGML_MOE_HYBRID_ADAPTIVE=1, without --moe-cache-mib");
+        }
+        if (hybrid_profile && !*hybrid_profile) {
+            hybrid_profile = nullptr;
         }
         size_t mib = 0;
         const size_t limit = std::numeric_limits<size_t>::max() / (1024*1024);
@@ -383,7 +389,7 @@ llama_context::llama_context(
         // the environment reaches every context of the process, a draft model's too: a profile that names layers
         // without routed experts in this model belongs to another model, so this context runs without the cache
         bool profile_fits = true;
-        {
+        if (hybrid_profile) {
             std::ifstream input(hybrid_profile);
             std::string header;
             std::getline(input, header);
@@ -393,12 +399,20 @@ llama_context::llama_context(
                     (model.layers[il].ffn_up_exps || model.layers[il].ffn_gate_up_exps);
             }
         }
-        if (profile_fits) {
+        const bool has_experts = std::any_of(model.layers.begin(), model.layers.end(), [](const llama_layer & l) {
+            return l.ffn_up_exps || l.ffn_gate_up_exps;
+        });
+        if (hybrid_adaptive && !has_experts) {
+            LLAMA_LOG_WARN("%s: hybrid MoE off for this context: model has no routed experts (a draft model?)\n", __func__);
+            hybrid_profile = nullptr;
+            hybrid_adaptive = false;
+        } else if (profile_fits) {
             cparams.moe_cache_size = mib*1024*1024;
         } else {
             LLAMA_LOG_WARN("%s: hybrid MoE off for this context: %s names layers without routed experts in this model (a draft model?)\n",
                 __func__, hybrid_profile);
             hybrid_profile = nullptr;
+            hybrid_adaptive = false;
         }
     }
 
@@ -591,7 +605,7 @@ llama_context::llama_context(
         }
 
         if (cparams.moe_cache_size > 0) {
-            moe_cache = std::make_unique<llama_moe_cache>(model, backend_ptrs, backend_buft, cparams.moe_cache_size, hybrid_profile);
+            moe_cache = std::make_unique<llama_moe_cache>(model, backend_ptrs, backend_buft, cparams.moe_cache_size, hybrid_profile, hybrid_adaptive);
         }
 
         sched_reserve();
@@ -1609,7 +1623,14 @@ llm_graph_result * llama_context::process_ubatch(const llama_ubatch & ubatch, ll
         //LLAMA_LOG_INFO("graph set inputs time: %.3f ms\n", (ggml_time_us() - t_start_us)/1000.0);
     }
 
+    if (moe_cache) {
+        moe_cache->begin_graph(cparams.warmup ? 0 : ubatch.n_tokens, ubatch.output);
+    }
     const auto status = graph_compute(res->get_gf(), ubatch.n_tokens > 1);
+    if (moe_cache) {
+        // CPU route collectors finish before the scheduler returns; GPU tails may still be in flight.
+        moe_cache->end_graph(status == GGML_STATUS_SUCCESS);
+    }
     if (status != GGML_STATUS_SUCCESS) {
         LLAMA_LOG_ERROR("%s: failed to compute graph, compute status: %d\n", __func__, status);
         ret = status;
