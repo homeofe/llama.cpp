@@ -17,17 +17,24 @@ class ProfileRun(bench.Run):
     def __init__(self, out, end, perf):
         super().__init__(out, end)
         self.perf_enabled = perf
-        self.telemetry = None
+        self.telemetry = []
         self.recorders = []
 
     def start(self, name, cfg):
         super().start(name, cfg)
         self.check_gpu()
         prefix = self.out / f'{name}-{self.child.pid}'
+        status = Path(f'/proc/{self.child.pid}/status').read_text()
+        prefix.with_suffix('.memory.txt').write_text('\n'.join(line for line in status.splitlines()
+            if line.startswith(('VmRSS:', 'VmLck:', 'VmSwap:', 'Threads:', 'Cpus_allowed_list:', 'Mems_allowed_list:'))) + '\n'
+            + Path(f'/proc/{self.child.pid}/smaps_rollup').read_text())
         fields = 'timestamp,pcie.link.gen.current,pcie.link.width.current,clocks.current.sm,clocks.current.memory,power.draw,utilization.gpu,utilization.memory,memory.used'
         with prefix.with_suffix('.gpu.csv').open('w') as stream:
-            self.telemetry = subprocess.Popen(['nvidia-smi', '--query-gpu=' + fields,
-                                               '--format=csv', '-lms', '200'], stdout=stream, stderr=subprocess.STDOUT)
+            self.telemetry.append(subprocess.Popen(['nvidia-smi', '--query-gpu=' + fields,
+                                                   '--format=csv', '-lms', '200'], stdout=stream, stderr=subprocess.STDOUT))
+        with prefix.with_suffix('.pcie.txt').open('w') as stream:
+            self.telemetry.append(subprocess.Popen(['nvidia-smi', 'dmon', '-s', 'pucvt', '-o', 'DT', '-d', '1', '-c', '120'],
+                                                   stdout=stream, stderr=subprocess.STDOUT))
         if self.perf_enabled:
             command = ['sudo', '-n', 'perf', 'record', '-F', '499', '-e', 'cycles:u',
                        '-p', str(self.child.pid), '-o', '-', '--', 'sleep', '120']
@@ -40,10 +47,10 @@ class ProfileRun(bench.Run):
         try:
             super().stop()
         finally:
-            if self.telemetry is not None:
-                self.telemetry.terminate()
-                self.telemetry.wait(timeout=5)
-                self.telemetry = None
+            for proc in self.telemetry:
+                proc.terminate()
+                proc.wait(timeout=5)
+            self.telemetry = []
 
 
 def main():
