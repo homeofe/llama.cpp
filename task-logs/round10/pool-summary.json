@@ -1,0 +1,1204 @@
+{
+  "complete": true,
+  "summary": [
+    {
+      "config": "qwen-pool-control",
+      "category": "code",
+      "requests": 12,
+      "tok_s": 46.89120527165446,
+      "minimum": 43.772570036840726,
+      "maximum": 49.205229195141165,
+      "acceptance_pct": 91.94395796847635,
+      "median_mean_length": 3.7800000000000002,
+      "measured_lengths": 12,
+      "text_matches_control": 12,
+      "max_foreign_cores": 0.28358672941705876,
+      "peak_vram_mib": 10694
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "english",
+      "requests": 12,
+      "tok_s": 39.848792401035226,
+      "minimum": 37.71837758724407,
+      "maximum": 40.57268868857143,
+      "acceptance_pct": 69.56521739130434,
+      "median_mean_length": 3.09,
+      "measured_lengths": 12,
+      "text_matches_control": 12,
+      "max_foreign_cores": 0.27232171624314977,
+      "peak_vram_mib": 10696
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "code",
+      "requests": 12,
+      "tok_s": 47.5938388310733,
+      "minimum": 44.67262377584704,
+      "maximum": 49.480745182775586,
+      "acceptance_pct": 91.94395796847635,
+      "median_mean_length": 3.7800000000000002,
+      "measured_lengths": 12,
+      "text_matches_control": 12,
+      "max_foreign_cores": 0.23870701274847395,
+      "peak_vram_mib": 10694
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "english",
+      "requests": 12,
+      "tok_s": 40.2231169500872,
+      "minimum": 38.548662469500336,
+      "maximum": 40.87763575941291,
+      "acceptance_pct": 69.56521739130434,
+      "median_mean_length": 3.09,
+      "measured_lengths": 12,
+      "text_matches_control": 12,
+      "max_foreign_cores": 0.3290557049736769,
+      "peak_vram_mib": 10696
+    }
+  ],
+  "requests": [
+    {
+      "config": "qwen-pool-control",
+      "category": "code",
+      "round": 1,
+      "prompt": "code-duration",
+      "tok_s": 43.772570036840726,
+      "control_tok_s": 43.772570036840726,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+      "control_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+      "draft_n": 180,
+      "draft_n_accepted": 158,
+      "mean_length": 3.63
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "code",
+      "round": 1,
+      "prompt": "code-intervals",
+      "tok_s": 46.046161242686374,
+      "control_tok_s": 46.046161242686374,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+      "control_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+      "draft_n": 120,
+      "draft_n_accepted": 110,
+      "mean_length": 3.75
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "code",
+      "round": 1,
+      "prompt": "code-roman",
+      "tok_s": 47.37347856834008,
+      "control_tok_s": 47.37347856834008,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+      "control_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+      "draft_n": 199,
+      "draft_n_accepted": 188,
+      "mean_length": 3.81
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "code",
+      "round": 1,
+      "prompt": "code-bugfix",
+      "tok_s": 48.1956062915813,
+      "control_tok_s": 48.1956062915813,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+      "control_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+      "draft_n": 72,
+      "draft_n_accepted": 69,
+      "mean_length": 3.88
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "code",
+      "round": 2,
+      "prompt": "code-duration",
+      "tok_s": 44.01237830654147,
+      "control_tok_s": 44.01237830654147,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+      "control_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+      "draft_n": 180,
+      "draft_n_accepted": 158,
+      "mean_length": 3.63
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "code",
+      "round": 2,
+      "prompt": "code-intervals",
+      "tok_s": 46.16365020218888,
+      "control_tok_s": 46.16365020218888,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+      "control_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+      "draft_n": 120,
+      "draft_n_accepted": 110,
+      "mean_length": 3.75
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "code",
+      "round": 2,
+      "prompt": "code-roman",
+      "tok_s": 47.220138628988536,
+      "control_tok_s": 47.220138628988536,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+      "control_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+      "draft_n": 199,
+      "draft_n_accepted": 188,
+      "mean_length": 3.81
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "code",
+      "round": 2,
+      "prompt": "code-bugfix",
+      "tok_s": 48.852825689452196,
+      "control_tok_s": 48.852825689452196,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+      "control_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+      "draft_n": 72,
+      "draft_n_accepted": 69,
+      "mean_length": 3.88
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "code",
+      "round": 3,
+      "prompt": "code-duration",
+      "tok_s": 44.29969389072232,
+      "control_tok_s": 44.29969389072232,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+      "control_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+      "draft_n": 180,
+      "draft_n_accepted": 158,
+      "mean_length": 3.63
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "code",
+      "round": 3,
+      "prompt": "code-intervals",
+      "tok_s": 46.56227191432038,
+      "control_tok_s": 46.56227191432038,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+      "control_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+      "draft_n": 120,
+      "draft_n_accepted": 110,
+      "mean_length": 3.75
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "code",
+      "round": 3,
+      "prompt": "code-roman",
+      "tok_s": 47.79382726018228,
+      "control_tok_s": 47.79382726018228,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+      "control_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+      "draft_n": 199,
+      "draft_n_accepted": 188,
+      "mean_length": 3.81
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "code",
+      "round": 3,
+      "prompt": "code-bugfix",
+      "tok_s": 49.205229195141165,
+      "control_tok_s": 49.205229195141165,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+      "control_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+      "draft_n": 72,
+      "draft_n_accepted": 69,
+      "mean_length": 3.88
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "english",
+      "round": 1,
+      "prompt": "en-1",
+      "tok_s": 39.8972185879877,
+      "control_tok_s": 39.8972185879877,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+      "control_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+      "draft_n": 244,
+      "draft_n_accepted": 173,
+      "mean_length": 3.11
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "english",
+      "round": 1,
+      "prompt": "en-2",
+      "tok_s": 39.36723559947379,
+      "control_tok_s": 39.36723559947379,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b",
+      "control_sha256": "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b",
+      "draft_n": 247,
+      "draft_n_accepted": 172,
+      "mean_length": 3.07
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "english",
+      "round": 1,
+      "prompt": "en-3",
+      "tok_s": 40.12685600973987,
+      "control_tok_s": 40.12685600973987,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd",
+      "control_sha256": "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd",
+      "draft_n": 245,
+      "draft_n_accepted": 173,
+      "mean_length": 3.11
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "english",
+      "round": 1,
+      "prompt": "en-4",
+      "tok_s": 37.71837758724407,
+      "control_tok_s": 37.71837758724407,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97",
+      "control_sha256": "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97",
+      "draft_n": 253,
+      "draft_n_accepted": 170,
+      "mean_length": 3.0
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "english",
+      "round": 2,
+      "prompt": "en-1",
+      "tok_s": 40.202746655915334,
+      "control_tok_s": 40.202746655915334,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+      "control_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+      "draft_n": 244,
+      "draft_n_accepted": 173,
+      "mean_length": 3.11
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "english",
+      "round": 2,
+      "prompt": "en-2",
+      "tok_s": 39.68880314129878,
+      "control_tok_s": 39.68880314129878,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b",
+      "control_sha256": "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b",
+      "draft_n": 247,
+      "draft_n_accepted": 172,
+      "mean_length": 3.07
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "english",
+      "round": 2,
+      "prompt": "en-3",
+      "tok_s": 40.08459403680925,
+      "control_tok_s": 40.08459403680925,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd",
+      "control_sha256": "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd",
+      "draft_n": 245,
+      "draft_n_accepted": 173,
+      "mean_length": 3.11
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "english",
+      "round": 2,
+      "prompt": "en-4",
+      "tok_s": 38.15823672896226,
+      "control_tok_s": 38.15823672896226,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97",
+      "control_sha256": "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97",
+      "draft_n": 253,
+      "draft_n_accepted": 170,
+      "mean_length": 3.0
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "english",
+      "round": 3,
+      "prompt": "en-1",
+      "tok_s": 40.221291133703396,
+      "control_tok_s": 40.221291133703396,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+      "control_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+      "draft_n": 244,
+      "draft_n_accepted": 173,
+      "mean_length": 3.11
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "english",
+      "round": 3,
+      "prompt": "en-2",
+      "tok_s": 39.80036621408274,
+      "control_tok_s": 39.80036621408274,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b",
+      "control_sha256": "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b",
+      "draft_n": 247,
+      "draft_n_accepted": 172,
+      "mean_length": 3.07
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "english",
+      "round": 3,
+      "prompt": "en-3",
+      "tok_s": 40.57268868857143,
+      "control_tok_s": 40.57268868857143,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd",
+      "control_sha256": "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd",
+      "draft_n": 245,
+      "draft_n_accepted": 173,
+      "mean_length": 3.11
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "english",
+      "round": 3,
+      "prompt": "en-4",
+      "tok_s": 38.48769475860471,
+      "control_tok_s": 38.48769475860471,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97",
+      "control_sha256": "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97",
+      "draft_n": 253,
+      "draft_n_accepted": 170,
+      "mean_length": 3.0
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "code",
+      "round": 1,
+      "prompt": "code-duration",
+      "tok_s": 44.9026369478575,
+      "control_tok_s": 43.772570036840726,
+      "change_pct": 2.5816782292327423,
+      "same_text": true,
+      "text_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+      "control_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+      "draft_n": 180,
+      "draft_n_accepted": 158,
+      "mean_length": 3.63
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "code",
+      "round": 1,
+      "prompt": "code-intervals",
+      "tok_s": 47.078508030004144,
+      "control_tok_s": 46.046161242686374,
+      "change_pct": 2.241982305271417,
+      "same_text": true,
+      "text_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+      "control_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+      "draft_n": 120,
+      "draft_n_accepted": 110,
+      "mean_length": 3.75
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "code",
+      "round": 1,
+      "prompt": "code-roman",
+      "tok_s": 48.10916963214246,
+      "control_tok_s": 47.37347856834008,
+      "change_pct": 1.5529597699714737,
+      "same_text": true,
+      "text_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+      "control_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+      "draft_n": 199,
+      "draft_n_accepted": 188,
+      "mean_length": 3.81
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "code",
+      "round": 1,
+      "prompt": "code-bugfix",
+      "tok_s": 49.38789940965504,
+      "control_tok_s": 48.1956062915813,
+      "change_pct": 2.4738626813000764,
+      "same_text": true,
+      "text_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+      "control_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+      "draft_n": 72,
+      "draft_n_accepted": 69,
+      "mean_length": 3.88
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "code",
+      "round": 2,
+      "prompt": "code-duration",
+      "tok_s": 44.68444292882918,
+      "control_tok_s": 44.01237830654147,
+      "change_pct": 1.5269900154153193,
+      "same_text": true,
+      "text_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+      "control_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+      "draft_n": 180,
+      "draft_n_accepted": 158,
+      "mean_length": 3.63
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "code",
+      "round": 2,
+      "prompt": "code-intervals",
+      "tok_s": 46.89320208163596,
+      "control_tok_s": 46.16365020218888,
+      "change_pct": 1.5803600370676296,
+      "same_text": true,
+      "text_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+      "control_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+      "draft_n": 120,
+      "draft_n_accepted": 110,
+      "mean_length": 3.75
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "code",
+      "round": 2,
+      "prompt": "code-roman",
+      "tok_s": 48.17736048442785,
+      "control_tok_s": 47.220138628988536,
+      "change_pct": 2.0271474909471676,
+      "same_text": true,
+      "text_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+      "control_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+      "draft_n": 199,
+      "draft_n_accepted": 188,
+      "mean_length": 3.81
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "code",
+      "round": 2,
+      "prompt": "code-bugfix",
+      "tok_s": 49.480745182775586,
+      "control_tok_s": 48.852825689452196,
+      "change_pct": 1.2853289128349488,
+      "same_text": true,
+      "text_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+      "control_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+      "draft_n": 72,
+      "draft_n_accepted": 69,
+      "mean_length": 3.88
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "code",
+      "round": 3,
+      "prompt": "code-duration",
+      "tok_s": 44.67262377584704,
+      "control_tok_s": 44.29969389072232,
+      "change_pct": 0.8418340001280056,
+      "same_text": true,
+      "text_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+      "control_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+      "draft_n": 180,
+      "draft_n_accepted": 158,
+      "mean_length": 3.63
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "code",
+      "round": 3,
+      "prompt": "code-intervals",
+      "tok_s": 46.949240661707215,
+      "control_tok_s": 46.56227191432038,
+      "change_pct": 0.8310778909132788,
+      "same_text": true,
+      "text_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+      "control_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+      "draft_n": 120,
+      "draft_n_accepted": 110,
+      "mean_length": 3.75
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "code",
+      "round": 3,
+      "prompt": "code-roman",
+      "tok_s": 48.13298532713472,
+      "control_tok_s": 47.79382726018228,
+      "change_pct": 0.7096273439373579,
+      "same_text": true,
+      "text_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+      "control_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+      "draft_n": 199,
+      "draft_n_accepted": 188,
+      "mean_length": 3.81
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "code",
+      "round": 3,
+      "prompt": "code-bugfix",
+      "tok_s": 49.4663444071062,
+      "control_tok_s": 49.205229195141165,
+      "change_pct": 0.5306655740378474,
+      "same_text": true,
+      "text_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+      "control_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+      "draft_n": 72,
+      "draft_n_accepted": 69,
+      "mean_length": 3.88
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "english",
+      "round": 1,
+      "prompt": "en-1",
+      "tok_s": 40.55337599533355,
+      "control_tok_s": 39.8972185879877,
+      "change_pct": 1.6446194260353986,
+      "same_text": true,
+      "text_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+      "control_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+      "draft_n": 244,
+      "draft_n_accepted": 173,
+      "mean_length": 3.11
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "english",
+      "round": 1,
+      "prompt": "en-2",
+      "tok_s": 40.0202281197581,
+      "control_tok_s": 39.36723559947379,
+      "change_pct": 1.6587207873266063,
+      "same_text": true,
+      "text_sha256": "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b",
+      "control_sha256": "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b",
+      "draft_n": 247,
+      "draft_n_accepted": 172,
+      "mean_length": 3.07
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "english",
+      "round": 1,
+      "prompt": "en-3",
+      "tok_s": 40.4260057804163,
+      "control_tok_s": 40.12685600973987,
+      "change_pct": 0.7455101157285204,
+      "same_text": true,
+      "text_sha256": "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd",
+      "control_sha256": "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd",
+      "draft_n": 245,
+      "draft_n_accepted": 173,
+      "mean_length": 3.11
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "english",
+      "round": 1,
+      "prompt": "en-4",
+      "tok_s": 38.62013761301756,
+      "control_tok_s": 37.71837758724407,
+      "change_pct": 2.390770980771073,
+      "same_text": true,
+      "text_sha256": "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97",
+      "control_sha256": "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97",
+      "draft_n": 253,
+      "draft_n_accepted": 170,
+      "mean_length": 3.0
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "english",
+      "round": 2,
+      "prompt": "en-1",
+      "tok_s": 40.786246093160116,
+      "control_tok_s": 40.202746655915334,
+      "change_pct": 1.4513919713963874,
+      "same_text": true,
+      "text_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+      "control_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+      "draft_n": 244,
+      "draft_n_accepted": 173,
+      "mean_length": 3.11
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "english",
+      "round": 2,
+      "prompt": "en-2",
+      "tok_s": 40.01220776393136,
+      "control_tok_s": 39.68880314129878,
+      "change_pct": 0.8148510336308368,
+      "same_text": true,
+      "text_sha256": "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b",
+      "control_sha256": "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b",
+      "draft_n": 247,
+      "draft_n_accepted": 172,
+      "mean_length": 3.07
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "english",
+      "round": 2,
+      "prompt": "en-3",
+      "tok_s": 40.87763575941291,
+      "control_tok_s": 40.08459403680925,
+      "change_pct": 1.9784202426384123,
+      "same_text": true,
+      "text_sha256": "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd",
+      "control_sha256": "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd",
+      "draft_n": 245,
+      "draft_n_accepted": 173,
+      "mean_length": 3.11
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "english",
+      "round": 2,
+      "prompt": "en-4",
+      "tok_s": 38.58337102815913,
+      "control_tok_s": 38.15823672896226,
+      "change_pct": 1.1141350744705347,
+      "same_text": true,
+      "text_sha256": "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97",
+      "control_sha256": "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97",
+      "draft_n": 253,
+      "draft_n_accepted": 170,
+      "mean_length": 3.0
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "english",
+      "round": 3,
+      "prompt": "en-1",
+      "tok_s": 40.6094449385452,
+      "control_tok_s": 40.221291133703396,
+      "change_pct": 0.9650456111702344,
+      "same_text": true,
+      "text_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+      "control_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+      "draft_n": 244,
+      "draft_n_accepted": 173,
+      "mean_length": 3.11
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "english",
+      "round": 3,
+      "prompt": "en-2",
+      "tok_s": 39.843936428368664,
+      "control_tok_s": 39.80036621408274,
+      "change_pct": 0.10947189292571657,
+      "same_text": true,
+      "text_sha256": "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b",
+      "control_sha256": "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b",
+      "draft_n": 247,
+      "draft_n_accepted": 172,
+      "mean_length": 3.07
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "english",
+      "round": 3,
+      "prompt": "en-3",
+      "tok_s": 40.81050838209454,
+      "control_tok_s": 40.57268868857143,
+      "change_pct": 0.5861570953519246,
+      "same_text": true,
+      "text_sha256": "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd",
+      "control_sha256": "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd",
+      "draft_n": 245,
+      "draft_n_accepted": 173,
+      "mean_length": 3.11
+    },
+    {
+      "config": "qwen-pool-native",
+      "category": "english",
+      "round": 3,
+      "prompt": "en-4",
+      "tok_s": 38.548662469500336,
+      "control_tok_s": 38.48769475860471,
+      "change_pct": 0.1584083205762754,
+      "same_text": true,
+      "text_sha256": "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97",
+      "control_sha256": "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97",
+      "draft_n": 253,
+      "draft_n_accepted": 170,
+      "mean_length": 3.0
+    }
+  ],
+  "per_prompt": [
+    {
+      "config": "qwen-pool-control",
+      "prompt": "code-duration",
+      "requests": 3,
+      "tok_s": 44.01237830654147,
+      "minimum": 43.772570036840726,
+      "maximum": 44.29969389072232,
+      "server_tok_s": 44.012941833145106,
+      "text_hashes": [
+        "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7"
+      ],
+      "draft_counts": [
+        [
+          180,
+          158
+        ],
+        [
+          180,
+          158
+        ],
+        [
+          180,
+          158
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-control",
+      "prompt": "code-intervals",
+      "requests": 3,
+      "tok_s": 46.16365020218888,
+      "minimum": 46.046161242686374,
+      "maximum": 46.56227191432038,
+      "server_tok_s": 46.16435742292091,
+      "text_hashes": [
+        "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4"
+      ],
+      "draft_counts": [
+        [
+          120,
+          110
+        ],
+        [
+          120,
+          110
+        ],
+        [
+          120,
+          110
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-control",
+      "prompt": "code-roman",
+      "requests": 3,
+      "tok_s": 47.37347856834008,
+      "minimum": 47.220138628988536,
+      "maximum": 47.79382726018228,
+      "server_tok_s": 47.37368642520949,
+      "text_hashes": [
+        "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39"
+      ],
+      "draft_counts": [
+        [
+          199,
+          188
+        ],
+        [
+          199,
+          188
+        ],
+        [
+          199,
+          188
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-control",
+      "prompt": "code-bugfix",
+      "requests": 3,
+      "tok_s": 48.852825689452196,
+      "minimum": 48.1956062915813,
+      "maximum": 49.205229195141165,
+      "server_tok_s": 46.6879188734657,
+      "text_hashes": [
+        "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47"
+      ],
+      "draft_counts": [
+        [
+          72,
+          69
+        ],
+        [
+          72,
+          69
+        ],
+        [
+          72,
+          69
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-control",
+      "prompt": "en-1",
+      "requests": 3,
+      "tok_s": 40.202746655915334,
+      "minimum": 39.8972185879877,
+      "maximum": 40.221291133703396,
+      "server_tok_s": 40.20293178697617,
+      "text_hashes": [
+        "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801"
+      ],
+      "draft_counts": [
+        [
+          244,
+          173
+        ],
+        [
+          244,
+          173
+        ],
+        [
+          244,
+          173
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-control",
+      "prompt": "en-2",
+      "requests": 3,
+      "tok_s": 39.68880314129878,
+      "minimum": 39.36723559947379,
+      "maximum": 39.80036621408274,
+      "server_tok_s": 39.689117477453074,
+      "text_hashes": [
+        "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b"
+      ],
+      "draft_counts": [
+        [
+          247,
+          172
+        ],
+        [
+          247,
+          172
+        ],
+        [
+          247,
+          172
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-control",
+      "prompt": "en-3",
+      "requests": 3,
+      "tok_s": 40.12685600973987,
+      "minimum": 40.08459403680925,
+      "maximum": 40.57268868857143,
+      "server_tok_s": 40.127217441837956,
+      "text_hashes": [
+        "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd"
+      ],
+      "draft_counts": [
+        [
+          245,
+          173
+        ],
+        [
+          245,
+          173
+        ],
+        [
+          245,
+          173
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-control",
+      "prompt": "en-4",
+      "requests": 3,
+      "tok_s": 38.15823672896226,
+      "minimum": 37.71837758724407,
+      "maximum": 38.48769475860471,
+      "server_tok_s": 38.15866913336276,
+      "text_hashes": [
+        "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97"
+      ],
+      "draft_counts": [
+        [
+          253,
+          170
+        ],
+        [
+          253,
+          170
+        ],
+        [
+          253,
+          170
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-native",
+      "prompt": "code-duration",
+      "requests": 3,
+      "tok_s": 44.68444292882918,
+      "minimum": 44.67262377584704,
+      "maximum": 44.9026369478575,
+      "server_tok_s": 44.684417843373495,
+      "text_hashes": [
+        "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7"
+      ],
+      "draft_counts": [
+        [
+          180,
+          158
+        ],
+        [
+          180,
+          158
+        ],
+        [
+          180,
+          158
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-native",
+      "prompt": "code-intervals",
+      "requests": 3,
+      "tok_s": 46.949240661707215,
+      "minimum": 46.89320208163596,
+      "maximum": 47.078508030004144,
+      "server_tok_s": 46.94790128796872,
+      "text_hashes": [
+        "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4"
+      ],
+      "draft_counts": [
+        [
+          120,
+          110
+        ],
+        [
+          120,
+          110
+        ],
+        [
+          120,
+          110
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-native",
+      "prompt": "code-roman",
+      "requests": 3,
+      "tok_s": 48.13298532713472,
+      "minimum": 48.10916963214246,
+      "maximum": 48.17736048442785,
+      "server_tok_s": 48.13235150886428,
+      "text_hashes": [
+        "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39"
+      ],
+      "draft_counts": [
+        [
+          199,
+          188
+        ],
+        [
+          199,
+          188
+        ],
+        [
+          199,
+          188
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-native",
+      "prompt": "code-bugfix",
+      "requests": 3,
+      "tok_s": 49.4663444071062,
+      "minimum": 49.38789940965504,
+      "maximum": 49.480745182775586,
+      "server_tok_s": 47.24315850486071,
+      "text_hashes": [
+        "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47"
+      ],
+      "draft_counts": [
+        [
+          72,
+          69
+        ],
+        [
+          72,
+          69
+        ],
+        [
+          72,
+          69
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-native",
+      "prompt": "en-1",
+      "requests": 3,
+      "tok_s": 40.6094449385452,
+      "minimum": 40.55337599533355,
+      "maximum": 40.786246093160116,
+      "server_tok_s": 40.60935047016073,
+      "text_hashes": [
+        "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801"
+      ],
+      "draft_counts": [
+        [
+          244,
+          173
+        ],
+        [
+          244,
+          173
+        ],
+        [
+          244,
+          173
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-native",
+      "prompt": "en-2",
+      "requests": 3,
+      "tok_s": 40.01220776393136,
+      "minimum": 39.843936428368664,
+      "maximum": 40.0202281197581,
+      "server_tok_s": 40.01165515978537,
+      "text_hashes": [
+        "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b"
+      ],
+      "draft_counts": [
+        [
+          247,
+          172
+        ],
+        [
+          247,
+          172
+        ],
+        [
+          247,
+          172
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-native",
+      "prompt": "en-3",
+      "requests": 3,
+      "tok_s": 40.81050838209454,
+      "minimum": 40.4260057804163,
+      "maximum": 40.87763575941291,
+      "server_tok_s": 40.81031031679843,
+      "text_hashes": [
+        "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd"
+      ],
+      "draft_counts": [
+        [
+          245,
+          173
+        ],
+        [
+          245,
+          173
+        ],
+        [
+          245,
+          173
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-native",
+      "prompt": "en-4",
+      "requests": 3,
+      "tok_s": 38.58337102815913,
+      "minimum": 38.548662469500336,
+      "maximum": 38.62013761301756,
+      "server_tok_s": 38.583148121613476,
+      "text_hashes": [
+        "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97"
+      ],
+      "draft_counts": [
+        [
+          253,
+          170
+        ],
+        [
+          253,
+          170
+        ],
+        [
+          253,
+          170
+        ]
+      ]
+    }
+  ],
+  "rejected_passes": 0,
+  "length_definition": "Server mean includes bonus token; rounded to 2 decimal places.",
+  "hashes_definition": "SHA256 of all streamed text, not the truncated preview."
+}

@@ -1,0 +1,14 @@
+{
+  "pid": 80418,
+  "config": "qwen-pool-native",
+  "libraries": [
+    "/opt/llm-gateway/data/build/llama-l5/build-cpu-native/bin/libggml-cpu.so.0.27.0",
+    "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/pool-candidate-bin/libggml-base.so.0.27.0",
+    "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/pool-candidate-bin/libggml-cuda.so.0.27.0",
+    "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/pool-candidate-bin/libggml.so.0.27.0",
+    "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/pool-candidate-bin/libllama-common.so.0.7.0",
+    "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/pool-candidate-bin/libllama-server-impl.so",
+    "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/pool-candidate-bin/libllama.so.0.7.0"
+  ],
+  "cpu_preload": "/opt/llm-gateway/data/build/llama-l5/build-cpu-native/bin/libggml-cpu.so.0.27.0"
+}

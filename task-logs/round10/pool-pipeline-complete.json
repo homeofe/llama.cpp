@@ -1,0 +1,70 @@
+[
+  {
+    "command": [
+      "python3",
+      "-u",
+      "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/quality.py",
+      "qwen",
+      "off",
+      "--probe",
+      "--cpu-library",
+      "/opt/llm-gateway/data/build/llama-l5/build-cpu-native/bin/libggml-cpu.so.0.27.0",
+      "--tag",
+      "nativefixed",
+      "--attempts",
+      "2"
+    ],
+    "exit": 0,
+    "epoch": 1792318508.2613873
+  },
+  {
+    "command": [
+      "python3",
+      "-u",
+      "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/quality.py",
+      "qwen",
+      "off",
+      "--cpu-library",
+      "/opt/llm-gateway/data/build/llama-l5/build-cpu-native/bin/libggml-cpu.so.0.27.0",
+      "--tag",
+      "nativefixed",
+      "--attempts",
+      "2"
+    ],
+    "exit": 0,
+    "epoch": 1792318686.1289866
+  },
+  {
+    "command": [
+      "python3",
+      "-u",
+      "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/quality.py",
+      "qwen",
+      "r7",
+      "--cpu-library",
+      "/opt/llm-gateway/data/build/llama-l5/build-cpu-native/bin/libggml-cpu.so.0.27.0",
+      "--tag",
+      "nativefixed",
+      "--attempts",
+      "2"
+    ],
+    "exit": 0,
+    "epoch": 1792318833.0572681
+  },
+  {
+    "command": [
+      "python3",
+      "-u",
+      "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/pool_bench.py",
+      "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/pool-results",
+      "10:55",
+      "--only",
+      "qwen-pool-control",
+      "qwen-pool-native",
+      "--rounds",
+      "3"
+    ],
+    "exit": 0,
+    "epoch": 1792319761.1674569
+  }
+]

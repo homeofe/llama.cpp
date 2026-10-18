@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Use the same stage-B pass gates for the original and persistent native pools."""
 import json
+import os
 from pathlib import Path
 import sys
 
@@ -24,7 +25,8 @@ class Run(bench.Run):
 
 bench.configure()
 bench.stage.Run = Run
-bench.stage.CONFIGS.update(json.loads(Path(__file__).with_name('pool-configs.json').read_text()))
+config_path = Path(os.environ.get('R10_POOL_CONFIGS', str(Path(__file__).with_name('pool-configs.json'))))
+bench.stage.CONFIGS.update(json.loads(config_path.read_text()))
 out = Path(sys.argv[1])
 out.mkdir(parents=True, exist_ok=True)
 (out / 'configs.json').write_text(json.dumps(bench.stage.CONFIGS, indent=2) + '\n')

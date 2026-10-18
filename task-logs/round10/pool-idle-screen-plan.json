@@ -1,0 +1,11 @@
+{
+  "epoch": 1792319322.2725658,
+  "purpose": "One bounded check whether sleeping native workers removes CPU spin without losing throughput",
+  "source_change": false,
+  "only_after_initial_three_rounds": true,
+  "screen_rounds": 1,
+  "screen_requests": 16,
+  "adoption_requires": "At least3% in both categories, then three full rounds and matching output/counts and numeric checks; a screen alone cannot qualify",
+  "latest_start_utc": "10:37",
+  "stop_experiments_utc": "10:55"
+}

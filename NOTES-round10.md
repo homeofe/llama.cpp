@@ -135,3 +135,18 @@ The original positive Qwen external-MTP and Ling same-model-MTP checks both crea
 The first destructor-order mutation correctly triggered the lifetime guard, but SIGABRT entered the installed piped crash collector despite the process-local zero core limit; owned-process cleanup ultimately returned SIGKILL. This attempt remains archived as `pool-order-cut-signal/` and is not counted as the final controlled-exit proof. The test guard was changed to `_Exit(86)` on an ownership violation; no system/core settings were changed. The corrected negative cut returned86 with the expected live-context violation; the restored isolated runtime again passed attachment,46-worker placement/reuse and normal exit0. Unit tests pass after restoration. Results: `pool-mutation-verdict.json`, `pool-restored/verdict.json`. The existing OS collector wrote a2.4GB crash report outside the allowed worktree; it remains untouched under `/var/crash`, with metadata in `pool-crash-collector.json`.
 
 Fresh native-backend quality:127,139,840 bytes of cache-off full-vocabulary logits are bit-identical to the original reference, SHA256 `b7facadb625ef4a18eb43b74959a4daa766b477a0dd2bb0bdeec6f0b984fd5a0`. Twelve test-de chunks, ctx512/ubatch4 give cache-off PPL3.8093 and R7-cache PPL3.8025 (-0.1785%). All three checks passed the foreign-process gate on the first attempt. These target-only numeric checks are combined with the actual MTP response/count comparison, placement and lifetime tests; they are not a drafter perplexity measurement. Evidence: `pool-quality-verdict.json` and `qwen-*-nativefixed-*`.
+
+### Three-round threadpool result: rejected for adoption
+
+48 accepted requests, three alternating pairs (A B, B A, A B), no rejected pass. All24 paired output hashes, generated-token counts and draft/accept counts are identical; all16 configuration/prompt combinations repeat stably across three runs.
+
+| Runtime | Code tok/s (range) | English tok/s (range) | CPU seconds/output token, code / English |
+|---|---:|---:|---:|
+| qwen-pool-control | 46.891 (43.773-49.205) | 39.849 (37.718-40.573) | 0.6414 / 0.6233 |
+| qwen-pool-native | 47.594 (44.673-49.481) | 40.223 (38.549-40.878) | 0.6074 / 0.5928 |
+
+Category medians each contain12 requests across four prompts; their ranges include prompt differences. Per-prompt three-run ranges are in `pool-summary.json`. The gain is **+1.498% code / +0.939% English**, below the predeclared3% threshold in both categories. CPU time per generated token falls5.31% /4.89%; this covers the complete request, including prefill, and is not an electrical-energy measurement.
+
+**Do not adopt this configuration.** The integration defect is real and repaired by the experimental patch, but eliminating it does not deliver the required gain over the functioning OpenMP control. The old broken native1.3-1.6tok/s result is not the baseline. Source/test patch, isolated candidate binaries and successful proof artifacts are retained for later work; original source/runtime will be restored after the last bounded wait-policy screen.
+
+A final one-round screen tests the existing native `--poll 0` setting for all target/draft pools, using the same isolated binaries and a fresh paired control. It is predeclared in `pool-idle-screen-plan.json`; it cannot justify adoption without the full confirmation and quality gates. No additional kernel/source change is involved.
