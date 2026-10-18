@@ -1,6 +1,6 @@
 # Round 10: Ling confirmation, panels and whole-round profiling
 
-Started 2026-10-18 07:00 UTC; deadline 11:00 UTC. Branch `l5-cache`. No system changes, sudo, live gateway changes, pushes or PRs.
+Started 2026-10-18 07:00 UTC; deadline 11:00 UTC. Branch `l5-cache`. No system changes, live gateway changes, pushes or PRs. The owner subsequently authorized CPU sampling and sudo explicitly; use those for task 3 without changing kernel settings.
 
 ## Measurement protocol
 
