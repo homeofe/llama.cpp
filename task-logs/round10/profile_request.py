@@ -96,7 +96,7 @@ def main():
         env['GGML_CUDA_DISABLE_GRAPHS'] = '1'
     if not args.plain:
         env['LD_PRELOAD'] = ':'.join(filter(None, [str(bench.ROOT / 'task-logs/round9/cpu-profile.so'), injection]))
-    cmd += ['-lv', '4' if args.plain or args.counters_only else '5', '--log-prefix', '--log-timestamps', '--log-colors', 'off']
+    cmd += ['-lv', '4' if args.plain else '5', '--log-prefix', '--log-timestamps', '--log-colors', 'off']
     env.update(XDG_CONFIG_HOME=str(out / 'config'), XDG_CACHE_HOME=str(out / 'cache'), CUDA_CACHE_PATH=str(out / 'cuda-cache'))
     cfg = dict(cmd=cmd, env=env)
     (out / 'config.json').write_text(json.dumps(cfg, indent=2) + '\n')
@@ -107,6 +107,7 @@ def main():
 
         tracing = False
         first_cpu = None
+        first_epoch_ns = None
 
         def request(self, *request_args, **kwargs):
             original = bench.stage.urllib.request.urlopen
@@ -131,6 +132,7 @@ def main():
                             data = json.loads(raw[5:])
                             if any((c.get('delta') or {}).get('content') or (c.get('delta') or {}).get('reasoning_content') for c in data.get('choices', [])):
                                 seen = True
+                                owner.first_epoch_ns = time.time_ns()
                                 nvtx.nvtxMarkA(b'first_token')
                                 if not args.plain:
                                     owner.first_cpu = cpu_counters(owner.child.pid)
@@ -193,12 +195,17 @@ def main():
         b0, o0, t0 = bench.stage.busy_jiffies(), bench.stage.proc_jiffies(own_pids), time.monotonic()
         run.tracing = True
         nvtx.nvtxRangePushA(args.prompt.encode())
+        request_start_epoch_ns = time.time_ns()
         result = run.request(name, cfg, prompt, 256)
+        request_end_epoch_ns = time.time_ns()
         nvtx.nvtxRangePop()
         wall = time.monotonic() - t0
         foreign = max(0, bench.stage.busy_jiffies() - b0 - bench.stage.proc_jiffies(own_pids) + o0) / bench.stage.HZ / wall
         nvtx.nvtxMarkA(('epoch_ns=' + str(time.time_ns()) + ';monotonic_ns=' + str(time.monotonic_ns())).encode())
         nvtx.nvtxRangePop()
+        (out / 'request-boundaries.json').write_text(json.dumps(dict(start_epoch_ns=request_start_epoch_ns,
+            first_token_epoch_ns=run.first_epoch_ns, end_epoch_ns=request_end_epoch_ns,
+            scope='Client observation boundaries; first-token delivery can lag server emission.'), indent=2) + '\n')
         if cpu_before is not None:
             cpu_after = cpu_counters(run.child.pid)
             counters = {key: [a-b for a,b in zip(cpu_after[key], cpu_before[key])] for key in cpu_before}
