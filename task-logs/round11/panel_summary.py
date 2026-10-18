@@ -37,9 +37,10 @@ def main():
             request = response['request']
             foreign_failures.append(dict(event=event, seed=request.get('seed'),
                 first_message=str(request.get('messages', [{}])[0].get('content', ''))[:240],
-                scope='Correctness outcome retained; this request is not a clean timing measurement.'))
+                scope='Discarded by foreign CPU gate; repeated with identical request and seed.'))
     result.update(complete=len(groups['hard']) == 42 and len(groups['agent']) == 36,
         chat_requests=len(chats), quiet_requests=sum(r['quiet'] for r in chats),
+        selected_requests=sum(r.get('selected', True) for r in chats),
         max_foreign_cores=max((r['foreign_cores'] for r in chats), default=None),
         foreign_load_failures=foreign_failures,
         historical_controls=json.loads((ROOT / 'task-logs/round10/panel-controls.json').read_text()),

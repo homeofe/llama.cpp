@@ -28,7 +28,7 @@ class Run(previous.Run):
                 if '/libggml' in line or '/libllama' in line})
             assert libraries and all(Path(p).parent == directory for p in libraries), 'runtime libraries were mixed'
             log = (self.out / (name + '.server.log')).read_text(errors='replace')
-            if cfg['env'].get('GGML_MOE_HYBRID_ASYNC_UPLOAD') == '1':
+            if cfg['env'].get('GGML_MOE_HYBRID_ASYNC_UPLOAD') == '1' and cfg['env'].get('GGML_MOE_HYBRID') == '1':
                 assert 'async upload enabled: separate stream' in log, 'CUDA upload path did not activate'
                 assert 'async upload unavailable' not in log, 'CUDA upload path fell back'
             self.event(kind='runtime_loaded', config=name, pid=self.child.pid, libraries=libraries,

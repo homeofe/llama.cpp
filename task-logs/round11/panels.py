@@ -66,6 +66,7 @@ def main():
     server = None
     key = Path(settings['apiKeyFile']).read_text().strip()
     env = {**os.environ, 'LLM_GATEWAY_HOME': str(HOME_BENCH), 'LLM_GATEWAY_KEY_FILE': settings['apiKeyFile'],
+           'CUDA_CACHE_PATH': str(ROOT / 'task-logs/round11/cuda-cache'),
            'npm_config_cache': str(HOME_BENCH / 'npm-cache'), 'TMPDIR': str(HOME_BENCH / 'tmp')}
     Path(env['TMPDIR']).mkdir(exist_ok=True)
 
@@ -105,29 +106,37 @@ def main():
         def forward(self):
             is_chat = self.path.startswith('/v1/chat/completions')
             body = self.rfile.read(int(self.headers.get('Content-Length', '0')))
-            if is_chat:
-                run.quiet()
-                foreign_gpu = {p: m for p, m in run.gpu_apps().items() if p not in own_pids() and m > 300}
-                if foreign_gpu:
-                    raise RuntimeError('foreign GPU allocation ' + str(foreign_gpu))
-            b0, o0, t0 = bench.stage.busy_jiffies(), bench.stage.proc_jiffies(own_pids()), time.monotonic()
             headers = {k: v for k, v in self.headers.items() if k.lower() not in ['host', 'connection', 'content-length']}
-            request = urllib.request.Request('http://127.0.0.1:8791' + self.path, data=body or None, method=self.command, headers=headers)
-            try:
-                response = urllib.request.urlopen(request, timeout=1800)
-            except urllib.error.HTTPError as error:
-                response = error
-            with response:
-                payload = response.read()
-                status = int(response.status or 500)
-            wall = time.monotonic() - t0
-            if is_chat:
+            for attempt in range(1, 4):
+                if is_chat:
+                    run.quiet()
+                    foreign_gpu = {p: m for p, m in run.gpu_apps().items() if p not in own_pids() and m > 300}
+                    if foreign_gpu:
+                        raise RuntimeError('foreign GPU allocation ' + str(foreign_gpu))
+                b0, o0, t0 = bench.stage.busy_jiffies(), bench.stage.proc_jiffies(own_pids()), time.monotonic()
+                request = urllib.request.Request('http://127.0.0.1:8791' + self.path, data=body or None, method=self.command, headers=headers)
+                try:
+                    response = urllib.request.urlopen(request, timeout=min(1800, max(1, run.end - time.time())))
+                except urllib.error.HTTPError as error:
+                    response = error
+                with response:
+                    payload = response.read()
+                    status = int(response.status or 500)
+                wall = time.monotonic() - t0
+                if not is_chat:
+                    break
                 foreign = max(0, bench.stage.busy_jiffies() - b0 - bench.stage.proc_jiffies(own_pids()) + o0) / bench.stage.HZ / wall
                 run.event(kind='panel_request', path=self.path, status=status, wall_s=wall,
-                    foreign_cores=foreign, quiet=foreign < 1.0,
+                    foreign_cores=foreign, quiet=foreign < 1.0, attempt=attempt, selected=foreign < 1.0,
                     request_sha256=hashlib.sha256(body).hexdigest(), response_sha256=hashlib.sha256(payload).hexdigest())
                 with (OUT / 'responses.jsonl').open('a') as stream:
-                    stream.write(json.dumps(dict(status=status, request=json.loads(body), response=json.loads(payload))) + '\n')
+                    stream.write(json.dumps(dict(status=status, attempt=attempt, selected=foreign < 1.0,
+                        request=json.loads(body), response=json.loads(payload))) + '\n')
+                if foreign < 1.0:
+                    break
+            else:
+                status = 503
+                payload = json.dumps(dict(error=dict(message='Foreign CPU gate failed three attempts.'))).encode()
             self.send_response(status)
             self.send_header('Content-Type', 'application/json')
             self.send_header('Content-Length', str(len(payload)))
@@ -161,13 +170,28 @@ def main():
         command = ['npm', 'run', '--silent', 'bench', '--', '--label', 'card-round11-2026-10-18',
                    '--card', '--hard', '--agent', '--runs', '3', '--no-speed', MODEL_ID]
         (OUT / 'command.json').write_text(json.dumps(dict(command=command, gateway_port=8791, gate_proxy_port=18791,
-            original_context=int(flags[flags.index('-c') + 1]), long_panel_context_limitation=True), indent=2) + '\n')
+            original_context=int(flags[flags.index('-c') + 1]), long_panel_context_limitation=False,
+            retry_policy='Up to three identical requests, selected only by foreign CPU < 1 core; all attempts archived.'), indent=2) + '\n')
         with (OUT / 'bench.log').open('w') as stream:
             panel = subprocess.Popen(command, cwd='/opt/llm-gateway', env={**env, 'LLM_GATEWAY_URL': 'http://127.0.0.1:18791'},
                 stdout=stream, stderr=subprocess.STDOUT, start_new_session=True)
         run.event(kind='panel_started', gateway_pid=gateway.pid, bench_pid=panel.pid, config=args.config)
         while panel.poll() is None:
             run.renew()
+            if not (OUT / 'actual-engine.json').exists():
+                for pid in own_pids():
+                    try:
+                        argv = Path(f'/proc/{pid}/cmdline').read_bytes().decode().rstrip('\0').split('\0')
+                        if not argv or argv[0] != cfg['cmd'][0]:
+                            continue
+                        environ = dict(x.split('=', 1) for x in Path(f'/proc/{pid}/environ').read_bytes().decode().split('\0') if '=' in x)
+                        libraries = sorted({line.split()[-1] for line in Path(f'/proc/{pid}/maps').read_text().splitlines()
+                            if '/libllama' in line or '/libggml' in line})
+                        (OUT / 'actual-engine.json').write_text(json.dumps(dict(pid=pid, argv=argv,
+                            env={k: v for k, v in environ.items() if k.startswith(('GGML_', 'LD_', 'OMP_', 'CUDA_'))},
+                            libraries=libraries), indent=2) + '\n')
+                    except FileNotFoundError:
+                        pass
             if time.time() > run.end:
                 raise TimeoutError('panel deadline')
             time.sleep(2)

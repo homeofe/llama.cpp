@@ -51,6 +51,7 @@ def main():
     cfg = stage.CONFIGS['q-warm-draft' if args.model == 'qwen' else 'ling-cache-mtp3']
     env = {k: v for k, v in os.environ.items() if not k.startswith('GGML_MOE_')}
     env.update(cfg['env'])
+    env['CUDA_CACHE_PATH'] = str(ROOT / 'task-logs/round11/cuda-cache')
     if args.async_upload:
         env['GGML_MOE_HYBRID_ASYNC_UPLOAD'] = '1'
     if args.runtime_dir:
@@ -124,6 +125,13 @@ def main():
                     ready = 'llama threadpool init' if args.probe else 'calculating perplexity over'
                     done = 'TOPIC agent' if args.probe else 'Final estimate: PPL ='
                     if ready in log and not evaluation_started:
+                        if args.runtime_dir:
+                            libraries = sorted({line.split()[-1] for line in Path(f'/proc/{pid}/maps').read_text().splitlines()
+                                if '/libggml' in line or '/libllama' in line})
+                            (out / 'mapped-libraries.json').write_text(json.dumps(libraries, indent=2) + '\n')
+                            assert libraries and all(Path(p).parent == args.runtime_dir.resolve() for p in libraries), 'unexpected runtime library'
+                        if args.async_upload and not args.policy.startswith('off'):
+                            assert 'async upload enabled: separate stream' in log and 'async upload unavailable' not in log, 'async path not active'
                         if args.cpu_library:
                             libraries = sorted({line.split()[-1] for line in Path(f'/proc/{pid}/maps').read_text().splitlines()
                                                 if '/libggml' in line or '/libllama' in line})
