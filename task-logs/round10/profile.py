@@ -38,7 +38,7 @@ def main():
         command = ['sudo', '-n', 'env', 'TMPDIR=' + str(out / 'tmp'), 'XDG_CONFIG_HOME=' + str(out / 'config'),
                    'XDG_CACHE_HOME=' + str(out / 'cache'), 'nsys', 'profile', '--trace=cuda,nvtx,osrt',
                    '--sample=process-tree', '--cpuctxsw=process-tree', '--backtrace=dwarf',
-                   '--sampling-period=2284683', '--samples-per-backtrace=1',
+                   '--sampling-period=18000000', '--samples-per-backtrace=1',
                    '--env-var=NSYS_NVTX_PROFILER_REGISTER_ONLY=0',
                    '--capture-range=nvtx', '--nvtx-capture=round10', '--capture-range-end=stop',
                    '--kill=none', '--force-overwrite=true', '--export=sqlite', '-o', str(out / 'trace')] + target

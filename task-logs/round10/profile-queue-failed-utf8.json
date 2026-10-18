@@ -1,0 +1,12 @@
+[
+  {
+    "command": [
+      "python3",
+      "-u",
+      "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/profile.py",
+      "code-duration"
+    ],
+    "exit": 1,
+    "epoch": 1792316648.9677308
+  }
+]

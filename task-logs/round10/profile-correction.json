@@ -1,0 +1,8 @@
+{
+  "epoch": 1792316723.683272,
+  "failure": "Debug token pieces are arbitrary bytes; decode human log lines with replacement while retaining the original raw file. No completed request record or timing from failed capture is accepted.",
+  "sampling_period": 18000000,
+  "previous_sampling_period": 2284683,
+  "reason": "The failed trace was 588 MiB. A larger cycle period reduces stack-sampling overhead; realized sample counts will be reported, not an assumed fixed frequency.",
+  "ownership": "Include detached Nsight collector only when its environment matches this capture XDG_CONFIG_HOME."
+}

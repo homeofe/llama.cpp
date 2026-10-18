@@ -28,7 +28,7 @@ class Run(previous.Run):
         start = log.stat().st_size if log.exists() else 0
         result = super().request(name, cfg, text, max_tokens)
         if log.exists():
-            with log.open() as stream:
+            with log.open(errors='replace') as stream:
                 stream.seek(start)
                 tail = stream.read()
             rows = re.findall(r'draft acceptance = [\d.]+ \(\s*(\d+) accepted /\s*(\d+) generated\), mean len =\s*([\d.]+)', tail)

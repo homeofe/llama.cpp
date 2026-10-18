@@ -16,7 +16,7 @@ def parse(directory):
     entries = []
     stats = []
     decode_times = []
-    for line in (directory / 'q-warm-draft.server.log').read_text().splitlines():
+    for line in (directory / 'q-warm-draft.server.log').read_text(errors='replace').splitlines():
         match = STAMP.match(line)
         if not match:
             continue

@@ -59,15 +59,22 @@ def logger_epoch(pid, spawn_epoch_ns, out):
 
 
 
-def owned_processes(root_pid):
+def owned_processes(root_pid, directory):
     parents = {}
+    detached = set()
     for path in Path('/proc').iterdir():
         if path.name.isdigit():
             try:
                 parents[int(path.name)] = int((path / 'stat').read_text().rsplit(')', 1)[1].split()[1])
+                # Nsight reparents its collector; our unique output environment identifies this session.
+                if (path / 'comm').read_text().strip() == 'nsys':
+                    environment = (path / 'environ').read_bytes().split(b'\0')
+                    marker = ('XDG_CONFIG_HOME=' + str(directory / 'config')).encode()
+                    if marker in environment:
+                        detached.add(int(path.name))
             except (OSError, ValueError, IndexError):
                 pass
-    owned = {root_pid}
+    owned = {root_pid} | detached
     while True:
         found = {pid for pid, parent in parents.items() if parent in owned}
         if found <= owned:
@@ -190,7 +197,7 @@ def main():
         nvtx.nvtxRangePushA(b'round10')
         nvtx.nvtxMarkA(('epoch_ns=' + str(time.time_ns()) + ';monotonic_ns=' + str(time.monotonic_ns())).encode())
         profiler_root = json.loads((out / 'profiler-owner.json').read_text())['pid']
-        own_pids = owned_processes(profiler_root)
+        own_pids = owned_processes(profiler_root, out)
         assert run.child.pid in own_pids
         b0, o0, t0 = bench.stage.busy_jiffies(), bench.stage.proc_jiffies(own_pids), time.monotonic()
         run.tracing = True
