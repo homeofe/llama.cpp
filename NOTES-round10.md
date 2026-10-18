@@ -61,3 +61,7 @@ Exact commands and environment are in `task-logs/round10/configs.json` and each 
 All three checks passed the unchanged foreign-process gate without system changes. Full-vocabulary cache-off probe: 80,478,208 bytes, bit-exact against the round-9 cache-off reference despite changed inactive policy knobs; SHA256 `83429a23024228e61b2f64515128019cc75b04e30bc97c7dfd853580094a0552`. Foreign CPU: 0.223 cores.
 
 Twelve test-de chunks, context512, batch512, ubatch4: cache off PPL **4.5559**, adaptive4608 PPL **4.5420** (-0.3051%, within +0.5%). Evaluation foreign CPU 0.559 / 0.660 cores. Both exactly reproduce the prior numerical estimates with the original compaction setting20. These are target/cache tests, not a perplexity measurement of speculative acceptance; actual DSpark behavior is checked by the response hashes and panels. Commands, raw logs, gates and comparison: `task-logs/round10/quality-summary.json` and its referenced directories.
+
+## Panel checkpoint
+
+Hard panel complete: **39/42**, all three misses are `long-combine` HTTP400 context rejections (about20,005 input tokens against8192 configured). All39 in-context cases pass: code15/15, tools9/9, German9/9, format6/6. At least one request (seed1 intervals, foreign1.213 cores) passed its pre-gate but exceeded the post-request gate. Its correctness result is retained and its timing is not a clean performance result; the final summary lists every such event separately. Agent panel still running. Actual spawned argv/environment are captured in `panels/actual-engine.json`.

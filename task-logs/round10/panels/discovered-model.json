@@ -1,0 +1,42 @@
+{
+  "id": "ling-round10",
+  "label": "Ling 3.0 Flash IQ4_XS (ling-dspark-n3-p00)",
+  "kind": "chat",
+  "runtime": "llama.cpp",
+  "capabilities": {
+    "context": 8192,
+    "tools": true,
+    "reasoning": true,
+    "vision": false
+  },
+  "sizeBytes": 68739201216,
+  "format": {
+    "container": "gguf",
+    "architecture": "bailingmoe3",
+    "quantization": "IQ4_XS",
+    "shards": 2
+  },
+  "files": [
+    {
+      "path": "/opt/llm-gateway/data/bench-home-keep75ud/models/ling-round10/Ling-3.0-flash-IQ4_XS-00001-of-00002.gguf",
+      "bytes": 39935439872
+    },
+    {
+      "path": "/opt/llm-gateway/data/bench-home-keep75ud/models/ling-round10/Ling-3.0-flash-IQ4_XS-00002-of-00002.gguf",
+      "bytes": 28803761344
+    }
+  ],
+  "exclusive": true,
+  "activeRequests": 0,
+  "queuedRequests": 0,
+  "idleUnloadS": 600,
+  "state": {
+    "status": "not_loaded"
+  },
+  "sampling": {
+    "temperature": 0.6,
+    "top_p": 0.95,
+    "top_k": 20
+  },
+  "reasoning": "on"
+}

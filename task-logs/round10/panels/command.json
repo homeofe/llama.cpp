@@ -1,0 +1,22 @@
+{
+  "command": [
+    "npm",
+    "run",
+    "--silent",
+    "bench",
+    "--",
+    "--label",
+    "card-round10-2026-10-18",
+    "--card",
+    "--hard",
+    "--agent",
+    "--runs",
+    "3",
+    "--no-speed",
+    "ling-round10"
+  ],
+  "gateway_port": 8791,
+  "gate_proxy_port": 18791,
+  "original_context": 8192,
+  "long_panel_context_limitation": true
+}
