@@ -101,8 +101,11 @@ def main():
         raise RuntimeError('cache fit did not converge in three measurements')
     assert memory <= 10700 and int(base['env']['GGML_MOE_HYBRID_MIB']) == budget
     configs = json.loads((OUT / 'configs.json').read_text())
+    log_flag = base['cmd'].index('-lv')
+    del base['cmd'][log_flag:log_flag + 2]
     configs['ling-32k'] = base
     configs['ling-8k'] = copy.deepcopy(bench.stage.CONFIGS[control])
+    configs['ling-8k']['cmd'] += ['-fit', 'off']
     (OUT / 'configs.json').write_text(json.dumps(configs, indent=2) + '\n')
     (OUT / 'context-fit.json').write_text(json.dumps(dict(fixed_vram_mib=fixed, cache_budget_mib=budget,
         measured_vram_mib=memory, original_cache_budget_mib=4608, budget_step_mib=64, total_vram_ceiling_mib=10700,
