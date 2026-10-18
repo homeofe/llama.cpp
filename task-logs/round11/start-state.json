@@ -6,5 +6,17 @@
   "sha256": {
     "/opt/llm-gateway/data/settings.json": "f35471c24b9bcd59d015a0919b5c9593e2814e7676b19e4ab0ae89c69de415b3",
     "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/llama-server": "8c98297c2682a3fd7a28d360a3e4b48952e8a18dfb8d6336165e8066a713d7a9"
+  },
+  "system": {
+    "compaction_proactiveness": "20",
+    "perf_event_paranoid": "4",
+    "ptrace_scope": "1"
+  },
+  "cpu_governors": [
+    "schedutil"
+  ],
+  "live_history": {
+    "size": 848605,
+    "mtime_ns": 1792108001065163904
   }
 }

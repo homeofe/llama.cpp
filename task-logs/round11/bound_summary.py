@@ -33,8 +33,11 @@ def main():
             context.update(tokens=int(match[1]), hits=int(match[2]), misses=int(match[3]), hit_rate_pct=float(match[4]), uploads=int(match[5]), uploaded_mib=float(match[6]))
             bursts = [re.search(r'context = (\d+), uploads = (\d+), MiB = ([\d.]+)', b) for b in row['prefill_bursts']]
             context['prefill_uploaded_mib'] = sum(float(b[3]) for b in bursts if b and b[1] == context['id'])
-            context['decode_uploaded_mib'] = context['uploaded_mib'] - context['prefill_uploaded_mib']
-            contexts.append(context)
+            delta = context['uploaded_mib'] - context['prefill_uploaded_mib']
+            assert delta > -0.1, 'uploaded-byte accounting is inconsistent'
+            context['decode_uploaded_mib'] = max(0.0, delta)
+            if context['tokens']:
+                contexts.append(context)
             context = None
         rounds = row['speculative_rounds']
         stats.append(dict(config=row['config'], contexts=contexts, speculative_rounds=rounds,

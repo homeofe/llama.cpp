@@ -18,6 +18,7 @@
 #include <functional>
 #include <fstream>
 #include <map>
+#include <memory>
 #include <string>
 #include <stdexcept>
 #include <vector>
@@ -186,6 +187,94 @@ struct queued_backend {
     }
 };
 
+struct two_stream_backend {
+    struct event_state {
+        std::shared_ptr<bool> done = std::make_shared<bool>(true);
+    };
+
+    queued_backend compute;
+    ggml_backend upload = {};
+    ggml_backend_reg reg = {};
+    std::vector<std::function<bool()>> copies;
+    size_t copy_head = 0;
+    size_t copy_syncs = 0;
+    size_t records = 0;
+
+    static bool query(ggml_backend_event_t event) {
+        return *static_cast<event_state *>(event->context)->done;
+    }
+
+    two_stream_backend() {
+        reg.api_version = GGML_BACKEND_API_VERSION;
+        reg.context = this;
+        reg.iface.get_proc_address = [](ggml_backend_reg_t, const char * name) -> void * {
+            return strcmp(name, "ggml_backend_event_query") == 0 ? (void *) query : nullptr;
+        };
+        compute.device.reg = &reg;
+        compute.device.iface.get_host_buffer_type = [](ggml_backend_dev_t) { return ggml_backend_cpu_buffer_type(); };
+        compute.device.iface.init_backend = [](ggml_backend_dev_t dev, const char *) {
+            return &static_cast<two_stream_backend *>(dev->reg->context)->upload;
+        };
+        compute.device.iface.event_new = [](ggml_backend_dev_t dev) {
+            return new ggml_backend_event{dev, new event_state};
+        };
+        compute.device.iface.event_free = [](ggml_backend_dev_t, ggml_backend_event_t event) {
+            delete static_cast<event_state *>(event->context);
+            delete event;
+        };
+        compute.device.iface.event_synchronize = [](ggml_backend_dev_t, ggml_backend_event_t) {
+            GGML_ABORT("The admission path must not synchronize an event on the host");
+        };
+        upload.device = &compute.device;
+        upload.context = this;
+        upload.iface.free = [](ggml_backend_t) {};
+        upload.iface.get_name = [](ggml_backend_t) { return "queued-upload-test"; };
+        upload.iface.set_tensor_async = [](ggml_backend_t b, ggml_tensor * t, const void * data, size_t offset, size_t size) {
+            auto * self = static_cast<two_stream_backend *>(b->context);
+            self->copies.push_back([=]() {
+                memcpy((char *) t->data + offset, data, size);
+                return true;
+            });
+        };
+        upload.iface.synchronize = [](ggml_backend_t b) {
+            auto * self = static_cast<two_stream_backend *>(b->context);
+            ++self->copy_syncs;
+            self->compute.drain();
+            self->drain_copies();
+            GGML_ASSERT(self->copies.empty());
+        };
+        auto record = [](ggml_backend_t b, ggml_backend_event_t event) {
+            auto * self = static_cast<two_stream_backend *>(b->device->reg->context);
+            auto * state = static_cast<event_state *>(event->context);
+            state->done = std::make_shared<bool>(false);
+            const auto done = state->done;
+            ++self->records;
+            if (b == &self->upload) {
+                self->copies.push_back([done]() { *done = true; return true; });
+            } else {
+                self->compute.queue.push_back([done]() { *done = true; });
+            }
+        };
+        upload.iface.event_record = record;
+        compute.backend.iface.event_record = record;
+        upload.iface.event_wait = [](ggml_backend_t b, ggml_backend_event_t event) {
+            auto * self = static_cast<two_stream_backend *>(b->context);
+            const auto done = static_cast<event_state *>(event->context)->done;
+            self->copies.push_back([done]() { return *done; });
+        };
+    }
+
+    void drain_copies(size_t limit = SIZE_MAX) {
+        while (copy_head < copies.size() && limit-- && copies[copy_head]()) {
+            ++copy_head;
+        }
+        if (copy_head == copies.size()) {
+            copies.clear();
+            copy_head = 0;
+        }
+    }
+};
+
 struct test_env {
     std::string name;
     std::string previous;
@@ -246,6 +335,94 @@ static void test_config() {
         }
         GGML_ASSERT(rejected);
     }
+}
+
+static void test_async_ordering(const char * path) {
+    test_env async("GGML_MOE_HYBRID_ASYNC_UPLOAD", "1");
+    test_env admit("GGML_MOE_HYBRID_ADMIT", "2");
+    test_env prefill("GGML_MOE_HYBRID_PREFILL", "0");
+    two_stream_backend queued;
+    ggml_backend_cpu_set_n_threads(queued.compute.cpu.get(), 2);
+    ggml_backend_dev_t devices[] = {&queued.compute.device, nullptr};
+    auto params = llama_model_default_params();
+    params.devices = devices;
+    params.n_gpu_layers = 99;
+    params.use_extra_bufts = false;
+    llama_model_ptr model(llama_model_load_from_file(path, params));
+    GGML_ASSERT(model && model->layers.size() == 2 && model->hparams.n_expert == 2);
+    const auto buft = ggml_backend_cpu_buffer_type();
+    const size_t alignment = ggml_backend_buft_get_alignment(buft);
+    auto padded = [&](size_t n) { return (n + alignment - 1)/alignment*alignment; };
+    size_t budget = 2*padded(2*sizeof(int32_t));
+    const auto & first = model->layers[0];
+    for (const auto * w : {first.ffn_gate_exps, first.ffn_up_exps, first.ffn_down_exps}) {
+        budget += padded(3*w->nb[2]);
+    }
+    {
+        llama_moe_cache cache(*model, {&queued.compute.backend}, {buft}, budget, nullptr, true);
+        auto map = [&](int il) { return (const int32_t *) cache.get_slot_map(il, 1, 1)->data; };
+        auto expect = [&](int il) {
+            const auto & layer = model->layers[il];
+            for (int e = 0; e < 2; ++e) {
+                GGML_ASSERT(map(il)[e] >= 0 && map(il)[e] < 2);
+                for (const auto * w : {layer.ffn_gate_exps, layer.ffn_up_exps, layer.ffn_down_exps}) {
+                    const auto * bank = cache.get_experts(w);
+                    GGML_ASSERT(memcmp((const char *) bank->data + map(il)[e]*bank->nb[2], (const char *) w->data + e*w->nb[2], w->nb[2]) == 0);
+                }
+            }
+        };
+        auto collect = [&](int il, const std::vector<int32_t> & ids, bool success = true) {
+            cache.begin_graph(ids.size());
+            ggml_context_ptr ctx(ggml_init({1024*1024, nullptr, false}));
+            auto src = ggml_new_tensor_2d(ctx.get(), GGML_TYPE_I32, 1, ids.size());
+            memcpy(src->data, ids.data(), ids.size()*sizeof(int32_t));
+            auto observed = cache.build_observe(ctx.get(), src, il, true);
+            auto graph = ggml_new_graph(ctx.get());
+            ggml_build_forward_expand(graph, observed);
+            GGML_ASSERT(ggml_backend_graph_compute(queued.compute.cpu.get(), graph) == GGML_STATUS_SUCCESS);
+            cache.end_graph(success);
+        };
+        const size_t syncs = queued.compute.syncs;
+        collect(0, {0, 1});
+        GGML_ASSERT(!queued.copies.empty());
+        cache.begin_graph(0);
+        queued.compute.drain();
+        GGML_ASSERT(map(0)[0] == -1 && map(0)[1] == -1); // No publication before copy completion.
+        queued.drain_copies(2);
+        cache.begin_graph(0);
+        queued.compute.drain();
+        GGML_ASSERT(map(0)[0] == -1 && map(0)[1] == -1); // A partial expert is still invisible.
+        const size_t pending = queued.copies.size();
+        collect(1, {0, 1, 0, 1});
+        GGML_ASSERT(queued.copies.size() == pending); // Pending slots cannot be admitted again.
+        queued.compute.queue.push_back([&]() { GGML_ASSERT(map(0)[0] == -1 && map(0)[1] == -1); });
+        queued.drain_copies(); // An older event wait must not follow a later event record.
+        GGML_ASSERT(queued.copies.empty());
+        cache.begin_graph(0);
+        queued.compute.drain();
+        expect(0);
+
+        queued.compute.queue.push_back([&]() { expect(0); });
+        collect(1, {0, 1, 0, 1, 0, 1});
+        queued.drain_copies(); // The old reader has not completed, so reuse must remain blocked.
+        GGML_ASSERT(!queued.copies.empty());
+        expect(0);
+        queued.compute.drain();
+        GGML_ASSERT(map(0)[0] == -1 && map(0)[1] == -1);
+        queued.drain_copies();
+        GGML_ASSERT(map(1)[0] == -1 && map(1)[1] == -1);
+        cache.begin_graph(0);
+        queued.compute.drain();
+        expect(1);
+        const size_t records = queued.records;
+        collect(0, {0, 0, 0, 0, 0, 0}, false);
+        GGML_ASSERT(queued.records > records && queued.copies.empty());
+        GGML_ASSERT(queued.compute.syncs == syncs && queued.copy_syncs == 0);
+        collect(0, {0, 0, 0, 0, 0, 0, 0, 0});
+        GGML_ASSERT(!queued.copies.empty()); // Teardown must drain a final in-flight upload.
+    }
+    GGML_ASSERT(queued.copies.empty() && queued.copy_syncs == 1);
+    puts("Two-stream readers, delayed publication, reserved slots, event reuse, abort and teardown passed");
 }
 
 static void test_ordering(const char * path, const char * profile, const char * trace_path) {
@@ -1016,9 +1193,15 @@ static void replay_log(const char * path, int slots, size_t admit, size_t prefil
 }
 
 int main(int argc, char ** argv) {
+    ggml_set_abort_callback([](const char * message) {
+        fprintf(stderr, "%s\n", message);
+        std::_Exit(86);
+    });
     test_policy();
     test_config();
-    if (argc >= 3 && std::string(argv[1]) == "--ordering") {
+    if (argc == 3 && std::string(argv[1]) == "--async-ordering") {
+        test_async_ordering(argv[2]);
+    } else if (argc >= 3 && std::string(argv[1]) == "--ordering") {
         GGML_ASSERT(argc <= 5);
         test_ordering(argv[2], argc >= 4 ? argv[3] : nullptr, argc == 5 ? argv[4] : nullptr);
     } else if (argc == 4 && std::string(argv[1]) == "--contexts") {
