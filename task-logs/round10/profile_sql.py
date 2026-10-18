@@ -86,7 +86,13 @@ def summarize(directory):
             if position in row['candidate_us']:
                 points.append((row['candidate_us'][position] * 1000 + offset, ['draft_2', 'draft_3', 'draft_tail'][position]))
         if 'verify_start_us' in row:
-            points.append((row['verify_start_us'] * 1000 + offset, 'verify_catchup_and_sample'))
+            yields = row.get('verify_yield_ends_us', [])
+            if len(yields) == 2:
+                points.append((row['verify_start_us'] * 1000 + offset, 'verify_target'))
+                points.append((yields[0] * 1000 + offset, 'mtp_catchup'))
+                points.append((yields[1] * 1000 + offset, 'sampling_accept_host'))
+            else:
+                points.append((row['verify_start_us'] * 1000 + offset, 'verify_catchup_and_sample'))
         if 'accepted_us' in row:
             points.append((row['accepted_us'] * 1000 + offset, 'emit_and_host'))
         points.append((finish_ns, 'end'))
@@ -96,7 +102,9 @@ def summarize(directory):
                 raise ValueError('non-monotonic server boundaries')
             phases.append(dict(name=name, wall_ms=(b-a)/1e6,
                 **{key + '_union_ms': union_ns(values.clip(a, b))/1e6 for key, values in indexed.items()}))
-        rounds.append(dict(start_ns=start_ns, end_ns=finish_ns, full_three_step_draft=full_draft, wall_ms=(finish_ns-start_ns)/1e6, phases=phases))
+        rounds.append(dict(start_ns=start_ns, end_ns=finish_ns, full_three_step_draft=full_draft,
+            verify_tokens=row.get('verify_tokens'), verify_yield_boundaries=len(row.get('verify_yield_ends_us', [])),
+            wall_ms=(finish_ns-start_ns)/1e6, phases=phases))
 
     leaves = connection.execute('''select s.value,m.value,c.originalIP,c.unresolved,count(*)
         from COMPOSITE_EVENTS e join SAMPLING_CALLCHAINS c on c.id=e.id

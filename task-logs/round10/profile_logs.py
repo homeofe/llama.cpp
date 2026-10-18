@@ -56,7 +56,13 @@ def parse(directory):
             current['verify_start_us'] = timestamp
             batch = re.search(r'n_batch \(effective\) = (\d+)', message)
             if batch:
-                current['verify_tokens'] = int(batch[1])
+                current['batch_limit'] = int(batch[1])
+        drafted = re.search(r'generate_draft:.*#draft=(\d+)', message)
+        if drafted:
+            current['drafted_tokens'] = int(drafted[1])
+            current['verify_tokens'] = 1 + int(drafted[1])  # One slot: anchor plus drafts.
+        if 'done yielding to queue' in message and 'verify_start_us' in current and 'accepted_us' not in current:
+            current.setdefault('verify_yield_ends_us', []).append(timestamp)
         if 'add accepted tokens:' in message:
             current['accepted_us'] = timestamp
         if 'stop processing:' in message:
