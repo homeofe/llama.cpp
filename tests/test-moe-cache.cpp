@@ -348,7 +348,7 @@ static void test_async_ordering(const char * path) {
     params.devices = devices;
     params.n_gpu_layers = 99;
     params.use_extra_bufts = false;
-    params.use_mmap = false;
+    params.load_mode = LLAMA_LOAD_MODE_NONE;
     llama_model_ptr model(llama_model_load_from_file(path, params));
     GGML_ASSERT(model && model->layers.size() == 2 && model->hparams.n_expert == 2);
     const auto buft = ggml_backend_cpu_buffer_type();
