@@ -1,0 +1,12 @@
+{
+  "child_pid": 28846,
+  "child_cpu_samples": 354,
+  "parent_nvtx": [
+    [
+      594594,
+      206110338,
+      "round10"
+    ]
+  ],
+  "purpose": "Capture range in parent includes CPU samples from an already-running child process."
+}
