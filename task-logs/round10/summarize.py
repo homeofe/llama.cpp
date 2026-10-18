@@ -7,13 +7,13 @@ from pathlib import Path
 import statistics
 
 
-def summarize(directory):
+def summarize(directory, control_name='ling-cache-mtp3'):
     events = [json.loads(line) for line in (directory / 'runs.jsonl').read_text().splitlines()]
     requests = [r for r in events if r.get('kind') == 'request' and r.get('accepted')]
     grouped = collections.defaultdict(list)
     for row in requests:
         grouped[row['config']].append(row)
-    control = {(r['round'], r['prompt']): r for r in requests if r['config'] == 'ling-cache-mtp3'}
+    control = {(r['round'], r['prompt']): r for r in requests if r['config'] == control_name}
     summary = []
     pairs = []
     per_prompt = []

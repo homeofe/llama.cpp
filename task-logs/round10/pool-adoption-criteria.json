@@ -1,0 +1,13 @@
+{
+  "epoch": 1792318017.4788103,
+  "minimum_category_gain_pct": 3,
+  "categories": [
+    "code",
+    "english"
+  ],
+  "complete_accepted_requests": 48,
+  "all_paired_output_hashes_tokens_and_draft_counts_identical": true,
+  "cache_off_bit_exact": true,
+  "max_cache_ppl_change_pct": 0.5,
+  "live_installation": false
+}
