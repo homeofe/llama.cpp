@@ -1,0 +1,32 @@
+[  0%] Provisioning UI assets
+[  1%] Built target vendor-hash
+[  1%] Built target llama-common-base
+[  1%] Built target cpp-httplib
+[  4%] Built target ggml-base
+-- UI: HF stamp matches 'ggml-org/llama-ui|b11768', skipping HF fetch
+-- UI: assets unchanged, skipping embedding
+[  4%] Built target llama-ui-assets
+[  9%] Built target ggml-cpu
+[  9%] Built target llama-ui
+[ 50%] Built target ggml-cuda
+[ 50%] Built target ggml
+[ 63%] Built target llama
+[ 78%] Built target mtmd
+[ 78%] Building CXX object common/CMakeFiles/llama-common.dir/speculative.cpp.o
+[ 78%] Linking CXX shared library ../bin/libllama-common.so
+[ 95%] Built target llama-common
+[ 98%] Built target server-context
+[100%] Linking CXX shared library ../../bin/libllama-server-impl.so
+[100%] Built target llama-server-impl
+[100%] Linking CXX executable ../../bin/llama-server
+[100%] Built target llama-server
+[  0%] Built target llama-common-base
+[  0%] Built target cpp-httplib
+[  4%] Built target ggml-base
+[ 10%] Built target ggml-cpu
+[ 62%] Built target ggml-cuda
+[ 62%] Built target ggml
+[ 79%] Built target llama
+[100%] Built target llama-common
+[100%] Linking CXX executable ../bin/test-arg-parser
+[100%] Built target test-arg-parser
