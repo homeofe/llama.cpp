@@ -21,7 +21,18 @@ class Run(previous.Run):
         cache = ROOT / 'task-logs/round11/cuda-cache'
         cache.mkdir(exist_ok=True)
         cfg = {**cfg, 'env': {**cfg.get('env', {}), 'CUDA_CACHE_PATH': str(cache)}}
-        return super().start(name, cfg)
+        super().start(name, cfg)
+        directory = Path(cfg['cmd'][0]).resolve().parent
+        if directory.name in ['baseline-bin', 'candidate-bin']:
+            libraries = sorted({line.split()[-1] for line in Path(f'/proc/{self.child.pid}/maps').read_text().splitlines()
+                if '/libggml' in line or '/libllama' in line})
+            assert libraries and all(Path(p).parent == directory for p in libraries), 'runtime libraries were mixed'
+            log = (self.out / (name + '.server.log')).read_text(errors='replace')
+            if cfg['env'].get('GGML_MOE_HYBRID_ASYNC_UPLOAD') == '1':
+                assert 'async upload enabled: separate stream' in log, 'CUDA upload path did not activate'
+                assert 'async upload unavailable' not in log, 'CUDA upload path fell back'
+            self.event(kind='runtime_loaded', config=name, pid=self.child.pid, libraries=libraries,
+                cuda_cache_path=str(cache))
 
     def renew(self, force=False):
         if self.held and (force or time.monotonic() - self.last_hold > 300):

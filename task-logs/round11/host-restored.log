@@ -1,0 +1,297 @@
+llama_model_loader: loaded meta data with 156 key-value pairs and 61 tensors from /opt/llm-gateway/data/build/llama-l5/task-logs/round7/models/qwen3moe-moe.gguf (version GGUF V3 (latest))
+llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.
+llama_model_loader: - kv   0:                       general.architecture str              = qwen3moe
+llama_model_loader: - kv   1:                               general.name str              = n/a
+llama_model_loader: - kv   2:                        qwen3moe.vocab_size u32              = 128
+llama_model_loader: - kv   3:                    qwen3moe.context_length u32              = 256
+llama_model_loader: - kv   4:                  qwen3moe.embedding_length u32              = 256
+llama_model_loader: - kv   5:                       qwen3moe.block_count u32              = 2
+llama_model_loader: - kv   6:         qwen3moe.leading_dense_block_count u32              = 0
+llama_model_loader: - kv   7:               qwen3moe.feed_forward_length u32              = 384
+llama_model_loader: - kv   8:        qwen3moe.expert_feed_forward_length u32              = 384
+llama_model_loader: - kv   9:              qwen3moe.expert_latent_length u32              = 0
+llama_model_loader: - kv  10:                   qwen3moe.moe_latent_size u32              = 0
+llama_model_loader: - kv  11: qwen3moe.expert_shared_feed_forward_length u32              = 0
+llama_model_loader: - kv  12:  qwen3moe.expert_chunk_feed_forward_length u32              = 0
+llama_model_loader: - kv  13:                  qwen3moe.swiglu_clamp_exp arr[f32,2]       = [0.000000, 0.000000]
+llama_model_loader: - kv  14:                qwen3moe.swiglu_clamp_shexp arr[f32,2]       = [0.000000, 0.000000]
+llama_model_loader: - kv  15:             qwen3moe.use_parallel_residual bool             = false
+llama_model_loader: - kv  16:                      qwen3moe.expert_count u32              = 2
+llama_model_loader: - kv  17:                 qwen3moe.expert_used_count u32              = 2
+llama_model_loader: - kv  18:               qwen3moe.expert_shared_count u32              = 0
+llama_model_loader: - kv  19:                qwen3moe.expert_group_count u32              = 0
+llama_model_loader: - kv  20:           qwen3moe.expert_group_used_count u32              = 0
+llama_model_loader: - kv  21:              qwen3moe.expert_weights_scale f32              = 0.000000
+llama_model_loader: - kv  22:               qwen3moe.expert_weights_norm bool             = false
+llama_model_loader: - kv  23:                qwen3moe.expert_gating_func u32              = 0
+llama_model_loader: - kv  24:                qwen3moe.expert_group_scale f32              = 0.050000
+llama_model_loader: - kv  25:                 qwen3moe.experts_per_group u32              = 0
+llama_model_loader: - kv  26:                qwen3moe.moe_every_n_layers u32              = 0
+llama_model_loader: - kv  27:              qwen3moe.nextn_predict_layers u32              = 0
+llama_model_loader: - kv  28:                qwen3moe.n_deepstack_layers u32              = 0
+llama_model_loader: - kv  29:                 qwen3moe.deepstack_mapping arr[i32,512]     = [-1, -1, -1, -1, -1, -1, -1, -1, -1, ...
+llama_model_loader: - kv  30:                      qwen3moe.pooling_type u32              = 4294967295
+llama_model_loader: - kv  31:                       qwen3moe.logit_scale f32              = 0.000000
+llama_model_loader: - kv  32:            qwen3moe.decoder_start_token_id i32              = -1
+llama_model_loader: - kv  33:               qwen3moe.decoder_block_count u32              = 0
+llama_model_loader: - kv  34:            qwen3moe.attn_logit_softcapping f32              = 50.000000
+llama_model_loader: - kv  35:          qwen3moe.router_logit_softcapping f32              = 30.000000
+llama_model_loader: - kv  36:           qwen3moe.final_logit_softcapping f32              = 30.000000
+llama_model_loader: - kv  37:                         qwen3moe.swin_norm bool             = false
+llama_model_loader: - kv  38:            qwen3moe.rescale_every_n_layers u32              = 0
+llama_model_loader: - kv  39:                qwen3moe.time_mix_extra_dim u32              = 0
+llama_model_loader: - kv  40:              qwen3moe.time_decay_extra_dim u32              = 0
+llama_model_loader: - kv  41:                    qwen3moe.residual_scale f32              = 0.000000
+llama_model_loader: - kv  42:                   qwen3moe.embedding_scale f32              = 0.000000
+llama_model_loader: - kv  43:              qwen3moe.hrm.layers_per_stack u32              = 0
+llama_model_loader: - kv  44:                      qwen3moe.hrm.h_cycles u32              = 0
+llama_model_loader: - kv  45:                      qwen3moe.hrm.l_cycles u32              = 0
+llama_model_loader: - kv  46:                     qwen3moe.hrm.prefix_lm bool             = false
+llama_model_loader: - kv  47:                 qwen3moe.token_shift_count u32              = 2
+llama_model_loader: - kv  48:         qwen3moe.interleave_moe_layer_step u32              = 0
+llama_model_loader: - kv  49:              qwen3moe.attention.head_count u32              = 2
+llama_model_loader: - kv  50:           qwen3moe.attention.head_count_kv u32              = 2
+llama_model_loader: - kv  51:          qwen3moe.attention.max_alibi_bias f32              = 0.000000
+llama_model_loader: - kv  52:               qwen3moe.attention.clamp_kqv f32              = 0.000000
+llama_model_loader: - kv  53:              qwen3moe.attention.key_length u32              = 128
+llama_model_loader: - kv  54:            qwen3moe.attention.value_length u32              = 128
+llama_model_loader: - kv  55:      qwen3moe.attention.layer_norm_epsilon f32              = 0.000000
+llama_model_loader: - kv  56:  qwen3moe.attention.layer_norm_rms_epsilon f32              = 0.000010
+llama_model_loader: - kv  57:      qwen3moe.attention.group_norm_epsilon f32              = 0.000000
+llama_model_loader: - kv  58:       qwen3moe.attention.group_norm_groups u32              = 0
+llama_model_loader: - kv  59:      qwen3moe.attention.value_expert_count u32              = 0
+llama_model_loader: - kv  60: qwen3moe.attention.value_expert_used_count u32              = 0
+llama_model_loader: - kv  61:                  qwen3moe.attention.causal bool             = true
+llama_model_loader: - kv  62:             qwen3moe.attention.q_lora_rank u32              = 0
+llama_model_loader: - kv  63:            qwen3moe.attention.kv_lora_rank u32              = 0
+llama_model_loader: - kv  64:         qwen3moe.attention.decay_lora_rank u32              = 0
+llama_model_loader: - kv  65:          qwen3moe.attention.iclr_lora_rank u32              = 0
+llama_model_loader: - kv  66: qwen3moe.attention.value_residual_mix_lora_rank u32              = 0
+llama_model_loader: - kv  67:          qwen3moe.attention.gate_lora_rank u32              = 0
+llama_model_loader: - kv  68:  qwen3moe.attention.relative_buckets_count u32              = 0
+llama_model_loader: - kv  69:            qwen3moe.attention.rope_pattern u32              = 1
+llama_model_loader: - kv  70:          qwen3moe.attention.sliding_window u32              = 0
+llama_model_loader: - kv  71:                   qwen3moe.attention.scale f32              = 0.000000
+llama_model_loader: - kv  72:            qwen3moe.attention.output_scale f32              = 0.000000
+llama_model_loader: - kv  73:             qwen3moe.attention.value_scale f32              = 0.000000
+llama_model_loader: - kv  74:      qwen3moe.attention.temperature_length u32              = 0
+llama_model_loader: - kv  75:       qwen3moe.attention.temperature_scale f32              = 0.000000
+llama_model_loader: - kv  76:          qwen3moe.attention.key_length_mla u32              = 0
+llama_model_loader: - kv  77:        qwen3moe.attention.value_length_mla u32              = 0
+llama_model_loader: - kv  78:          qwen3moe.attention.key_length_swa u32              = 128
+llama_model_loader: - kv  79:        qwen3moe.attention.value_length_swa u32              = 128
+llama_model_loader: - kv  80:      qwen3moe.attention.key_length_mla_swa u32              = 0
+llama_model_loader: - kv  81:    qwen3moe.attention.value_length_mla_swa u32              = 0
+llama_model_loader: - kv  82:        qwen3moe.attention.kv_lora_rank_swa u32              = 0
+llama_model_loader: - kv  83:      qwen3moe.attention.indexer.head_count u32              = 0
+llama_model_loader: - kv  84:      qwen3moe.attention.indexer.key_length u32              = 0
+llama_model_loader: - kv  85:           qwen3moe.attention.indexer.top_k u32              = 0
+llama_model_loader: - kv  86:      qwen3moe.attention.indexer.block_size u32              = 0
+llama_model_loader: - kv  87:           qwen3moe.attention.indexer.kpool u32              = 0
+llama_model_loader: - kv  88: qwen3moe.attention.indexer.kpool_select_tail bool             = true
+llama_model_loader: - kv  89:    qwen3moe.attention.indexer.local_blocks u32              = 0
+llama_model_loader: - kv  90:           qwen3moe.attention.indexer.types u32              = 0
+llama_model_loader: - kv  91:        qwen3moe.attention.recurrent_layers u32              = 0
+llama_model_loader: - kv  92:      qwen3moe.attention.output_group_count u32              = 0
+llama_model_loader: - kv  93:        qwen3moe.attention.output_lora_rank u32              = 0
+llama_model_loader: - kv  94: qwen3moe.attention.compress_rope_freq_base f32              = 0.000000
+llama_model_loader: - kv  95:         qwen3moe.attention.compress_ratios u32              = 0
+llama_model_loader: - kv  96:            qwen3moe.hyper_connection.count u32              = 0
+llama_model_loader: - kv  97: qwen3moe.hyper_connection.sinkhorn_iterations u32              = 0
+llama_model_loader: - kv  98:          qwen3moe.hyper_connection.epsilon f32              = 0.000000
+llama_model_loader: - kv  99:        qwen3moe.hyper_connection.magnitude f32              = 0.000000
+llama_model_loader: - kv 100:                  qwen3moe.hash_layer_count u32              = 0
+llama_model_loader: - kv 101:         qwen3moe.hyper_connection.low_rank u32              = 0
+llama_model_loader: - kv 102:              qwen3moe.rope.dimension_count u32              = 128
+llama_model_loader: - kv 103:          qwen3moe.rope.dimension_count_swa u32              = 128
+llama_model_loader: - kv 104:           qwen3moe.rope.dimension_sections arr[i32,4]       = [0, 0, 0, 0]
+llama_model_loader: - kv 105:                qwen3moe.rope.section_order str              = tyxz
+llama_model_loader: - kv 106:                    qwen3moe.rope.freq_base f32              = 10000.000000
+llama_model_loader: - kv 107:                qwen3moe.rope.freq_base_swa f32              = 10000.000000
+llama_model_loader: - kv 108:                 qwen3moe.rope.scaling.type str              = linear
+llama_model_loader: - kv 109:               qwen3moe.rope.scaling.factor f32              = 0.000000
+llama_model_loader: - kv 110:          qwen3moe.rope.scaling.attn_factor f32              = 1.000000
+llama_model_loader: - kv 111: qwen3moe.rope.scaling.original_context_length u32              = 256
+llama_model_loader: - kv 112:            qwen3moe.rope.scaling.finetuned bool             = false
+llama_model_loader: - kv 113:  qwen3moe.rope.scaling.yarn_log_multiplier f32              = 0.000000
+llama_model_loader: - kv 114:      qwen3moe.rope.scaling.yarn_ext_factor f32              = -1.000000
+llama_model_loader: - kv 115:     qwen3moe.rope.scaling.yarn_attn_factor f32              = 1.000000
+llama_model_loader: - kv 116:       qwen3moe.rope.scaling.yarn_beta_fast f32              = 32.000000
+llama_model_loader: - kv 117:       qwen3moe.rope.scaling.yarn_beta_slow f32              = 1.000000
+llama_model_loader: - kv 118:                    qwen3moe.ssm.inner_size u32              = 0
+llama_model_loader: - kv 119:                   qwen3moe.ssm.conv_kernel u32              = 0
+llama_model_loader: - kv 120:                    qwen3moe.ssm.state_size u32              = 0
+llama_model_loader: - kv 121:                qwen3moe.ssm.time_step_rank u32              = 0
+llama_model_loader: - kv 122:                   qwen3moe.ssm.group_count u32              = 0
+llama_model_loader: - kv 123:                    qwen3moe.ssm.dt_b_c_rms bool             = false
+llama_model_loader: - kv 124:                      qwen3moe.kda.head_dim u32              = 0
+llama_model_loader: - kv 125:                     qwen3moe.kda.safe_gate bool             = false
+llama_model_loader: - kv 126:              qwen3moe.kda.gate_lower_bound f32              = -inf
+llama_model_loader: - kv 127:                     qwen3moe.wkv.head_size u32              = 0
+llama_model_loader: - kv 128:                       tokenizer.ggml.model str              = test
+llama_model_loader: - kv 129:                      tokenizer.ggml.tokens arr[str,128]     = ["tok_0", "tok_1", "tok_2", "tok_3", ...
+llama_model_loader: - kv 130:                  tokenizer.ggml.token_type arr[i32,128]     = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+llama_model_loader: - kv 131:            tokenizer.ggml.token_type_count u32              = 0
+llama_model_loader: - kv 132:                      tokenizer.ggml.scores arr[f32,128]     = [0.000000, 0.000000, 0.000000, 0.0000...
+llama_model_loader: - kv 133:                      tokenizer.ggml.merges arr[str,0]       = []
+llama_model_loader: - kv 134:               tokenizer.ggml.add_bos_token bool             = false
+llama_model_loader: - kv 135:               tokenizer.ggml.add_eos_token bool             = false
+llama_model_loader: - kv 136:               tokenizer.ggml.add_sep_token bool             = false
+llama_model_loader: - kv 137:            tokenizer.ggml.add_space_prefix bool             = false
+llama_model_loader: - kv 138:    tokenizer.ggml.remove_extra_whitespaces bool             = false
+llama_model_loader: - kv 139:           qwen3moe.posnet.embedding_length u32              = 0
+llama_model_loader: - kv 140:                qwen3moe.posnet.block_count u32              = 0
+llama_model_loader: - kv 141:         qwen3moe.convnext.embedding_length u32              = 0
+llama_model_loader: - kv 142:              qwen3moe.convnext.block_count u32              = 0
+llama_model_loader: - kv 143:          qwen3moe.classifier.output_labels arr[str,0]       = []
+llama_model_loader: - kv 144:                 qwen3moe.shortconv.l_cache u32              = 0
+llama_model_loader: - kv 145:                              xielu.alpha_n arr[f32,512]     = [0.000000, 0.000000, 0.000000, 0.0000...
+llama_model_loader: - kv 146:                              xielu.alpha_p arr[f32,512]     = [0.000000, 0.000000, 0.000000, 0.0000...
+llama_model_loader: - kv 147:                                 xielu.beta arr[f32,512]     = [0.000000, 0.000000, 0.000000, 0.0000...
+llama_model_loader: - kv 148:                                  xielu.eps arr[f32,512]     = [0.000000, 0.000000, 0.000000, 0.0000...
+llama_model_loader: - kv 149:               qwen3moe.attn_res.block_size u32              = 0
+llama_model_loader: - kv 150:              qwen3moe.activation.situ_beta f32              = 1.000000
+llama_model_loader: - kv 151:       qwen3moe.activation.situ_linear_beta f32              = 0.000000
+llama_model_loader: - kv 152:                   qwen3moe.dense_2_feat_in u32              = 0
+llama_model_loader: - kv 153:                  qwen3moe.dense_2_feat_out u32              = 0
+llama_model_loader: - kv 154:                   qwen3moe.dense_3_feat_in u32              = 0
+llama_model_loader: - kv 155:                  qwen3moe.dense_3_feat_out u32              = 0
+llama_model_loader: - type  f32:   61 tensors
+print_info: file format = GGUF V3 (latest)
+print_info: file type   = (guessed) all F32
+print_info: file size   = 6.77 MiB (32.00 BPW) 
+llama_prepare_model_devices: using device CPU (AMD Ryzen Threadripper 3960X 24-Core Processor) (unknown id) - 128690 MiB free
+init_tokenizer: initializing tokenizer for type 7
+load: 0 unused tokens
+load: printing all EOG tokens:
+load: special tokens cache size = 0
+load: token to piece cache size = 0.0002 MB
+print_info: arch                  = qwen3moe
+print_info: vocab_only            = 0
+print_info: no_alloc              = 0
+print_info: n_ctx_train           = 256
+print_info: n_embd_inp            = 256
+print_info: n_embd                = 256
+print_info: n_embd_out            = 256
+print_info: n_layer               = 2
+print_info: n_layer_all           = 2
+print_info: n_head                = 2
+print_info: n_head_kv             = 2
+print_info: n_rot                 = 128
+print_info: n_swa                 = 0
+print_info: is_swa_any            = 0
+print_info: non_causal_type       = 0
+print_info: n_embd_head_k         = 128
+print_info: n_embd_head_v         = 128
+print_info: n_gqa                 = 1
+print_info: n_embd_k_gqa          = 256
+print_info: n_embd_v_gqa          = 256
+print_info: f_norm_eps            = 0.0e+00
+print_info: f_norm_rms_eps        = 1.0e-05
+print_info: f_clamp_kqv           = 0.0e+00
+print_info: f_max_alibi_bias      = 0.0e+00
+print_info: f_logit_scale         = 0.0e+00
+print_info: f_attn_scale          = 0.0e+00
+print_info: f_attn_value_scale    = 0.0000
+print_info: n_ff                  = 384
+print_info: n_expert              = 2
+print_info: n_expert_used         = 2
+print_info: n_expert_groups       = 0
+print_info: n_group_used          = 0
+print_info: causal attn           = 1
+print_info: pooling type          = -1
+print_info: rope type             = 2
+print_info: rope scaling          = linear
+print_info: freq_base_train       = 10000.0
+print_info: freq_scale_train      = 1
+print_info: n_ctx_orig_yarn       = 256
+print_info: rope_yarn_log_mul     = 0.0000
+print_info: rope_finetuned        = unknown
+print_info: model type            = ?B
+print_info: model params          = 1.77 M
+print_info: general.name          = n/a
+print_info: n_ff_exp              = 384
+print_info: vocab type            = TEST
+print_info: n_vocab               = 128
+print_info: n_merges              = 0
+print_info: LF token              = 10 'tok_10'
+print_info: max token length      = 7
+load_tensors: loading model tensors, this can take a while... (load_mode = none)
+load_tensors: layer   0 assigned to device CPU, is_swa = 0
+load_tensors: layer   1 assigned to device CPU, is_swa = 0
+load_tensors: layer   2 assigned to device CPU, is_swa = 0
+create_tensor: loading tensor token_embd.weight
+create_tensor: loading tensor output_norm.weight
+create_tensor: loading tensor output.weight
+create_tensor: loading tensor blk.0.attn_norm.weight
+create_tensor: loading tensor blk.0.attn_qkv.weight
+create_tensor: loading tensor blk.0.attn_q.weight
+create_tensor: loading tensor blk.0.attn_k.weight
+create_tensor: loading tensor blk.0.attn_v.weight
+create_tensor: loading tensor blk.0.attn_q.bias
+create_tensor: loading tensor blk.0.attn_k.bias
+create_tensor: loading tensor blk.0.attn_v.bias
+create_tensor: loading tensor blk.0.attn_output.weight
+create_tensor: loading tensor blk.0.attn_k_norm.weight
+create_tensor: loading tensor blk.0.attn_q_norm.weight
+create_tensor: loading tensor blk.0.ffn_norm.weight
+create_tensor: loading tensor blk.0.ffn_gate_inp.weight
+create_tensor: loading tensor blk.0.ffn_gate_exps.weight
+create_tensor: loading tensor blk.0.ffn_down_exps.weight
+create_tensor: loading tensor blk.0.ffn_up_exps.weight
+create_tensor: loading tensor blk.1.attn_norm.weight
+create_tensor: loading tensor blk.1.attn_qkv.weight
+create_tensor: loading tensor blk.1.attn_q.weight
+create_tensor: loading tensor blk.1.attn_k.weight
+create_tensor: loading tensor blk.1.attn_v.weight
+create_tensor: loading tensor blk.1.attn_q.bias
+create_tensor: loading tensor blk.1.attn_k.bias
+create_tensor: loading tensor blk.1.attn_v.bias
+create_tensor: loading tensor blk.1.attn_output.weight
+create_tensor: loading tensor blk.1.attn_k_norm.weight
+create_tensor: loading tensor blk.1.attn_q_norm.weight
+create_tensor: loading tensor blk.1.ffn_norm.weight
+create_tensor: loading tensor blk.1.ffn_gate_inp.weight
+create_tensor: loading tensor blk.1.ffn_gate_exps.weight
+create_tensor: loading tensor blk.1.ffn_down_exps.weight
+create_tensor: loading tensor blk.1.ffn_up_exps.weight
+create_tensor: loading tensor blk.0.attn_q.scale
+create_tensor: loading tensor blk.0.attn_k.scale
+create_tensor: loading tensor blk.0.attn_v.scale
+create_tensor: loading tensor blk.0.attn_output.scale
+create_tensor: loading tensor blk.0.ffn_gate_exps.scale
+create_tensor: loading tensor blk.0.ffn_down_exps.scale
+create_tensor: loading tensor blk.0.ffn_up_exps.scale
+create_tensor: loading tensor blk.0.attn_q.input_scale
+create_tensor: loading tensor blk.0.attn_k.input_scale
+create_tensor: loading tensor blk.0.attn_v.input_scale
+create_tensor: loading tensor blk.0.attn_output.input_scale
+create_tensor: loading tensor blk.0.ffn_gate_exps.input_scale
+create_tensor: loading tensor blk.0.ffn_down_exps.input_scale
+create_tensor: loading tensor blk.0.ffn_up_exps.input_scale
+create_tensor: loading tensor blk.1.attn_q.scale
+create_tensor: loading tensor blk.1.attn_k.scale
+create_tensor: loading tensor blk.1.attn_v.scale
+create_tensor: loading tensor blk.1.attn_output.scale
+create_tensor: loading tensor blk.1.ffn_gate_exps.scale
+create_tensor: loading tensor blk.1.ffn_down_exps.scale
+create_tensor: loading tensor blk.1.ffn_up_exps.scale
+create_tensor: loading tensor blk.1.attn_q.input_scale
+create_tensor: loading tensor blk.1.attn_k.input_scale
+create_tensor: loading tensor blk.1.attn_v.input_scale
+create_tensor: loading tensor blk.1.attn_output.input_scale
+create_tensor: loading tensor blk.1.ffn_gate_exps.input_scale
+create_tensor: loading tensor blk.1.ffn_down_exps.input_scale
+create_tensor: loading tensor blk.1.ffn_up_exps.input_scale
+load_tensors:          CPU model buffer size =     6.77 MiB
+load_all_data: no device found for buffer type CPU for async uploads
+.................
+llama_moe_cache: adaptive LFU: 2 slots, admit <= 2 experts/ubatch, decay every 512 tokens
+llama_moe_cache: async upload enabled: separate stream, event-gated publication
+impl:        CPU MoE cache size =     3.38 MiB for 4.50 MiB of host experts
+impl:  2 layers, f32:     2 slots (50.0%)
+llama_moe_cache: adaptive: tokens = 20, hits = 0, misses = 20, hit rate = 0.00%, uploads = 5, uploaded = 5.63 MiB, hits/token = 0.00, misses/token = 1.00, uploads/token = 0.250, MiB/token = 0.281
+Prompt ranking, cross-ubatch candidates, static pinning and configurable decay passed
+LFU policy checks passed
+Cross-group byte value, soft layer budgets, pinned survival and delayed feedback passed
+Two-stream readers, delayed publication, reserved slots, event reuse, abort and teardown passed

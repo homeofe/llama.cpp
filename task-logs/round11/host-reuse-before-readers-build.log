@@ -1,0 +1,6 @@
+[ 11%] Built target ggml-base
+[ 33%] Built target ggml-cpu
+[ 38%] Built target ggml
+[ 44%] Building CXX object src/CMakeFiles/llama.dir/llama-moe-cache.cpp.o
+[ 50%] Linking CXX shared library ../bin/libllama.so
+[100%] Built target llama

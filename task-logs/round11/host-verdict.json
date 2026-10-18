@@ -1,0 +1,32 @@
+[
+  {
+    "check": "two-stream positive",
+    "exit": 0
+  },
+  {
+    "check": "original library lacks async protocol",
+    "exit": 86
+  },
+  {
+    "check": "publish-before-completion",
+    "exit": 86,
+    "expected_diagnostic": "map(0)[0] == -1",
+    "diagnostic_found": true
+  },
+  {
+    "check": "reuse-before-readers",
+    "exit": 86,
+    "expected_diagnostic": "!queued.copies.empty()",
+    "diagnostic_found": true
+  },
+  {
+    "check": "tiny-map-publication",
+    "exit": 86,
+    "expected_diagnostic": "map(il)[e] >= 0",
+    "diagnostic_found": true
+  },
+  {
+    "check": "restored positive",
+    "exit": 0
+  }
+]

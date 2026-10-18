@@ -1,0 +1,26 @@
+-- llama.cpp version: 0.7.0-dev
+CMAKE_BUILD_TYPE=Release
+-- Warning: ccache not found - consider installing it for faster compilation or disable this warning with GGML_CCACHE=OFF
+-- CMAKE_SYSTEM_PROCESSOR: x86_64
+-- GGML_SYSTEM_ARCH: x86
+-- Including CPU backend
+-- x86 detected
+-- Adding CPU backend variant ggml-cpu: -march=native 
+-- ggml version: 0.27.0
+-- ggml commit:  8ec498147
+-- OpenSSL found: 3.0.13
+-- Generating embedded license file for target: llama-app
+-- Configuring done (0.3s)
+-- Generating done (0.2s)
+-- Build files have been written to: /opt/llm-gateway/data/build/llama-l5/build-cpu
+[  0%] Building C object ggml/src/CMakeFiles/ggml-base.dir/ggml.c.o
+[  0%] Linking CXX shared library ../../bin/libggml-base.so
+[ 11%] Built target ggml-base
+[ 11%] Linking CXX shared library ../../bin/libggml-cpu.so
+[ 33%] Built target ggml-cpu
+[ 38%] Linking CXX shared library ../../bin/libggml.so
+[ 38%] Built target ggml
+[ 44%] Building CXX object src/CMakeFiles/llama.dir/llama-moe-cache.cpp.o
+[ 44%] Building CXX object src/CMakeFiles/llama.dir/llama.cpp.o
+[ 50%] Linking CXX shared library ../bin/libllama.so
+[100%] Built target llama
