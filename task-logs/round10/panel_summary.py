@@ -29,9 +29,19 @@ def main():
             failures=[r for r in group if not r['right']])
     events = [json.loads(line) for line in (OUT / 'runs.jsonl').read_text().splitlines()]
     chats = [r for r in events if r['kind'] == 'panel_request']
+    responses = [json.loads(line) for line in (OUT / 'responses.jsonl').read_text().splitlines()]
+    assert len(chats) == len(responses), 'request archive is incomplete'
+    foreign_failures = []
+    for event, response in zip(chats, responses):
+        if not event['quiet']:
+            request = response['request']
+            foreign_failures.append(dict(event=event, seed=request.get('seed'),
+                first_message=str(request.get('messages', [{}])[0].get('content', ''))[:240],
+                scope='Correctness outcome retained; this request is not a clean timing measurement.'))
     result.update(complete=len(groups['hard']) == 42 and len(groups['agent']) == 36,
         chat_requests=len(chats), quiet_requests=sum(r['quiet'] for r in chats),
         max_foreign_cores=max((r['foreign_cores'] for r in chats), default=None),
+        foreign_load_failures=foreign_failures,
         historical_controls=json.loads((OUT.parent / 'panel-controls.json').read_text()),
         scope='Three seeds, model-card sampling and thinking on. Historical controls are not paired runtime measurements. Exact 8192 context is retained; long-combine context failures remain in the denominator.')
     (OUT / 'summary.json').write_text(json.dumps(result, indent=2) + '\n')
