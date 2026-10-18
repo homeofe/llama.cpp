@@ -1,0 +1,46 @@
+{
+  "source": "/opt/llm-gateway/data/moe-quant/qwen38/stage_b.py",
+  "source_sha256": "0b0424590a7a2dca08e6c69e764c6b9bf7a1e09ab5a8e9ce1379762d43586538",
+  "prompts": [
+    {
+      "id": "code-duration",
+      "text": "Write a Python function parse_duration(s: str) -> int that turns a duration like \"1h30m15s\", \"45s\", \"2h\" or \"10m5s\" into seconds. Hours, minutes and seconds are each optional but appear in this order; an empty or malformed string raises ValueError.\nReturn only the code, in one ```python block, without tests or examples.",
+      "sha256": "319c5ef1b4b4f6f2a9bdb9d35d5dcdc27953ed7f5bfc992db0b113f7325646b6"
+    },
+    {
+      "id": "code-intervals",
+      "text": "Write a Python function merge_intervals(intervals: list[list[int]]) -> list[list[int]] that merges overlapping or touching closed intervals and returns them sorted by start. The input may be unsorted or empty.\nReturn only the code, in one ```python block, without tests or examples.",
+      "sha256": "2a7dd8e2c46d02388872a8054adf17c60604562477cd3f09095ee2d32bd23c4f"
+    },
+    {
+      "id": "code-roman",
+      "text": "Write two Python functions: int_to_roman(n: int) -> str for 1 <= n <= 3999 (standard subtractive notation) and roman_to_int(s: str) -> int, its inverse.\nReturn only the code, in one ```python block, without tests or examples.",
+      "sha256": "d0fd7197a096066522474cbf83efd7345961b0f5ebc3b95f7876820e3a367262"
+    },
+    {
+      "id": "code-bugfix",
+      "text": "This Python function should return the index of target in the sorted list xs, or -1. It has a bug. Return the corrected function.\n\ndef binary_search(xs, target):\n    lo, hi = 0, len(xs) - 1\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if xs[mid] == target:\n            return mid\n        if xs[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return -1\nReturn only the code, in one ```python block, without tests or examples.",
+      "sha256": "0486e2883406be401ff03892deba09c2d0a75f3d468b6fa89fa50419e00926e9"
+    },
+    {
+      "id": "en-1",
+      "text": "Explain the difference between a process and a thread, and when you would choose one over the other in a web server.",
+      "sha256": "095b4843434fb3e4a5b0b55f8ac3c60cf13babf910104b552b63d48c677d2652"
+    },
+    {
+      "id": "en-2",
+      "text": "Summarize the trade-offs of putting a message queue between two services: what it buys you and what it costs.",
+      "sha256": "3a852e9c725ffd47a3dacf0f245b47ba79150c97949bb1c7cf12c788dcd9b870"
+    },
+    {
+      "id": "en-3",
+      "text": "Write the \"Usage\" section of a README for a command-line tool that syncs a local folder to an S3 bucket.",
+      "sha256": "c869405f501dc6334f3fd92f35d368c31f8152687688e502eb625bcb1a9875c8"
+    },
+    {
+      "id": "en-4",
+      "text": "Explain how HTTP caching works with Cache-Control, ETag and If-None-Match, with one short example exchange.",
+      "sha256": "937b3b88e3c799e8bbe6870b66a50c5af5526cf1313783e9a79ebc0c84f07046"
+    }
+  ]
+}

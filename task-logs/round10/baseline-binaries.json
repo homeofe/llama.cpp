@@ -38,5 +38,15 @@
     "path": "/opt/llm-gateway/data/build/llama-l5/task-logs/round9/cpu-profile.so",
     "bytes": 16400,
     "sha256": "465ba7503b68c61db04413c9ec6814e74d58e88defd337840dc4a79ca53569b5"
+  },
+  "libllama-common.so": {
+    "path": "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama-common.so.0.7.0",
+    "bytes": 6397392,
+    "sha256": "94fe743aa165a86ab7867858366998f9f0c968581849042d8abba92f821c40b0"
+  },
+  "llama-perplexity": {
+    "path": "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/llama-perplexity",
+    "bytes": 15968,
+    "sha256": "f8aa12d85653cbff763f80fcb401f350048e4465bcb25a065fcffa38a17d2f5b"
   }
 }

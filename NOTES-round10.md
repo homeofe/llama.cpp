@@ -8,7 +8,19 @@ The unchanged stage-B foreign-process gate is reused. A rejected request invalid
 
 ## Initial findings (screening, not confirmation)
 
-MTP3 reproduces the previous control: code 50.7452, English 47.4517 tok/s. DSpark7 with 4608 MiB gives 77.3186 / 41.73 (rounded English), repeating the code-only gain. DSpark3 gives 66.32 / 51.68 in its first pass and is the first candidate improving both categories. Final selection waits for every screened setting and the three-round confirmation.
+| Configuration | Code tok/s | English tok/s | Acceptance code / English |
+|---|---:|---:|---:|
+| ling-cache-mtp3 | 50.7452 | 47.4517 | 67.88% / 53.02% |
+| ling-dspark-n7-p00 | 77.3175 | 41.7307 | 78.28% / 32.87% |
+| ling-dspark-n3-p00 | 66.3210 | 51.6762 | 95.84% / 57.64% |
+| ling-dspark-n4-p00 | 69.8386 | 51.6521 | 86.64% / 48.45% |
+| ling-dspark-n5-p00 | 73.9066 | 49.5328 | 84.69% / 43.17% |
+| ling-dspark-n7-p30 | 76.6976 | 45.4170 | 79.02% / 43.26% |
+| ling-dspark-n7-p50 | 76.8802 | 47.1952 | 89.57% / 61.11% |
+
+Four prompts per category, one complete clean pass per configuration. Foreign-load failures discard the entire pass before retrying with a fresh server/cache. Selection is pending the remaining screen and three interleaved confirmation rounds.
+
+The reported speed is the unchanged stage-B client first-to-last streamed-token metric. Raw server timing is also retained; a batched final token/stop event can produce a boundary difference, especially on short answers. Output hashes are recorded in `screen-summary.json`; the prompt texts and their SHA256 hashes are in `task-logs/round10/prompts.json`.
 
 ## Panel protocol
 
