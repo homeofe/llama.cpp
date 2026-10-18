@@ -6078,8 +6078,26 @@ static ggml_backend_feature * ggml_backend_cuda_get_features(ggml_backend_reg_t 
     GGML_UNUSED(reg);
 }
 
+#if !defined(GGML_USE_HIP) && !defined(GGML_USE_MUSA) && !defined(GGML_CUDA_NO_PEER_COPY)
+static bool ggml_backend_cuda_event_query(ggml_backend_event_t event) {
+    auto * dev_ctx = (ggml_backend_cuda_device_context *) event->device->context;
+    ggml_cuda_set_device(dev_ctx->device);
+    const cudaError_t status = cudaEventQuery((cudaEvent_t) event->context);
+    if (status == cudaErrorNotReady) {
+        return false;
+    }
+    CUDA_CHECK(status);
+    return true;
+}
+#endif
+
 static void * ggml_backend_cuda_reg_get_proc_address(ggml_backend_reg_t reg, const char * name) {
     GGML_UNUSED(reg);
+#if !defined(GGML_USE_HIP) && !defined(GGML_USE_MUSA) && !defined(GGML_CUDA_NO_PEER_COPY)
+    if (strcmp(name, "ggml_backend_event_query") == 0) {
+        return (void *) ggml_backend_cuda_event_query;
+    }
+#endif
     if (strcmp(name, "ggml_backend_comm_init") == 0) {
         return (void *)ggml_backend_cuda_comm_init;
     }

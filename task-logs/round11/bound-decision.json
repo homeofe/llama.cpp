@@ -1,0 +1,91 @@
+{
+  "build_experiment": true,
+  "results": [
+    {
+      "config": "qwen-admit32",
+      "category": "code",
+      "tok_s": 47.2548176374778,
+      "change_pct": 0.0,
+      "same_text_count": 4
+    },
+    {
+      "config": "qwen-admit32",
+      "category": "english",
+      "tok_s": 40.19611463418629,
+      "change_pct": 0.0,
+      "same_text_count": 4
+    },
+    {
+      "config": "qwen-admit8",
+      "category": "code",
+      "tok_s": 47.89888002835994,
+      "change_pct": 1.36295603936758,
+      "same_text_count": 3
+    },
+    {
+      "config": "qwen-admit8",
+      "category": "english",
+      "tok_s": 40.69990590417379,
+      "change_pct": 1.253333250171984,
+      "same_text_count": 1
+    },
+    {
+      "config": "qwen-admit0",
+      "category": "code",
+      "tok_s": 46.58375008916347,
+      "change_pct": -1.4201039848730779,
+      "same_text_count": 2
+    },
+    {
+      "config": "qwen-admit0",
+      "category": "english",
+      "tok_s": 39.41920369506421,
+      "change_pct": -1.9328010833696951,
+      "same_text_count": 1
+    },
+    {
+      "config": "ling-admit32",
+      "category": "code",
+      "tok_s": 66.26592791524749,
+      "change_pct": 0.0,
+      "same_text_count": 4
+    },
+    {
+      "config": "ling-admit32",
+      "category": "english",
+      "tok_s": 51.54303291875753,
+      "change_pct": 0.0,
+      "same_text_count": 4
+    },
+    {
+      "config": "ling-admit8",
+      "category": "code",
+      "tok_s": 68.29128227151952,
+      "change_pct": 3.056403826205245,
+      "same_text_count": 3
+    },
+    {
+      "config": "ling-admit8",
+      "category": "english",
+      "tok_s": 55.6264130021529,
+      "change_pct": 7.9222735880358774,
+      "same_text_count": 0
+    },
+    {
+      "config": "ling-admit0",
+      "category": "code",
+      "tok_s": 67.49083105574005,
+      "change_pct": 1.848465990032122,
+      "same_text_count": 4
+    },
+    {
+      "config": "ling-admit0",
+      "category": "english",
+      "tok_s": 53.988898324864095,
+      "change_pct": 4.745288097349154,
+      "same_text_count": 0
+    }
+  ],
+  "reason": "The equal-hit-rate premise fails: target hit rates fall by 13.29 pp (Qwen) and 16.81 pp (Ling) with admit 0. These net gains are not an upload-only ceiling. Ling admit 8 exceeds 3% in both categories despite fewer hits, but outputs/acceptance also change. The existing round-10 transfer envelope (~9 ms in target verification) exceeds 3%; proceed with a gated two-stream implementation, not a promised gain.",
+  "adopt_any_policy_from_screen": false
+}

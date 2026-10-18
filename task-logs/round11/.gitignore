@@ -1,0 +1,11 @@
+**/tmp/
+**/cache/
+**/config/
+**/cuda-cache/
+*.qdstrm
+*.nsys-rep
+*.sqlite
+baseline-bin/
+candidate-bin/
+baseline-cpu-libllama.so
+asan-test-moe-cache

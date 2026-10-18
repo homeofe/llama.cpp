@@ -42,12 +42,19 @@ def main():
         rounds = row['speculative_rounds']
         stats.append(dict(config=row['config'], contexts=contexts, speculative_rounds=rounds,
             decode_uploaded_mib_per_round=sum(c['decode_uploaded_mib'] for c in contexts) / rounds if rounds else None))
+    models = {}
+    for model in ['qwen', 'ling']:
+        data = summary.summarize(OUT / 'bound', model + '-admit32')
+        for key in ['summary', 'requests', 'per_prompt']:
+            data[key] = [r for r in data[key] if r['config'].startswith(model + '-')]
+        models[model] = data
     result = dict(complete=events[-1]['kind'] == 'all_complete', cache=stats,
-        models={m: summary.summarize(OUT / 'bound', m + '-admit32') for m in ['qwen', 'ling']},
+        models=models,
         scope='Speed: eight measured prompts. Cache counters and exact logged speculative-round count: those prompts plus the 16-token warmup. Hit rate includes prefill; upload rate subtracts all logged prompt bursts and excludes model initialization. All controls use identical level-5 logging.')
     (OUT / 'bound-summary.json').write_text(json.dumps(result, indent=2) + '\n')
-    for row in result['models']['qwen']['summary']:
-        print(row['config'], row['category'], round(row['tok_s'], 3))
+    for model in models.values():
+        for row in model['summary']:
+            print(row['config'], row['category'], round(row['tok_s'], 3))
     for row in stats:
         print(row['config'], 'MiB/round', row['decode_uploaded_mib_per_round'], 'hits', [(c['kind'], c['hit_rate_pct']) for c in row['contexts']])
 

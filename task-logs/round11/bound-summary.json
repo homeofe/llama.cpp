@@ -1,0 +1,1934 @@
+{
+  "complete": true,
+  "cache": [
+    {
+      "config": "qwen-admit32",
+      "contexts": [
+        {
+          "id": "674760512130",
+          "kind": "draft",
+          "tokens": 4231,
+          "hits": 26779,
+          "misses": 15531,
+          "hit_rate_pct": 63.29,
+          "uploads": 2520,
+          "uploaded_mib": 12550.8,
+          "prefill_uploaded_mib": 2510.15,
+          "decode_uploaded_mib": 10040.65
+        },
+        {
+          "id": "674760512129",
+          "kind": "target",
+          "tokens": 2653,
+          "hits": 435728,
+          "misses": 784652,
+          "hit_rate_pct": 35.7,
+          "uploads": 24506,
+          "uploaded_mib": 47543.35,
+          "prefill_uploaded_mib": 16426.56,
+          "decode_uploaded_mib": 31116.789999999997
+        }
+      ],
+      "speculative_rounds": 526,
+      "decode_uploaded_mib_per_round": 78.2460836501901
+    },
+    {
+      "config": "qwen-admit8",
+      "contexts": [
+        {
+          "id": "674914261591",
+          "kind": "draft",
+          "tokens": 4254,
+          "hits": 26865,
+          "misses": 15675,
+          "hit_rate_pct": 63.15,
+          "uploads": 2432,
+          "uploaded_mib": 12112.52,
+          "prefill_uploaded_mib": 2490.23,
+          "decode_uploaded_mib": 9622.29
+        },
+        {
+          "id": "674914261590",
+          "kind": "target",
+          "tokens": 2667,
+          "hits": 369001,
+          "misses": 857819,
+          "hit_rate_pct": 30.08,
+          "uploads": 11589,
+          "uploaded_mib": 22442.79,
+          "prefill_uploaded_mib": 14275.78,
+          "decode_uploaded_mib": 8167.01
+        }
+      ],
+      "speculative_rounds": 529,
+      "decode_uploaded_mib_per_round": 33.62816635160681
+    },
+    {
+      "config": "qwen-admit0",
+      "contexts": [
+        {
+          "id": "675067731787",
+          "kind": "draft",
+          "tokens": 4175,
+          "hits": 17540,
+          "misses": 24210,
+          "hit_rate_pct": 42.01,
+          "uploads": 409,
+          "uploaded_mib": 2037.01,
+          "prefill_uploaded_mib": 2037.02,
+          "decode_uploaded_mib": 0.0
+        },
+        {
+          "id": "675067731786",
+          "kind": "target",
+          "tokens": 2624,
+          "hits": 270555,
+          "misses": 936485,
+          "hit_rate_pct": 22.41,
+          "uploads": 5914,
+          "uploaded_mib": 11546.72,
+          "prefill_uploaded_mib": 11546.720000000001,
+          "decode_uploaded_mib": 0.0
+        }
+      ],
+      "speculative_rounds": 517,
+      "decode_uploaded_mib_per_round": 0.0
+    },
+    {
+      "config": "ling-admit32",
+      "contexts": [
+        {
+          "id": "675348375758",
+          "kind": "target",
+          "tokens": 2762,
+          "hits": 385184,
+          "misses": 494080,
+          "hit_rate_pct": 43.81,
+          "uploads": 26411,
+          "uploaded_mib": 78923.69,
+          "prefill_uploaded_mib": 27399.63,
+          "decode_uploaded_mib": 51524.06
+        }
+      ],
+      "speculative_rounds": 546,
+      "decode_uploaded_mib_per_round": 94.36641025641025
+    },
+    {
+      "config": "ling-admit8",
+      "contexts": [
+        {
+          "id": "676076618449",
+          "kind": "target",
+          "tokens": 2821,
+          "hits": 336577,
+          "misses": 561567,
+          "hit_rate_pct": 37.47,
+          "uploads": 12805,
+          "uploaded_mib": 38265.03,
+          "prefill_uploaded_mib": 24781.870000000003,
+          "decode_uploaded_mib": 13483.159999999996
+        }
+      ],
+      "speculative_rounds": 562,
+      "decode_uploaded_mib_per_round": 23.991387900355864
+    },
+    {
+      "config": "ling-admit0",
+      "contexts": [
+        {
+          "id": "676355314669",
+          "kind": "target",
+          "tokens": 2799,
+          "hits": 240586,
+          "misses": 650518,
+          "hit_rate_pct": 27.0,
+          "uploads": 7292,
+          "uploaded_mib": 21790.6,
+          "prefill_uploaded_mib": 21790.6,
+          "decode_uploaded_mib": 0.0
+        }
+      ],
+      "speculative_rounds": 556,
+      "decode_uploaded_mib_per_round": 0.0
+    }
+  ],
+  "models": {
+    "qwen": {
+      "complete": true,
+      "summary": [
+        {
+          "config": "qwen-admit32",
+          "category": "code",
+          "requests": 4,
+          "tok_s": 47.2548176374778,
+          "minimum": 44.376969537578255,
+          "maximum": 49.19188782739028,
+          "acceptance_pct": 91.94395796847635,
+          "median_mean_length": 3.7800000000000002,
+          "measured_lengths": 4,
+          "text_matches_control": 4,
+          "max_foreign_cores": 0.23151252517730747,
+          "peak_vram_mib": 10694
+        },
+        {
+          "config": "qwen-admit32",
+          "category": "english",
+          "requests": 4,
+          "tok_s": 40.19611463418629,
+          "minimum": 38.29588416487746,
+          "maximum": 40.71891911092106,
+          "acceptance_pct": 69.56521739130434,
+          "median_mean_length": 3.09,
+          "measured_lengths": 4,
+          "text_matches_control": 4,
+          "max_foreign_cores": 0.267759724369447,
+          "peak_vram_mib": 10696
+        },
+        {
+          "config": "qwen-admit8",
+          "category": "code",
+          "requests": 4,
+          "tok_s": 47.89888002835994,
+          "minimum": 44.17824604165053,
+          "maximum": 50.66828152460671,
+          "acceptance_pct": 90.78498293515358,
+          "median_mean_length": 3.7800000000000002,
+          "measured_lengths": 4,
+          "text_matches_control": 3,
+          "max_foreign_cores": 0.21622550458064863,
+          "peak_vram_mib": 10694
+        },
+        {
+          "config": "qwen-admit8",
+          "category": "english",
+          "requests": 4,
+          "tok_s": 40.69990590417379,
+          "minimum": 37.82028084775193,
+          "maximum": 42.445457728226366,
+          "acceptance_pct": 70.02032520325203,
+          "median_mean_length": 3.07,
+          "measured_lengths": 4,
+          "text_matches_control": 1,
+          "max_foreign_cores": 0.22378975648900915,
+          "peak_vram_mib": 10696
+        },
+        {
+          "config": "qwen-admit0",
+          "category": "code",
+          "requests": 4,
+          "tok_s": 46.58375008916347,
+          "minimum": 45.76463721824128,
+          "maximum": 51.16105786729088,
+          "acceptance_pct": 93.26241134751773,
+          "median_mean_length": 3.8,
+          "measured_lengths": 4,
+          "text_matches_control": 2,
+          "max_foreign_cores": 0.23938310836377424,
+          "peak_vram_mib": 10694
+        },
+        {
+          "config": "qwen-admit0",
+          "category": "english",
+          "requests": 4,
+          "tok_s": 39.41920369506421,
+          "minimum": 36.870435805735255,
+          "maximum": 40.931909473890464,
+          "acceptance_pct": 71.12024665981501,
+          "median_mean_length": 3.13,
+          "measured_lengths": 4,
+          "text_matches_control": 1,
+          "max_foreign_cores": 0.28908222608291656,
+          "peak_vram_mib": 10696
+        }
+      ],
+      "requests": [
+        {
+          "config": "qwen-admit32",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-duration",
+          "tok_s": 44.376969537578255,
+          "control_tok_s": 44.376969537578255,
+          "change_pct": 0.0,
+          "same_text": true,
+          "text_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+          "control_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+          "draft_n": 180,
+          "draft_n_accepted": 158,
+          "mean_length": 3.63
+        },
+        {
+          "config": "qwen-admit32",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-intervals",
+          "tok_s": 46.83524345638251,
+          "control_tok_s": 46.83524345638251,
+          "change_pct": 0.0,
+          "same_text": true,
+          "text_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+          "control_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+          "draft_n": 120,
+          "draft_n_accepted": 110,
+          "mean_length": 3.75
+        },
+        {
+          "config": "qwen-admit32",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-roman",
+          "tok_s": 47.6743918185731,
+          "control_tok_s": 47.6743918185731,
+          "change_pct": 0.0,
+          "same_text": true,
+          "text_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+          "control_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+          "draft_n": 199,
+          "draft_n_accepted": 188,
+          "mean_length": 3.81
+        },
+        {
+          "config": "qwen-admit32",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-bugfix",
+          "tok_s": 49.19188782739028,
+          "control_tok_s": 49.19188782739028,
+          "change_pct": 0.0,
+          "same_text": true,
+          "text_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+          "control_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+          "draft_n": 72,
+          "draft_n_accepted": 69,
+          "mean_length": 3.88
+        },
+        {
+          "config": "qwen-admit32",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-1",
+          "tok_s": 40.47501899724805,
+          "control_tok_s": 40.47501899724805,
+          "change_pct": 0.0,
+          "same_text": true,
+          "text_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+          "control_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+          "draft_n": 244,
+          "draft_n_accepted": 173,
+          "mean_length": 3.11
+        },
+        {
+          "config": "qwen-admit32",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-2",
+          "tok_s": 39.91721027112453,
+          "control_tok_s": 39.91721027112453,
+          "change_pct": 0.0,
+          "same_text": true,
+          "text_sha256": "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b",
+          "control_sha256": "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b",
+          "draft_n": 247,
+          "draft_n_accepted": 172,
+          "mean_length": 3.07
+        },
+        {
+          "config": "qwen-admit32",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-3",
+          "tok_s": 40.71891911092106,
+          "control_tok_s": 40.71891911092106,
+          "change_pct": 0.0,
+          "same_text": true,
+          "text_sha256": "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd",
+          "control_sha256": "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd",
+          "draft_n": 245,
+          "draft_n_accepted": 173,
+          "mean_length": 3.11
+        },
+        {
+          "config": "qwen-admit32",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-4",
+          "tok_s": 38.29588416487746,
+          "control_tok_s": 38.29588416487746,
+          "change_pct": 0.0,
+          "same_text": true,
+          "text_sha256": "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97",
+          "control_sha256": "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97",
+          "draft_n": 253,
+          "draft_n_accepted": 170,
+          "mean_length": 3.0
+        },
+        {
+          "config": "qwen-admit8",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-duration",
+          "tok_s": 44.17824604165053,
+          "control_tok_s": 44.376969537578255,
+          "change_pct": -0.4478077209833953,
+          "same_text": false,
+          "text_sha256": "c5665bc7d4d22143ae265697f54122479b23d39ea8b6698b1085d1b5cdd1eb11",
+          "control_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+          "draft_n": 195,
+          "draft_n_accepted": 165,
+          "mean_length": 3.54
+        },
+        {
+          "config": "qwen-admit8",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-intervals",
+          "tok_s": 47.44621587104554,
+          "control_tok_s": 46.83524345638251,
+          "change_pct": 1.3045142281197464,
+          "same_text": true,
+          "text_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+          "control_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+          "draft_n": 120,
+          "draft_n_accepted": 110,
+          "mean_length": 3.75
+        },
+        {
+          "config": "qwen-admit8",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-roman",
+          "tok_s": 48.351544185674335,
+          "control_tok_s": 47.6743918185731,
+          "change_pct": 1.4203691778138738,
+          "same_text": true,
+          "text_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+          "control_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+          "draft_n": 199,
+          "draft_n_accepted": 188,
+          "mean_length": 3.81
+        },
+        {
+          "config": "qwen-admit8",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-bugfix",
+          "tok_s": 50.66828152460671,
+          "control_tok_s": 49.19188782739028,
+          "change_pct": 3.0012950557965157,
+          "same_text": true,
+          "text_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+          "control_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+          "draft_n": 72,
+          "draft_n_accepted": 69,
+          "mean_length": 3.88
+        },
+        {
+          "config": "qwen-admit8",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-1",
+          "tok_s": 40.504962915652115,
+          "control_tok_s": 40.47501899724805,
+          "change_pct": 0.0739812337237078,
+          "same_text": true,
+          "text_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+          "control_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+          "draft_n": 247,
+          "draft_n_accepted": 172,
+          "mean_length": 3.07
+        },
+        {
+          "config": "qwen-admit8",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-2",
+          "tok_s": 40.894848892695464,
+          "control_tok_s": 39.91721027112453,
+          "change_pct": 2.449165698030109,
+          "same_text": false,
+          "text_sha256": "0e0470266affd88bcf5c8ee6123c1c5a7b13e62cae01142b6a21754f39178a46",
+          "control_sha256": "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b",
+          "draft_n": 246,
+          "draft_n_accepted": 172,
+          "mean_length": 3.07
+        },
+        {
+          "config": "qwen-admit8",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-3",
+          "tok_s": 42.445457728226366,
+          "control_tok_s": 40.71891911092106,
+          "change_pct": 4.240138625983914,
+          "same_text": false,
+          "text_sha256": "0726c8fe2f290caf0980a30bbd537819ac61bc0945bcc74f4e230a0a72ea68b5",
+          "control_sha256": "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd",
+          "draft_n": 230,
+          "draft_n_accepted": 177,
+          "mean_length": 3.3
+        },
+        {
+          "config": "qwen-admit8",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-4",
+          "tok_s": 37.82028084775193,
+          "control_tok_s": 38.29588416487746,
+          "change_pct": -1.2419175780819747,
+          "same_text": false,
+          "text_sha256": "e8d94902004f834c565344ff2fcb80a56e9cb16dce563f32f580849f915b8890",
+          "control_sha256": "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97",
+          "draft_n": 261,
+          "draft_n_accepted": 168,
+          "mean_length": 2.93
+        },
+        {
+          "config": "qwen-admit0",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-duration",
+          "tok_s": 45.76463721824128,
+          "control_tok_s": 44.376969537578255,
+          "change_pct": 3.1269996467153005,
+          "same_text": false,
+          "text_sha256": "f761084f92ba0de854a76609ba2d5eca26d350b1a71823f497d1f20e96d99265",
+          "control_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+          "draft_n": 174,
+          "draft_n_accepted": 159,
+          "mean_length": 3.74
+        },
+        {
+          "config": "qwen-admit0",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-intervals",
+          "tok_s": 47.013348103117885,
+          "control_tok_s": 46.83524345638251,
+          "change_pct": 0.3802791094728697,
+          "same_text": true,
+          "text_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+          "control_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+          "draft_n": 120,
+          "draft_n_accepted": 110,
+          "mean_length": 3.75
+        },
+        {
+          "config": "qwen-admit0",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-roman",
+          "tok_s": 46.15415207520907,
+          "control_tok_s": 47.6743918185731,
+          "change_pct": -3.1887973508909484,
+          "same_text": false,
+          "text_sha256": "ad87dfdb9d1cd1fa32366614ca6e9e1b4a45b51cd11f3466b5ab52ce99ef4921",
+          "control_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+          "draft_n": 198,
+          "draft_n_accepted": 188,
+          "mean_length": 3.85
+        },
+        {
+          "config": "qwen-admit0",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-bugfix",
+          "tok_s": 51.16105786729088,
+          "control_tok_s": 49.19188782739028,
+          "change_pct": 4.003038157043748,
+          "same_text": true,
+          "text_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+          "control_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+          "draft_n": 72,
+          "draft_n_accepted": 69,
+          "mean_length": 3.88
+        },
+        {
+          "config": "qwen-admit0",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-1",
+          "tok_s": 39.63128498037329,
+          "control_tok_s": 40.47501899724805,
+          "change_pct": -2.0845796685904694,
+          "same_text": true,
+          "text_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+          "control_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+          "draft_n": 244,
+          "draft_n_accepted": 173,
+          "mean_length": 3.11
+        },
+        {
+          "config": "qwen-admit0",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-2",
+          "tok_s": 36.870435805735255,
+          "control_tok_s": 39.91721027112453,
+          "change_pct": -7.632733962857275,
+          "same_text": false,
+          "text_sha256": "d90337649976db08701327887edf2d8877a0ec8814f0f1d1518990ff24e92844",
+          "control_sha256": "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b",
+          "draft_n": 257,
+          "draft_n_accepted": 168,
+          "mean_length": 2.95
+        },
+        {
+          "config": "qwen-admit0",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-3",
+          "tok_s": 40.931909473890464,
+          "control_tok_s": 40.71891911092106,
+          "change_pct": 0.5230746975115164,
+          "same_text": false,
+          "text_sha256": "9f14fcae5df3f0b3a8f8acda8d5ce59cea822bec54e912c3eb5aa9b0e4ff1d94",
+          "control_sha256": "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd",
+          "draft_n": 231,
+          "draft_n_accepted": 177,
+          "mean_length": 3.3
+        },
+        {
+          "config": "qwen-admit0",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-4",
+          "tok_s": 39.20712240975514,
+          "control_tok_s": 38.29588416487746,
+          "change_pct": 2.379467832507731,
+          "same_text": false,
+          "text_sha256": "0e99777ec47ba72ab68fde76d48cbce5875d1e23c48de385a0ed14cde265c440",
+          "control_sha256": "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97",
+          "draft_n": 241,
+          "draft_n_accepted": 174,
+          "mean_length": 3.15
+        }
+      ],
+      "per_prompt": [
+        {
+          "config": "qwen-admit32",
+          "prompt": "code-duration",
+          "requests": 1,
+          "tok_s": 44.376969537578255,
+          "minimum": 44.376969537578255,
+          "maximum": 44.376969537578255,
+          "server_tok_s": 44.377820905839265,
+          "text_hashes": [
+            "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7"
+          ],
+          "draft_counts": [
+            [
+              180,
+              158
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit32",
+          "prompt": "code-intervals",
+          "requests": 1,
+          "tok_s": 46.83524345638251,
+          "minimum": 46.83524345638251,
+          "maximum": 46.83524345638251,
+          "server_tok_s": 46.836740237818226,
+          "text_hashes": [
+            "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4"
+          ],
+          "draft_counts": [
+            [
+              120,
+              110
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit32",
+          "prompt": "code-roman",
+          "requests": 1,
+          "tok_s": 47.6743918185731,
+          "minimum": 47.6743918185731,
+          "maximum": 47.6743918185731,
+          "server_tok_s": 47.67495774690019,
+          "text_hashes": [
+            "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39"
+          ],
+          "draft_counts": [
+            [
+              199,
+              188
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit32",
+          "prompt": "code-bugfix",
+          "requests": 1,
+          "tok_s": 49.19188782739028,
+          "minimum": 49.19188782739028,
+          "maximum": 49.19188782739028,
+          "server_tok_s": 46.9912939785457,
+          "text_hashes": [
+            "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47"
+          ],
+          "draft_counts": [
+            [
+              72,
+              69
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit32",
+          "prompt": "en-1",
+          "requests": 1,
+          "tok_s": 40.47501899724805,
+          "minimum": 40.47501899724805,
+          "maximum": 40.47501899724805,
+          "server_tok_s": 40.4758049923334,
+          "text_hashes": [
+            "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801"
+          ],
+          "draft_counts": [
+            [
+              244,
+              173
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit32",
+          "prompt": "en-2",
+          "requests": 1,
+          "tok_s": 39.91721027112453,
+          "minimum": 39.91721027112453,
+          "maximum": 39.91721027112453,
+          "server_tok_s": 39.917353858262715,
+          "text_hashes": [
+            "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b"
+          ],
+          "draft_counts": [
+            [
+              247,
+              172
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit32",
+          "prompt": "en-3",
+          "requests": 1,
+          "tok_s": 40.71891911092106,
+          "minimum": 40.71891911092106,
+          "maximum": 40.71891911092106,
+          "server_tok_s": 40.719466667603484,
+          "text_hashes": [
+            "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd"
+          ],
+          "draft_counts": [
+            [
+              245,
+              173
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit32",
+          "prompt": "en-4",
+          "requests": 1,
+          "tok_s": 38.29588416487746,
+          "minimum": 38.29588416487746,
+          "maximum": 38.29588416487746,
+          "server_tok_s": 38.296327066852776,
+          "text_hashes": [
+            "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97"
+          ],
+          "draft_counts": [
+            [
+              253,
+              170
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit8",
+          "prompt": "code-duration",
+          "requests": 1,
+          "tok_s": 44.17824604165053,
+          "minimum": 44.17824604165053,
+          "maximum": 44.17824604165053,
+          "server_tok_s": 44.17938520735883,
+          "text_hashes": [
+            "c5665bc7d4d22143ae265697f54122479b23d39ea8b6698b1085d1b5cdd1eb11"
+          ],
+          "draft_counts": [
+            [
+              195,
+              165
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit8",
+          "prompt": "code-intervals",
+          "requests": 1,
+          "tok_s": 47.44621587104554,
+          "minimum": 47.44621587104554,
+          "maximum": 47.44621587104554,
+          "server_tok_s": 47.447948809356994,
+          "text_hashes": [
+            "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4"
+          ],
+          "draft_counts": [
+            [
+              120,
+              110
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit8",
+          "prompt": "code-roman",
+          "requests": 1,
+          "tok_s": 48.351544185674335,
+          "minimum": 48.351544185674335,
+          "maximum": 48.351544185674335,
+          "server_tok_s": 48.35200257877347,
+          "text_hashes": [
+            "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39"
+          ],
+          "draft_counts": [
+            [
+              199,
+              188
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit8",
+          "prompt": "code-bugfix",
+          "requests": 1,
+          "tok_s": 50.66828152460671,
+          "minimum": 50.66828152460671,
+          "maximum": 50.66828152460671,
+          "server_tok_s": 48.45655453055759,
+          "text_hashes": [
+            "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47"
+          ],
+          "draft_counts": [
+            [
+              72,
+              69
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit8",
+          "prompt": "en-1",
+          "requests": 1,
+          "tok_s": 40.504962915652115,
+          "minimum": 40.504962915652115,
+          "maximum": 40.504962915652115,
+          "server_tok_s": 40.487790549514585,
+          "text_hashes": [
+            "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801"
+          ],
+          "draft_counts": [
+            [
+              247,
+              172
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit8",
+          "prompt": "en-2",
+          "requests": 1,
+          "tok_s": 40.894848892695464,
+          "minimum": 40.894848892695464,
+          "maximum": 40.894848892695464,
+          "server_tok_s": 40.89517124251559,
+          "text_hashes": [
+            "0e0470266affd88bcf5c8ee6123c1c5a7b13e62cae01142b6a21754f39178a46"
+          ],
+          "draft_counts": [
+            [
+              246,
+              172
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit8",
+          "prompt": "en-3",
+          "requests": 1,
+          "tok_s": 42.445457728226366,
+          "minimum": 42.445457728226366,
+          "maximum": 42.445457728226366,
+          "server_tok_s": 42.4455070432077,
+          "text_hashes": [
+            "0726c8fe2f290caf0980a30bbd537819ac61bc0945bcc74f4e230a0a72ea68b5"
+          ],
+          "draft_counts": [
+            [
+              230,
+              177
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit8",
+          "prompt": "en-4",
+          "requests": 1,
+          "tok_s": 37.82028084775193,
+          "minimum": 37.82028084775193,
+          "maximum": 37.82028084775193,
+          "server_tok_s": 37.82018120464545,
+          "text_hashes": [
+            "e8d94902004f834c565344ff2fcb80a56e9cb16dce563f32f580849f915b8890"
+          ],
+          "draft_counts": [
+            [
+              261,
+              168
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit0",
+          "prompt": "code-duration",
+          "requests": 1,
+          "tok_s": 45.76463721824128,
+          "minimum": 45.76463721824128,
+          "maximum": 45.76463721824128,
+          "server_tok_s": 45.764893453607435,
+          "text_hashes": [
+            "f761084f92ba0de854a76609ba2d5eca26d350b1a71823f497d1f20e96d99265"
+          ],
+          "draft_counts": [
+            [
+              174,
+              159
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit0",
+          "prompt": "code-intervals",
+          "requests": 1,
+          "tok_s": 47.013348103117885,
+          "minimum": 47.013348103117885,
+          "maximum": 47.013348103117885,
+          "server_tok_s": 47.01522290230612,
+          "text_hashes": [
+            "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4"
+          ],
+          "draft_counts": [
+            [
+              120,
+              110
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit0",
+          "prompt": "code-roman",
+          "requests": 1,
+          "tok_s": 46.15415207520907,
+          "minimum": 46.15415207520907,
+          "maximum": 46.15415207520907,
+          "server_tok_s": 46.15361225318677,
+          "text_hashes": [
+            "ad87dfdb9d1cd1fa32366614ca6e9e1b4a45b51cd11f3466b5ab52ce99ef4921"
+          ],
+          "draft_counts": [
+            [
+              198,
+              188
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit0",
+          "prompt": "code-bugfix",
+          "requests": 1,
+          "tok_s": 51.16105786729088,
+          "minimum": 51.16105786729088,
+          "maximum": 51.16105786729088,
+          "server_tok_s": 48.978431057591784,
+          "text_hashes": [
+            "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47"
+          ],
+          "draft_counts": [
+            [
+              72,
+              69
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit0",
+          "prompt": "en-1",
+          "requests": 1,
+          "tok_s": 39.63128498037329,
+          "minimum": 39.63128498037329,
+          "maximum": 39.63128498037329,
+          "server_tok_s": 39.6317264559181,
+          "text_hashes": [
+            "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801"
+          ],
+          "draft_counts": [
+            [
+              244,
+              173
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit0",
+          "prompt": "en-2",
+          "requests": 1,
+          "tok_s": 36.870435805735255,
+          "minimum": 36.870435805735255,
+          "maximum": 36.870435805735255,
+          "server_tok_s": 36.85749260067769,
+          "text_hashes": [
+            "d90337649976db08701327887edf2d8877a0ec8814f0f1d1518990ff24e92844"
+          ],
+          "draft_counts": [
+            [
+              257,
+              168
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit0",
+          "prompt": "en-3",
+          "requests": 1,
+          "tok_s": 40.931909473890464,
+          "minimum": 40.931909473890464,
+          "maximum": 40.931909473890464,
+          "server_tok_s": 40.93183324852685,
+          "text_hashes": [
+            "9f14fcae5df3f0b3a8f8acda8d5ce59cea822bec54e912c3eb5aa9b0e4ff1d94"
+          ],
+          "draft_counts": [
+            [
+              231,
+              177
+            ]
+          ]
+        },
+        {
+          "config": "qwen-admit0",
+          "prompt": "en-4",
+          "requests": 1,
+          "tok_s": 39.20712240975514,
+          "minimum": 39.20712240975514,
+          "maximum": 39.20712240975514,
+          "server_tok_s": 39.20739559108993,
+          "text_hashes": [
+            "0e99777ec47ba72ab68fde76d48cbce5875d1e23c48de385a0ed14cde265c440"
+          ],
+          "draft_counts": [
+            [
+              241,
+              174
+            ]
+          ]
+        }
+      ],
+      "rejected_passes": 2,
+      "length_definition": "Server mean includes bonus token; rounded to 2 decimal places.",
+      "hashes_definition": "SHA256 of all streamed text, not the truncated preview."
+    },
+    "ling": {
+      "complete": true,
+      "summary": [
+        {
+          "config": "ling-admit32",
+          "category": "code",
+          "requests": 4,
+          "tok_s": 66.26592791524749,
+          "minimum": 64.94306802418194,
+          "maximum": 66.60178955865422,
+          "acceptance_pct": 95.84158415841584,
+          "median_mean_length": 3.87,
+          "measured_lengths": 4,
+          "text_matches_control": 4,
+          "max_foreign_cores": 0.2739056486170026,
+          "peak_vram_mib": 10136
+        },
+        {
+          "config": "ling-admit32",
+          "category": "english",
+          "requests": 4,
+          "tok_s": 51.54303291875753,
+          "minimum": 45.338990868001105,
+          "maximum": 55.68403983582606,
+          "acceptance_pct": 57.64075067024129,
+          "median_mean_length": 2.83,
+          "measured_lengths": 4,
+          "text_matches_control": 4,
+          "max_foreign_cores": 0.30518431324358325,
+          "peak_vram_mib": 10138
+        },
+        {
+          "config": "ling-admit8",
+          "category": "code",
+          "requests": 4,
+          "tok_s": 68.29128227151952,
+          "minimum": 61.581467559536186,
+          "maximum": 71.75522964548976,
+          "acceptance_pct": 92.3076923076923,
+          "median_mean_length": 3.855,
+          "measured_lengths": 4,
+          "text_matches_control": 3,
+          "max_foreign_cores": 0.3076682715334489,
+          "peak_vram_mib": 10136
+        },
+        {
+          "config": "ling-admit8",
+          "category": "english",
+          "requests": 4,
+          "tok_s": 55.6264130021529,
+          "minimum": 46.416858860957895,
+          "maximum": 58.446838937013176,
+          "acceptance_pct": 56.29955947136564,
+          "median_mean_length": 2.77,
+          "measured_lengths": 4,
+          "text_matches_control": 0,
+          "max_foreign_cores": 0.3062560803314927,
+          "peak_vram_mib": 10138
+        },
+        {
+          "config": "ling-admit0",
+          "category": "code",
+          "requests": 4,
+          "tok_s": 67.49083105574005,
+          "minimum": 65.87665575381614,
+          "maximum": 73.3354785843218,
+          "acceptance_pct": 95.65217391304348,
+          "median_mean_length": 3.88,
+          "measured_lengths": 4,
+          "text_matches_control": 4,
+          "max_foreign_cores": 0.23770629203845184,
+          "peak_vram_mib": 10136
+        },
+        {
+          "config": "ling-admit0",
+          "category": "english",
+          "requests": 4,
+          "tok_s": 53.988898324864095,
+          "minimum": 40.88708219807751,
+          "maximum": 57.637898540680794,
+          "acceptance_pct": 55.45851528384279,
+          "median_mean_length": 2.825,
+          "measured_lengths": 4,
+          "text_matches_control": 0,
+          "max_foreign_cores": 0.2475753929299863,
+          "peak_vram_mib": 10138
+        }
+      ],
+      "requests": [
+        {
+          "config": "ling-admit32",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-duration",
+          "tok_s": 66.00494731147306,
+          "control_tok_s": 66.00494731147306,
+          "change_pct": 0.0,
+          "same_text": true,
+          "text_sha256": "fe33e5063e058a608e1425f12275fcaf454ded017b385c51f272554b5a9e6129",
+          "control_sha256": "fe33e5063e058a608e1425f12275fcaf454ded017b385c51f272554b5a9e6129",
+          "draft_n": 144,
+          "draft_n_accepted": 138,
+          "mean_length": 3.88
+        },
+        {
+          "config": "ling-admit32",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-intervals",
+          "tok_s": 64.94306802418194,
+          "control_tok_s": 64.94306802418194,
+          "change_pct": 0.0,
+          "same_text": true,
+          "text_sha256": "bf1817f83662da4b95945e808857dd713294d468f06b3de742b1e7c47c1d4a4b",
+          "control_sha256": "bf1817f83662da4b95945e808857dd713294d468f06b3de742b1e7c47c1d4a4b",
+          "draft_n": 90,
+          "draft_n_accepted": 85,
+          "mean_length": 3.83
+        },
+        {
+          "config": "ling-admit32",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-roman",
+          "tok_s": 66.52690851902193,
+          "control_tok_s": 66.52690851902193,
+          "change_pct": 0.0,
+          "same_text": true,
+          "text_sha256": "c7af6574a214b11d8c35d40d6d53268c41c2c7acd82d8802eb2005e73cb213e2",
+          "control_sha256": "c7af6574a214b11d8c35d40d6d53268c41c2c7acd82d8802eb2005e73cb213e2",
+          "draft_n": 196,
+          "draft_n_accepted": 189,
+          "mean_length": 3.86
+        },
+        {
+          "config": "ling-admit32",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-bugfix",
+          "tok_s": 66.60178955865422,
+          "control_tok_s": 66.60178955865422,
+          "change_pct": 0.0,
+          "same_text": true,
+          "text_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+          "control_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+          "draft_n": 75,
+          "draft_n_accepted": 72,
+          "mean_length": 3.88
+        },
+        {
+          "config": "ling-admit32",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-1",
+          "tok_s": 50.72402999997439,
+          "control_tok_s": 50.72402999997439,
+          "change_pct": 0.0,
+          "same_text": true,
+          "text_sha256": "b47f8edae47dc44e2eab3e8c307653b9debf088a9f06246e998e1a320a5f98d4",
+          "control_sha256": "b47f8edae47dc44e2eab3e8c307653b9debf088a9f06246e998e1a320a5f98d4",
+          "draft_n": 273,
+          "draft_n_accepted": 163,
+          "mean_length": 2.79
+        },
+        {
+          "config": "ling-admit32",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-2",
+          "tok_s": 45.338990868001105,
+          "control_tok_s": 45.338990868001105,
+          "change_pct": 0.0,
+          "same_text": true,
+          "text_sha256": "cdcc90908cbd37499e4a877857c0e24132ba70b2718fd6471b3140de12ce3196",
+          "control_sha256": "cdcc90908cbd37499e4a877857c0e24132ba70b2718fd6471b3140de12ce3196",
+          "draft_n": 317,
+          "draft_n_accepted": 149,
+          "mean_length": 2.41
+        },
+        {
+          "config": "ling-admit32",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-3",
+          "tok_s": 55.68403983582606,
+          "control_tok_s": 55.68403983582606,
+          "change_pct": 0.0,
+          "same_text": true,
+          "text_sha256": "105e4b995f0d2aee76a9611e4acff077c748f91dd77ca89a42756b85f5db7ca2",
+          "control_sha256": "105e4b995f0d2aee76a9611e4acff077c748f91dd77ca89a42756b85f5db7ca2",
+          "draft_n": 263,
+          "draft_n_accepted": 167,
+          "mean_length": 2.9
+        },
+        {
+          "config": "ling-admit32",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-4",
+          "tok_s": 52.362035837540674,
+          "control_tok_s": 52.362035837540674,
+          "change_pct": 0.0,
+          "same_text": true,
+          "text_sha256": "23f472739cccc4ef209ba84525f4bda6b5dd6eec97c2b33dde18e2369913d4bd",
+          "control_sha256": "23f472739cccc4ef209ba84525f4bda6b5dd6eec97c2b33dde18e2369913d4bd",
+          "draft_n": 266,
+          "draft_n_accepted": 166,
+          "mean_length": 2.87
+        },
+        {
+          "config": "ling-admit8",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-duration",
+          "tok_s": 61.581467559536186,
+          "control_tok_s": 66.00494731147306,
+          "change_pct": -6.70173969090947,
+          "same_text": false,
+          "text_sha256": "24f9dca389590923f372c544ee7b26bd7f72afdb3ec132961d25f238dce2c536",
+          "control_sha256": "fe33e5063e058a608e1425f12275fcaf454ded017b385c51f272554b5a9e6129",
+          "draft_n": 174,
+          "draft_n_accepted": 145,
+          "mean_length": 3.5
+        },
+        {
+          "config": "ling-admit8",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-intervals",
+          "tok_s": 67.20950760770529,
+          "control_tok_s": 64.94306802418194,
+          "change_pct": 3.489886838545142,
+          "same_text": true,
+          "text_sha256": "bf1817f83662da4b95945e808857dd713294d468f06b3de742b1e7c47c1d4a4b",
+          "control_sha256": "bf1817f83662da4b95945e808857dd713294d468f06b3de742b1e7c47c1d4a4b",
+          "draft_n": 90,
+          "draft_n_accepted": 85,
+          "mean_length": 3.83
+        },
+        {
+          "config": "ling-admit8",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-roman",
+          "tok_s": 69.37305693533375,
+          "control_tok_s": 66.52690851902193,
+          "change_pct": 4.278191305850365,
+          "same_text": true,
+          "text_sha256": "c7af6574a214b11d8c35d40d6d53268c41c2c7acd82d8802eb2005e73cb213e2",
+          "control_sha256": "c7af6574a214b11d8c35d40d6d53268c41c2c7acd82d8802eb2005e73cb213e2",
+          "draft_n": 194,
+          "draft_n_accepted": 190,
+          "mean_length": 3.92
+        },
+        {
+          "config": "ling-admit8",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-bugfix",
+          "tok_s": 71.75522964548976,
+          "control_tok_s": 66.60178955865422,
+          "change_pct": 7.737690114613316,
+          "same_text": true,
+          "text_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+          "control_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+          "draft_n": 75,
+          "draft_n_accepted": 72,
+          "mean_length": 3.88
+        },
+        {
+          "config": "ling-admit8",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-1",
+          "tok_s": 58.446838937013176,
+          "control_tok_s": 50.72402999997439,
+          "change_pct": 15.225148587449944,
+          "same_text": false,
+          "text_sha256": "ff22144e0275928cb36b268f609cbdb97f53576937ee404d7e9e781309bce54b",
+          "control_sha256": "b47f8edae47dc44e2eab3e8c307653b9debf088a9f06246e998e1a320a5f98d4",
+          "draft_n": 254,
+          "draft_n_accepted": 170,
+          "mean_length": 3.0
+        },
+        {
+          "config": "ling-admit8",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-2",
+          "tok_s": 46.416858860957895,
+          "control_tok_s": 45.338990868001105,
+          "change_pct": 2.3773532941985254,
+          "same_text": false,
+          "text_sha256": "da680f02f24c88c819f6593fa02c41769b1d98f6b0a25306979ee8d8b863b726",
+          "control_sha256": "cdcc90908cbd37499e4a877857c0e24132ba70b2718fd6471b3140de12ce3196",
+          "draft_n": 333,
+          "draft_n_accepted": 143,
+          "mean_length": 2.28
+        },
+        {
+          "config": "ling-admit8",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-3",
+          "tok_s": 57.30018659904884,
+          "control_tok_s": 55.68403983582606,
+          "change_pct": 2.9023518551952954,
+          "same_text": false,
+          "text_sha256": "b1ff8ac6108db3a60100faaad7c0f331ae5c1fd2a078c9ffb116528a4f11ca36",
+          "control_sha256": "105e4b995f0d2aee76a9611e4acff077c748f91dd77ca89a42756b85f5db7ca2",
+          "draft_n": 270,
+          "draft_n_accepted": 164,
+          "mean_length": 2.8
+        },
+        {
+          "config": "ling-admit8",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-4",
+          "tok_s": 53.95263940525697,
+          "control_tok_s": 52.362035837540674,
+          "change_pct": 3.0377038292615843,
+          "same_text": false,
+          "text_sha256": "e4779658fd09965381429ab3fd7a7c447dd019f58e7fa1c11ea6e4455a1a6766",
+          "control_sha256": "23f472739cccc4ef209ba84525f4bda6b5dd6eec97c2b33dde18e2369913d4bd",
+          "draft_n": 278,
+          "draft_n_accepted": 162,
+          "mean_length": 2.74
+        },
+        {
+          "config": "ling-admit0",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-duration",
+          "tok_s": 65.87665575381614,
+          "control_tok_s": 66.00494731147306,
+          "change_pct": -0.19436657838922677,
+          "same_text": true,
+          "text_sha256": "fe33e5063e058a608e1425f12275fcaf454ded017b385c51f272554b5a9e6129",
+          "control_sha256": "fe33e5063e058a608e1425f12275fcaf454ded017b385c51f272554b5a9e6129",
+          "draft_n": 144,
+          "draft_n_accepted": 138,
+          "mean_length": 3.88
+        },
+        {
+          "config": "ling-admit0",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-intervals",
+          "tok_s": 67.14025995321082,
+          "control_tok_s": 64.94306802418194,
+          "change_pct": 3.3832585922961567,
+          "same_text": true,
+          "text_sha256": "bf1817f83662da4b95945e808857dd713294d468f06b3de742b1e7c47c1d4a4b",
+          "control_sha256": "bf1817f83662da4b95945e808857dd713294d468f06b3de742b1e7c47c1d4a4b",
+          "draft_n": 93,
+          "draft_n_accepted": 84,
+          "mean_length": 3.71
+        },
+        {
+          "config": "ling-admit0",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-roman",
+          "tok_s": 67.84140215826928,
+          "control_tok_s": 66.52690851902193,
+          "change_pct": 1.975882644346072,
+          "same_text": true,
+          "text_sha256": "c7af6574a214b11d8c35d40d6d53268c41c2c7acd82d8802eb2005e73cb213e2",
+          "control_sha256": "c7af6574a214b11d8c35d40d6d53268c41c2c7acd82d8802eb2005e73cb213e2",
+          "draft_n": 194,
+          "draft_n_accepted": 190,
+          "mean_length": 3.92
+        },
+        {
+          "config": "ling-admit0",
+          "category": "code",
+          "round": 1,
+          "prompt": "code-bugfix",
+          "tok_s": 73.3354785843218,
+          "control_tok_s": 66.60178955865422,
+          "change_pct": 10.110372514446375,
+          "same_text": true,
+          "text_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+          "control_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+          "draft_n": 75,
+          "draft_n_accepted": 72,
+          "mean_length": 3.88
+        },
+        {
+          "config": "ling-admit0",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-1",
+          "tok_s": 57.637898540680794,
+          "control_tok_s": 50.72402999997439,
+          "change_pct": 13.630361271984693,
+          "same_text": false,
+          "text_sha256": "3768da4177fdb70880bfc50f5eba99d9201046d0bf66e350cadde15b69d13c29",
+          "control_sha256": "b47f8edae47dc44e2eab3e8c307653b9debf088a9f06246e998e1a320a5f98d4",
+          "draft_n": 253,
+          "draft_n_accepted": 170,
+          "mean_length": 3.0
+        },
+        {
+          "config": "ling-admit0",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-2",
+          "tok_s": 40.88708219807751,
+          "control_tok_s": 45.338990868001105,
+          "change_pct": -9.81916135470412,
+          "same_text": false,
+          "text_sha256": "6d9edfe89403bdf8488dd5e9f80874ab1ae364ab356c6eb02ff5987191c4ad86",
+          "control_sha256": "cdcc90908cbd37499e4a877857c0e24132ba70b2718fd6471b3140de12ce3196",
+          "draft_n": 355,
+          "draft_n_accepted": 136,
+          "mean_length": 2.14
+        },
+        {
+          "config": "ling-admit0",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-3",
+          "tok_s": 54.322666569284685,
+          "control_tok_s": 55.68403983582606,
+          "change_pct": -2.444817708189151,
+          "same_text": false,
+          "text_sha256": "735fdcbaea99750f936f5dab77b9c86febe5b879be03acdc95cffd6fb54caafb",
+          "control_sha256": "105e4b995f0d2aee76a9611e4acff077c748f91dd77ca89a42756b85f5db7ca2",
+          "draft_n": 267,
+          "draft_n_accepted": 165,
+          "mean_length": 2.85
+        },
+        {
+          "config": "ling-admit0",
+          "category": "english",
+          "round": 1,
+          "prompt": "en-4",
+          "tok_s": 53.6551300804435,
+          "control_tok_s": 52.362035837540674,
+          "change_pct": 2.469526293658264,
+          "same_text": false,
+          "text_sha256": "1b9b5b025c5d2cf82718484ab6c47352f7adede67d9e3d41bf7c0bec08009408",
+          "control_sha256": "23f472739cccc4ef209ba84525f4bda6b5dd6eec97c2b33dde18e2369913d4bd",
+          "draft_n": 270,
+          "draft_n_accepted": 164,
+          "mean_length": 2.8
+        }
+      ],
+      "per_prompt": [
+        {
+          "config": "ling-admit32",
+          "prompt": "code-duration",
+          "requests": 1,
+          "tok_s": 66.00494731147306,
+          "minimum": 66.00494731147306,
+          "maximum": 66.00494731147306,
+          "server_tok_s": 66.00379825100637,
+          "text_hashes": [
+            "fe33e5063e058a608e1425f12275fcaf454ded017b385c51f272554b5a9e6129"
+          ],
+          "draft_counts": [
+            [
+              144,
+              138
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit32",
+          "prompt": "code-intervals",
+          "requests": 1,
+          "tok_s": 64.94306802418194,
+          "minimum": 64.94306802418194,
+          "maximum": 64.94306802418194,
+          "server_tok_s": 64.93994184769382,
+          "text_hashes": [
+            "bf1817f83662da4b95945e808857dd713294d468f06b3de742b1e7c47c1d4a4b"
+          ],
+          "draft_counts": [
+            [
+              90,
+              85
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit32",
+          "prompt": "code-roman",
+          "requests": 1,
+          "tok_s": 66.52690851902193,
+          "minimum": 66.52690851902193,
+          "maximum": 66.52690851902193,
+          "server_tok_s": 66.52594472711448,
+          "text_hashes": [
+            "c7af6574a214b11d8c35d40d6d53268c41c2c7acd82d8802eb2005e73cb213e2"
+          ],
+          "draft_counts": [
+            [
+              196,
+              189
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit32",
+          "prompt": "code-bugfix",
+          "requests": 1,
+          "tok_s": 66.60178955865422,
+          "minimum": 66.60178955865422,
+          "maximum": 66.60178955865422,
+          "server_tok_s": 63.28866154267743,
+          "text_hashes": [
+            "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47"
+          ],
+          "draft_counts": [
+            [
+              75,
+              72
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit32",
+          "prompt": "en-1",
+          "requests": 1,
+          "tok_s": 50.72402999997439,
+          "minimum": 50.72402999997439,
+          "maximum": 50.72402999997439,
+          "server_tok_s": 50.723011777286594,
+          "text_hashes": [
+            "b47f8edae47dc44e2eab3e8c307653b9debf088a9f06246e998e1a320a5f98d4"
+          ],
+          "draft_counts": [
+            [
+              273,
+              163
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit32",
+          "prompt": "en-2",
+          "requests": 1,
+          "tok_s": 45.338990868001105,
+          "minimum": 45.338990868001105,
+          "maximum": 45.338990868001105,
+          "server_tok_s": 45.339668796386476,
+          "text_hashes": [
+            "cdcc90908cbd37499e4a877857c0e24132ba70b2718fd6471b3140de12ce3196"
+          ],
+          "draft_counts": [
+            [
+              317,
+              149
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit32",
+          "prompt": "en-3",
+          "requests": 1,
+          "tok_s": 55.68403983582606,
+          "minimum": 55.68403983582606,
+          "maximum": 55.68403983582606,
+          "server_tok_s": 55.68524515702146,
+          "text_hashes": [
+            "105e4b995f0d2aee76a9611e4acff077c748f91dd77ca89a42756b85f5db7ca2"
+          ],
+          "draft_counts": [
+            [
+              263,
+              167
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit32",
+          "prompt": "en-4",
+          "requests": 1,
+          "tok_s": 52.362035837540674,
+          "minimum": 52.362035837540674,
+          "maximum": 52.362035837540674,
+          "server_tok_s": 52.362493013200684,
+          "text_hashes": [
+            "23f472739cccc4ef209ba84525f4bda6b5dd6eec97c2b33dde18e2369913d4bd"
+          ],
+          "draft_counts": [
+            [
+              266,
+              166
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit8",
+          "prompt": "code-duration",
+          "requests": 1,
+          "tok_s": 61.581467559536186,
+          "minimum": 61.581467559536186,
+          "maximum": 61.581467559536186,
+          "server_tok_s": 61.583450758543485,
+          "text_hashes": [
+            "24f9dca389590923f372c544ee7b26bd7f72afdb3ec132961d25f238dce2c536"
+          ],
+          "draft_counts": [
+            [
+              174,
+              145
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit8",
+          "prompt": "code-intervals",
+          "requests": 1,
+          "tok_s": 67.20950760770529,
+          "minimum": 67.20950760770529,
+          "maximum": 67.20950760770529,
+          "server_tok_s": 66.9478866007589,
+          "text_hashes": [
+            "bf1817f83662da4b95945e808857dd713294d468f06b3de742b1e7c47c1d4a4b"
+          ],
+          "draft_counts": [
+            [
+              90,
+              85
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit8",
+          "prompt": "code-roman",
+          "requests": 1,
+          "tok_s": 69.37305693533375,
+          "minimum": 69.37305693533375,
+          "maximum": 69.37305693533375,
+          "server_tok_s": 69.37284230056667,
+          "text_hashes": [
+            "c7af6574a214b11d8c35d40d6d53268c41c2c7acd82d8802eb2005e73cb213e2"
+          ],
+          "draft_counts": [
+            [
+              194,
+              190
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit8",
+          "prompt": "code-bugfix",
+          "requests": 1,
+          "tok_s": 71.75522964548976,
+          "minimum": 71.75522964548976,
+          "maximum": 71.75522964548976,
+          "server_tok_s": 68.36170814061087,
+          "text_hashes": [
+            "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47"
+          ],
+          "draft_counts": [
+            [
+              75,
+              72
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit8",
+          "prompt": "en-1",
+          "requests": 1,
+          "tok_s": 58.446838937013176,
+          "minimum": 58.446838937013176,
+          "maximum": 58.446838937013176,
+          "server_tok_s": 58.44809980643364,
+          "text_hashes": [
+            "ff22144e0275928cb36b268f609cbdb97f53576937ee404d7e9e781309bce54b"
+          ],
+          "draft_counts": [
+            [
+              254,
+              170
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit8",
+          "prompt": "en-2",
+          "requests": 1,
+          "tok_s": 46.416858860957895,
+          "minimum": 46.416858860957895,
+          "maximum": 46.416858860957895,
+          "server_tok_s": 46.41647519112212,
+          "text_hashes": [
+            "da680f02f24c88c819f6593fa02c41769b1d98f6b0a25306979ee8d8b863b726"
+          ],
+          "draft_counts": [
+            [
+              333,
+              143
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit8",
+          "prompt": "en-3",
+          "requests": 1,
+          "tok_s": 57.30018659904884,
+          "minimum": 57.30018659904884,
+          "maximum": 57.30018659904884,
+          "server_tok_s": 57.30038344068354,
+          "text_hashes": [
+            "b1ff8ac6108db3a60100faaad7c0f331ae5c1fd2a078c9ffb116528a4f11ca36"
+          ],
+          "draft_counts": [
+            [
+              270,
+              164
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit8",
+          "prompt": "en-4",
+          "requests": 1,
+          "tok_s": 53.95263940525697,
+          "minimum": 53.95263940525697,
+          "maximum": 53.95263940525697,
+          "server_tok_s": 53.95337539721851,
+          "text_hashes": [
+            "e4779658fd09965381429ab3fd7a7c447dd019f58e7fa1c11ea6e4455a1a6766"
+          ],
+          "draft_counts": [
+            [
+              278,
+              162
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit0",
+          "prompt": "code-duration",
+          "requests": 1,
+          "tok_s": 65.87665575381614,
+          "minimum": 65.87665575381614,
+          "maximum": 65.87665575381614,
+          "server_tok_s": 65.87831100830137,
+          "text_hashes": [
+            "fe33e5063e058a608e1425f12275fcaf454ded017b385c51f272554b5a9e6129"
+          ],
+          "draft_counts": [
+            [
+              144,
+              138
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit0",
+          "prompt": "code-intervals",
+          "requests": 1,
+          "tok_s": 67.14025995321082,
+          "minimum": 67.14025995321082,
+          "maximum": 67.14025995321082,
+          "server_tok_s": 65.24744953393463,
+          "text_hashes": [
+            "bf1817f83662da4b95945e808857dd713294d468f06b3de742b1e7c47c1d4a4b"
+          ],
+          "draft_counts": [
+            [
+              93,
+              84
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit0",
+          "prompt": "code-roman",
+          "requests": 1,
+          "tok_s": 67.84140215826928,
+          "minimum": 67.84140215826928,
+          "maximum": 67.84140215826928,
+          "server_tok_s": 67.84347154245725,
+          "text_hashes": [
+            "c7af6574a214b11d8c35d40d6d53268c41c2c7acd82d8802eb2005e73cb213e2"
+          ],
+          "draft_counts": [
+            [
+              194,
+              190
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit0",
+          "prompt": "code-bugfix",
+          "requests": 1,
+          "tok_s": 73.3354785843218,
+          "minimum": 73.3354785843218,
+          "maximum": 73.3354785843218,
+          "server_tok_s": 69.9187284882778,
+          "text_hashes": [
+            "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47"
+          ],
+          "draft_counts": [
+            [
+              75,
+              72
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit0",
+          "prompt": "en-1",
+          "requests": 1,
+          "tok_s": 57.637898540680794,
+          "minimum": 57.637898540680794,
+          "maximum": 57.637898540680794,
+          "server_tok_s": 57.638750599838566,
+          "text_hashes": [
+            "3768da4177fdb70880bfc50f5eba99d9201046d0bf66e350cadde15b69d13c29"
+          ],
+          "draft_counts": [
+            [
+              253,
+              170
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit0",
+          "prompt": "en-2",
+          "requests": 1,
+          "tok_s": 40.88708219807751,
+          "minimum": 40.88708219807751,
+          "maximum": 40.88708219807751,
+          "server_tok_s": 40.88709277858581,
+          "text_hashes": [
+            "6d9edfe89403bdf8488dd5e9f80874ab1ae364ab356c6eb02ff5987191c4ad86"
+          ],
+          "draft_counts": [
+            [
+              355,
+              136
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit0",
+          "prompt": "en-3",
+          "requests": 1,
+          "tok_s": 54.322666569284685,
+          "minimum": 54.322666569284685,
+          "maximum": 54.322666569284685,
+          "server_tok_s": 54.32237839136739,
+          "text_hashes": [
+            "735fdcbaea99750f936f5dab77b9c86febe5b879be03acdc95cffd6fb54caafb"
+          ],
+          "draft_counts": [
+            [
+              267,
+              165
+            ]
+          ]
+        },
+        {
+          "config": "ling-admit0",
+          "prompt": "en-4",
+          "requests": 1,
+          "tok_s": 53.6551300804435,
+          "minimum": 53.6551300804435,
+          "maximum": 53.6551300804435,
+          "server_tok_s": 53.655293147272204,
+          "text_hashes": [
+            "1b9b5b025c5d2cf82718484ab6c47352f7adede67d9e3d41bf7c0bec08009408"
+          ],
+          "draft_counts": [
+            [
+              270,
+              164
+            ]
+          ]
+        }
+      ],
+      "rejected_passes": 2,
+      "length_definition": "Server mean includes bonus token; rounded to 2 decimal places.",
+      "hashes_definition": "SHA256 of all streamed text, not the truncated preview."
+    }
+  },
+  "scope": "Speed: eight measured prompts. Cache counters and exact logged speculative-round count: those prompts plus the 16-token warmup. Hit rate includes prefill; upload rate subtracts all logged prompt bursts and excludes model initialization. All controls use identical level-5 logging."
+}
