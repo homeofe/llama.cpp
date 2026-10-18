@@ -38,7 +38,10 @@ def main():
     parser.add_argument('--graphs', action='store_true')
     parser.add_argument('--plain', action='store_true')
     args = parser.parse_args()
+    injection = os.environ.get('LD_PRELOAD', '')
     bench.configure()
+    if injection:
+        os.environ['LD_PRELOAD'] = injection
     out = args.out.resolve()
     base = bench.stage.CONFIGS['q-warm-draft']
     cmd = list(base['cmd'])
@@ -46,7 +49,7 @@ def main():
     if not args.graphs:
         env['GGML_CUDA_DISABLE_GRAPHS'] = '1'
     if not args.plain:
-        env['LD_PRELOAD'] = str(bench.ROOT / 'task-logs/round9/cpu-profile.so')
+        env['LD_PRELOAD'] = ':'.join(filter(None, [str(bench.ROOT / 'task-logs/round9/cpu-profile.so'), injection]))
         cmd += ['-lv', '5']
     env.update(XDG_CONFIG_HOME=str(out / 'config'), XDG_CACHE_HOME=str(out / 'cache'), CUDA_CACHE_PATH=str(out / 'cuda-cache'))
     cfg = dict(cmd=cmd, env=env)
