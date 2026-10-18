@@ -80,7 +80,9 @@ def main():
     parser.add_argument('out', type=Path)
     parser.add_argument('prompt')
     parser.add_argument('--graphs', action='store_true')
-    parser.add_argument('--plain', action='store_true')
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument('--plain', action='store_true')
+    mode.add_argument('--counters-only', action='store_true')
     args = parser.parse_args()
     injection = os.environ.get('LD_PRELOAD', '')
     bench.configure()
@@ -94,7 +96,7 @@ def main():
         env['GGML_CUDA_DISABLE_GRAPHS'] = '1'
     if not args.plain:
         env['LD_PRELOAD'] = ':'.join(filter(None, [str(bench.ROOT / 'task-logs/round9/cpu-profile.so'), injection]))
-    cmd += ['-lv', '4' if args.plain else '5', '--log-prefix', '--log-timestamps', '--log-colors', 'off']
+    cmd += ['-lv', '4' if args.plain or args.counters_only else '5', '--log-prefix', '--log-timestamps', '--log-colors', 'off']
     env.update(XDG_CONFIG_HOME=str(out / 'config'), XDG_CACHE_HOME=str(out / 'cache'), CUDA_CACHE_PATH=str(out / 'cuda-cache'))
     cfg = dict(cmd=cmd, env=env)
     (out / 'config.json').write_text(json.dumps(cfg, indent=2) + '\n')
@@ -205,7 +207,7 @@ def main():
             assert all(n >= 0 for values in counters.values() for n in values)
             (out / 'cpu-counters.json').write_text(json.dumps(dict(before=cpu_before, first_token=run.first_cpu, after=cpu_after, delta=counters, decode_delta=decode,
                 scope='Complete request and client first-token-to-end interval; boundary can lag server emission; atomic snapshots may straddle a CPU call; CPU graph elapsed time can overlap GPU work; buckets 1..8 tokens, 9 larger, 0 no expert op.'), indent=2) + '\n')
-        run.event(kind='profile_request', prompt=args.prompt, graphs=args.graphs, plain=args.plain,
+        run.event(kind='profile_request', prompt=args.prompt, graphs=args.graphs, plain=args.plain, counters_only=args.counters_only,
             waited_s=waited, pre_busy_cores=pre, owned_profiler_processes=own_pids, foreign_cores=foreign, accepted=foreign < 1,
             wall_s=wall, **result)
     finally:

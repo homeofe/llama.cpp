@@ -15,10 +15,12 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('prompt', choices=['code-duration', 'en-1'])
     parser.add_argument('--graphs', action='store_true')
-    parser.add_argument('--plain', action='store_true')
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument('--plain', action='store_true')
+    mode.add_argument('--counters-only', action='store_true')
     args = parser.parse_args()
     bench.configure()
-    tag = args.prompt + ('-on' if args.graphs else '-off') + ('-plain' if args.plain else '')
+    tag = args.prompt + ('-on' if args.graphs else '-off') + ('-plain' if args.plain else '-counters' if args.counters_only else '')
     out = bench.ROOT / 'task-logs/round10' / ('profile-' + tag)
     out.mkdir(exist_ok=True)
     if (out / 'owned-pids.json').exists():
@@ -28,8 +30,9 @@ def main():
     target = ['python3', str(bench.ROOT / 'task-logs/round10/profile_request.py'), str(out), args.prompt]
     if args.graphs:
         target += ['--graphs']
-    if args.plain:
-        target += ['--plain']
+    direct = args.plain or args.counters_only
+    if direct:
+        target += ['--plain' if args.plain else '--counters-only']
         command = target
     else:
         command = ['sudo', '-n', 'env', 'TMPDIR=' + str(out / 'tmp'), 'XDG_CONFIG_HOME=' + str(out / 'config'),
@@ -53,7 +56,7 @@ def main():
         with (out / 'profiler.log').open('w') as stream:
             proc = subprocess.Popen(command, stdout=stream, stderr=subprocess.STDOUT, start_new_session=True)
         (out / 'profiler-owner.json').write_text(json.dumps(dict(pid=proc.pid)) + '\n')
-        run.event(kind='profile_start', pid=proc.pid, graphs=args.graphs, plain=args.plain)
+        run.event(kind='profile_start', pid=proc.pid, graphs=args.graphs, plain=args.plain, counters_only=args.counters_only)
         while proc.poll() is None:
             if run.held and (out / 'server-stopped.json').exists():
                 run.stop()
@@ -71,7 +74,7 @@ def main():
         if proc.returncode:
             raise RuntimeError('profiler failed; inspect raw capture before retrying')
         run.stop()
-        if not args.plain and not (out / 'trace.sqlite').exists():
+        if not direct and not (out / 'trace.sqlite').exists():
             if not (out / 'trace.qdstrm').exists():
                 raise RuntimeError('capture range never produced a trace')
             with (out / 'import.log').open('w') as stream:
@@ -88,14 +91,14 @@ def main():
                 if owned_file.exists():
                     owned = json.loads(owned_file.read_text())
                     for key in ['wrapper', 'server']:
-                        if args.plain:
+                        if direct:
                             try:
                                 os.kill(owned[key], signal.SIGTERM)
                             except ProcessLookupError:
                                 pass
                         else:
                             subprocess.run(['sudo', '-n', 'kill', '-TERM', str(owned[key])], check=False)
-                if args.plain:
+                if direct:
                     proc.terminate()
                 else:
                     subprocess.run(['sudo', '-n', 'kill', '-TERM', '--', '-' + str(proc.pid)], check=False)

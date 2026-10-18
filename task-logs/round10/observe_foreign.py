@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Attribute transient foreign CPU load without changing system settings."""
 import importlib.util
+import argparse
 import json
 from pathlib import Path
 import time
@@ -10,9 +11,13 @@ spec = importlib.util.spec_from_file_location('observe_cpu', ROOT / 'task-logs/r
 assert spec and spec.loader
 observer = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(observer)
+parser = argparse.ArgumentParser()
+parser.add_argument('--seconds', type=int, default=300)
+args = parser.parse_args()
+assert 1 <= args.seconds <= 3600
 previous = observer.snapshot()
 with (ROOT / 'task-logs/round10/foreign-processes.jsonl').open('a') as stream:
-    for _ in range(300):
+    for _ in range(args.seconds):
         time.sleep(1)
         current = observer.snapshot()
         elapsed = current[0] - previous[0]
