@@ -1,0 +1,49 @@
+{
+  "samples": 316,
+  "callchains": 4235,
+  "nvtx": [
+    [
+      1449329,
+      201747137,
+      "round10"
+    ]
+  ],
+  "top_leaves": [
+    [
+      "_PyEval_EvalFrameDefault",
+      86
+    ],
+    [
+      "0x7fffd3fd6b03",
+      48
+    ],
+    [
+      "_PyTime_AsSecondsDouble",
+      30
+    ],
+    [
+      "PyDict_GetItemWithError",
+      26
+    ],
+    [
+      "_PyTime_GetMonotonicClockWithInfo",
+      13
+    ],
+    [
+      "0x57258a",
+      11
+    ],
+    [
+      "PyObject_Free",
+      9
+    ],
+    [
+      "0x57259e",
+      8
+    ]
+  ],
+  "plain_string_source": "https://docs.nvidia.com/nsight-systems/UserGuide/index.html",
+  "setpriv_exit": 134,
+  "root_exit": 0,
+  "gpu_used": false
+}

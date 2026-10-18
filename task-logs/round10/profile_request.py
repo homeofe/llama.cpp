@@ -170,6 +170,15 @@ def main():
         run.start(name, cfg)
         run.request(name, cfg, 'Say hello in five words.', 16)
         logger_epoch(run.child.pid, run.spawn_epoch_ns, out)
+        (out / 'server.maps.txt').write_text(Path(f'/proc/{run.child.pid}/maps').read_text())
+        affinity = {}
+        for status in Path(f'/proc/{run.child.pid}/task').glob('*/status'):
+            try:
+                fields = dict(line.split(':', 1) for line in status.read_text().splitlines() if ':' in line)
+                affinity[status.parent.name] = {key: fields[key].strip() for key in ['Name', 'Cpus_allowed_list']}
+            except FileNotFoundError:
+                pass
+        (out / 'server-affinity.json').write_text(json.dumps(affinity, indent=2) + '\n')
         waited, pre = run.quiet()
         run.check_gpu()
         prompt = dict(bench.stage.PROMPTS)[args.prompt]

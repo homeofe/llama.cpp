@@ -36,9 +36,9 @@ def main():
                    'XDG_CACHE_HOME=' + str(out / 'cache'), 'nsys', 'profile', '--trace=cuda,nvtx,osrt',
                    '--sample=process-tree', '--cpuctxsw=process-tree', '--backtrace=dwarf',
                    '--sampling-period=2284683', '--samples-per-backtrace=1',
+                   '--env-var=NSYS_NVTX_PROFILER_REGISTER_ONLY=0',
                    '--capture-range=nvtx', '--nvtx-capture=round10', '--capture-range-end=stop',
-                   '--kill=none', '--force-overwrite=true', '--export=sqlite', '-o', str(out / 'trace'),
-                   'setpriv', '--reuid=' + str(os.getuid()), '--regid=' + str(os.getgid()), '--init-groups'] + target
+                   '--kill=none', '--force-overwrite=true', '--export=sqlite', '-o', str(out / 'trace')] + target
     (out / 'command.json').write_text(json.dumps(dict(command=command, permission='Owner explicitly authorized sudo and CPU sampling',
         production_source_changed=False, no_build=True), indent=2) + '\n')
     run = bench.Run(out, min(time.time() + 1500, 1792320900))
@@ -70,6 +70,17 @@ def main():
         run.event(kind='profile_exit', exit=proc.returncode)
         if proc.returncode:
             raise RuntimeError('profiler failed; inspect raw capture before retrying')
+        run.stop()
+        if not args.plain and not (out / 'trace.sqlite').exists():
+            if not (out / 'trace.qdstrm').exists():
+                raise RuntimeError('capture range never produced a trace')
+            with (out / 'import.log').open('w') as stream:
+                subprocess.run(['/usr/lib/nsight-systems/host-linux-x64/QdstrmImporter',
+                    '-i', str(out / 'trace.qdstrm'), '-o', str(out / 'trace.nsys-rep'), '-f'],
+                    stdout=stream, stderr=subprocess.STDOUT, check=True, timeout=300)
+                subprocess.run(['nsys', 'export', '--type', 'sqlite', '--force-overwrite=true',
+                    '-o', str(out / 'trace.sqlite'), str(out / 'trace.nsys-rep')],
+                    stdout=stream, stderr=subprocess.STDOUT, check=True, timeout=300)
     finally:
         try:
             if proc is not None and proc.poll() is None:
@@ -77,10 +88,13 @@ def main():
                 if owned_file.exists():
                     owned = json.loads(owned_file.read_text())
                     for key in ['wrapper', 'server']:
-                        try:
-                            os.kill(owned[key], signal.SIGTERM)
-                        except ProcessLookupError:
-                            pass
+                        if args.plain:
+                            try:
+                                os.kill(owned[key], signal.SIGTERM)
+                            except ProcessLookupError:
+                                pass
+                        else:
+                            subprocess.run(['sudo', '-n', 'kill', '-TERM', str(owned[key])], check=False)
                 if args.plain:
                     proc.terminate()
                 else:
