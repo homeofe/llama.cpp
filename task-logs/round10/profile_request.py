@@ -201,6 +201,7 @@ def main():
             wall_s=wall, **result)
     finally:
         run.stop()
+        (out / 'server-stopped.json').write_text(json.dumps(dict(epoch_ns=time.time_ns())) + '\n')
 
 
 if __name__ == '__main__':

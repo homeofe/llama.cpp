@@ -21,6 +21,8 @@ def main():
     tag = args.prompt + ('-on' if args.graphs else '-off') + ('-plain' if args.plain else '')
     out = bench.ROOT / 'task-logs/round10' / ('profile-' + tag)
     out.mkdir(exist_ok=True)
+    if (out / 'owned-pids.json').exists():
+        raise RuntimeError('capture directory already used; archive it before a retry')
     for name in ['tmp', 'config', 'cache']:
         (out / name).mkdir(exist_ok=True)
     target = ['python3', str(bench.ROOT / 'task-logs/round10/profile_request.py'), str(out), args.prompt]
@@ -52,11 +54,14 @@ def main():
         (out / 'profiler-owner.json').write_text(json.dumps(dict(pid=proc.pid)) + '\n')
         run.event(kind='profile_start', pid=proc.pid, graphs=args.graphs, plain=args.plain)
         while proc.poll() is None:
+            if run.held and (out / 'server-stopped.json').exists():
+                run.stop()
+                run.event(kind='gpu_released_before_trace_export')
             run.renew()
             owned_file = out / 'owned-pids.json'
             owned = json.loads(owned_file.read_text()) if owned_file.exists() else {}
             foreign = {p: m for p, m in run.gpu_apps().items() if p not in owned.values() and m > 300}
-            if foreign:
+            if run.held and foreign:
                 raise RuntimeError('foreign GPU allocation ' + str(foreign))
             if time.time() > run.end:
                 raise TimeoutError('profile deadline')
