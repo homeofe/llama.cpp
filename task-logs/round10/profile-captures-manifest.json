@@ -1,0 +1,30 @@
+{
+  "task-logs/round10/profile-code-duration-off-failed-utf8/trace.qdstrm": {
+    "bytes": 616332885,
+    "sha256": "1301672d3822fba030c0648b44a7d37d2a3befcc4421f4e45940fa0af8b25971"
+  },
+  "task-logs/round10/profile-code-duration-off/trace.qdstrm": {
+    "bytes": 609967421,
+    "sha256": "7738f26e21a6e416317e800136e8d822a150232be5a04aaf53e259c61aa5540e"
+  },
+  "task-logs/round10/profile-code-duration-off/trace.nsys-rep": {
+    "bytes": 19473948,
+    "sha256": "5652b5c5fb86c3378321d9d2b8c2f052c3397c0882fe38acadd469c271817b55"
+  },
+  "task-logs/round10/profile-code-duration-off/trace.sqlite": {
+    "bytes": 57688064,
+    "sha256": "24ac637e62c5472dfc21a26d39ae6b2dfb02674c5d9b2344d4ecbc24f3a6dcb3"
+  },
+  "task-logs/round10/profile-en-1-off/trace.qdstrm": {
+    "bytes": 616454559,
+    "sha256": "74584a2107b3d51f4fbdc4735b80c668df27654cde8b86a4768f6b97af745c7f"
+  },
+  "task-logs/round10/profile-en-1-off/trace.nsys-rep": {
+    "bytes": 26842228,
+    "sha256": "360d0554ff066bcec731e1fec508aa2c8e4f7cc09b10916eb370e98d180f0ccd"
+  },
+  "task-logs/round10/profile-en-1-off/trace.sqlite": {
+    "bytes": 77094912,
+    "sha256": "fe9adf7633d9447e1802bb7f34eeb1d2784c5ca614a1e190567d2b11d7c83daa"
+  }
+}

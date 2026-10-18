@@ -1,0 +1,27 @@
+{
+  "screen_only": true,
+  "requests": 16,
+  "rounds": 1,
+  "gain_pct": {
+    "code": -14.821597788793694,
+    "english": -13.717017113324125
+  },
+  "cpu_seconds_per_token": {
+    "qwen-pool-control": {
+      "code": 0.642521720639164,
+      "english": 0.6244921875
+    },
+    "qwen-pool-native-idle": {
+      "code": 0.4672161127650526,
+      "english": 0.40431640625
+    }
+  },
+  "cpu_change_pct": {
+    "code": -27.283997138605976,
+    "english": -35.25677112654032
+  },
+  "paired_outputs_and_counts_match": true,
+  "qualifies_for_confirmation": false,
+  "adopted": false,
+  "scope": "One fresh interleaved pair. CPU work includes prefill; no electrical energy was measured. A screen alone does not qualify a configuration for adoption."
+}

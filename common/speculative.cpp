@@ -2600,11 +2600,11 @@ common_params common_base_params_to_speculative(const common_params & params) {
         if (n_devs == 1) {
             result.split_mode = LLAMA_SPLIT_MODE_LAYER;
         }
-    }
 
-    if (params_spec.cpuparams.n_threads > 0) {
-        result.cpuparams       = params_spec.cpuparams;
-        result.cpuparams_batch = params_spec.cpuparams_batch;
+        if (params_spec.cpuparams.n_threads > 0) {
+            result.cpuparams.n_threads       = params_spec.cpuparams.n_threads;
+            result.cpuparams_batch.n_threads = params_spec.cpuparams_batch.n_threads;
+        }
     }
 
     result.cache_type_k  = params_spec.cache_type_k;
@@ -2645,7 +2645,6 @@ struct common_speculative_init_result::impl {
     ~impl() = default;
 
     // note: the order in which model, context, etc. are declared matters because their destructors will be called bottom-to-top
-    common_threadpools threadpools;
     llama_model_ptr   model;
     llama_context_ptr context;
 };
@@ -2707,10 +2706,6 @@ common_speculative_init_result::common_speculative_init_result(
         }
 
         pimpl->context.reset(ctx_dft);
-    }
-
-    if (pimpl->context) {
-        pimpl->threadpools.init(pimpl->context.get(), params);
     }
 }
 

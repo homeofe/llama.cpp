@@ -1,0 +1,596 @@
+{
+  "complete": true,
+  "summary": [
+    {
+      "config": "qwen-pool-control",
+      "category": "code",
+      "requests": 4,
+      "tok_s": 46.964297362054026,
+      "minimum": 43.997225870406844,
+      "maximum": 48.61822870082591,
+      "acceptance_pct": 91.94395796847635,
+      "median_mean_length": 3.7800000000000002,
+      "measured_lengths": 4,
+      "text_matches_control": 4,
+      "max_foreign_cores": 0.26020876621251426,
+      "peak_vram_mib": 10694
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "english",
+      "requests": 4,
+      "tok_s": 39.695445858135926,
+      "minimum": 38.04759312975307,
+      "maximum": 40.2864576996675,
+      "acceptance_pct": 69.56521739130434,
+      "median_mean_length": 3.09,
+      "measured_lengths": 4,
+      "text_matches_control": 4,
+      "max_foreign_cores": 0.22440469877404445,
+      "peak_vram_mib": 10696
+    },
+    {
+      "config": "qwen-pool-native-idle",
+      "category": "code",
+      "requests": 4,
+      "tok_s": 40.00343810271733,
+      "minimum": 35.970812612509576,
+      "maximum": 41.6354569426038,
+      "acceptance_pct": 91.94395796847635,
+      "median_mean_length": 3.7800000000000002,
+      "measured_lengths": 4,
+      "text_matches_control": 4,
+      "max_foreign_cores": 0.2873133658847693,
+      "peak_vram_mib": 10694
+    },
+    {
+      "config": "qwen-pool-native-idle",
+      "category": "english",
+      "requests": 4,
+      "tok_s": 34.25041475656511,
+      "minimum": 32.63939538229379,
+      "maximum": 34.404848619601765,
+      "acceptance_pct": 69.56521739130434,
+      "median_mean_length": 3.09,
+      "measured_lengths": 4,
+      "text_matches_control": 4,
+      "max_foreign_cores": 0.15445764924519614,
+      "peak_vram_mib": 10696
+    }
+  ],
+  "requests": [
+    {
+      "config": "qwen-pool-control",
+      "category": "code",
+      "round": 1,
+      "prompt": "code-duration",
+      "tok_s": 43.997225870406844,
+      "control_tok_s": 43.997225870406844,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+      "control_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+      "draft_n": 180,
+      "draft_n_accepted": 158,
+      "mean_length": 3.63
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "code",
+      "round": 1,
+      "prompt": "code-intervals",
+      "tok_s": 46.35471392387753,
+      "control_tok_s": 46.35471392387753,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+      "control_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+      "draft_n": 120,
+      "draft_n_accepted": 110,
+      "mean_length": 3.75
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "code",
+      "round": 1,
+      "prompt": "code-roman",
+      "tok_s": 47.57388080023051,
+      "control_tok_s": 47.57388080023051,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+      "control_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+      "draft_n": 199,
+      "draft_n_accepted": 188,
+      "mean_length": 3.81
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "code",
+      "round": 1,
+      "prompt": "code-bugfix",
+      "tok_s": 48.61822870082591,
+      "control_tok_s": 48.61822870082591,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+      "control_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+      "draft_n": 72,
+      "draft_n_accepted": 69,
+      "mean_length": 3.88
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "english",
+      "round": 1,
+      "prompt": "en-1",
+      "tok_s": 40.06548495906628,
+      "control_tok_s": 40.06548495906628,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+      "control_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+      "draft_n": 244,
+      "draft_n_accepted": 173,
+      "mean_length": 3.11
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "english",
+      "round": 1,
+      "prompt": "en-2",
+      "tok_s": 39.32540675720558,
+      "control_tok_s": 39.32540675720558,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b",
+      "control_sha256": "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b",
+      "draft_n": 247,
+      "draft_n_accepted": 172,
+      "mean_length": 3.07
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "english",
+      "round": 1,
+      "prompt": "en-3",
+      "tok_s": 40.2864576996675,
+      "control_tok_s": 40.2864576996675,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd",
+      "control_sha256": "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd",
+      "draft_n": 245,
+      "draft_n_accepted": 173,
+      "mean_length": 3.11
+    },
+    {
+      "config": "qwen-pool-control",
+      "category": "english",
+      "round": 1,
+      "prompt": "en-4",
+      "tok_s": 38.04759312975307,
+      "control_tok_s": 38.04759312975307,
+      "change_pct": 0.0,
+      "same_text": true,
+      "text_sha256": "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97",
+      "control_sha256": "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97",
+      "draft_n": 253,
+      "draft_n_accepted": 170,
+      "mean_length": 3.0
+    },
+    {
+      "config": "qwen-pool-native-idle",
+      "category": "code",
+      "round": 1,
+      "prompt": "code-duration",
+      "tok_s": 35.970812612509576,
+      "control_tok_s": 43.997225870406844,
+      "change_pct": -18.242998505267003,
+      "same_text": true,
+      "text_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+      "control_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+      "draft_n": 180,
+      "draft_n_accepted": 158,
+      "mean_length": 3.63
+    },
+    {
+      "config": "qwen-pool-native-idle",
+      "category": "code",
+      "round": 1,
+      "prompt": "code-intervals",
+      "tok_s": 39.70122560051876,
+      "control_tok_s": 46.35471392387753,
+      "change_pct": -14.353423330979787,
+      "same_text": true,
+      "text_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+      "control_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+      "draft_n": 120,
+      "draft_n_accepted": 110,
+      "mean_length": 3.75
+    },
+    {
+      "config": "qwen-pool-native-idle",
+      "category": "code",
+      "round": 1,
+      "prompt": "code-roman",
+      "tok_s": 40.305650604915904,
+      "control_tok_s": 47.57388080023051,
+      "change_pct": -15.277774428020575,
+      "same_text": true,
+      "text_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+      "control_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+      "draft_n": 199,
+      "draft_n_accepted": 188,
+      "mean_length": 3.81
+    },
+    {
+      "config": "qwen-pool-native-idle",
+      "category": "code",
+      "round": 1,
+      "prompt": "code-bugfix",
+      "tok_s": 41.6354569426038,
+      "control_tok_s": 48.61822870082591,
+      "change_pct": -14.362456109190758,
+      "same_text": true,
+      "text_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+      "control_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+      "draft_n": 72,
+      "draft_n_accepted": 69,
+      "mean_length": 3.88
+    },
+    {
+      "config": "qwen-pool-native-idle",
+      "category": "english",
+      "round": 1,
+      "prompt": "en-1",
+      "tok_s": 34.404848619601765,
+      "control_tok_s": 40.06548495906628,
+      "change_pct": -14.128460806721355,
+      "same_text": true,
+      "text_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+      "control_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+      "draft_n": 244,
+      "draft_n_accepted": 173,
+      "mean_length": 3.11
+    },
+    {
+      "config": "qwen-pool-native-idle",
+      "category": "english",
+      "round": 1,
+      "prompt": "en-2",
+      "tok_s": 34.21778906212583,
+      "control_tok_s": 39.32540675720558,
+      "change_pct": -12.988086115965935,
+      "same_text": true,
+      "text_sha256": "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b",
+      "control_sha256": "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b",
+      "draft_n": 247,
+      "draft_n_accepted": 172,
+      "mean_length": 3.07
+    },
+    {
+      "config": "qwen-pool-native-idle",
+      "category": "english",
+      "round": 1,
+      "prompt": "en-3",
+      "tok_s": 34.283040451004375,
+      "control_tok_s": 40.2864576996675,
+      "change_pct": -14.901824562035582,
+      "same_text": true,
+      "text_sha256": "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd",
+      "control_sha256": "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd",
+      "draft_n": 245,
+      "draft_n_accepted": 173,
+      "mean_length": 3.11
+    },
+    {
+      "config": "qwen-pool-native-idle",
+      "category": "english",
+      "round": 1,
+      "prompt": "en-4",
+      "tok_s": 32.63939538229379,
+      "control_tok_s": 38.04759312975307,
+      "change_pct": -14.214296628477364,
+      "same_text": true,
+      "text_sha256": "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97",
+      "control_sha256": "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97",
+      "draft_n": 253,
+      "draft_n_accepted": 170,
+      "mean_length": 3.0
+    }
+  ],
+  "per_prompt": [
+    {
+      "config": "qwen-pool-control",
+      "prompt": "code-duration",
+      "requests": 1,
+      "tok_s": 43.997225870406844,
+      "minimum": 43.997225870406844,
+      "maximum": 43.997225870406844,
+      "server_tok_s": 43.997637509344436,
+      "text_hashes": [
+        "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7"
+      ],
+      "draft_counts": [
+        [
+          180,
+          158
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-control",
+      "prompt": "code-intervals",
+      "requests": 1,
+      "tok_s": 46.35471392387753,
+      "minimum": 46.35471392387753,
+      "maximum": 46.35471392387753,
+      "server_tok_s": 46.355642965129434,
+      "text_hashes": [
+        "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4"
+      ],
+      "draft_counts": [
+        [
+          120,
+          110
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-control",
+      "prompt": "code-roman",
+      "requests": 1,
+      "tok_s": 47.57388080023051,
+      "minimum": 47.57388080023051,
+      "maximum": 47.57388080023051,
+      "server_tok_s": 47.573748171442354,
+      "text_hashes": [
+        "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39"
+      ],
+      "draft_counts": [
+        [
+          199,
+          188
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-control",
+      "prompt": "code-bugfix",
+      "requests": 1,
+      "tok_s": 48.61822870082591,
+      "minimum": 48.61822870082591,
+      "maximum": 48.61822870082591,
+      "server_tok_s": 46.45809479849176,
+      "text_hashes": [
+        "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47"
+      ],
+      "draft_counts": [
+        [
+          72,
+          69
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-control",
+      "prompt": "en-1",
+      "requests": 1,
+      "tok_s": 40.06548495906628,
+      "minimum": 40.06548495906628,
+      "maximum": 40.06548495906628,
+      "server_tok_s": 40.06571405586952,
+      "text_hashes": [
+        "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801"
+      ],
+      "draft_counts": [
+        [
+          244,
+          173
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-control",
+      "prompt": "en-2",
+      "requests": 1,
+      "tok_s": 39.32540675720558,
+      "minimum": 39.32540675720558,
+      "maximum": 39.32540675720558,
+      "server_tok_s": 39.32539217440117,
+      "text_hashes": [
+        "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b"
+      ],
+      "draft_counts": [
+        [
+          247,
+          172
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-control",
+      "prompt": "en-3",
+      "requests": 1,
+      "tok_s": 40.2864576996675,
+      "minimum": 40.2864576996675,
+      "maximum": 40.2864576996675,
+      "server_tok_s": 40.28678503398072,
+      "text_hashes": [
+        "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd"
+      ],
+      "draft_counts": [
+        [
+          245,
+          173
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-control",
+      "prompt": "en-4",
+      "requests": 1,
+      "tok_s": 38.04759312975307,
+      "minimum": 38.04759312975307,
+      "maximum": 38.04759312975307,
+      "server_tok_s": 38.047952057789914,
+      "text_hashes": [
+        "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97"
+      ],
+      "draft_counts": [
+        [
+          253,
+          170
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-native-idle",
+      "prompt": "code-duration",
+      "requests": 1,
+      "tok_s": 35.970812612509576,
+      "minimum": 35.970812612509576,
+      "maximum": 35.970812612509576,
+      "server_tok_s": 35.97138998092356,
+      "text_hashes": [
+        "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7"
+      ],
+      "draft_counts": [
+        [
+          180,
+          158
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-native-idle",
+      "prompt": "code-intervals",
+      "requests": 1,
+      "tok_s": 39.70122560051876,
+      "minimum": 39.70122560051876,
+      "maximum": 39.70122560051876,
+      "server_tok_s": 39.70249596357958,
+      "text_hashes": [
+        "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4"
+      ],
+      "draft_counts": [
+        [
+          120,
+          110
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-native-idle",
+      "prompt": "code-roman",
+      "requests": 1,
+      "tok_s": 40.305650604915904,
+      "minimum": 40.305650604915904,
+      "maximum": 40.305650604915904,
+      "server_tok_s": 40.30599680523605,
+      "text_hashes": [
+        "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39"
+      ],
+      "draft_counts": [
+        [
+          199,
+          188
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-native-idle",
+      "prompt": "code-bugfix",
+      "requests": 1,
+      "tok_s": 41.6354569426038,
+      "minimum": 41.6354569426038,
+      "maximum": 41.6354569426038,
+      "server_tok_s": 39.69459914430396,
+      "text_hashes": [
+        "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47"
+      ],
+      "draft_counts": [
+        [
+          72,
+          69
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-native-idle",
+      "prompt": "en-1",
+      "requests": 1,
+      "tok_s": 34.404848619601765,
+      "minimum": 34.404848619601765,
+      "maximum": 34.404848619601765,
+      "server_tok_s": 34.40544291408435,
+      "text_hashes": [
+        "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801"
+      ],
+      "draft_counts": [
+        [
+          244,
+          173
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-native-idle",
+      "prompt": "en-2",
+      "requests": 1,
+      "tok_s": 34.21778906212583,
+      "minimum": 34.21778906212583,
+      "maximum": 34.21778906212583,
+      "server_tok_s": 34.21804651722013,
+      "text_hashes": [
+        "9f9e19b2b164b737b3abaee1dbe9c244b38e220b13ceb30a3938cec206fc043b"
+      ],
+      "draft_counts": [
+        [
+          247,
+          172
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-native-idle",
+      "prompt": "en-3",
+      "requests": 1,
+      "tok_s": 34.283040451004375,
+      "minimum": 34.283040451004375,
+      "maximum": 34.283040451004375,
+      "server_tok_s": 34.283676855775425,
+      "text_hashes": [
+        "86e6f744ca36a7b0654d378fe3b6c1902d2ec886602d0e71f532fce058f805dd"
+      ],
+      "draft_counts": [
+        [
+          245,
+          173
+        ]
+      ]
+    },
+    {
+      "config": "qwen-pool-native-idle",
+      "prompt": "en-4",
+      "requests": 1,
+      "tok_s": 32.63939538229379,
+      "minimum": 32.63939538229379,
+      "maximum": 32.63939538229379,
+      "server_tok_s": 32.640196363421325,
+      "text_hashes": [
+        "4d74059abcdeaf94fbecfb5ca766781e7fdaabd526a486dbe22c1e3b5dda0a97"
+      ],
+      "draft_counts": [
+        [
+          253,
+          170
+        ]
+      ]
+    }
+  ],
+  "rejected_passes": 0,
+  "length_definition": "Server mean includes bonus token; rounded to 2 decimal places.",
+  "hashes_definition": "SHA256 of all streamed text, not the truncated preview."
+}

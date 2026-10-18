@@ -1,5 +1,7 @@
 # Round 10: Ling confirmation, panels and whole-round profiling
 
+**Result:** Ling DSpark n3/p_min0 with cache4608 is the general measured choice: +30.68% code and +9.15% English versus MTP3/cache5120. Ling passes39/42 hard cases (three context-limit rejections) and36/36 agent cases. Qwen takes81.72 /76.09ms per actual code / English round without the profiler. The C++ threadpool repair passes correctness but gains only1.50% /0.94%; it is not adopted, and the original source/runtime is restored. Full artifact and cleanup checks pass.
+
 Started 2026-10-18 07:00 UTC; deadline 11:00 UTC (13:00 Europe/Berlin), explicitly confirmed by the owner after lifting the separate four-hour constraint. Branch `l5-cache`. No system changes, live gateway changes, pushes or PRs. The owner subsequently authorized CPU sampling and sudo explicitly; use those for task 3 without changing kernel settings.
 
 ## Measurement protocol
@@ -72,11 +74,11 @@ Three seeds, card sampling (temperature0.6, top_p0.95, top_k20), thinking enable
 | Qwen3.8 IQ3_S | 56/56 | 69/72 | Historical control, read only |
 | Bolt | 41/42 | 36/36 | Historical control, read only |
 
-Ling's three misses are all `long-combine` HTTP400 context rejections: about20,005 input tokens against8192 configured. All39 in-context hard cases pass: code15/15, tools9/9, German9/9, format6/6. Agent: escalation12/12, memory9/9, media9/9, documentation6/6. These small panels do not establish universal quality equivalence between the models; the historical controls have different configurations and sample counts.
+Ling's three misses are all `long-combine` HTTP400 context rejections: about 20,005 input tokens against 8192 configured. All 39 in-context hard cases pass: code15/15, tools9/9, German9/9, format6/6. Agent: escalation12/12, memory9/9, media9/9, documentation6/6. These small panels do not establish universal quality equivalence between the models; the historical controls have different configurations and sample counts.
 
 There were 137 HTTP chat requests, of which 135 passed the post-request foreign-load gate. Every request passed the pre-gate. Correctness outcomes of the 2 loaded requests are retained; their elapsed times are not clean performance measurements. The complete event list, seeds, input prefixes and hashes are in `panels/summary.json`, `runs.jsonl` and `responses.jsonl`. Panel elapsed times also include the added pre-request gate and must not be compared directly to ordinary user latency.
 
-The first code-duration answer used7693 completion tokens, largely thinking, while still passing its hidden tests. This illustrates why the short decode benchmark and complete-task latency are different measurements. No tuning was made from individual panel answers.
+The first code-duration answer used 7693 completion tokens, largely thinking, while still passing its hidden tests. This illustrates why the short decode benchmark and complete-task latency are different measurements. No tuning was made from individual panel answers.
 
 Actual spawned argv/environment: `panels/actual-engine.json`; model-card entry: `model-entry.json`; panel command: `command.json`; raw selected history rows: `results.jsonl`; engine/bench logs are archived beside them. Historical raw control rows: `task-logs/round10/panel-controls.json`. The second gateway was unloaded and stopped, and its main-gateway hold released before Qwen profiling. The live settings and live benchmark history were not edited.
 
@@ -112,11 +114,11 @@ CPU sampling found30,428 code and40,903 English samples. libgomp accounts for63.
 
 ### Three largest actionable directions and ceilings
 
-1. **CPU expert computation and thread synchronization:** eliminating every measured expert CPU graph would remove at most **35.89 / 30.66 ms per round** in the graph-on counter runs. Actual savings are smaller because CPU and GPU work overlap. First test the missing persistent draft pool and native worker placement; do not interpret the OpenMP sample share as a speed forecast. This measured envelope exceeds the3% threshold for a bounded experiment.
+1. **CPU expert computation and thread synchronization:** eliminating every measured expert CPU graph would remove at most **35.89 / 30.66 ms per round** in the graph-on counter runs. Actual savings are smaller because CPU and GPU work overlap. First test the missing persistent draft pool and native worker placement; do not interpret the OpenMP sample share as a speed forecast. This measured envelope exceeds the 3% threshold for a bounded experiment.
 2. **GPU dense/output-head work:** the graph-off trace contains at most **33.73 / 33.74 ms per round** in dense-and-other kernels, including the three draft output-head steps. Reusing/fusing work or improving compatible low-batch kernels can only recover a fraction. This is a trace-domain zero-cost ceiling, not a predicted graph-on gain; the category also includes small non-expert kernels.
 3. **Transfer scheduling and avoiding redundant copies:** eliminating all recorded copies would remove at most **11.03 / 10.78 ms per round** in the same trace. Overlap makes the critical-path gain smaller. Host-to-device copies move6.31 /8.68 GB over507 /697 ms of copy activity, about12.44 GB/s during transfers, while average whole-decode traffic is only about1.08 /1.10 GB/s. This points toward reducing or overlapping transfers, not a claim that extra motherboard lanes alone solve the round. Copy kinds are verified against installed `cupti_activity.h` (1 HtoD,2 DtoH,8 DtoD).
 
-These ceilings overlap and are not additive. GPU occupancy or use of all4352 arithmetic lanes cannot be inferred from Nsight Systems utilization; no new instruction-level kernel claim is made. The exact GPU kernel list, intervals, API counts, CPU stacks and transfer totals are in the local captures and committed summaries.
+These ceilings overlap and are not additive. GPU occupancy or use of all 4352 arithmetic lanes cannot be inferred from Nsight Systems utilization; no new instruction-level kernel claim is made. The exact GPU kernel list, intervals, API counts, CPU stacks and transfer totals are in the local captures and committed summaries.
 
 Compared with the historical Strata figures51ms code /41ms English in `patches/llama.cpp/strata-parity/PLAN-DE.md`, the present plain Qwen runs take **81.72 /76.09 ms per round** (1.60x /1.86x). The gap remains in target verification. This is a historical comparison with different cache state/configuration and per-round output counts, not a fresh paired Strata benchmark. Strata was not run or modified. Current round counts come from actual speculative accept calls; the older Strata document infers them from emitted-minus-accepted tokens. For the capped English request, that older formula gives86 versus85 actual calls because of the initial token boundary.
 
@@ -147,6 +149,27 @@ Fresh native-backend quality:127,139,840 bytes of cache-off full-vocabulary logi
 
 Category medians each contain12 requests across four prompts; their ranges include prompt differences. Per-prompt three-run ranges are in `pool-summary.json`. The gain is **+1.498% code / +0.939% English**, below the predeclared3% threshold in both categories. CPU time per generated token falls5.31% /4.89%; this covers the complete request, including prefill, and is not an electrical-energy measurement.
 
-**Do not adopt this configuration.** The integration defect is real and repaired by the experimental patch, but eliminating it does not deliver the required gain over the functioning OpenMP control. The old broken native1.3-1.6tok/s result is not the baseline. Source/test patch, isolated candidate binaries and successful proof artifacts are retained for later work; original source/runtime will be restored after the last bounded wait-policy screen.
+**Do not adopt this configuration.** The integration defect is real and repaired by the experimental patch, but eliminating it does not deliver the required gain over the functioning OpenMP control. The old broken native1.3-1.6tok/s result is not the baseline. Source/test patch, isolated candidate binaries and successful proof artifacts are retained for later work; original source/runtime were restored after the last bounded wait-policy screen.
 
 A final one-round screen tests the existing native `--poll 0` setting for all target/draft pools, using the same isolated binaries and a fresh paired control. It is predeclared in `pool-idle-screen-plan.json`; it cannot justify adoption without the full confirmation and quality gates. No additional kernel/source change is involved.
+
+### Zero-polling screen: rejected
+
+One fresh paired pass, eight prompts per configuration, 16 accepted requests and no rejected pass. Every paired output hash, generated-token count and draft/accept count matches.
+
+| Runtime | Code tok/s | English tok/s | CPU seconds/output token, code / English |
+|---|---:|---:|---:|
+| qwen-pool-control | 46.964 | 39.695 | 0.6425 / 0.6245 |
+| qwen-pool-native-idle | 40.003 | 34.250 | 0.4672 / 0.4043 |
+
+Disabling polling loses **14.82% code / 13.72% English throughput**, while reducing complete-request CPU seconds per output token by 27.28% / 35.26%. This is a one-round screen, not a confirmed replacement. It is rejected without further tuning. Lower sampled CPU activity alone is not a token-speed optimization. Electrical energy and the individual contributions of wake-up latency and dynamic CPU clocks were not measured; the unchanged governor is `schedutil`.
+
+## Final state and limits
+
+Measurements and restoration verified at 10:43 UTC / 12:43 Europe/Berlin, before the owner's 13:00 deadline. All four handoff tasks were handled: Ling confirmed, panels measured, Qwen whole-round profile attributed, persistent native draft pools implemented/tested and rejected against the 3% adoption criterion. The wait-policy follow-up is also rejected.
+
+Production source under `src/`, `ggml/`, `common/`, `tools/server/` and `tests/test-arg-parser.cpp` matches the pre-experiment baseline. Every original binary in the worktree runtime snapshot was restored and SHA256-verified. The source/test experiment remains reproducible as `task-logs/round10/persistent-pool.patch`; baseline/candidate binary snapshots remain local, ignored by Git, with manifests. Patch applicability to the restored source was checked. No live runtime was installed; no commit was pushed.
+
+Final checks: no GPU compute processes, no gateway GPU hold, no loaded main-gateway model or active request, no remaining round10 Python workers or recorded Nsight capture PIDs. Live settings SHA256 matches the starting value, and live benchmark history predates the entire run. Compaction remains 20, perf_event_paranoid 4, ptrace_scope 1; amd_uncore is absent; governors remain untouched (`schedutil` observed at completion). The second gateway remains stopped and retains its authorized isolated Ling entry/hardlinks and settings backup for reproduction. Evidence: `task-logs/round10/final-state.json`, `pool-final-state.json`, `pool-restored-original-binaries.json`.
+
+Remaining limits: the Ling recommendation covers the eight prescribed short prompts, with changed English output hashes versus MTP and separate passing target-cache PPL/panels. Its 8192-token context rejects the long-document panel. The historical Qwen/Bolt panels and Strata timings are not contemporaneous paired controls. The profile separates existing wall/GPU intervals, but cannot perfectly isolate CPU miss arithmetic from every wait or catch-up operation; overlapping clocks and trace overhead are disclosed above. No claim of full 4352-lane occupancy or an unmeasured hardware-setting gain is made. Large trace/logit artifacts stay local; small raw results, scripts and reports are committed.
