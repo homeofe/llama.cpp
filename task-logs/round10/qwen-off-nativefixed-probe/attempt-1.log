@@ -1,0 +1,5 @@
+0.37.833.910 I cmn          init: llama threadpool init, n_threads = 24
+TOPIC de tokens 32 callbacks 0
+TOPIC en tokens 32 callbacks 0
+TOPIC code tokens 32 callbacks 0
+TOPIC agent tokens 32 callbacks 0

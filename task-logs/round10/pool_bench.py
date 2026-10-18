@@ -6,7 +6,24 @@ import sys
 
 import bench
 
+
+class Run(bench.Run):
+    def start(self, name, config):
+        super().start(name, config)
+        assert self.child is not None
+        libraries = sorted({line.split()[-1] for line in Path(f'/proc/{self.child.pid}/maps').read_text().splitlines()
+                            if '/libggml' in line or '/libllama' in line})
+        directory = Path(config['cmd'][0]).parent
+        native = config['env'].get('LD_PRELOAD')
+        assert all(Path(path).parent == directory or path == native for path in libraries)
+        cpu = [path for path in libraries if Path(path).name.startswith('libggml-cpu.so')]
+        assert len(cpu) == 1 and (cpu[0] == native if native else Path(cpu[0]).parent == directory)
+        (self.out / f'{name}-{self.child.pid}-libraries.json').write_text(json.dumps(dict(pid=self.child.pid,
+            config=name, libraries=libraries, cpu_preload=native), indent=2) + '\n')
+
+
 bench.configure()
+bench.stage.Run = Run
 bench.stage.CONFIGS.update(json.loads(Path(__file__).with_name('pool-configs.json').read_text()))
 out = Path(sys.argv[1])
 out.mkdir(parents=True, exist_ok=True)

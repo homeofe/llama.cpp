@@ -1,0 +1,16 @@
+{
+  "code-duration": {
+    "phase_rounds_checked": 59,
+    "maximum_phase_sum_error_ms": 1.4210854715202004e-14,
+    "all_union_intervals_within_wall": true,
+    "all_verify_yield_pairs": true,
+    "epoch_alignment_spread_ns": 4553
+  },
+  "en-1": {
+    "phase_rounds_checked": 84,
+    "maximum_phase_sum_error_ms": 1.4210854715202004e-14,
+    "all_union_intervals_within_wall": true,
+    "all_verify_yield_pairs": true,
+    "epoch_alignment_spread_ns": 5422
+  }
+}

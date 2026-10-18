@@ -1,0 +1,1 @@
+{"kind": "system_state", "config": "pool-check", "compaction_proactiveness": 20, "transparent_hugepage": "always [madvise] never", "epoch": 1792318364.0, "utc": "2026-10-18 10:12:43"}

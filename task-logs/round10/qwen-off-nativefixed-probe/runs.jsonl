@@ -1,0 +1,1 @@
+{"kind": "quality", "name": "qwen-off-nativefixed-probe", "attempt": 1, "exit": 0, "foreign_cores": 0.24010713777335277, "whole_process_foreign_cores": 0.20678377635675724, "evaluation_wall_s": 5.247657406958751, "wall_s": 55.85544573899824, "peak_vram_mib": 4328, "accepted": true, "epoch": 1792318508.2, "utc": "2026-10-18 10:15:08"}

@@ -1,0 +1,1 @@
+{"kind": "quality", "name": "qwen-off-nativefixed-ppl", "attempt": 1, "exit": 0, "foreign_cores": 0.22482775382691686, "whole_process_foreign_cores": 0.2211367955447104, "evaluation_wall_s": 121.64868231106084, "wall_s": 172.6985321729444, "peak_vram_mib": 4364, "accepted": true, "epoch": 1792318686.1, "utc": "2026-10-18 10:18:06"}
