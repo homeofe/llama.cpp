@@ -2,6 +2,7 @@
 """Existing server, NVTX request ranges and one real prompt; no instrumentation build."""
 import argparse
 import ctypes
+import functools
 import json
 import os
 from pathlib import Path
@@ -13,7 +14,8 @@ import time
 import bench
 
 
-def cpu_counters(pid):
+@functools.lru_cache(maxsize=4)
+def cpu_layout(pid):
     library = (bench.ROOT / 'task-logs/round9/cpu-profile.so').resolve()
     symbols = {}
     for line in subprocess.check_output(['nm', '-a', str(library)], text=True).splitlines():
@@ -25,10 +27,16 @@ def cpu_counters(pid):
     bases = [int(line.split()[0].split('-')[0], 16) for line in maps
              if line.split()[-1] == str(library) and int(line.split()[2], 16) == 0]
     assert len(bases) == 1
+    return bases[0], symbols
+
+
+def cpu_counters(pid):
+    base, symbols = cpu_layout(pid)
     with open(f'/proc/{pid}/mem', 'rb', buffering=0) as memory:
-        result = {name: list(struct.unpack('<10Q', os.pread(memory.fileno(), 80, bases[0] + offset)))
+        result = {name: list(struct.unpack('<10Q', os.pread(memory.fileno(), 80, base + offset)))
                   for name, offset in symbols.items()}
     return dict(calls=result['_ZL5calls'], cpu_ns=result['_ZL6cpu_ns'])
+
 
 
 def main():
@@ -58,6 +66,43 @@ def main():
     class OwnedRun(bench.Run):
         def renew(self, force=False):
             pass  # The outer profiler owns and renews the lease.
+
+        tracing = False
+        first_cpu = None
+
+        def request(self, *request_args, **kwargs):
+            original = bench.stage.urllib.request.urlopen
+            owner = self
+            seen = False
+
+            class Response:
+                def __init__(self, response):
+                    self.response = response
+
+                def __enter__(self):
+                    self.response.__enter__()
+                    return self
+
+                def __exit__(self, *exc):
+                    return self.response.__exit__(*exc)
+
+                def __iter__(self):
+                    nonlocal seen
+                    for raw in self.response:
+                        if owner.tracing and not seen and raw.startswith(b'data:') and b'[DONE]' not in raw:
+                            data = json.loads(raw[5:])
+                            if any((c.get('delta') or {}).get('content') or (c.get('delta') or {}).get('reasoning_content') for c in data.get('choices', [])):
+                                seen = True
+                                nvtx.nvtxMarkA(b'first_token')
+                                if not args.plain:
+                                    owner.first_cpu = cpu_counters(owner.child.pid)
+                        yield raw
+
+            bench.stage.urllib.request.urlopen = lambda *a, **kw: Response(original(*a, **kw))
+            try:
+                return super().request(*request_args, **kwargs)
+            finally:
+                bench.stage.urllib.request.urlopen = original
 
         def start(self, name, config):
             import subprocess
@@ -94,6 +139,7 @@ def main():
         nvtx.nvtxRangePushA(b'round10')
         nvtx.nvtxMarkA(('epoch_ns=' + str(time.time_ns()) + ';monotonic_ns=' + str(time.monotonic_ns())).encode())
         b0, o0, t0 = bench.stage.busy_jiffies(), bench.stage.proc_jiffies([run.child.pid]), time.monotonic()
+        run.tracing = True
         nvtx.nvtxRangePushA(args.prompt.encode())
         result = run.request(name, cfg, prompt, 256)
         nvtx.nvtxRangePop()
@@ -104,9 +150,11 @@ def main():
         if cpu_before is not None:
             cpu_after = cpu_counters(run.child.pid)
             counters = {key: [a-b for a,b in zip(cpu_after[key], cpu_before[key])] for key in cpu_before}
+            assert run.first_cpu is not None, 'no first-token boundary'
+            decode = {key: [a-b for a,b in zip(cpu_after[key], run.first_cpu[key])] for key in cpu_before}
             assert all(n >= 0 for values in counters.values() for n in values)
-            (out / 'cpu-counters.json').write_text(json.dumps(dict(before=cpu_before, after=cpu_after, delta=counters,
-                scope='Complete request; CPU graph elapsed time can overlap GPU work; buckets 1..8 tokens, 9 larger, 0 no expert op.'), indent=2) + '\n')
+            (out / 'cpu-counters.json').write_text(json.dumps(dict(before=cpu_before, first_token=run.first_cpu, after=cpu_after, delta=counters, decode_delta=decode,
+                scope='Complete request and client first-token-to-end interval; boundary can lag server emission; atomic snapshots may straddle a CPU call; CPU graph elapsed time can overlap GPU work; buckets 1..8 tokens, 9 larger, 0 no expert op.'), indent=2) + '\n')
         run.event(kind='profile_request', prompt=args.prompt, graphs=args.graphs, plain=args.plain,
             waited_s=waited, pre_busy_cores=pre, foreign_cores=foreign, accepted=foreign < 1,
             wall_s=wall, **result)
