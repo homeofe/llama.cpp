@@ -17,6 +17,12 @@ stage = previous.stage
 
 
 class Run(previous.Run):
+    def start(self, name, cfg):
+        cache = ROOT / 'task-logs/round11/cuda-cache'
+        cache.mkdir(exist_ok=True)
+        cfg = {**cfg, 'env': {**cfg.get('env', {}), 'CUDA_CACHE_PATH': str(cache)}}
+        return super().start(name, cfg)
+
     def renew(self, force=False):
         if self.held and (force or time.monotonic() - self.last_hold > 300):
             stage.gw('POST', '/api/v1/gpu/hold', {'reason': 'codex: round 11', 'ttlS': 900})
