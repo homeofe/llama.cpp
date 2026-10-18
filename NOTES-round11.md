@@ -15,7 +15,7 @@ Use a second backend instance on each CUDA device for its independent nonblockin
 
 NVIDIA documents that asynchronous host transfers require pinned memory and that stream waits order later work on the waiting stream: [CUDA asynchronous execution](https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/asynchronous-execution.html). Event queries test completion without a blocking host synchronization: [CUDA event API](https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/group__CUDART__EVENT.html). The implementation will validate source-buffer support and exercise these dependencies with the existing deferred host backend before GPU measurements.
 
-Results pending. A percentage gate is not a technical speed ceiling; cumulative improvements must be remeasured against the same functioning baseline.
+Runtime results follow below. A percentage gate is not a technical speed ceiling; cumulative improvements must be remeasured against the same functioning baseline.
 
 ## Upload screening result
 
@@ -55,3 +55,15 @@ The deferred host fixture proves old readers see old weights, new readers see ne
 - ASan/UBSan: changed cache implementation plus the test executable instrumented, exit 0; the existing base CPU/model libraries are not sanitizer-instrumented.
 
 The first fixture attempt correctly refused its mmap-backed source; the fixture now loads owned host storage with the fork's `load_mode` API. Expected assertion failures use a test-only abort callback with exit 86, avoiding the operating system's core collector. Evidence: `task-logs/round11/host-verdict.json`, `host-complete.json` and the matching raw logs.
+
+
+## Qwen end-to-end result
+
+Three interleaved rounds (control, async, async, control, control, async), 48 accepted requests, one contaminated full pass discarded. Each category has 12 requests per configuration. Control uses the saved original runtime; the candidate replaces only `libllama` and `libggml-cuda`. Actual loaded libraries were checked in `/proc/PID/maps`.
+
+| Category | Control tok/s | Async tok/s | Change | Per-round change | Same text and draft counts |
+|---|---:|---:|---:|---|---:|
+| code | 47.406 | 48.205 | +1.68% | +1.92% / +1.68% / +1.91% | 12/12 |
+| english | 40.233 | 40.980 | +1.86% | +2.12% / +1.95% / +1.89% | 12/12 |
+
+All 24 paired outputs and draft counts match. The modest gain is repeatable but **does not meet the predeclared +3% gate for Qwen**. No Qwen gateway entry is justified by this result. Prompt-level medians/ranges, individual hashes and CPU/VRAM observations are in `task-logs/round11/qwen-e2e/summary.json`; raw accepted and rejected records are retained. Quality checks still run as required for the candidate implementation.
