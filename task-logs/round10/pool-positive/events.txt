@@ -1,0 +1,10 @@
+R10_POOL context_freed 0x5b8fc1396ff0
+R10_POOL context_freed 0x5b8fc1e356e0
+R10_POOL create 0x5b8fc1e37c00 threads=24 poll=1 strict=1 mask=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,
+R10_POOL attach ctx=0x5b8fc1e356e0 pool=0x5b8fc1e37c00 batch=(nil)
+R10_POOL create 0x5b8fd4ab3b00 threads=24 poll=1 strict=1 mask=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,
+R10_POOL attach ctx=0x5b8fd4ab17f0 pool=0x5b8fd4ab3b00 batch=(nil)
+R10_POOL context_freed 0x5b8fd4ab17f0
+R10_POOL free 0x5b8fd4ab3b00
+R10_POOL context_freed 0x5b8fc1e356e0
+R10_POOL free 0x5b8fc1e37c00

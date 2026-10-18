@@ -1,0 +1,448 @@
+200000000-200200000 ---p 00000000 00:00 0 
+200200000-200400000 rw-s 00000000 00:05 1080                             /dev/nvidia0
+200400000-203c00000 rw-s 00000000 00:05 1079                             /dev/nvidiactl
+203c00000-204a00000 ---p 00000000 00:00 0 
+204a00000-204c00000 rw-s 00000000 00:05 1079                             /dev/nvidiactl
+204c00000-204e00000 rw-s 00000000 00:05 1079                             /dev/nvidiactl
+204e00000-205000000 rw-s 204e00000 00:05 1081                            /dev/nvidia-uvm
+205000000-205600000 ---p 00000000 00:00 0 
+205600000-205800000 rw-s 00000000 00:01 115837                           /dev/zero (deleted)
+205800000-300200000 ---p 00000000 00:00 0 
+302000000-1302000000 ---p 00000000 00:00 0 
+10000000000-10004000000 ---p 00000000 00:00 0 
+5b8fa84d8000-5b8fa84d9000 r--p 00000000 fc:00 66200049                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/llama-server
+5b8fa84d9000-5b8fa84da000 r-xp 00001000 fc:00 66200049                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/llama-server
+5b8fa84da000-5b8fa84db000 r--p 00002000 fc:00 66200049                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/llama-server
+5b8fa84db000-5b8fa84dc000 r--p 00002000 fc:00 66200049                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/llama-server
+5b8fa84dc000-5b8fa84dd000 rw-p 00003000 fc:00 66200049                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/llama-server
+5b8fc0be9000-5b8fd9a31000 rw-p 00000000 00:00 0                          [heap]
+7a81e6000000-7a821f400000 ---p 00000000 00:00 0 
+7a821f400000-7a821f7d5000 rw-s 00000000 00:01 70579                      /dev/zero (deleted)
+7a821f7d5000-7a8220000000 ---p 00000000 00:00 0 
+7a8220273000-7a822c7f5000 rw-p 00000000 00:00 0 
+7a822c7f5000-7a822c7f6000 ---p 00000000 00:00 0 
+7a822c7f6000-7a822cff6000 rw-p 00000000 00:00 0 
+7a822cff6000-7a822cff7000 ---p 00000000 00:00 0 
+7a822cff7000-7a822d7f7000 rw-p 00000000 00:00 0 
+7a822d7f7000-7a822d7f8000 ---p 00000000 00:00 0 
+7a822d7f8000-7a822dff8000 rw-p 00000000 00:00 0 
+7a822dff8000-7a822dff9000 ---p 00000000 00:00 0 
+7a822dff9000-7a822e7f9000 rw-p 00000000 00:00 0 
+7a822e7f9000-7a822e7fa000 ---p 00000000 00:00 0 
+7a822e7fa000-7a822effa000 rw-p 00000000 00:00 0 
+7a822effa000-7a822effb000 ---p 00000000 00:00 0 
+7a822effb000-7a822f7fb000 rw-p 00000000 00:00 0 
+7a822f7fb000-7a822f7fc000 ---p 00000000 00:00 0 
+7a822f7fc000-7a822fffc000 rw-p 00000000 00:00 0 
+7a822fffc000-7a822fffd000 ---p 00000000 00:00 0 
+7a822fffd000-7a82307fd000 rw-p 00000000 00:00 0 
+7a82307fd000-7a82307fe000 ---p 00000000 00:00 0 
+7a82307fe000-7a8230ffe000 rw-p 00000000 00:00 0 
+7a8230ffe000-7a8230fff000 ---p 00000000 00:00 0 
+7a8230fff000-7a82317ff000 rw-p 00000000 00:00 0 
+7a82317ff000-7a8231800000 ---p 00000000 00:00 0 
+7a8231800000-7a8232000000 rw-p 00000000 00:00 0 
+7a826c293000-7a826c294000 ---p 00000000 00:00 0 
+7a826c294000-7a826ca94000 rw-p 00000000 00:00 0 
+7a826ca94000-7a826ca95000 ---p 00000000 00:00 0 
+7a826ca95000-7a826d295000 rw-p 00000000 00:00 0 
+7a826d295000-7a826d296000 ---p 00000000 00:00 0 
+7a826d296000-7a826da96000 rw-p 00000000 00:00 0 
+7a8274000000-7a8274021000 rw-p 00000000 00:00 0 
+7a8274021000-7a8278000000 ---p 00000000 00:00 0 
+7a82797ff000-7a8279800000 ---p 00000000 00:00 0 
+7a8279800000-7a827a000000 rw-p 00000000 00:00 0 
+7a827a000000-7a829a000000 ---p 00000000 00:00 0 
+7a829a000000-7a8361a24000 rw-s 00000000 00:01 70574                      /dev/zero (deleted)
+7a8361a24000-7a8399a00000 ---p 00000000 00:00 0 
+7a8399a00000-7a8399c00000 rw-s 00000000 00:01 70573                      /dev/zero (deleted)
+7a8399c00000-7a839a000000 ---p 00000000 00:00 0 
+7a839a7fd000-7a839a7fe000 ---p 00000000 00:00 0 
+7a839a7fe000-7a839affe000 rw-p 00000000 00:00 0 
+7a839affe000-7a839afff000 ---p 00000000 00:00 0 
+7a839afff000-7a839b7ff000 rw-p 00000000 00:00 0 
+7a839b7ff000-7a839b800000 ---p 00000000 00:00 0 
+7a839b800000-7a839c000000 rw-p 00000000 00:00 0 
+7a839c000000-7a83d8000000 ---p 00000000 00:00 0 
+7a83d84d5000-7a83d84d6000 ---p 00000000 00:00 0 
+7a83d84d6000-7a83d8cd6000 rw-p 00000000 00:00 0 
+7a83d8cd6000-7a8408000000 rw-p 00000000 00:00 0 
+7a8408000000-7a84a0400000 ---p 00000000 00:00 0 
+7a84a0400000-7a84a15af000 rw-s 00000000 00:01 115845                     /dev/zero (deleted)
+7a84a15af000-7a84c2400000 ---p 00000000 00:00 0 
+7a84c2400000-7a84c35aa000 rw-s 00000000 00:01 70578                      /dev/zero (deleted)
+7a84c35aa000-7a84d0000000 ---p 00000000 00:00 0 
+7a84d0000000-7a84d0021000 rw-p 00000000 00:00 0 
+7a84d0021000-7a84d4000000 ---p 00000000 00:00 0 
+7a84d47f9000-7a84d47fa000 ---p 00000000 00:00 0 
+7a84d47fa000-7a84d4ffa000 rw-p 00000000 00:00 0 
+7a84d4ffa000-7a84d4ffb000 ---p 00000000 00:00 0 
+7a84d4ffb000-7a84d57fb000 rw-p 00000000 00:00 0 
+7a84d57fb000-7a84d57fc000 ---p 00000000 00:00 0 
+7a84d57fc000-7a84d5ffc000 rw-p 00000000 00:00 0 
+7a84d5ffc000-7a84d5ffd000 ---p 00000000 00:00 0 
+7a84d5ffd000-7a84d67fd000 rw-p 00000000 00:00 0 
+7a84d67fd000-7a84d67fe000 ---p 00000000 00:00 0 
+7a84d67fe000-7a84d6ffe000 rw-p 00000000 00:00 0 
+7a84d6ffe000-7a84d6fff000 ---p 00000000 00:00 0 
+7a84d6fff000-7a84d77ff000 rw-p 00000000 00:00 0 
+7a84d77ff000-7a84d7800000 ---p 00000000 00:00 0 
+7a84d7800000-7a84d8000000 rw-p 00000000 00:00 0 
+7a84d8000000-7a84d8021000 rw-p 00000000 00:00 0 
+7a84d8021000-7a84dc000000 ---p 00000000 00:00 0 
+7a84dc000000-7a84dc021000 rw-p 00000000 00:00 0 
+7a84dc021000-7a84e0000000 ---p 00000000 00:00 0 
+7a84e0000000-7a84e0021000 rw-p 00000000 00:00 0 
+7a84e0021000-7a84e4000000 ---p 00000000 00:00 0 
+7a84e4000000-7a84e4021000 rw-p 00000000 00:00 0 
+7a84e4021000-7a84e8000000 ---p 00000000 00:00 0 
+7a84e8000000-7a84e8021000 rw-p 00000000 00:00 0 
+7a84e8021000-7a84ec000000 ---p 00000000 00:00 0 
+7a84ec7fd000-7a84ec7fe000 ---p 00000000 00:00 0 
+7a84ec7fe000-7a84ecffe000 rw-p 00000000 00:00 0 
+7a84ecffe000-7a84ecfff000 ---p 00000000 00:00 0 
+7a84ecfff000-7a84ed7ff000 rw-p 00000000 00:00 0 
+7a84ed7ff000-7a84ed800000 ---p 00000000 00:00 0 
+7a84ed800000-7a84ee000000 rw-p 00000000 00:00 0 
+7a84ee000000-7a90b7c92000 rw-s 00000000 00:01 115841                     /dev/zero (deleted)
+7a90b7c92000-7a90b7e00000 ---p 00000000 00:00 0 
+7a90b7e00000-7a90b8000000 rw-s 00000000 00:01 115844                     /dev/zero (deleted)
+7a90b8000000-7a91b2000000 ---p 00000000 00:00 0 
+7a91b25fd000-7a91b25fe000 ---p 00000000 00:00 0 
+7a91b25fe000-7a91b2dfe000 rw-p 00000000 00:00 0 
+7a91b2dfe000-7a91b2dff000 ---p 00000000 00:00 0 
+7a91b2dff000-7a91b35ff000 rw-p 00000000 00:00 0 
+7a91b35ff000-7a91b3600000 ---p 00000000 00:00 0 
+7a91b3600000-7a91b3e00000 rw-p 00000000 00:00 0 
+7a91b3e00000-7a98687f4000 r--s 00000000 fc:00 6426793                    /opt/llm-gateway/models/Qwen3.8-Flash-Next/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00002-of-00002.gguf
+7a9868800000-7aa52be11000 r--s 00000000 fc:00 6438027                    /opt/llm-gateway/models/Qwen3.8-Flash-Next/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf
+7aa52c000000-7aa52c021000 rw-p 00000000 00:00 0 
+7aa52c021000-7aa530000000 ---p 00000000 00:00 0 
+7aa5307f9000-7aa5307fa000 ---p 00000000 00:00 0 
+7aa5307fa000-7aa530ffa000 rw-p 00000000 00:00 0 
+7aa530ffa000-7aa530ffb000 ---p 00000000 00:00 0 
+7aa530ffb000-7aa5317fb000 rw-p 00000000 00:00 0 
+7aa5317fb000-7aa5317fc000 ---p 00000000 00:00 0 
+7aa5317fc000-7aa531ffc000 rw-p 00000000 00:00 0 
+7aa531ffc000-7aa531ffd000 ---p 00000000 00:00 0 
+7aa531ffd000-7aa5327fd000 rw-p 00000000 00:00 0 
+7aa5327fd000-7aa5327fe000 ---p 00000000 00:00 0 
+7aa5327fe000-7aa532ffe000 rw-p 00000000 00:00 0 
+7aa532ffe000-7aa532fff000 ---p 00000000 00:00 0 
+7aa532fff000-7aa5337ff000 rw-p 00000000 00:00 0 
+7aa5337ff000-7aa533800000 ---p 00000000 00:00 0 
+7aa533800000-7aa534000000 rw-p 00000000 00:00 0 
+7aa534000000-7aa534021000 rw-p 00000000 00:00 0 
+7aa534021000-7aa53a400000 ---p 00000000 00:00 0 
+7aa53a400000-7aa53a600000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa53a600000-7aa53a800000 rw-s 00000000 00:01 115834                     /dev/zero (deleted)
+7aa53a800000-7aa53aa00000 rw-s 00000000 00:01 115835                     /dev/zero (deleted)
+7aa53aa00000-7aa53b000000 ---p 00000000 00:00 0 
+7aa53b000000-7aa53b200000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa53b200000-7aa53b400000 ---p 00000000 00:00 0 
+7aa53b400000-7aa53b600000 rw-s 00000000 00:01 115838                     /dev/zero (deleted)
+7aa53b600000-7aa53b777000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa53b777000-7aa53c000000 ---p 00000000 00:00 0 
+7aa53c000000-7aa53c021000 rw-p 00000000 00:00 0 
+7aa53c021000-7aa540000000 ---p 00000000 00:00 0 
+7aa5405da000-7aa5405db000 ---p 00000000 00:00 0 
+7aa5405db000-7aa540ddb000 rw-p 00000000 00:00 0 
+7aa540ddb000-7aa540ddc000 ---p 00000000 00:00 0 
+7aa540ddc000-7aa5415dc000 rw-p 00000000 00:00 0 
+7aa5415dc000-7aa5415dd000 ---p 00000000 00:00 0 
+7aa5415dd000-7aa541ddd000 rw-p 00000000 00:00 0 
+7aa541ddd000-7aa541dde000 ---p 00000000 00:00 0 
+7aa541dde000-7aa5425de000 rw-p 00000000 00:00 0 
+7aa5425de000-7aa5425df000 ---p 00000000 00:00 0 
+7aa5425df000-7aa542ddf000 rw-p 00000000 00:00 0 
+7aa542ddf000-7aa542de0000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa542de0000-7aa542de1000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa542de1000-7aa542de2000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa542de2000-7aa542de3000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa542de3000-7aa542de4000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa542de4000-7aa542de5000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa542de5000-7aa542de6000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa542de6000-7aa542de7000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa542de7000-7aa542de8000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa542de8000-7aa542de9000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa542de9000-7aa542dea000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa542dea000-7aa542deb000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa542deb000-7aa542dec000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa542dec000-7aa542ded000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa542ded000-7aa542dee000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa542dee000-7aa542def000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa542def000-7aa542df0000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa542df0000-7aa542df1000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa542df1000-7aa542df2000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa542df2000-7aa542df3000 rw-s 00000000 00:05 1079                       /dev/nvidiactl
+7aa542df3000-7aa544000000 ---p 00000000 00:00 0 
+7aa544000000-7aa544021000 rw-p 00000000 00:00 0 
+7aa544021000-7aa548000000 ---p 00000000 00:00 0 
+7aa5480a4000-7aa5480a5000 ---p 00000000 00:00 0 
+7aa5480a5000-7aa5488a5000 rw-p 00000000 00:00 0 
+7aa5488a5000-7aa5488a6000 ---p 00000000 00:00 0 
+7aa5488a6000-7aa5490a6000 rw-p 00000000 00:00 0 
+7aa5490a6000-7aa5490a7000 ---p 00000000 00:00 0 
+7aa5490a7000-7aa5498a7000 rw-p 00000000 00:00 0 
+7aa5498a7000-7aa5498a8000 ---p 00000000 00:00 0 
+7aa5498a8000-7aa54a0a8000 rw-p 00000000 00:00 0 
+7aa54a5d1000-7aa54a5d2000 ---p 00000000 00:00 0 
+7aa54a5d2000-7aa54add2000 rw-p 00000000 00:00 0 
+7aa54add2000-7aa54afd2000 rw-s 00000000 00:01 115836                     /dev/zero (deleted)
+7aa54afd2000-7aa54afd3000 ---p 00000000 00:00 0 
+7aa54afd3000-7aa54b7d3000 rw-p 00000000 00:00 0 
+7aa54b7d3000-7aa54b7d4000 ---p 00000000 00:00 0 
+7aa54b7d4000-7aa54bfd4000 rw-p 00000000 00:00 0 
+7aa54bfd4000-7aa54bfd5000 ---p 00000000 00:00 0 
+7aa54bfd5000-7aa54c7d5000 rw-p 00000000 00:00 0 
+7aa54c7d5000-7aa54c7d6000 ---p 00000000 00:00 0 
+7aa54c7d6000-7aa54cfd6000 rw-p 00000000 00:00 0 
+7aa54cfd6000-7aa54cfd7000 ---p 00000000 00:00 0 
+7aa54cfd7000-7aa54d7d7000 rw-p 00000000 00:00 0 
+7aa54d7d7000-7aa54d7d8000 ---p 00000000 00:00 0 
+7aa54d7d8000-7aa54dfd8000 rw-p 00000000 00:00 0 
+7aa54dfd8000-7aa54dfd9000 ---p 00000000 00:00 0 
+7aa54dfd9000-7aa54e7d9000 rw-p 00000000 00:00 0 
+7aa54e7d9000-7aa54e7da000 ---p 00000000 00:00 0 
+7aa54e7da000-7aa54efda000 rw-p 00000000 00:00 0 
+7aa54efda000-7aa54efdb000 ---p 00000000 00:00 0 
+7aa54efdb000-7aa54f7db000 rw-p 00000000 00:00 0 
+7aa54f7db000-7aa54f7dc000 ---p 00000000 00:00 0 
+7aa54f7dc000-7aa54ffdc000 rw-p 00000000 00:00 0 
+7aa54ffdc000-7aa54ffdd000 ---p 00000000 00:00 0 
+7aa54ffdd000-7aa5507dd000 rw-p 00000000 00:00 0 
+7aa5507dd000-7aa5507de000 ---p 00000000 00:00 0 
+7aa5507de000-7aa550fde000 rw-p 00000000 00:00 0 
+7aa550fde000-7aa550fdf000 ---p 00000000 00:00 0 
+7aa550fdf000-7aa5517df000 rw-p 00000000 00:00 0 
+7aa5517df000-7aa5517e0000 ---p 00000000 00:00 0 
+7aa5517e0000-7aa551fe0000 rw-p 00000000 00:00 0 
+7aa551fe0000-7aa551fe1000 ---p 00000000 00:00 0 
+7aa551fe1000-7aa5527e1000 rw-p 00000000 00:00 0 
+7aa5527e1000-7aa5527e2000 ---p 00000000 00:00 0 
+7aa5527e2000-7aa552fe2000 rw-p 00000000 00:00 0 
+7aa552fe2000-7aa552fe3000 ---p 00000000 00:00 0 
+7aa552fe3000-7aa5537e3000 rw-p 00000000 00:00 0 
+7aa5537e3000-7aa5537e4000 ---p 00000000 00:00 0 
+7aa5537e4000-7aa553fe4000 rw-p 00000000 00:00 0 
+7aa553fe4000-7aa553fe5000 ---p 00000000 00:00 0 
+7aa553fe5000-7aa5547e5000 rw-p 00000000 00:00 0 
+7aa5547e5000-7aa5547e6000 ---p 00000000 00:00 0 
+7aa5547e6000-7aa554fe6000 rw-p 00000000 00:00 0 
+7aa554fe6000-7aa554fe7000 ---p 00000000 00:00 0 
+7aa554fe7000-7aa5557e7000 rw-p 00000000 00:00 0 
+7aa5557e7000-7aa5557e8000 ---p 00000000 00:00 0 
+7aa5557e8000-7aa555fe8000 rw-p 00000000 00:00 0 
+7aa555fe8000-7aa555fe9000 ---p 00000000 00:00 0 
+7aa555fe9000-7aa5567e9000 rw-p 00000000 00:00 0 
+7aa5567e9000-7aa5567ea000 ---p 00000000 00:00 0 
+7aa5567ea000-7aa556fea000 rw-p 00000000 00:00 0 
+7aa556fea000-7aa556feb000 ---p 00000000 00:00 0 
+7aa556feb000-7aa5577eb000 rw-p 00000000 00:00 0 
+7aa5577eb000-7aa5577ec000 ---p 00000000 00:00 0 
+7aa5577ec000-7aa557fec000 rw-p 00000000 00:00 0 
+7aa557fec000-7aa557fed000 ---p 00000000 00:00 0 
+7aa557fed000-7aa5587ed000 rw-p 00000000 00:00 0 
+7aa5587ed000-7aa5587ee000 ---p 00000000 00:00 0 
+7aa5587ee000-7aa558fee000 rw-p 00000000 00:00 0 
+7aa558fee000-7aa558fef000 ---p 00000000 00:00 0 
+7aa558fef000-7aa5597ef000 rw-p 00000000 00:00 0 
+7aa5597ef000-7aa5597f0000 ---p 00000000 00:00 0 
+7aa5597f0000-7aa559ff0000 rw-p 00000000 00:00 0 
+7aa559ff0000-7aa559ff1000 ---p 00000000 00:00 0 
+7aa559ff1000-7aa55a7f1000 rw-p 00000000 00:00 0 
+7aa55a7f1000-7aa55a7f2000 ---p 00000000 00:00 0 
+7aa55a7f2000-7aa55aff2000 rw-p 00000000 00:00 0 
+7aa55aff2000-7aa55aff3000 ---p 00000000 00:00 0 
+7aa55aff3000-7aa55b7f3000 rw-p 00000000 00:00 0 
+7aa55b7f3000-7aa55b7f4000 ---p 00000000 00:00 0 
+7aa55b7f4000-7aa55bff4000 rw-p 00000000 00:00 0 
+7aa55bff4000-7aa55bff5000 ---p 00000000 00:00 0 
+7aa55bff5000-7aa55c7f5000 rw-p 00000000 00:00 0 
+7aa55c7f5000-7aa55c7f6000 ---p 00000000 00:00 0 
+7aa55c7f6000-7aa55cff6000 rw-p 00000000 00:00 0 
+7aa55cff6000-7aa55cff7000 ---p 00000000 00:00 0 
+7aa55cff7000-7aa55d7f7000 rw-p 00000000 00:00 0 
+7aa55d7f7000-7aa55d7f8000 ---p 00000000 00:00 0 
+7aa55d7f8000-7aa55dff8000 rw-p 00000000 00:00 0 
+7aa55dff8000-7aa55dff9000 ---p 00000000 00:00 0 
+7aa55dff9000-7aa55e7f9000 rw-p 00000000 00:00 0 
+7aa55e7f9000-7aa55e7fa000 ---p 00000000 00:00 0 
+7aa55e7fa000-7aa55effa000 rw-p 00000000 00:00 0 
+7aa55effa000-7aa55effb000 ---p 00000000 00:00 0 
+7aa55effb000-7aa55f7fb000 rw-p 00000000 00:00 0 
+7aa55f7fb000-7aa55f7fc000 ---p 00000000 00:00 0 
+7aa55f7fc000-7aa55fffc000 rw-p 00000000 00:00 0 
+7aa55fffc000-7aa55fffd000 ---p 00000000 00:00 0 
+7aa55fffd000-7aa5607fd000 rw-p 00000000 00:00 0 
+7aa5607fd000-7aa5607fe000 ---p 00000000 00:00 0 
+7aa5607fe000-7aa560ffe000 rw-p 00000000 00:00 0 
+7aa560ffe000-7aa560fff000 ---p 00000000 00:00 0 
+7aa560fff000-7aa5617ff000 rw-p 00000000 00:00 0 
+7aa5617ff000-7aa561800000 ---p 00000000 00:00 0 
+7aa561800000-7aa562000000 rw-p 00000000 00:00 0 
+7aa562000000-7aa568000000 ---p 00000000 00:00 0 
+7aa568000000-7aa568021000 rw-p 00000000 00:00 0 
+7aa568021000-7aa56c000000 ---p 00000000 00:00 0 
+7aa56c147000-7aa56c148000 ---p 00000000 00:00 0 
+7aa56c148000-7aa56c948000 rw-p 00000000 00:00 0 
+7aa56c948000-7aa56c949000 ---p 00000000 00:00 0 
+7aa56c949000-7aa56d149000 rw-p 00000000 00:00 0 
+7aa56d149000-7aa56e36a000 ---p 00000000 00:00 0 
+7aa56e36a000-7aa56e5fd000 rw-p 00000000 00:00 0 
+7aa56e5fd000-7aa56e5fe000 ---p 00000000 00:00 0 
+7aa56e5fe000-7aa56edfe000 rw-p 00000000 00:00 0 
+7aa56edfe000-7aa56edff000 ---p 00000000 00:00 0 
+7aa56edff000-7aa56f5ff000 rw-p 00000000 00:00 0 
+7aa56f5ff000-7aa56f600000 ---p 00000000 00:00 0 
+7aa56f600000-7aa56fe00000 rw-p 00000000 00:00 0 
+7aa56fe00000-7aa572b7c000 r-xp 00000000 fc:00 658058                     /usr/lib/x86_64-linux-gnu/libnvrtc.so.12.0.140
+7aa572b7c000-7aa572d7c000 ---p 02d7c000 fc:00 658058                     /usr/lib/x86_64-linux-gnu/libnvrtc.so.12.0.140
+7aa572d7c000-7aa57344f000 r--p 02d7c000 fc:00 658058                     /usr/lib/x86_64-linux-gnu/libnvrtc.so.12.0.140
+7aa57344f000-7aa57351b000 rw-p 0344f000 fc:00 658058                     /usr/lib/x86_64-linux-gnu/libnvrtc.so.12.0.140
+7aa57351b000-7aa57361c000 rw-p 00000000 00:00 0 
+7aa573800000-7aa590a63000 r-xp 00000000 fc:00 657420                     /usr/lib/x86_64-linux-gnu/libcublasLt.so.12.0.2.224
+7aa590a63000-7aa590c63000 ---p 1d263000 fc:00 657420                     /usr/lib/x86_64-linux-gnu/libcublasLt.so.12.0.2.224
+7aa590c63000-7aa590e93000 r--p 1d263000 fc:00 657420                     /usr/lib/x86_64-linux-gnu/libcublasLt.so.12.0.2.224
+7aa590e93000-7aa591e27000 rw-p 1d493000 fc:00 657420                     /usr/lib/x86_64-linux-gnu/libcublasLt.so.12.0.2.224
+7aa591e27000-7aa59460f000 rw-p 00000000 00:00 0 
+7aa594800000-7aa594966000 r--p 00000000 fc:00 657954                     /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+7aa594966000-7aa5958ea000 r-xp 00166000 fc:00 657954                     /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+7aa5958ea000-7aa59a295000 r--p 010ea000 fc:00 657954                     /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+7aa59a295000-7aa59a296000 ---p 05a95000 fc:00 657954                     /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+7aa59a296000-7aa59a3cb000 r--p 05a95000 fc:00 657954                     /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+7aa59a3cb000-7aa59a3d4000 rw-p 05bca000 fc:00 657954                     /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+7aa59a3d4000-7aa59a44c000 rw-p 00000000 00:00 0 
+7aa59a600000-7aa5a0c67000 r-xp 00000000 fc:00 657423                     /usr/lib/x86_64-linux-gnu/libcublas.so.12.0.2.224
+7aa5a0c67000-7aa5a0e67000 ---p 06667000 fc:00 657423                     /usr/lib/x86_64-linux-gnu/libcublas.so.12.0.2.224
+7aa5a0e67000-7aa5a0e6e000 r--p 06667000 fc:00 657423                     /usr/lib/x86_64-linux-gnu/libcublas.so.12.0.2.224
+7aa5a0e6e000-7aa5a0e75000 rw-p 0666e000 fc:00 657423                     /usr/lib/x86_64-linux-gnu/libcublas.so.12.0.2.224
+7aa5a0e75000-7aa5a0e7d000 rw-p 00000000 00:00 0 
+7aa5a1000000-7aa5a109f000 r-xp 00000000 fc:00 657431                     /usr/lib/x86_64-linux-gnu/libcudart.so.12.0.146
+7aa5a109f000-7aa5a129f000 ---p 0009f000 fc:00 657431                     /usr/lib/x86_64-linux-gnu/libcudart.so.12.0.146
+7aa5a129f000-7aa5a12a4000 r--p 0009f000 fc:00 657431                     /usr/lib/x86_64-linux-gnu/libcudart.so.12.0.146
+7aa5a12a4000-7aa5a12a5000 rw-p 000a4000 fc:00 657431                     /usr/lib/x86_64-linux-gnu/libcudart.so.12.0.146
+7aa5a12a5000-7aa5a12a6000 rw-p 00000000 00:00 0 
+7aa5a1400000-7aa5a1436000 r--p 00000000 fc:00 66198947                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml-cuda.so.0.27.0
+7aa5a1436000-7aa5a239d000 r-xp 00036000 fc:00 66198947                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml-cuda.so.0.27.0
+7aa5a239d000-7aa5adaf9000 r--p 00f9d000 fc:00 66198947                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml-cuda.so.0.27.0
+7aa5adaf9000-7aa5adafb000 r--p 0c6f8000 fc:00 66198947                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml-cuda.so.0.27.0
+7aa5adafb000-7aa5adafe000 rw-p 0c6fa000 fc:00 66198947                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml-cuda.so.0.27.0
+7aa5adafe000-7aa5adb0a000 rw-p 00000000 00:00 0 
+7aa5adc00000-7aa5adcb3000 r--p 00000000 fc:00 662313                     /usr/lib/x86_64-linux-gnu/libcrypto.so.3
+7aa5adcb3000-7aa5adfe7000 r-xp 000b3000 fc:00 662313                     /usr/lib/x86_64-linux-gnu/libcrypto.so.3
+7aa5adfe7000-7aa5ae0b2000 r--p 003e7000 fc:00 662313                     /usr/lib/x86_64-linux-gnu/libcrypto.so.3
+7aa5ae0b2000-7aa5ae10e000 r--p 004b1000 fc:00 662313                     /usr/lib/x86_64-linux-gnu/libcrypto.so.3
+7aa5ae10e000-7aa5ae111000 rw-p 0050d000 fc:00 662313                     /usr/lib/x86_64-linux-gnu/libcrypto.so.3
+7aa5ae111000-7aa5ae114000 rw-p 00000000 00:00 0 
+7aa5ae200000-7aa5ae2b8000 r--p 00000000 fc:00 66199243                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama.so.0.7.0
+7aa5ae2b8000-7aa5ae5a2000 r-xp 000b8000 fc:00 66199243                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama.so.0.7.0
+7aa5ae5a2000-7aa5ae640000 r--p 003a2000 fc:00 66199243                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama.so.0.7.0
+7aa5ae640000-7aa5ae64b000 r--p 00440000 fc:00 66199243                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama.so.0.7.0
+7aa5ae64b000-7aa5ae651000 rw-p 0044b000 fc:00 66199243                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama.so.0.7.0
+7aa5ae651000-7aa5ae652000 rw-p 00000000 00:00 0 
+7aa5ae83c000-7aa5ae862000 r--p 00000000 fc:00 66199048                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libmtmd.so.0.7.0
+7aa5ae862000-7aa5ae9c3000 r-xp 00026000 fc:00 66199048                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libmtmd.so.0.7.0
+7aa5ae9c3000-7aa5ae9fa000 r--p 00187000 fc:00 66199048                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libmtmd.so.0.7.0
+7aa5ae9fa000-7aa5ae9fd000 r--p 001bd000 fc:00 66199048                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libmtmd.so.0.7.0
+7aa5ae9fd000-7aa5ae9ff000 rw-p 001c0000 fc:00 66199048                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libmtmd.so.0.7.0
+7aa5ae9ff000-7aa5aea00000 rw-p 00000000 00:00 0 
+7aa5aea00000-7aa5aeab7000 r--p 00000000 fc:00 66199197                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama-common.so.0.7.0
+7aa5aeab7000-7aa5aee12000 r-xp 000b7000 fc:00 66199197                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama-common.so.0.7.0
+7aa5aee12000-7aa5aeeca000 r--p 00412000 fc:00 66199197                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama-common.so.0.7.0
+7aa5aeeca000-7aa5aeed1000 r--p 004ca000 fc:00 66199197                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama-common.so.0.7.0
+7aa5aeed1000-7aa5aeed7000 rw-p 004d1000 fc:00 66199197                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama-common.so.0.7.0
+7aa5aeed7000-7aa5aeef7000 rw-p 00000000 00:00 0 
+7aa5af000000-7aa5af028000 r--p 00000000 fc:00 686838                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7aa5af028000-7aa5af1b1000 r-xp 00028000 fc:00 686838                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7aa5af1b1000-7aa5af200000 r--p 001b1000 fc:00 686838                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7aa5af200000-7aa5af204000 r--p 001ff000 fc:00 686838                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7aa5af204000-7aa5af206000 rw-p 00203000 fc:00 686838                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7aa5af206000-7aa5af213000 rw-p 00000000 00:00 0 
+7aa5af246000-7aa5af307000 rw-p 00000000 00:00 0 
+7aa5af307000-7aa5af317000 -w-s 00000000 00:05 1080                       /dev/nvidia0
+7aa5af317000-7aa5af327000 r--p 00000000 fc:00 686841                     /usr/lib/x86_64-linux-gnu/libm.so.6
+7aa5af327000-7aa5af3a6000 r-xp 00010000 fc:00 686841                     /usr/lib/x86_64-linux-gnu/libm.so.6
+7aa5af3a6000-7aa5af3fe000 r--p 0008f000 fc:00 686841                     /usr/lib/x86_64-linux-gnu/libm.so.6
+7aa5af3fe000-7aa5af3ff000 r--p 000e7000 fc:00 686841                     /usr/lib/x86_64-linux-gnu/libm.so.6
+7aa5af3ff000-7aa5af400000 rw-p 000e8000 fc:00 686841                     /usr/lib/x86_64-linux-gnu/libm.so.6
+7aa5af400000-7aa5af49d000 r--p 00000000 fc:00 657906                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7aa5af49d000-7aa5af5e5000 r-xp 0009d000 fc:00 657906                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7aa5af5e5000-7aa5af66c000 r--p 001e5000 fc:00 657906                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7aa5af66c000-7aa5af677000 r--p 0026b000 fc:00 657906                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7aa5af677000-7aa5af67a000 rw-p 00276000 fc:00 657906                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7aa5af67a000-7aa5af67e000 rw-p 00000000 00:00 0 
+7aa5af68b000-7aa5af6d4000 rw-p 00000000 00:00 0 
+7aa5af6d4000-7aa5af6d5000 r--p 00000000 fc:00 686862                     /usr/lib/x86_64-linux-gnu/librt.so.1
+7aa5af6d5000-7aa5af6d6000 r-xp 00001000 fc:00 686862                     /usr/lib/x86_64-linux-gnu/librt.so.1
+7aa5af6d6000-7aa5af6d7000 r--p 00002000 fc:00 686862                     /usr/lib/x86_64-linux-gnu/librt.so.1
+7aa5af6d7000-7aa5af6d8000 r--p 00002000 fc:00 686862                     /usr/lib/x86_64-linux-gnu/librt.so.1
+7aa5af6d8000-7aa5af6d9000 rw-p 00003000 fc:00 686862                     /usr/lib/x86_64-linux-gnu/librt.so.1
+7aa5af6d9000-7aa5af6e4000 r--p 00000000 fc:00 666009                     /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0
+7aa5af6e4000-7aa5af720000 r-xp 0000b000 fc:00 666009                     /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0
+7aa5af720000-7aa5af72d000 r--p 00047000 fc:00 666009                     /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0
+7aa5af72d000-7aa5af72e000 r--p 00054000 fc:00 666009                     /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0
+7aa5af72e000-7aa5af72f000 rw-p 00055000 fc:00 666009                     /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0
+7aa5af72f000-7aa5af740000 r--p 00000000 fc:00 66200502                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml-base.so.0.27.0
+7aa5af740000-7aa5af7d8000 r-xp 00011000 fc:00 66200502                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml-base.so.0.27.0
+7aa5af7d8000-7aa5af7fc000 r--p 000a9000 fc:00 66200502                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml-base.so.0.27.0
+7aa5af7fc000-7aa5af7fe000 r--p 000cc000 fc:00 66200502                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml-base.so.0.27.0
+7aa5af7fe000-7aa5af7ff000 rw-p 000ce000 fc:00 66200502                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml-base.so.0.27.0
+7aa5af7ff000-7aa5af800000 rw-p 00000000 00:00 0 
+7aa5af800000-7aa5af88a000 r--p 00000000 fc:00 66200190                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama-server-impl.so
+7aa5af88a000-7aa5afabc000 r-xp 0008a000 fc:00 66200190                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama-server-impl.so
+7aa5afabc000-7aa5afe33000 r--p 002bc000 fc:00 66200190                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama-server-impl.so
+7aa5afe33000-7aa5afe38000 r--p 00632000 fc:00 66200190                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama-server-impl.so
+7aa5afe38000-7aa5afe3d000 rw-p 00637000 fc:00 66200190                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama-server-impl.so
+7aa5afe3d000-7aa5afe3f000 rw-p 00000000 00:00 0 
+7aa5afe40000-7aa5afe42000 rw-p 00000000 00:00 0 
+7aa5afe42000-7aa5afe43000 r--p 00000000 fc:00 686860                     /usr/lib/x86_64-linux-gnu/libpthread.so.0
+7aa5afe43000-7aa5afe44000 r-xp 00001000 fc:00 686860                     /usr/lib/x86_64-linux-gnu/libpthread.so.0
+7aa5afe44000-7aa5afe45000 r--p 00002000 fc:00 686860                     /usr/lib/x86_64-linux-gnu/libpthread.so.0
+7aa5afe45000-7aa5afe46000 r--p 00002000 fc:00 686860                     /usr/lib/x86_64-linux-gnu/libpthread.so.0
+7aa5afe46000-7aa5afe47000 rw-p 00003000 fc:00 686860                     /usr/lib/x86_64-linux-gnu/libpthread.so.0
+7aa5afe47000-7aa5afe49000 rw-p 00000000 00:00 0 
+7aa5afe49000-7aa5afe4a000 r--p 00000000 fc:00 686840                     /usr/lib/x86_64-linux-gnu/libdl.so.2
+7aa5afe4a000-7aa5afe4b000 r-xp 00001000 fc:00 686840                     /usr/lib/x86_64-linux-gnu/libdl.so.2
+7aa5afe4b000-7aa5afe4c000 r--p 00002000 fc:00 686840                     /usr/lib/x86_64-linux-gnu/libdl.so.2
+7aa5afe4c000-7aa5afe4d000 r--p 00002000 fc:00 686840                     /usr/lib/x86_64-linux-gnu/libdl.so.2
+7aa5afe4d000-7aa5afe4e000 rw-p 00003000 fc:00 686840                     /usr/lib/x86_64-linux-gnu/libdl.so.2
+7aa5afe4e000-7aa5afe50000 rw-p 00000000 00:00 0 
+7aa5afe50000-7aa5afe6e000 r--p 00000000 fc:00 662314                     /usr/lib/x86_64-linux-gnu/libssl.so.3
+7aa5afe6e000-7aa5afed0000 r-xp 0001e000 fc:00 662314                     /usr/lib/x86_64-linux-gnu/libssl.so.3
+7aa5afed0000-7aa5afeec000 r--p 00080000 fc:00 662314                     /usr/lib/x86_64-linux-gnu/libssl.so.3
+7aa5afeec000-7aa5afef6000 r--p 0009c000 fc:00 662314                     /usr/lib/x86_64-linux-gnu/libssl.so.3
+7aa5afef6000-7aa5afefa000 rw-p 000a6000 fc:00 662314                     /usr/lib/x86_64-linux-gnu/libssl.so.3
+7aa5afefa000-7aa5afefd000 r--p 00000000 fc:00 66198936                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml.so.0.27.0
+7aa5afefd000-7aa5aff03000 r-xp 00003000 fc:00 66198936                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml.so.0.27.0
+7aa5aff03000-7aa5aff05000 r--p 00009000 fc:00 66198936                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml.so.0.27.0
+7aa5aff05000-7aa5aff06000 r--p 0000a000 fc:00 66198936                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml.so.0.27.0
+7aa5aff06000-7aa5aff07000 rw-p 0000b000 fc:00 66198936                   /opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml.so.0.27.0
+7aa5aff07000-7aa5aff0b000 rw-p 00000000 00:00 0 
+7aa5aff0b000-7aa5aff0f000 r--p 00000000 fc:00 657939                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7aa5aff0f000-7aa5aff33000 r-xp 00004000 fc:00 657939                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7aa5aff33000-7aa5aff37000 r--p 00028000 fc:00 657939                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7aa5aff37000-7aa5aff38000 r--p 0002b000 fc:00 657939                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7aa5aff38000-7aa5aff39000 rw-p 0002c000 fc:00 657939                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7aa5aff43000-7aa5aff44000 r--s 00000000 00:05 1079                       /dev/nvidiactl
+7aa5aff44000-7aa5aff57000 r--p 00000000 fc:00 66205613                   /opt/llm-gateway/data/build/llama-l5/build-cpu-native/bin/libggml-cpu.so.0.27.0
+7aa5aff57000-7aa5b0059000 r-xp 00013000 fc:00 66205613                   /opt/llm-gateway/data/build/llama-l5/build-cpu-native/bin/libggml-cpu.so.0.27.0
+7aa5b0059000-7aa5b0084000 r--p 00115000 fc:00 66205613                   /opt/llm-gateway/data/build/llama-l5/build-cpu-native/bin/libggml-cpu.so.0.27.0
+7aa5b0084000-7aa5b0086000 r--p 0013f000 fc:00 66205613                   /opt/llm-gateway/data/build/llama-l5/build-cpu-native/bin/libggml-cpu.so.0.27.0
+7aa5b0086000-7aa5b0087000 rw-p 00141000 fc:00 66205613                   /opt/llm-gateway/data/build/llama-l5/build-cpu-native/bin/libggml-cpu.so.0.27.0
+7aa5b0087000-7aa5b010c000 rw-p 00000000 00:00 0 
+7aa5b010c000-7aa5b010d000 r--p 00000000 fc:00 66200433                   /opt/llm-gateway/data/build/llama-l5/task-logs/round10/pool-guard.so
+7aa5b010d000-7aa5b010e000 r-xp 00001000 fc:00 66200433                   /opt/llm-gateway/data/build/llama-l5/task-logs/round10/pool-guard.so
+7aa5b010e000-7aa5b010f000 r--p 00002000 fc:00 66200433                   /opt/llm-gateway/data/build/llama-l5/task-logs/round10/pool-guard.so
+7aa5b010f000-7aa5b0110000 r--p 00002000 fc:00 66200433                   /opt/llm-gateway/data/build/llama-l5/task-logs/round10/pool-guard.so
+7aa5b0110000-7aa5b0111000 rw-p 00003000 fc:00 66200433                   /opt/llm-gateway/data/build/llama-l5/task-logs/round10/pool-guard.so
+7aa5b0111000-7aa5b0113000 rw-p 00000000 00:00 0 
+7aa5b0113000-7aa5b0114000 r--p 00000000 fc:00 686835                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7aa5b0114000-7aa5b013f000 r-xp 00001000 fc:00 686835                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7aa5b013f000-7aa5b0149000 r--p 0002c000 fc:00 686835                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7aa5b0149000-7aa5b014b000 r--p 00036000 fc:00 686835                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7aa5b014b000-7aa5b014d000 rw-p 00038000 fc:00 686835                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7fff6c874000-7fff6c896000 rw-p 00000000 00:00 0                          [stack]
+7fff6c8dc000-7fff6c8e0000 r--p 00000000 00:00 0                          [vvar]
+7fff6c8e0000-7fff6c8e2000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]

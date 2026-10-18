@@ -1,0 +1,93 @@
+diff --git a/common/speculative.cpp b/common/speculative.cpp
+index 745062f28..317cf81e3 100644
+--- a/common/speculative.cpp
++++ b/common/speculative.cpp
+@@ -2600,11 +2600,11 @@ common_params common_base_params_to_speculative(const common_params & params) {
+         if (n_devs == 1) {
+             result.split_mode = LLAMA_SPLIT_MODE_LAYER;
+         }
++    }
+ 
+-        if (params_spec.cpuparams.n_threads > 0) {
+-            result.cpuparams.n_threads       = params_spec.cpuparams.n_threads;
+-            result.cpuparams_batch.n_threads = params_spec.cpuparams_batch.n_threads;
+-        }
++    if (params_spec.cpuparams.n_threads > 0) {
++        result.cpuparams       = params_spec.cpuparams;
++        result.cpuparams_batch = params_spec.cpuparams_batch;
+     }
+ 
+     result.cache_type_k  = params_spec.cache_type_k;
+@@ -2645,6 +2645,7 @@ struct common_speculative_init_result::impl {
+     ~impl() = default;
+ 
+     // note: the order in which model, context, etc. are declared matters because their destructors will be called bottom-to-top
++    common_threadpools threadpools;
+     llama_model_ptr   model;
+     llama_context_ptr context;
+ };
+@@ -2707,6 +2708,10 @@ common_speculative_init_result::common_speculative_init_result(
+ 
+         pimpl->context.reset(ctx_dft);
+     }
++
++    if (pimpl->context) {
++        pimpl->threadpools.init(pimpl->context.get(), params);
++    }
+ }
+ 
+ common_speculative_init_result::~common_speculative_init_result() = default;
+diff --git a/tests/test-arg-parser.cpp b/tests/test-arg-parser.cpp
+index 543da2aed..1184f47a1 100644
+--- a/tests/test-arg-parser.cpp
++++ b/tests/test-arg-parser.cpp
+@@ -111,6 +111,49 @@ static void test(void) {
+         }
+     }
+ 
++    {
++        auto assert_cpu_params = [](const common_cpu_params & actual, const common_cpu_params & expected) {
++            assert(actual.n_threads == expected.n_threads);
++            assert(actual.mask_valid == expected.mask_valid);
++            assert(actual.priority == expected.priority);
++            assert(actual.strict_cpu == expected.strict_cpu);
++            assert(actual.poll == expected.poll);
++            for (int i = 0; i < GGML_MAX_N_THREADS; ++i) {
++                assert(actual.cpumask[i] == expected.cpumask[i]);
++            }
++        };
++
++        common_params base;
++        base.cpuparams.n_threads = 4;
++        base.cpuparams_batch.n_threads = 6;
++        base.speculative.types = {COMMON_SPECULATIVE_TYPE_DRAFT_MTP};
++        const auto inherited = common_base_params_to_speculative(base);
++        assert_cpu_params(inherited.cpuparams, base.cpuparams);
++        assert_cpu_params(inherited.cpuparams_batch, base.cpuparams_batch);
++
++        auto & cpu = base.speculative.draft.cpuparams;
++        cpu.n_threads = 2;
++        cpu.mask_valid = true;
++        cpu.cpumask[1] = true;
++        cpu.cpumask[3] = true;
++        cpu.strict_cpu = true;
++        cpu.priority = GGML_SCHED_PRIO_MEDIUM;
++        cpu.poll = 1;
++        auto & batch = base.speculative.draft.cpuparams_batch;
++        batch = cpu;
++        batch.n_threads = 1;
++        batch.cpumask[3] = false;
++        batch.poll = 7;
++        batch.priority = GGML_SCHED_PRIO_HIGH;
++
++        for (bool external : {false, true}) {
++            base.speculative.draft.mparams.path = external ? "draft.gguf" : "";
++            const auto draft = common_base_params_to_speculative(base);
++            assert_cpu_params(draft.cpuparams, cpu);
++            assert_cpu_params(draft.cpuparams_batch, batch);
++        }
++    }
++
+     printf("test-arg-parser: make sure there is no duplicated arguments in any examples\n\n");
+     for (int ex = 0; ex < LLAMA_EXAMPLE_COUNT; ex++) {
+         try {

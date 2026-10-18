@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/profile_request.py", line 227, in <module>
+    main()
+  File "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/profile_request.py", line 199, in main
+    result = run.request(name, cfg, prompt, 256)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/profile_request.py", line 143, in request
+    return super().request(*request_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/bench.py", line 33, in request
+    tail = stream.read()
+           ^^^^^^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xa1 in position 179921: invalid start byte
+Importer error status: The importer binary and its dependencies were not found.
+Unable to retrieve the importer version: skipping importation of the QDSTRM file.
+Capture range started in the application.
+Generating '/opt/llm-gateway/data/build/llama-l5/task-logs/round10/profile-code-duration-off/tmp/nsys-report-85a8.qdstrm'
+Capture range ended in the application.
+Generated:
+    /opt/llm-gateway/data/build/llama-l5/task-logs/round10/profile-code-duration-off/trace.qdstrm

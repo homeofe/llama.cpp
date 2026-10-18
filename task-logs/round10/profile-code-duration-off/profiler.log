@@ -1,0 +1,8 @@
+Importer error status: The importer binary and its dependencies were not found.
+Unable to retrieve the importer version: skipping importation of the QDSTRM file.
+{"kind": "profile_request", "prompt": "code-duration", "graphs": false, "plain": false, "counters_only": false, "waited_s": 20, "pre_busy_cores": 0.16, "owned_profiler_processes": [62324, 62326, 62334, 62351, 62352, 62353, 62358], "foreign_cores": 0.18456123323746573, "accepted": true, "wall_s": 7.4771932100411505, "tokens": 218, "pieces": 217, "decode_tok_s": 37.089919720495075, "ttft_s": 1.6241400241851807, "server_timings": {"predicted_per_second": 37.08896411890551, "draft_n": 180, "draft_n_accepted": 158, "predicted_n": 218}, "text_head": "```python\nimport re\n\ndef parse_duration(s: str) -> int:\n    if not s:\n        raise ValueError(\"Empty string\")\n    \n    pattern = r'^(?:(\\d+)h)?(?:(\\d+)m)?(?:(\\", "engine_cpu_s": 163.84, "engine_busy_cores": 21.918471256305004, "engine_cpu_s_per_token": 0.7515596330275229, "text_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7", "mean_accepted_length_including_bonus": 3.63, "epoch": 1792316830.3, "utc": "2026-10-18 09:47:10"}
+Capture range started in the application.
+Generating '/opt/llm-gateway/data/build/llama-l5/task-logs/round10/profile-code-duration-off/tmp/nsys-report-3e04.qdstrm'
+Capture range ended in the application.
+Generated:
+    /opt/llm-gateway/data/build/llama-l5/task-logs/round10/profile-code-duration-off/trace.qdstrm
