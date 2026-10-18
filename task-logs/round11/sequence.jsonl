@@ -1,0 +1,6 @@
+{"epoch": 1792325602.7707362, "kind": "sequence_start", "pid": 104499}
+{"epoch": 1792325992.7803056, "kind": "start", "name": "qwen-summary", "command": ["python3", "/opt/llm-gateway/data/build/llama-l5/task-logs/round11/e2e_summary.py", "qwen"]}
+{"epoch": 1792325992.7812114, "kind": "process", "name": "qwen-summary", "pid": 106939}
+{"epoch": 1792325992.8150265, "kind": "exit", "name": "qwen-summary", "code": 0}
+{"epoch": 1792325992.8152256, "kind": "start", "name": "ling-e2e", "command": ["python3", "/opt/llm-gateway/data/build/llama-l5/task-logs/round11/bench.py", "/opt/llm-gateway/data/build/llama-l5/task-logs/round11/ling-e2e", "13:30", "--only", "ling-control", "ling-async", "--rounds", "3"]}
+{"epoch": 1792325992.815809, "kind": "process", "name": "ling-e2e", "pid": 106940}

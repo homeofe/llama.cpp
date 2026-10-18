@@ -1,0 +1,12 @@
+{
+  "qwen": {
+    "adopted": false,
+    "reason": "Completed three-round speed gain +1.68% code/+1.86% English is below the predeclared 3% gate; fresh CUDA quality checks were not run."
+  },
+  "ling": {
+    "adopted": false,
+    "reason": "Owner stopped after one matched pair and an extra async pass; matched pair +1.40%/+1.47%. Remaining speed and quality checks were not run."
+  },
+  "status": "stopped-by-owner",
+  "automatic_resume": false
+}

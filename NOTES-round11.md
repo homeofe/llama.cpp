@@ -1,5 +1,8 @@
 # Round 11: asynchronous cache uploads and Ling at 32K
 
+**Stopped at the owner's request, 2026-10-18 12:34:45 UTC (14:34 Berlin).** The owner needs the machine/conversation for work and judged the long tests disproportionate to the small observed gain. No automatic continuation is scheduled. CPU/GPU measurement processes have stopped; the GPU lease is released. Original production sources and the original worktree CUDA runtime were restored and verified. The live gateway was not changed. Tasks 2-4 below are incomplete as detailed at the end; this is a saved intermediate result, not a completed round.
+
+
 Started 2026-10-18 11:23 UTC. Four-hour deadline: 15:24 UTC (17:24 Europe/Berlin). Branch `l5-cache`; original source/runtime from round 10. No live gateway changes, installation, push, system changes or other-worktree edits. Sudo profiling is authorized if needed. The handoff's foreign-process CPU gate overrides the generic load-average gate in the measurement skill.
 
 ## Predeclared measurement and adoption
@@ -67,3 +70,26 @@ Three interleaved rounds (control, async, async, control, control, async), 48 ac
 | english | 40.233 | 40.980 | +1.86% | +2.12% / +1.95% / +1.89% | 12/12 |
 
 All 24 paired outputs and draft counts match. The modest gain is repeatable but **does not meet the predeclared +3% gate for Qwen**. No Qwen gateway entry is justified by this result. Prompt-level medians/ranges, individual hashes and CPU/VRAM observations are in `task-logs/round11/qwen-e2e/summary.json`; raw accepted and rejected records are retained. Quality checks still run as required for the candidate implementation.
+
+
+## Ling intermediate result and stop decision
+
+One matched control/async round completed, followed by one additional complete async pass. The user stopped the series before the second control and the third paired round. The matched first round gives code **66.274 -> 67.204 tok/s (+1.40%)** and English **51.698 -> 52.456 tok/s (+1.47%)**. All eight paired text hashes and draft counts match. The extra async pass is archived but has no matching round-2 control; its values must not be pooled into a claim of a three-round speedup. `task-logs/round11/ling-e2e/summary.json` is explicitly incomplete.
+
+The cost is dominated by fresh model loading (roughly three minutes for Ling in these runs), plus eight prompts and quiet windows per pass. Full repeats should follow a promising short screen. Given these small early gains and the owner's need to work, no remaining long tests were launched. A future performance iteration should begin with a tightly capped 5-10 minute screen and a stated material upside before reserving a long validation window.
+
+## What remains unexecuted
+
+- Remaining Ling interleaved pairs; the async implementation is **not adopted** for either model. Qwen fails the speed gate; Ling is incomplete and its observed gain is also below the gate.
+- Fresh cache-off bit-exact probes and test-de perplexity for the CUDA candidate. Host ordering, mutation cuts and ASan/UBSan passed, but do not replace these pending model checks.
+- The prepared CUDA timeline captures were not executed; no actual copy/compute overlap percentage is claimed.
+- Ling 32K VRAM/cache fitting, the eight-prompt 8K/32K comparison and fresh hard/agent panels were not run. The existing round-10 profile therefore remains the tested Ling result.
+- `gateway-candidate.json` was not emitted because its required 32K and panel evidence does not exist. A generator is prepared; no live settings or runtime were installed.
+
+The isolated candidate binaries, reproducible source patch, host proof and completed/partial raw measurements remain under `task-logs/round11/`. The code patch is `two-stream.patch`, base `497f3fd1a5d53841113c5620a4fac83ecb164408`, tested candidate source commit `8ec4981476e647d46287dbd1024eade75a667acf`. It is experimental, defaults off and is not a production recommendation.
+
+## Restored state
+
+`task-logs/round11/stopped-state.json` verifies original CUDA-runtime hashes, original production source, restored CPU libllama, unchanged live settings/history, unchanged sysctls/governors, no GPU process and no GPU hold. No rebuild was started after the stop request. The CPU ordering-test executable remains an experimental local build artifact; its source was restored, so it must be rebuilt before being used as a current-source test.
+
+The sequence supervisor encountered a reentrant subprocess wait during SIGTERM after its measurement child had already exited. Only that owned idle supervisor PID was force-stopped; the model had already exited and released the GPU normally. There is no background continuation.

@@ -1,0 +1,23 @@
+{
+  "stopped_at_utc": "2026-10-18T12:36:14Z",
+  "reason": "Owner requested shorter tests and the machine/thread back for work.",
+  "restored_source_base": "497f3fd1a5d53841113c5620a4fac83ecb164408",
+  "restored_cuda_files": [
+    "libllama-common.so.0.7.0",
+    "libggml-base.so.0.27.0",
+    "libllama.so.0.7.0",
+    "libggml-cuda.so.0.27.0",
+    "libllama-server-impl.so",
+    "llama-server"
+  ],
+  "all_original_cuda_hashes_verified": true,
+  "cpu_libllama_restored": true,
+  "cpu_test_executable": "Experimental fixture remains in build-cpu; no rebuild was run after stopping.",
+  "gpu_hold": null,
+  "gpu_processes": "",
+  "live_settings_unchanged": true,
+  "live_history_unchanged": true,
+  "system_unchanged": true,
+  "governors_unchanged": true,
+  "source_unchanged": true
+}

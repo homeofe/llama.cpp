@@ -384,11 +384,6 @@ struct llama_moe_cache::impl {
         ggml_context_ptr ctx;
         ggml_backend_buffer_ptr buf;
         size_t buf_size = 0;
-        ggml_backend_ptr upload_backend;
-        ggml_backend_event_ptr readers_done;
-        ggml_backend_event_ptr uploads_done;
-        bool (*event_query)(ggml_backend_event_t) = nullptr;
-        bool uploading = false;
     };
 
     // layers of the same device with the same expert tensor layout share the banks and the LRU of a group
@@ -402,7 +397,6 @@ struct llama_moe_cache::impl {
         moe_cache_lru lru;
         llama_moe_cache_lfu lfu;
         std::vector<int32_t> slot_values; // immutable sources for async device map writes: -1, 0, ..., n_slots-1
-        std::vector<llama_moe_cache_lfu::fill> pending_uploads;
     };
 
     struct layer {
@@ -436,8 +430,6 @@ struct llama_moe_cache::impl {
     int32_t n_expert_used;
     bool hybrid;
     bool adaptive;
-    bool async_upload = false;
-    bool deferred_prefill = false;
     size_t admit = 8;
     size_t admit_prefill = 1024;
     size_t static_pct = 0;
@@ -782,9 +774,6 @@ struct llama_moe_cache::impl {
                     (unsigned long long) context_id, draft ? "draft" : "target", warm_prompt ? admit_prefill : 0, static_pct);
             }
         }
-        if (adaptive && !model.hparams.no_alloc && llama_moe_cache_env_size("GGML_MOE_HYBRID_ASYNC_UPLOAD", 0, 1)) {
-            init_async_upload();
-        }
         for (size_t id = 0; id < devices.size(); ++id) {
             const device & d = devices[id];
             if (d.host_bytes == 0) {
@@ -806,80 +795,7 @@ struct llama_moe_cache::impl {
     }
 
     ~impl() {
-        for (device & d : devices) {
-            if (d.upload_backend) {
-                // The owning context may already have destroyed its compute backends.
-                ggml_backend_synchronize(d.upload_backend.get());
-            }
-        }
         log_stats();
-    }
-
-    void init_async_upload() {
-        for (device & d : devices) {
-            if (!d.buf) {
-                continue;
-            }
-            const auto dev = ggml_backend_get_device(d.backend);
-            const auto reg = ggml_backend_dev_backend_reg(dev);
-            d.event_query = reg ? (bool (*)(ggml_backend_event_t)) ggml_backend_reg_get_proc_address(reg, "ggml_backend_event_query") : nullptr;
-            if (!d.event_query) {
-                LLAMA_LOG_WARN("llama_moe_cache: async upload unavailable: backend has no event query\n");
-                return;
-            }
-        }
-        for (const group & g : groups) {
-            if (!g.n_slots) {
-                continue;
-            }
-            const auto host_buft = ggml_backend_dev_host_buffer_type(ggml_backend_get_device(devices[g.id].backend));
-            for (int32_t il : g.layers) {
-                for (const auto * w : layers[il].experts) {
-                    const auto buffer = w->view_src ? w->view_src->buffer : w->buffer;
-                    if (!buffer || ggml_backend_buffer_get_type(buffer) != host_buft) {
-                        LLAMA_LOG_WARN("llama_moe_cache: async upload unavailable: expert source is not a pinned backend buffer\n");
-                        return;
-                    }
-                }
-            }
-        }
-        for (device & d : devices) {
-            if (!d.buf) {
-                continue;
-            }
-            const auto dev = ggml_backend_get_device(d.backend);
-            d.upload_backend.reset(ggml_backend_dev_init(dev, nullptr));
-            d.readers_done.reset(ggml_backend_event_new(dev));
-            d.uploads_done.reset(ggml_backend_event_new(dev));
-            if (!d.upload_backend || !d.readers_done || !d.uploads_done) {
-                throw std::runtime_error("failed to initialize MoE upload stream events");
-            }
-        }
-        async_upload = true;
-        LLAMA_LOG_WARN("llama_moe_cache: async upload enabled: separate stream, event-gated publication\n");
-    }
-
-    void publish_uploads() {
-        for (device & d : devices) {
-            if (!d.uploading || !d.event_query(d.uploads_done.get())) {
-                continue;
-            }
-            for (group & g : groups) {
-                if (&devices[g.id] != &d) {
-                    continue;
-                }
-                for (const auto & f : g.pending_uploads) {
-                    const int32_t il = f.key / g.lru.n_expert;
-                    const int32_t expert = f.key % g.lru.n_expert;
-                    g.lru.key_of[f.slot] = f.key;
-                    g.lru.slot_map[il][expert] = f.slot;
-                    ggml_backend_tensor_set_async(d.backend, layers[il].slot_map_device, &g.slot_values[f.slot + 1], expert*sizeof(int32_t), sizeof(int32_t));
-                    upload_bytes += sizeof(int32_t);
-                }
-                g.pending_uploads.clear();
-            }
-            d.uploading = false;
-        }
     }
 
     void load_profile(const char * path) {
@@ -1047,15 +963,11 @@ struct llama_moe_cache::impl {
 
     void begin_graph(int64_t n_tokens, const int8_t * output, const int32_t * positions,
                      const int32_t * n_seq_id, int32_t * const * seq_id, bool prefill, bool prefill_end) {
-        if (async_upload) {
-            publish_uploads();
-        }
         if (!adaptive && !trace.is_open()) {
             return;
         }
         if ((warm_prompt || trace.is_open()) && positions && n_tokens > 0 && positions[0] == 0) {
             prompt_pending = false;
-            deferred_prefill = false;
             for (group & g : groups) {
                 g.lfu.clear_prompt();
             }
@@ -1159,19 +1071,11 @@ struct llama_moe_cache::impl {
     }
 
     void end_graph(bool success) {
-        if (async_upload) {
-            for (device & d : devices) {
-                if (d.upload_backend) {
-                    ggml_backend_event_record(d.readers_done.get(), d.backend);
-                }
-            }
-        }
         if ((!adaptive && !trace.is_open()) || graph_tokens == 0) {
             return;
         }
         if (!success) {
             prompt_pending = false;
-            deferred_prefill = false;
             for (group & g : groups) {
                 g.lfu.clear_prompt();
             }
@@ -1203,19 +1107,13 @@ struct llama_moe_cache::impl {
                 for (int64_t e = 0; e < l.n_selected; ++e) {
                     const int32_t expert = l.routes[row*l.n_selected + e];
                     GGML_ASSERT(expert >= 0 && expert < g.lru.n_expert);
-                    const bool visible = !async_upload || g.lru.slot_map[il][expert] >= 0;
-                    g.lfu.observe(il*g.lru.n_expert + expert, l.use_cache && visible, warm_prompt && graph_prefill);
+                    g.lfu.observe(il*g.lru.n_expert + expert, l.use_cache, warm_prompt && graph_prefill);
                 }
             }
         }
         tokens += graph_tokens;
-        const bool burst = warm_prompt && (graph_prefill_end || deferred_prefill);
-        if (async_upload && std::any_of(devices.begin(), devices.end(), [](const device & d) { return d.uploading; })) {
-            deferred_prefill = burst;
-            return;
-        }
-        deferred_prefill = false;
-        size_t remaining = burst ? admit_prefill : (warm_prompt && graph_prefill ? 0 : admit);
+        const bool burst = warm_prompt && graph_prefill_end;
+        size_t remaining = warm_prompt && graph_prefill ? (burst ? admit_prefill : 0) : admit;
         const int64_t start_us = burst ? ggml_time_us() : 0;
         const uint64_t uploads_before = uploads;
         const uint64_t bytes_before = upload_bytes;
@@ -1238,24 +1136,15 @@ struct llama_moe_cache::impl {
             const auto admitted = byte_value ? std::move(plans[ig]) : g.lfu.plan(remaining, burst);
             remaining -= admitted.size();
             const auto backend = devices[g.id].backend;
-            if (async_upload && !admitted.empty()) {
-                device & d = devices[g.id];
-                if (!d.uploading) {
-                    // This wait captures the current graph's event, including all earlier readers.
-                    ggml_backend_event_wait(d.upload_backend.get(), d.readers_done.get());
-                    d.uploading = true;
-                }
-                g.pending_uploads = admitted;
-            }
             for (const auto & f : admitted) {
                 const int32_t il = f.key / g.lru.n_expert;
                 const int32_t expert = f.key % g.lru.n_expert;
                 const layer & l = layers[il];
-                // CUDA joins its graph worker streams before recording readers_done.
-                const auto upload_backend = async_upload ? devices[g.id].upload_backend.get() : backend;
+                // All graph reads are already submitted. CUDA joins its worker streams to this stream before returning.
+                // These writes and the next graph's reads use that same stream; no slot can change under a reader.
                 for (size_t ip = 0; ip < l.experts.size(); ++ip) {
                     const ggml_tensor * w = l.experts[ip];
-                    ggml_backend_tensor_set_async(upload_backend, g.banks[ip], (const char *) w->data + expert*w->nb[2], f.slot*w->nb[2], w->nb[2]);
+                    ggml_backend_tensor_set_async(backend, g.banks[ip], (const char *) w->data + expert*w->nb[2], f.slot*w->nb[2], w->nb[2]);
                     upload_bytes += w->nb[2];
                 }
                 if (f.evicted >= 0) {
@@ -1265,22 +1154,12 @@ struct llama_moe_cache::impl {
                     ggml_backend_tensor_set_async(backend, layers[old_layer].slot_map_device, &g.slot_values[0], old_expert*sizeof(int32_t), sizeof(int32_t));
                     upload_bytes += sizeof(int32_t);
                 }
-                ++uploads;
-                if (async_upload) {
-                    continue; // Later graphs see a miss until begin_graph observes copy completion.
-                }
                 g.lru.key_of[f.slot] = f.key;
                 g.lru.slot_map[il][expert] = f.slot;
                 // The upload sources are immutable until context teardown, which synchronizes all backends.
                 ggml_backend_tensor_set_async(backend, l.slot_map_device, &g.slot_values[f.slot + 1], expert*sizeof(int32_t), sizeof(int32_t));
                 upload_bytes += sizeof(int32_t);
-            }
-        }
-        if (async_upload) {
-            for (device & d : devices) {
-                if (d.uploading) {
-                    ggml_backend_event_record(d.uploads_done.get(), d.upload_backend.get());
-                }
+                ++uploads;
             }
         }
         next_group = (next_group + 1) % groups.size();
