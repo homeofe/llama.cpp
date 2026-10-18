@@ -39,12 +39,15 @@ def main():
     for row in result['summary']:
         grouped.setdefault(row['config'], {})[row['category']] = row['tok_s']
     control = grouped.pop('ling-cache-mtp3')
-    # Favor the weaker category's relative gain; retain an independent code-speed candidate.
-    balanced = max(grouped, key=lambda n: min(grouped[n][c]/control[c] for c in ['code', 'english']))
-    code = max((n for n in grouped if n != balanced), key=lambda n: grouped[n]['code'])
+    eligible = [n for n in grouped if grouped[n]['code'] > control['code'] and grouped[n]['english'] >= control['english']]
+    ranked = sorted(eligible, key=lambda n: min(grouped[n][c]/control[c] for c in ['code', 'english']), reverse=True)
+    for name in sorted(grouped, key=lambda n: grouped[n]['code'], reverse=True):
+        if name not in ranked:
+            ranked.append(name)
+    balanced, code = ranked[:2]
     utc = time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime())
-    selection = dict(rule='Maximize minimum of code/control and English/control; second candidate is highest code speed among the rest.',
-                     control='ling-cache-mtp3', balanced=balanced, code=code, selected=[balanced, code],
+    selection = dict(rule='Prefer candidates beating code and tying/beating English; rank by minimum category/control ratio. Fill any remaining slot by code speed.',
+                     control='ling-cache-mtp3', balanced=balanced, second=code, selected=[balanced, code],
                      screening_only=True, utc=utc)
     (OUT / 'selection.json').write_text(json.dumps(selection, indent=2) + '\n')
     print(json.dumps(selection), flush=True)
