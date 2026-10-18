@@ -85,7 +85,7 @@
   },
   "qwen-pool-native": {
     "cmd": [
-      "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/llama-server",
+      "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/pool-candidate-bin/llama-server",
       "-m",
       "/opt/llm-gateway/models/Qwen3.8-Flash-Next/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf",
       "--host",
@@ -165,7 +165,7 @@
       "GGML_MOE_HYBRID_DRAFT_MIB": "512",
       "GOMP_SPINCOUNT": "300000",
       "LD_PRELOAD": "/opt/llm-gateway/data/build/llama-l5/build-cpu-native/bin/libggml-cpu.so.0.27.0",
-      "LD_LIBRARY_PATH": "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin"
+      "LD_LIBRARY_PATH": "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/pool-candidate-bin"
     }
   }
 }

@@ -1,0 +1,10 @@
+[  0%] Built target llama-common-base
+[  0%] Built target cpp-httplib
+[  4%] Built target ggml-base
+[ 10%] Built target ggml-cpu
+[ 62%] Built target ggml-cuda
+[ 62%] Built target ggml
+[ 79%] Built target llama
+[ 79%] Building CXX object common/CMakeFiles/llama-common.dir/speculative.cpp.o
+[ 79%] Linking CXX shared library ../bin/libllama-common.so
+[100%] Built target llama-common

@@ -6,4 +6,5 @@
 *.nsys-rep
 *.sqlite
 pool-baseline-bin/
+pool-candidate-bin/
 pool-guard.so

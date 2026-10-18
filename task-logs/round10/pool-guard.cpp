@@ -43,7 +43,7 @@ static void free_pool(ggml_threadpool * pool) {
             if (entry.second.first == pool || entry.second.second == pool) {
                 std::fprintf(stderr, "R10_POOL violation pool=%p live_context=%p\n", (void *) pool, (void *) entry.first);
                 std::fflush(stderr);
-                std::abort();
+                std::_Exit(86);
             }
         }
         std::fprintf(stderr, "R10_POOL free %p\n", (void *) pool);

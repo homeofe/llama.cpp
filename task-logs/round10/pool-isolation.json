@@ -1,0 +1,8 @@
+{
+  "replaced_files": [
+    "libllama-common.so.0.7.0"
+  ],
+  "common_sha256": "da33f83d74e94fb7c660cbd9547e8edaf0ffb8fa0e1ddd61a985b4c6190e2913",
+  "cpu_preload": "/opt/llm-gateway/data/build/llama-l5/build-cpu-native/bin/libggml-cpu.so.0.27.0",
+  "cpu_sha256": "32a87658688e5daa2dce82554dada6e5ec31b3fe6d5aafa1dcfa0d2eb363186c"
+}

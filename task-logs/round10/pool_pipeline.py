@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import re
 import signal
+import shutil
 import subprocess
 import time
 
@@ -25,6 +26,25 @@ def main():
     process = None
     results = []
     try:
+        baseline = OUT / 'pool-baseline-bin'
+        candidate = OUT / 'pool-candidate-bin'
+        shutil.copytree(baseline, candidate, symlinks=True)
+        common = 'libllama-common.so.0.7.0'
+        shutil.copy2(ROOT / 'build-cuda/bin' / common, candidate / common)
+        differences = [p.name for p in candidate.iterdir() if p.is_file() and not p.is_symlink()
+                       and hashlib.sha256(p.read_bytes()).digest() != hashlib.sha256((baseline / p.name).read_bytes()).digest()]
+        assert differences == [common]
+        configs = json.loads((OUT / 'pool-configs.json').read_text())
+        configs['qwen-pool-native']['cmd'][0] = str(candidate / 'llama-server')
+        configs['qwen-pool-native']['env']['LD_LIBRARY_PATH'] = str(candidate)
+        (OUT / 'pool-configs.json').write_text(json.dumps(configs, indent=2) + '\n')
+        (OUT / 'pool-isolation.json').write_text(json.dumps(dict(replaced_files=differences,
+            common_sha256=hashlib.sha256((candidate / common).read_bytes()).hexdigest(),
+            cpu_preload=str(library), cpu_sha256=hashlib.sha256(library.read_bytes()).hexdigest()), indent=2) + '\n')
+        with (OUT / 'pool-restored-runtime-driver.log').open('w') as stream:
+            process = subprocess.Popen(['python3', '-u', str(OUT / 'pool_runtime.py'), 'qwen', 'restored'],
+                                       cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT)
+        assert process.wait() == 0
         for index, flags in enumerate(jobs):
             command = ['python3', '-u', str(OUT / 'quality.py'), 'qwen', *flags, '--cpu-library', str(library),
                        '--tag', 'nativefixed', '--attempts', '2']

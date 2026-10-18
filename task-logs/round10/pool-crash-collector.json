@@ -1,0 +1,7 @@
+{
+  "path": "/var/crash/_opt_llm-gateway_data_build_llama-l5_build-cuda_bin_llama-server.1001.crash",
+  "bytes": 2567153652,
+  "mtime_epoch": 1792318191.8636315,
+  "created_by": "Existing OS apport core collector after intentional SIGABRT mutation",
+  "action": "Left untouched outside handoff write scope; no system crash settings changed; controlled-exit retry avoids another core"
+}

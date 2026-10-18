@@ -1,0 +1,41 @@
+-- llama.cpp version: 0.7.0-dev
+CMAKE_BUILD_TYPE=Release
+-- Warning: ccache not found - consider installing it for faster compilation or disable this warning with GGML_CCACHE=OFF
+-- CMAKE_SYSTEM_PROCESSOR: x86_64
+-- GGML_SYSTEM_ARCH: x86
+-- Including CPU backend
+-- x86 detected
+-- Adding CPU backend variant ggml-cpu: -march=native 
+-- CUDA Toolkit found
+-- Using CMAKE_CUDA_ARCHITECTURES=75 CMAKE_CUDA_ARCHITECTURES_NATIVE=No CUDA devices found.-real
+-- FlashAttention K-V type combinations: f16-f16;q4_0-q4_0;q8_0-q8_0;bf16-bf16
+-- Could NOT find NCCL (missing: NCCL_LIBRARY NCCL_INCLUDE_DIR) 
+-- Warning: NCCL not found, performance for multiple CUDA GPUs will be suboptimal
+-- CUDA host compiler is GNU 12.4.0
+-- Including CUDA backend
+-- ggml version: 0.27.0
+-- ggml commit:  eb6b8dc90
+-- OpenSSL found: 3.0.13
+-- Generating embedded license file for target: llama-app
+-- Configuring done (0.5s)
+-- Generating done (0.3s)
+-- Build files have been written to: /opt/llm-gateway/data/build/llama-l5/build-cuda
+[  0%] Building CXX object common/CMakeFiles/llama-common-base.dir/build-info.cpp.o
+[  0%] Built target cpp-httplib
+[  2%] Building C object ggml/src/CMakeFiles/ggml-base.dir/ggml.c.o
+[  2%] Linking CXX static library libllama-common-base.a
+[  2%] Built target llama-common-base
+[  2%] Linking CXX shared library ../../bin/libggml-base.so
+[  4%] Built target ggml-base
+[  4%] Linking CXX shared library ../../bin/libggml-cpu.so
+[ 10%] Built target ggml-cpu
+[ 10%] Linking CUDA shared library ../../../bin/libggml-cuda.so
+[ 62%] Built target ggml-cuda
+[ 62%] Linking CXX shared library ../../bin/libggml.so
+[ 62%] Built target ggml
+[ 62%] Building CXX object src/CMakeFiles/llama.dir/llama.cpp.o
+[ 62%] Linking CXX shared library ../bin/libllama.so
+[ 79%] Built target llama
+[ 79%] Building CXX object common/CMakeFiles/llama-common.dir/speculative.cpp.o
+[ 79%] Linking CXX shared library ../bin/libllama-common.so
+[100%] Built target llama-common
