@@ -1,0 +1,141 @@
+0.00.122.787 I srv  llama_server: initializing ...
+0.00.122.801 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.122.904 I srv  init_listene: The UI is disabled
+0.00.122.906 I srv  init_listene: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
+0.00.122.987 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.126.825 I srv    load_model: loading model '/opt/llm-gateway/models/Ling-3.0-flash-GGUF/Ling-3.0-flash-IQ4_XS/Ling-3.0-flash-IQ4_XS-00001-of-00002.gguf'
+0.00.862.100 E llama_init_from_model: failed to initialize the context: dflash requires ctx_other to be set (this warning is normal during memory fitting)
+0.00.880.897 W operator(): failed to measure the memory of the extra model, fitting without it: failed to create llama_context from model
+0.01.057.426 W load: special_eos_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.01.124.427 W model has unused tensor blk.42.attn_norm.weight (size = 10240 bytes) -- ignoring
+0.01.124.436 W model has unused tensor blk.42.attn_q.weight (size = 8847360 bytes) -- ignoring
+0.01.124.441 W model has unused tensor blk.42.attn_kv_a_mqa.weight (size = 829440 bytes) -- ignoring
+0.01.124.446 W model has unused tensor blk.42.attn_kv_a_norm.weight (size = 2048 bytes) -- ignoring
+0.01.124.450 W model has unused tensor blk.42.attn_k_b.weight (size = 1179648 bytes) -- ignoring
+0.01.124.455 W model has unused tensor blk.42.attn_v_b.weight (size = 1179648 bytes) -- ignoring
+0.01.124.459 W model has unused tensor blk.42.attn_gate.weight (size = 46080 bytes) -- ignoring
+0.01.124.464 W model has unused tensor blk.42.attn_output.weight (size = 5898240 bytes) -- ignoring
+0.01.124.469 W model has unused tensor blk.42.ffn_norm.weight (size = 10240 bytes) -- ignoring
+0.01.124.474 W model has unused tensor blk.42.ffn_gate_inp.weight (size = 5242880 bytes) -- ignoring
+0.01.124.480 W model has unused tensor blk.42.exp_probs_b.bias (size = 2048 bytes) -- ignoring
+0.01.124.485 W model has unused tensor blk.42.ffn_gate_exps.weight (size = 566231040 bytes) -- ignoring
+0.01.124.491 W model has unused tensor blk.42.ffn_up_exps.weight (size = 566231040 bytes) -- ignoring
+0.01.124.496 W model has unused tensor blk.42.ffn_down_exps.weight (size = 566231040 bytes) -- ignoring
+0.01.124.502 W model has unused tensor blk.42.ffn_gate_shexp.weight (size = 1105920 bytes) -- ignoring
+0.01.124.507 W model has unused tensor blk.42.ffn_up_shexp.weight (size = 1105920 bytes) -- ignoring
+0.01.124.513 W model has unused tensor blk.42.ffn_down_shexp.weight (size = 1105920 bytes) -- ignoring
+0.01.124.519 W model has unused tensor blk.42.nextn.eh_proj.weight (size = 7372800 bytes) -- ignoring
+0.01.124.525 W model has unused tensor blk.42.nextn.enorm.weight (size = 10240 bytes) -- ignoring
+0.01.124.531 W model has unused tensor blk.42.nextn.hnorm.weight (size = 10240 bytes) -- ignoring
+0.01.124.537 W model has unused tensor blk.42.layer_output_norm.weight (size = 10240 bytes) -- ignoring
+2.40.909.358 W llama_moe_cache: adaptive LFU: 1540 slots, admit <= 32 experts/ubatch, decay every 128 tokens
+2.40.909.363 W llama_moe_cache: context = 659618407996 (target), prefill 1024, static 0%
+2.40.951.772 I cmn          init: llama threadpool init, n_threads = 24
+2.41.079.413 I common_speculative_init_result: loading draft model '/opt/llm-gateway/models/Ling-3.0-flash-GGUF/dspark/Ling-3.0-flash-DSpark-Q8_0.gguf'
+2.41.277.244 W load: special_eos_id is not in special_eog_ids - the tokenizer config may be incorrect
+2.43.549.734 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 8192, kv_unified = 'false'
+2.43.549.763 I common_speculative_impl_draft_dflash: adding speculative implementation 'draft-dspark'
+2.43.549.764 I common_speculative_impl_draft_dflash: - n_max=3, n_min=0, p_min=0.00
+2.43.549.765 I common_speculative_impl_draft_dflash: - block_size=8, mask_token_id=156892, n_extract=5, sample_from_anchor=true
+2.43.568.299 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+2.43.568.342 I srv  llama_server: model loaded
+2.43.568.345 I srv  llama_server: listening on http://127.0.0.1:8799
+2.44.484.031 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 0, t_last = -1
+2.44.485.251 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+2.45.294.548 W llama_moe_cache: prefill burst: context = 659618407996, uploads = 1024, MiB = 3060.00, enqueue = 175.708 ms (device completion not timed)
+2.45.674.483 I slot print_timing: id  0 | task 0 | prompt eval time =     898.59 ms /    27 tokens (   33.28 ms per token,    30.05 tokens per second)
+2.45.674.489 I slot print_timing: id  0 | task 0 |        eval time =     290.59 ms /     8 tokens (   41.51 ms per token,    24.09 tokens per second)
+2.45.674.490 I slot print_timing: id  0 | task 0 |       total time =    1189.18 ms /    35 tokens
+2.45.674.494 I slot print_timing: id  0 | task 0 |    graphs reused =          2
+2.45.674.494 I slot print_timing: id  0 | task 0 |   graph reallocs =          1    /     0        (same size) / (changed size)
+2.45.674.498 I slot print_timing: id  0 | task 0 | draft acceptance = 0.44444 (    4 accepted /     9 generated), mean len =  2.33
+2.45.674.543 I slot      release: id  0 | task 0 | stop processing: n_tokens = 34, truncated = 0
+2.50.703.327 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.111 (> 0.100 thold), f_keep = 0.353
+2.50.849.084 I slot launch_slot_: id  0 | task 7 | processing task, is_child = 0
+2.51.815.488 W llama_moe_cache: prefill burst: context = 659618407996, uploads = 1024, MiB = 3060.01, enqueue = 177.031 ms (device completion not timed)
+2.54.704.659 I slot print_timing: id  0 | task 7 | prompt eval time =    1055.36 ms /   100 tokens (   10.55 ms per token,    94.75 tokens per second)
+2.54.704.666 I slot print_timing: id  0 | task 7 |        eval time =    2800.17 ms /   186 tokens (   15.14 ms per token,    66.07 tokens per second)
+2.54.704.667 I slot print_timing: id  0 | task 7 |       total time =    3855.53 ms /   286 tokens
+2.54.704.668 I slot print_timing: id  0 | task 7 |    graphs reused =         48
+2.54.704.668 I slot print_timing: id  0 | task 7 |   graph reallocs =          3    /     0        (same size) / (changed size)
+2.54.704.672 I slot print_timing: id  0 | task 7 | draft acceptance = 0.95833 (  138 accepted /   144 generated), mean len =  3.88
+2.54.704.716 I slot      release: id  0 | task 7 | stop processing: n_tokens = 294, truncated = 0
+2.59.785.724 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.195 (> 0.100 thold), f_keep = 0.054
+2.59.943.261 I slot launch_slot_: id  0 | task 58 | processing task, is_child = 0
+3.00.781.510 W llama_moe_cache: prefill burst: context = 659618407996, uploads = 1024, MiB = 3060.01, enqueue = 176.869 ms (device completion not timed)
+3.02.641.245 I slot print_timing: id  0 | task 58 | prompt eval time =     926.62 ms /    74 tokens (   12.52 ms per token,    79.86 tokens per second)
+3.02.641.252 I slot print_timing: id  0 | task 58 |        eval time =    1771.32 ms /   116 tokens (   15.40 ms per token,    64.92 tokens per second)
+3.02.641.253 I slot print_timing: id  0 | task 58 |       total time =    2697.94 ms /   190 tokens
+3.02.641.254 I slot print_timing: id  0 | task 58 |    graphs reused =         77
+3.02.641.254 I slot print_timing: id  0 | task 58 |   graph reallocs =          4    /     0        (same size) / (changed size)
+3.02.641.258 I slot print_timing: id  0 | task 58 | draft acceptance = 0.94444 (   85 accepted /    90 generated), mean len =  3.83
+3.02.641.295 I slot      release: id  0 | task 58 | stop processing: n_tokens = 197, truncated = 0
+3.07.713.948 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.153 (> 0.100 thold), f_keep = 0.066
+3.07.866.396 I slot launch_slot_: id  0 | task 91 | processing task, is_child = 0
+3.08.700.346 W llama_moe_cache: prefill burst: context = 659618407996, uploads = 977, MiB = 2919.56, enqueue = 165.048 ms (device completion not timed)
+3.11.789.425 I slot print_timing: id  0 | task 91 | n_gen =    201, tg =  66.67 t/s, tg_3s =  67.00 t/s
+3.12.619.623 I slot print_timing: id  0 | task 91 | prompt eval time =     922.93 ms /    77 tokens (   11.99 ms per token,    83.43 tokens per second)
+3.12.619.629 I slot print_timing: id  0 | task 91 |        eval time =    3830.25 ms /   256 tokens (   15.02 ms per token,    66.58 tokens per second)
+3.12.619.630 I slot print_timing: id  0 | task 91 |       total time =    4753.18 ms /   333 tokens
+3.12.619.631 I slot print_timing: id  0 | task 91 |    graphs reused =        140
+3.12.619.632 I slot print_timing: id  0 | task 91 |   graph reallocs =          6    /     0        (same size) / (changed size)
+3.12.619.635 I slot print_timing: id  0 | task 91 | draft acceptance = 0.96429 (  189 accepted /   196 generated), mean len =  3.86
+3.12.619.670 I slot      release: id  0 | task 91 | stop processing: n_tokens = 340, truncated = 0
+3.17.693.548 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 340, t_last = 659650128998
+3.17.851.185 I slot launch_slot_: id  0 | task 160 | processing task, is_child = 0
+3.19.119.242 W llama_moe_cache: prefill burst: context = 659618407996, uploads = 1024, MiB = 3060.01, enqueue = 176.969 ms (device completion not timed)
+3.20.737.632 I slot print_timing: id  0 | task 160 | prompt eval time =    1356.74 ms /   153 tokens (    8.87 ms per token,   112.77 tokens per second)
+3.20.737.638 I slot print_timing: id  0 | task 160 |        eval time =    1529.66 ms /    98 tokens (   15.77 ms per token,    63.41 tokens per second)
+3.20.737.639 I slot print_timing: id  0 | task 160 |       total time =    2886.40 ms /   251 tokens
+3.20.737.640 I slot print_timing: id  0 | task 160 |    graphs reused =        163
+3.20.737.641 I slot print_timing: id  0 | task 160 |   graph reallocs =          8    /     0        (same size) / (changed size)
+3.20.737.644 I slot print_timing: id  0 | task 160 | draft acceptance = 0.96000 (   72 accepted /    75 generated), mean len =  3.88
+3.20.737.693 I slot      release: id  0 | task 160 | stop processing: n_tokens = 258, truncated = 0
+3.25.803.696 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.267 (> 0.100 thold), f_keep = 0.047
+3.25.956.373 I slot launch_slot_: id  0 | task 188 | processing task, is_child = 0
+3.26.566.350 W llama_moe_cache: prefill burst: context = 659618407996, uploads = 1024, MiB = 3060.01, enqueue = 176.966 ms (device completion not timed)
+3.29.658.016 I slot print_timing: id  0 | task 188 | n_gen =    155, tg =  51.29 t/s, tg_3s =  51.62 t/s
+3.31.645.687 I slot print_timing: id  0 | task 188 | prompt eval time =     698.88 ms /    37 tokens (   18.89 ms per token,    52.94 tokens per second)
+3.31.645.694 I slot print_timing: id  0 | task 188 |        eval time =    4990.40 ms /   256 tokens (   19.57 ms per token,    51.10 tokens per second)
+3.31.645.695 I slot print_timing: id  0 | task 188 |       total time =    5689.28 ms /   293 tokens
+3.31.645.696 I slot print_timing: id  0 | task 188 |    graphs reused =        252
+3.31.645.696 I slot print_timing: id  0 | task 188 |   graph reallocs =         10    /     0        (same size) / (changed size)
+3.31.645.700 I slot print_timing: id  0 | task 188 | draft acceptance = 0.59707 (  163 accepted /   273 generated), mean len =  2.79
+3.31.645.731 I slot      release: id  0 | task 188 | stop processing: n_tokens = 300, truncated = 0
+3.36.706.868 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.273 (> 0.100 thold), f_keep = 0.040
+3.36.871.521 I slot launch_slot_: id  0 | task 283 | processing task, is_child = 0
+3.37.489.506 W llama_moe_cache: prefill burst: context = 659618407996, uploads = 1024, MiB = 3060.01, enqueue = 176.991 ms (device completion not timed)
+3.40.579.718 I slot print_timing: id  0 | task 283 | n_gen =    141, tg =  46.64 t/s, tg_3s =  46.98 t/s
+3.43.191.729 I slot print_timing: id  0 | task 283 | prompt eval time =     706.59 ms /    36 tokens (   19.63 ms per token,    50.95 tokens per second)
+3.43.191.735 I slot print_timing: id  0 | task 283 |        eval time =    5613.57 ms /   256 tokens (   22.01 ms per token,    45.43 tokens per second)
+3.43.191.736 I slot print_timing: id  0 | task 283 |       total time =    6320.16 ms /   292 tokens
+3.43.191.737 I slot print_timing: id  0 | task 283 |    graphs reused =        355
+3.43.191.738 I slot print_timing: id  0 | task 283 |   graph reallocs =         12    /     0        (same size) / (changed size)
+3.43.191.742 I slot print_timing: id  0 | task 283 | draft acceptance = 0.47003 (  149 accepted /   317 generated), mean len =  2.41
+3.43.191.772 I slot      release: id  0 | task 283 | stop processing: n_tokens = 299, truncated = 0
+3.48.258.664 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.255 (> 0.100 thold), f_keep = 0.040
+3.48.418.468 I slot launch_slot_: id  0 | task 392 | processing task, is_child = 0
+3.49.038.345 W llama_moe_cache: prefill burst: context = 659618407996, uploads = 1024, MiB = 3060.01, enqueue = 176.881 ms (device completion not timed)
+3.52.136.312 I slot print_timing: id  0 | task 392 | n_gen =    173, tg =  57.15 t/s, tg_3s =  57.49 t/s
+3.53.697.800 I slot print_timing: id  0 | task 392 | prompt eval time =     708.41 ms /    39 tokens (   18.16 ms per token,    55.05 tokens per second)
+3.53.697.808 I slot print_timing: id  0 | task 392 |        eval time =    4570.88 ms /   256 tokens (   17.93 ms per token,    55.79 tokens per second)
+3.53.697.809 I slot print_timing: id  0 | task 392 |       total time =    5279.29 ms /   295 tokens
+3.53.697.810 I slot print_timing: id  0 | task 392 |    graphs reused =        440
+3.53.697.810 I slot print_timing: id  0 | task 392 |   graph reallocs =         14    /     0        (same size) / (changed size)
+3.53.697.814 I slot print_timing: id  0 | task 392 | draft acceptance = 0.63498 (  167 accepted /   263 generated), mean len =  2.90
+3.53.697.845 I slot      release: id  0 | task 392 | stop processing: n_tokens = 302, truncated = 0
+3.58.765.227 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.267 (> 0.100 thold), f_keep = 0.040
+3.58.923.108 I slot launch_slot_: id  0 | task 483 | processing task, is_child = 0
+3.59.533.977 W llama_moe_cache: prefill burst: context = 659618407996, uploads = 1024, MiB = 3060.01, enqueue = 176.938 ms (device completion not timed)
+4.02.634.693 I slot print_timing: id  0 | task 483 | n_gen =    150, tg =  49.47 t/s, tg_3s =  49.80 t/s
+4.04.502.654 I slot print_timing: id  0 | task 483 | prompt eval time =     699.73 ms /    37 tokens (   18.91 ms per token,    52.88 tokens per second)
+4.04.502.660 I slot print_timing: id  0 | task 483 |        eval time =    4879.76 ms /   256 tokens (   19.14 ms per token,    52.26 tokens per second)
+4.04.502.661 I slot print_timing: id  0 | task 483 |       total time =    5579.49 ms /   293 tokens
+4.04.502.662 I slot print_timing: id  0 | task 483 |    graphs reused =        526
+4.04.502.662 I slot print_timing: id  0 | task 483 |   graph reallocs =         16    /     0        (same size) / (changed size)
+4.04.502.667 I slot print_timing: id  0 | task 483 | draft acceptance = 0.62406 (  166 accepted /   266 generated), mean len =  2.87
+4.04.502.702 I slot      release: id  0 | task 483 | stop processing: n_tokens = 300, truncated = 0
+4.04.542.305 I srv    operator(): operator(): cleaning up before exit...
+4.04.545.003 W ~llama_context:  CUDA_Host compute buffer size of   1.5631 MiB, does not match expectation of   0.8132 MiB
+4.04.719.687 W llama_moe_cache: context = 659618407996 (target) statistics follow
+4.04.719.699 W llama_moe_cache: adaptive: tokens = 2762, hits = 385184, misses = 494080, hit rate = 43.81%, uploads = 26411, uploaded = 78923.69 MiB, hits/token = 139.46, misses/token = 178.88, uploads/token = 9.562, MiB/token = 28.575

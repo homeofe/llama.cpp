@@ -34,7 +34,8 @@ def main():
     else:
         command = ['sudo', '-n', 'env', 'TMPDIR=' + str(out / 'tmp'), 'XDG_CONFIG_HOME=' + str(out / 'config'),
                    'XDG_CACHE_HOME=' + str(out / 'cache'), 'nsys', 'profile', '--trace=cuda,nvtx,osrt',
-                   '--sample=process-tree', '--cpuctxsw=process-tree', '--backtrace=dwarf', '--sampling-period=9140000',
+                   '--sample=process-tree', '--cpuctxsw=process-tree', '--backtrace=dwarf',
+                   '--sampling-period=2284683', '--samples-per-backtrace=1',
                    '--capture-range=nvtx', '--nvtx-capture=round10', '--capture-range-end=stop',
                    '--kill=none', '--force-overwrite=true', '--export=sqlite', '-o', str(out / 'trace'),
                    'setpriv', '--reuid=' + str(os.getuid()), '--regid=' + str(os.getgid()), '--init-groups'] + target
