@@ -1,0 +1,283 @@
+{
+  "request": {
+    "kind": "request_pending",
+    "label": "ling-cache-mtp3-r2-code-bugfix",
+    "config": "ling-cache-mtp3",
+    "round": 2,
+    "prompt": "code-bugfix",
+    "waited_s": 5,
+    "pre_busy_cores": 0.84,
+    "gate": "foreign",
+    "wall_s": 3.602201461791992,
+    "foreign_cores": 1.085447341430728,
+    "vram_mib": "9938",
+    "accepted": false,
+    "tokens": 98,
+    "pieces": 96,
+    "decode_tok_s": 50.532038267713524,
+    "ttft_s": 1.6814849376678467,
+    "server_timings": {
+      "predicted_per_second": 50.53178188607531,
+      "draft_n": 90,
+      "draft_n_accepted": 67,
+      "predicted_n": 98
+    },
+    "text_head": "```python\ndef binary_search(xs, target):\n    lo, hi = 0, len(xs) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if xs[mid] == target:\n            ",
+    "engine_cpu_s": 68.8,
+    "engine_busy_cores": 19.103534872324555,
+    "engine_cpu_s_per_token": 0.7020408163265306,
+    "text_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+    "mean_accepted_length_including_bonus": 3.23,
+    "epoch": 1792312522.9,
+    "utc": "2026-10-18 08:35:22"
+  },
+  "observation_seconds": 3.1036659630481154,
+  "mean_cores": [
+    {
+      "name": "llama-server",
+      "pid": 34442,
+      "cores": 17.289231714646387
+    },
+    {
+      "name": "kcompactd0",
+      "pid": 322,
+      "cores": 0.8377190171092175
+    },
+    {
+      "name": "codex",
+      "pid": 3908179,
+      "cores": 0.06443992439301673
+    },
+    {
+      "name": "htop",
+      "pid": 3473089,
+      "cores": 0.06443992439301673
+    },
+    {
+      "name": "python3",
+      "pid": 31465,
+      "cores": 0.03221996219650836
+    },
+    {
+      "name": "kswapd0",
+      "pid": 353,
+      "cores": 0.01933197731790502
+    },
+    {
+      "name": "MainThread",
+      "pid": 1888,
+      "cores": 0.01610998109825418
+    },
+    {
+      "name": "python3",
+      "pid": 17759,
+      "cores": 0.00966598865895251
+    },
+    {
+      "name": "dockerd",
+      "pid": 1745,
+      "cores": 0.006443992439301673
+    },
+    {
+      "name": "python3",
+      "pid": 2436,
+      "cores": 0.006443992439301673
+    },
+    {
+      "name": "claude",
+      "pid": 34959,
+      "cores": 0.006443992439301673
+    },
+    {
+      "name": "claude",
+      "pid": 2647892,
+      "cores": 0.006443992439301673
+    },
+    {
+      "name": "kworker/u98:0-events_unbound",
+      "pid": 31642,
+      "cores": 0.0032219962196508366
+    },
+    {
+      "name": "kworker/u99:1-events_unbound",
+      "pid": 26318,
+      "cores": 0.0032219962196508366
+    },
+    {
+      "name": "claude",
+      "pid": 429444,
+      "cores": 0.0032219962196508366
+    },
+    {
+      "name": "node",
+      "pid": 2642740,
+      "cores": 0.0032219962196508366
+    }
+  ],
+  "samples": [
+    {
+      "epoch": 1792312520.0717542,
+      "elapsed_s": 1.0351213220274076,
+      "top": [
+        {
+          "pid": 34442,
+          "name": "llama-server",
+          "cores": 13.776162944909784
+        },
+        {
+          "pid": 322,
+          "name": "kcompactd0",
+          "cores": 0.5120172763535895
+        },
+        {
+          "pid": 3908179,
+          "name": "codex",
+          "cores": 0.06762492329198352
+        },
+        {
+          "pid": 353,
+          "name": "kswapd0",
+          "cores": 0.05796421996455729
+        },
+        {
+          "pid": 31465,
+          "name": "python3",
+          "cores": 0.038642813309704864
+        },
+        {
+          "pid": 17759,
+          "name": "python3",
+          "cores": 0.028982109982278646
+        },
+        {
+          "pid": 1745,
+          "name": "dockerd",
+          "cores": 0.009660703327426216
+        },
+        {
+          "pid": 1888,
+          "name": "MainThread",
+          "cores": 0.009660703327426216
+        },
+        {
+          "pid": 31642,
+          "name": "kworker/u98:0-events_unbound",
+          "cores": 0.009660703327426216
+        }
+      ]
+    },
+    {
+      "epoch": 1792312521.1062973,
+      "elapsed_s": 1.0343335049692541,
+      "top": [
+        {
+          "pid": 34442,
+          "name": "llama-server",
+          "cores": 16.010309943979095
+        },
+        {
+          "pid": 322,
+          "name": "kcompactd0",
+          "cores": 1.0054784022788803
+        },
+        {
+          "pid": 3473089,
+          "name": "htop",
+          "cores": 0.0966806156037385
+        },
+        {
+          "pid": 3908179,
+          "name": "codex",
+          "cores": 0.058008369362243094
+        },
+        {
+          "pid": 31465,
+          "name": "python3",
+          "cores": 0.029004184681121547
+        },
+        {
+          "pid": 1888,
+          "name": "MainThread",
+          "cores": 0.0193361231207477
+        },
+        {
+          "pid": 2436,
+          "name": "python3",
+          "cores": 0.00966806156037385
+        },
+        {
+          "pid": 26318,
+          "name": "kworker/u99:1-events_unbound",
+          "cores": 0.00966806156037385
+        }
+      ]
+    },
+    {
+      "epoch": 1792312522.1405876,
+      "elapsed_s": 1.0342111360514536,
+      "top": [
+        {
+          "pid": 34442,
+          "name": "llama-server",
+          "cores": 22.084465351244944
+        },
+        {
+          "pid": 322,
+          "name": "kcompactd0",
+          "cores": 0.9959281660149866
+        },
+        {
+          "pid": 3473089,
+          "name": "htop",
+          "cores": 0.09669205495291132
+        },
+        {
+          "pid": 3908179,
+          "name": "codex",
+          "cores": 0.06768443846703794
+        },
+        {
+          "pid": 31465,
+          "name": "python3",
+          "cores": 0.029007616485873394
+        },
+        {
+          "pid": 1888,
+          "name": "MainThread",
+          "cores": 0.019338410990582262
+        },
+        {
+          "pid": 34959,
+          "name": "claude",
+          "cores": 0.019338410990582262
+        },
+        {
+          "pid": 2647892,
+          "name": "claude",
+          "cores": 0.019338410990582262
+        },
+        {
+          "pid": 1745,
+          "name": "dockerd",
+          "cores": 0.009669205495291131
+        },
+        {
+          "pid": 2436,
+          "name": "python3",
+          "cores": 0.009669205495291131
+        },
+        {
+          "pid": 429444,
+          "name": "claude",
+          "cores": 0.009669205495291131
+        },
+        {
+          "pid": 2642740,
+          "name": "node",
+          "cores": 0.009669205495291131
+        }
+      ]
+    }
+  ],
+  "scope": "Observer samples overlap most of this request; independent request-level foreign gate is retained. No system settings changed."
+}
