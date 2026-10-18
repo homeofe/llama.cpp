@@ -123,7 +123,7 @@ def summarize(directory):
         cpu_leaf_symbols=[dict(module=m,symbol=s,count=n) for (m,s),n in symbol_counts.most_common()],
         cpu_leaf_ips=[dict(symbol=s,module=m,ip=ip,unresolved=u,count=n) for s,m,ip,u,n in leaves],
         server_logs=log, rounds=rounds,
-        scope='CPU samples are aggregate CPU time, not wall time. CUDA API, kernel and copy unions overlap each other and CPU graphs. Graph-enabled traces omit graph nodes in this Nsight version; their GPU union is incomplete.')
+        scope='CPU sample shares aggregate activity across threads; they are not wall-time shares. CUDA API, kernel and copy unions overlap each other and CPU graphs. Graph-enabled traces omit graph nodes in this Nsight version; their GPU union is incomplete.')
 
 
 if __name__ == '__main__':
