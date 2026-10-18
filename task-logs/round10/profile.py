@@ -49,6 +49,7 @@ def main():
             raise RuntimeError('foreign GPU allocation')
         with (out / 'profiler.log').open('w') as stream:
             proc = subprocess.Popen(command, stdout=stream, stderr=subprocess.STDOUT, start_new_session=True)
+        (out / 'profiler-owner.json').write_text(json.dumps(dict(pid=proc.pid)) + '\n')
         run.event(kind='profile_start', pid=proc.pid, graphs=args.graphs, plain=args.plain)
         while proc.poll() is None:
             run.renew()

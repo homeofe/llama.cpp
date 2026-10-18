@@ -42,13 +42,14 @@ def main():
     # Favor the weaker category's relative gain; retain an independent code-speed candidate.
     balanced = max(grouped, key=lambda n: min(grouped[n][c]/control[c] for c in ['code', 'english']))
     code = max((n for n in grouped if n != balanced), key=lambda n: grouped[n]['code'])
+    utc = time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime())
     selection = dict(rule='Maximize minimum of code/control and English/control; second candidate is highest code speed among the rest.',
                      control='ling-cache-mtp3', balanced=balanced, code=code, selected=[balanced, code],
-                     screening_only=True, utc=time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime()))
+                     screening_only=True, utc=utc)
     (OUT / 'selection.json').write_text(json.dumps(selection, indent=2) + '\n')
     print(json.dumps(selection), flush=True)
     with Path('/opt/llm-gateway/data/moe-quant/NOTE.log').open('a') as stream:
-        stream.write(selection['utc'] + ' Round 10: Screening abgeschlossen; drei Bestaetigungsrunden fuer ' + balanced + ' und ' + code + ' gegen MTP3.\n')
+        stream.write(utc + ' Round 10: Screening abgeschlossen; drei Bestaetigungsrunden fuer ' + balanced + ' und ' + code + ' gegen MTP3.\n')
     command = ['python3', '-u', str(OUT / 'bench.py'), str(DATA / 'round10-confirm'), '09:00', '--rounds', '3',
                '--only', 'ling-cache-mtp3', balanced, code]
     process = None

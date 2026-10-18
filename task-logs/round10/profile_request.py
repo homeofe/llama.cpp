@@ -39,6 +39,22 @@ def cpu_counters(pid):
 
 
 
+def owned_processes(root_pid):
+    parents = {}
+    for path in Path('/proc').iterdir():
+        if path.name.isdigit():
+            try:
+                parents[int(path.name)] = int((path / 'stat').read_text().rsplit(')', 1)[1].split()[1])
+            except (OSError, ValueError, IndexError):
+                pass
+    owned = {root_pid}
+    while True:
+        found = {pid for pid, parent in parents.items() if parent in owned}
+        if found <= owned:
+            return sorted(owned)
+        owned |= found
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('out', type=Path)
@@ -138,13 +154,16 @@ def main():
         cpu_before = cpu_counters(run.child.pid) if not args.plain else None
         nvtx.nvtxRangePushA(b'round10')
         nvtx.nvtxMarkA(('epoch_ns=' + str(time.time_ns()) + ';monotonic_ns=' + str(time.monotonic_ns())).encode())
-        b0, o0, t0 = bench.stage.busy_jiffies(), bench.stage.proc_jiffies([run.child.pid]), time.monotonic()
+        profiler_root = json.loads((out / 'profiler-owner.json').read_text())['pid']
+        own_pids = owned_processes(profiler_root)
+        assert run.child.pid in own_pids
+        b0, o0, t0 = bench.stage.busy_jiffies(), bench.stage.proc_jiffies(own_pids), time.monotonic()
         run.tracing = True
         nvtx.nvtxRangePushA(args.prompt.encode())
         result = run.request(name, cfg, prompt, 256)
         nvtx.nvtxRangePop()
         wall = time.monotonic() - t0
-        foreign = max(0, bench.stage.busy_jiffies() - b0 - bench.stage.proc_jiffies([run.child.pid]) + o0) / bench.stage.HZ / wall
+        foreign = max(0, bench.stage.busy_jiffies() - b0 - bench.stage.proc_jiffies(own_pids) + o0) / bench.stage.HZ / wall
         nvtx.nvtxMarkA(('epoch_ns=' + str(time.time_ns()) + ';monotonic_ns=' + str(time.monotonic_ns())).encode())
         nvtx.nvtxRangePop()
         if cpu_before is not None:
@@ -156,7 +175,7 @@ def main():
             (out / 'cpu-counters.json').write_text(json.dumps(dict(before=cpu_before, first_token=run.first_cpu, after=cpu_after, delta=counters, decode_delta=decode,
                 scope='Complete request and client first-token-to-end interval; boundary can lag server emission; atomic snapshots may straddle a CPU call; CPU graph elapsed time can overlap GPU work; buckets 1..8 tokens, 9 larger, 0 no expert op.'), indent=2) + '\n')
         run.event(kind='profile_request', prompt=args.prompt, graphs=args.graphs, plain=args.plain,
-            waited_s=waited, pre_busy_cores=pre, foreign_cores=foreign, accepted=foreign < 1,
+            waited_s=waited, pre_busy_cores=pre, owned_profiler_processes=own_pids, foreign_cores=foreign, accepted=foreign < 1,
             wall_s=wall, **result)
     finally:
         run.stop()
