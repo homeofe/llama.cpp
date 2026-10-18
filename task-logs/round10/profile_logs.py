@@ -54,6 +54,9 @@ def parse(directory):
             current['draft_end_us'] = timestamp
         if 'n_batch (effective)' in message:
             current['verify_start_us'] = timestamp
+            batch = re.search(r'n_batch \(effective\) = (\d+)', message)
+            if batch:
+                current['verify_tokens'] = int(batch[1])
         if 'add accepted tokens:' in message:
             current['accepted_us'] = timestamp
         if 'stop processing:' in message:
