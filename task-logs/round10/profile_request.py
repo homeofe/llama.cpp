@@ -3,6 +3,7 @@
 import argparse
 import ctypes
 import functools
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -36,6 +37,25 @@ def cpu_counters(pid):
         result = {name: list(struct.unpack('<10Q', os.pread(memory.fileno(), 80, base + offset)))
                   for name, offset in symbols.items()}
     return dict(calls=result['_ZL5calls'], cpu_ns=result['_ZL6cpu_ns'])
+
+
+def logger_epoch(pid, spawn_epoch_ns, out):
+    library = (bench.ROOT / 'build-cuda/bin/libllama-common.so').resolve()
+    symbols = subprocess.check_output(['nm', '-a', str(library)], text=True).splitlines()
+    offset = next(int(line.split()[0], 16) for line in symbols if line.endswith(' _ZZ15common_log_mainvE3log'))
+    disassembly = subprocess.check_output(['objdump', '-d', '--start-address=0x2e2670', '--stop-address=0x2e2750', str(library)], text=True)
+    assert 'mov    %rdx,0xa0(%rbx)' in disassembly, 'logger layout changed; inspect before reading'
+    (out / 'logger-layout.txt').write_text(disassembly)
+    maps = Path(f'/proc/{pid}/maps').read_text().splitlines()
+    base = next(int(line.split()[0].split('-')[0], 16) for line in maps
+                if line.split()[-1] == str(library) and int(line.split()[2], 16) == 0)
+    with open(f'/proc/{pid}/mem', 'rb', buffering=0) as memory:
+        pointer, = struct.unpack('<Q', os.pread(memory.fileno(), 8, base + offset))
+        epoch_us, = struct.unpack('<Q', os.pread(memory.fileno(), 8, pointer + 0xa0))
+    assert spawn_epoch_ns - 1_000_000_000 < epoch_us * 1000 < time.time_ns()
+    (out / 'logger-epoch.json').write_text(json.dumps(dict(epoch_us=epoch_us, field_offset=0xa0,
+        library=str(library), sha256=hashlib.sha256(library.read_bytes()).hexdigest(),
+        method='Read-only parent /proc/PID/mem; layout checked against this existing binary disassembly.'), indent=2) + '\n')
 
 
 
@@ -74,7 +94,7 @@ def main():
         env['GGML_CUDA_DISABLE_GRAPHS'] = '1'
     if not args.plain:
         env['LD_PRELOAD'] = ':'.join(filter(None, [str(bench.ROOT / 'task-logs/round9/cpu-profile.so'), injection]))
-    cmd += ['-lv', '4' if args.plain else '5']
+    cmd += ['-lv', '4' if args.plain else '5', '--log-prefix', '--log-timestamps', '--log-colors', 'off']
     env.update(XDG_CONFIG_HOME=str(out / 'config'), XDG_CACHE_HOME=str(out / 'cache'), CUDA_CACHE_PATH=str(out / 'cuda-cache'))
     cfg = dict(cmd=cmd, env=env)
     (out / 'config.json').write_text(json.dumps(cfg, indent=2) + '\n')
@@ -122,6 +142,7 @@ def main():
 
         def start(self, name, config):
             import subprocess
+            self.spawn_epoch_ns = time.time_ns()
             with (self.out / (name + '.server.log')).open('w') as stream:
                 self.child = subprocess.Popen(config['cmd'], env={**os.environ, **config['env']},
                     stdout=stream, stderr=subprocess.STDOUT, start_new_session=True)
@@ -148,6 +169,7 @@ def main():
     try:
         run.start(name, cfg)
         run.request(name, cfg, 'Say hello in five words.', 16)
+        logger_epoch(run.child.pid, run.spawn_epoch_ns, out)
         waited, pre = run.quiet()
         run.check_gpu()
         prompt = dict(bench.stage.PROMPTS)[args.prompt]

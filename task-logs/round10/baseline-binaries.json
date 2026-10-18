@@ -1,0 +1,42 @@
+{
+  "llama-server": {
+    "path": "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/llama-server",
+    "bytes": 17888,
+    "sha256": "8c98297c2682a3fd7a28d360a3e4b48952e8a18dfb8d6336165e8066a713d7a9"
+  },
+  "libllama-server-impl.so": {
+    "path": "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama-server-impl.so",
+    "bytes": 7335176,
+    "sha256": "766ae7db646fcb58246c059d138a3d61fa3dda251ebdf1637d6978953e3a78f3"
+  },
+  "libllama.so": {
+    "path": "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama.so.0.7.0",
+    "bytes": 5284080,
+    "sha256": "37a87d56130f1eeb73fc7838445d07181500dc6ae988672358044f97f75dc76d"
+  },
+  "libggml-cpu.so": {
+    "path": "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml-cpu.so.0.27.0",
+    "bytes": 1410376,
+    "sha256": "8c8c4d67a7cd0d676d794b3317cc2bae48b8becff480c12c091b24ccf80e31be"
+  },
+  "libggml-cuda.so": {
+    "path": "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml-cuda.so.0.27.0",
+    "bytes": 210861944,
+    "sha256": "4f155009e73771bc0720e39c750edcbab276ac9fcee339647aa58d7779caab1c"
+  },
+  "libggml-base.so": {
+    "path": "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml-base.so.0.27.0",
+    "bytes": 930472,
+    "sha256": "ee9f6841e3e0f22559725f38845e19a9a24bbbc334e5bb290d7810986c3efad9"
+  },
+  "libggml.so": {
+    "path": "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml.so.0.27.0",
+    "bytes": 56208,
+    "sha256": "e604f19a475f96a6eb33c208404f76f168b237279e5ba8e4b17806da408a4d53"
+  },
+  "existing_cpu_interposer": {
+    "path": "/opt/llm-gateway/data/build/llama-l5/task-logs/round9/cpu-profile.so",
+    "bytes": 16400,
+    "sha256": "465ba7503b68c61db04413c9ec6814e74d58e88defd337840dc4a79ca53569b5"
+  }
+}

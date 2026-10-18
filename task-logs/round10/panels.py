@@ -56,7 +56,7 @@ def main():
     assert settings['keepLoaded'] == []
     settings_path.write_text(json.dumps(settings, indent=2) + '\n')
     (OUT / 'model-entry.json').write_text(json.dumps(entry, indent=2) + '\n')
-    run = bench.Run(OUT, 1792320300)  # 10:45 UTC: preserve time for shutdown.
+    run = bench.Run(OUT, 1792318200)  # 10:10 UTC: preserve time for the mandatory Qwen profile.
     gateway = None
     panel = None
     server = None
