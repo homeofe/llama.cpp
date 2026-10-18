@@ -1,0 +1,51 @@
+{
+  "perplexity": [
+    {
+      "name": "ling-off-ppl",
+      "ppl": 4.5559,
+      "quiet_gate": true,
+      "foreign_cores": 0.5592145597186492,
+      "log": "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/ling-off-ppl/attempt-1.log",
+      "relative_percent": 0.0,
+      "numerical_gate": true
+    },
+    {
+      "name": "ling-r7-4608-ppl",
+      "ppl": 4.542,
+      "quiet_gate": true,
+      "foreign_cores": 0.6598993865407833,
+      "log": "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/ling-r7-4608-ppl/attempt-1.log",
+      "relative_percent": -0.30509888276740726,
+      "numerical_gate": true
+    }
+  ],
+  "probe": {
+    "control": "/opt/llm-gateway/data/build/llama-l5/task-logs/round9/ling-off-probe/logits.logits.bin",
+    "candidate": "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/ling-off-knobs-probe/logits.logits.bin",
+    "bytes": 80478208,
+    "bit_exact": true,
+    "sha256": "83429a23024228e61b2f64515128019cc75b04e30bc97c7dfd853580094a0552",
+    "quiet_gate": true,
+    "foreign_cores": 0.223431044761561
+  },
+  "historical_baseline": {
+    "name": "ling-off-compaction0-ppl",
+    "ppl": 4.5559,
+    "stderr": 0.20935,
+    "log": "/opt/llm-gateway/data/build/llama-l5/task-logs/round9/ling-off-compaction0-ppl/attempt-1.log",
+    "relative_percent": 0.0,
+    "within_half_percent": true
+  },
+  "historical_cache": {
+    "name": "ling-slots-4608-dspark-ppl",
+    "ppl": 4.542,
+    "stderr": 0.20838,
+    "log": "/opt/llm-gateway/data/build/llama-l5/task-logs/round9/ling-slots-4608-dspark-ppl/attempt-1.log",
+    "relative_percent": -0.30509888276740726,
+    "within_half_percent": true
+  },
+  "fresh_baseline_matches_historical": true,
+  "numerical_gate": true,
+  "quiet_gate": true,
+  "scope": "Perplexity and logits probe exercise the target/cache kernels. They do not run the speculative drafter; actual speculative behavior is checked by response hashes and gateway panels. A failed foreign-load gate is not silently relabeled as a clean measurement."
+}

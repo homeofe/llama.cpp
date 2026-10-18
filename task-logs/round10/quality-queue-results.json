@@ -1,0 +1,41 @@
+[
+  {
+    "command": [
+      "python3",
+      "-u",
+      "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/quality.py",
+      "ling",
+      "off-knobs",
+      "--probe",
+      "--attempts",
+      "1"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "python3",
+      "-u",
+      "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/quality.py",
+      "ling",
+      "off",
+      "--attempts",
+      "1"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "python3",
+      "-u",
+      "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/quality.py",
+      "ling",
+      "r7",
+      "--budget-mib",
+      "4608",
+      "--attempts",
+      "1"
+    ],
+    "exit": 0
+  }
+]

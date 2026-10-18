@@ -1,0 +1,1 @@
+{"kind": "quality", "name": "ling-r7-4608-ppl", "attempt": 1, "exit": 0, "foreign_cores": 0.6598993865407833, "whole_process_foreign_cores": 0.38486746238076663, "evaluation_wall_s": 62.03976065898314, "wall_s": 240.34247901290655, "peak_vram_mib": 7426, "accepted": true, "epoch": 1792314618.6, "utc": "2026-10-18 09:10:18"}

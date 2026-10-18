@@ -1,0 +1,1 @@
+{"kind": "quality", "name": "ling-off-ppl", "attempt": 1, "exit": 0, "foreign_cores": 0.5592145597186492, "whole_process_foreign_cores": 0.3744900743570709, "evaluation_wall_s": 86.38902396301273, "wall_s": 265.34748663392384, "peak_vram_mib": 2814, "accepted": true, "epoch": 1792314373.1, "utc": "2026-10-18 09:06:13"}

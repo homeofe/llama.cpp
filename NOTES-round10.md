@@ -55,3 +55,9 @@ A CPU-only Nsight smoke capture during model loading succeeded: 316 sample event
 Across configurations, n3 matches MTP text on three of four code prompts; n4/n7 match all four. All English hashes differ from MTP. Repetition stability does not establish cross-configuration bit equivalence. Cache-off full-logit checks and the task panels provide separate evidence. Mean accepted lengths include the bonus token; category values are medians of request means, not token-weighted averages.
 
 Exact commands and environment are in `task-logs/round10/configs.json` and each raw run. The recommended profile uses `--spec-type draft-dspark --spec-draft-n-max 3 --spec-draft-p-min 0 -ngld 99 --spec-draft-n-ubatch 32`, the existing DSpark Q8_0 file, target IQ4_XS, context 8192, batch 2048, ubatch 512, 24 threads, full dense offload and CPU experts with adaptive GPU expert cache 4608 MiB (admit32, prefill1, decay128). Control uses MTP3/cache5120. No live profile has been changed.
+
+## Fresh numerical quality (completed)
+
+All three checks passed the unchanged foreign-process gate without system changes. Full-vocabulary cache-off probe: 80,478,208 bytes, bit-exact against the round-9 cache-off reference despite changed inactive policy knobs; SHA256 `83429a23024228e61b2f64515128019cc75b04e30bc97c7dfd853580094a0552`. Foreign CPU: 0.223 cores.
+
+Twelve test-de chunks, context512, batch512, ubatch4: cache off PPL **4.5559**, adaptive4608 PPL **4.5420** (-0.3051%, within +0.5%). Evaluation foreign CPU 0.559 / 0.660 cores. Both exactly reproduce the prior numerical estimates with the original compaction setting20. These are target/cache tests, not a perplexity measurement of speculative acceptance; actual DSpark behavior is checked by the response hashes and panels. Commands, raw logs, gates and comparison: `task-logs/round10/quality-summary.json` and its referenced directories.

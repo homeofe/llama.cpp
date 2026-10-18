@@ -1,0 +1,48 @@
+0.00.796.697 W load: special_eos_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.00.864.079 W model has unused tensor blk.42.attn_norm.weight (size = 10240 bytes) -- ignoring
+0.00.864.087 W model has unused tensor blk.42.attn_q.weight (size = 8847360 bytes) -- ignoring
+0.00.864.093 W model has unused tensor blk.42.attn_kv_a_mqa.weight (size = 829440 bytes) -- ignoring
+0.00.864.097 W model has unused tensor blk.42.attn_kv_a_norm.weight (size = 2048 bytes) -- ignoring
+0.00.864.102 W model has unused tensor blk.42.attn_k_b.weight (size = 1179648 bytes) -- ignoring
+0.00.864.106 W model has unused tensor blk.42.attn_v_b.weight (size = 1179648 bytes) -- ignoring
+0.00.864.111 W model has unused tensor blk.42.attn_gate.weight (size = 46080 bytes) -- ignoring
+0.00.864.115 W model has unused tensor blk.42.attn_output.weight (size = 5898240 bytes) -- ignoring
+0.00.864.120 W model has unused tensor blk.42.ffn_norm.weight (size = 10240 bytes) -- ignoring
+0.00.864.125 W model has unused tensor blk.42.ffn_gate_inp.weight (size = 5242880 bytes) -- ignoring
+0.00.864.130 W model has unused tensor blk.42.exp_probs_b.bias (size = 2048 bytes) -- ignoring
+0.00.864.136 W model has unused tensor blk.42.ffn_gate_exps.weight (size = 566231040 bytes) -- ignoring
+0.00.864.141 W model has unused tensor blk.42.ffn_up_exps.weight (size = 566231040 bytes) -- ignoring
+0.00.864.147 W model has unused tensor blk.42.ffn_down_exps.weight (size = 566231040 bytes) -- ignoring
+0.00.864.153 W model has unused tensor blk.42.ffn_gate_shexp.weight (size = 1105920 bytes) -- ignoring
+0.00.864.158 W model has unused tensor blk.42.ffn_up_shexp.weight (size = 1105920 bytes) -- ignoring
+0.00.864.163 W model has unused tensor blk.42.ffn_down_shexp.weight (size = 1105920 bytes) -- ignoring
+0.00.864.169 W model has unused tensor blk.42.nextn.eh_proj.weight (size = 7372800 bytes) -- ignoring
+0.00.864.175 W model has unused tensor blk.42.nextn.enorm.weight (size = 10240 bytes) -- ignoring
+0.00.864.181 W model has unused tensor blk.42.nextn.hnorm.weight (size = 10240 bytes) -- ignoring
+0.00.864.187 W model has unused tensor blk.42.layer_output_norm.weight (size = 10240 bytes) -- ignoring
+2.41.621.633 W llama_moe_cache: adaptive LFU: 1540 slots, admit <= 32 experts/ubatch, decay every 128 tokens
+2.41.621.638 W llama_moe_cache: context = 666523986374 (target), prefill 1024, static 0%
+2.41.643.436 I cmn          init: llama threadpool init, n_threads = 24
+2.41.745.484 I 
+2.41.745.593 I system_info: n_threads = 24 (n_threads_batch = 24) / 48 | CUDA : ARCHS = 750 | USE_GRAPHS = 1 | FA_QUANTS = q4_0-q4_0,q8_0-q8_0,f16-f16,bf16-bf16 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
+2.41.745.608 I perplexity: tokenizing the input ..
+2.41.883.620 I perplexity: tokenization took 138.005 ms
+2.41.883.668 I perplexity: calculating perplexity over 12 chunks, n_ctx=512, batch_size=512, n_seq=1
+2.49.609.908 W llama_moe_cache: prefill burst: context = 666523986374, uploads = 1024, MiB = 3060.00, enqueue = 177.389 ms (device completion not timed)
+2.49.697.921 I perplexity: 7.81 seconds per pass - ETA 1.55 minutes
+[1]6.4253,2.55.017.884 W llama_moe_cache: prefill burst: context = 666523986374, uploads = 805, MiB = 2405.57, enqueue = 120.510 ms (device completion not timed)
+[2]5.2395,3.00.254.862 W llama_moe_cache: prefill burst: context = 666523986374, uploads = 722, MiB = 2157.54, enqueue = 99.416 ms (device completion not timed)
+[3]5.3393,3.05.174.512 W llama_moe_cache: prefill burst: context = 666523986374, uploads = 542, MiB = 1619.65, enqueue = 52.891 ms (device completion not timed)
+[4]5.4993,3.09.837.505 W llama_moe_cache: prefill burst: context = 666523986374, uploads = 341, MiB = 1019.01, enqueue = 4.431 ms (device completion not timed)
+[5]5.4837,3.14.350.911 W llama_moe_cache: prefill burst: context = 666523986374, uploads = 312, MiB = 932.35, enqueue = 4.251 ms (device completion not timed)
+[6]5.2700,3.19.412.233 W llama_moe_cache: prefill burst: context = 666523986374, uploads = 712, MiB = 2127.66, enqueue = 96.319 ms (device completion not timed)
+[7]5.1786,3.24.089.631 W llama_moe_cache: prefill burst: context = 666523986374, uploads = 440, MiB = 1314.85, enqueue = 26.418 ms (device completion not timed)
+[8]4.7691,3.29.115.987 W llama_moe_cache: prefill burst: context = 666523986374, uploads = 786, MiB = 2348.80, enqueue = 115.348 ms (device completion not timed)
+[9]4.5285,3.34.016.313 W llama_moe_cache: prefill burst: context = 666523986374, uploads = 560, MiB = 1673.44, enqueue = 57.394 ms (device completion not timed)
+[10]4.6178,3.38.825.801 W llama_moe_cache: prefill burst: context = 666523986374, uploads = 538, MiB = 1607.70, enqueue = 51.694 ms (device completion not timed)
+[11]4.5899,3.43.609.859 W llama_moe_cache: prefill burst: context = 666523986374, uploads = 623, MiB = 1861.70, enqueue = 73.544 ms (device completion not timed)
+[12]4.5420,
+3.43.811.853 I Final estimate: PPL = 4.5420 +/- 0.20838
+
+3.43.859.539 W llama_moe_cache: context = 666523986374 (target) statistics follow
+3.43.859.552 W llama_moe_cache: adaptive: tokens = 6146, hits = 1102627, misses = 839509, hit rate = 56.77%, uploads = 7437, uploaded = 22223.90 MiB, hits/token = 179.41, misses/token = 136.59, uploads/token = 1.210, MiB/token = 3.616

@@ -1,0 +1,1 @@
+{"kind": "quality", "name": "ling-off-knobs-probe", "attempt": 1, "exit": 0, "foreign_cores": 0.223431044761561, "whole_process_foreign_cores": 0.2828559530696046, "evaluation_wall_s": 4.207114552962594, "wall_s": 182.3896560780704, "peak_vram_mib": 2786, "accepted": true, "epoch": 1792314102.5, "utc": "2026-10-18 09:01:42"}
