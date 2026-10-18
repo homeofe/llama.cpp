@@ -28,9 +28,13 @@ def main():
     bench.configure()
     cfg = bench.stage.CONFIGS[args.config]
     OUT.mkdir(exist_ok=True)
+    if (OUT / 'model-entry.json').exists():
+        raise RuntimeError('panel directory already used; archive it before a retry')
     settings_path = HOME_BENCH / 'data/settings.json'
     original = settings_path.read_bytes()
-    (HOME_BENCH / 'data/settings.before-round10.json').write_bytes(original)
+    backup = HOME_BENCH / 'data/settings.before-round10.json'
+    if not backup.exists():
+        backup.write_bytes(original)
     settings = json.loads(original)
     flags = cfg['cmd'][1:]
     model = Path(flags[flags.index('-m') + 1])
