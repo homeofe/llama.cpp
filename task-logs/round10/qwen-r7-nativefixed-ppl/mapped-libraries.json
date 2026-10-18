@@ -1,0 +1,9 @@
+[
+  "/opt/llm-gateway/data/build/llama-l5/build-cpu-native/bin/libggml-cpu.so.0.27.0",
+  "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml-base.so.0.27.0",
+  "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml-cuda.so.0.27.0",
+  "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml.so.0.27.0",
+  "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama-common.so.0.7.0",
+  "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama-perplexity-impl.so",
+  "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama.so.0.7.0"
+]

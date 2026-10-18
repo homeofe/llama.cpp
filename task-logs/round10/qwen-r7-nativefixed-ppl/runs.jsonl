@@ -1,0 +1,1 @@
+{"kind": "quality", "name": "qwen-r7-nativefixed-ppl", "attempt": 1, "exit": 0, "foreign_cores": 0.24318476882941228, "whole_process_foreign_cores": 0.21741319356510913, "evaluation_wall_s": 90.1783450730145, "wall_s": 141.75772635790054, "peak_vram_mib": 6806, "accepted": true, "epoch": 1792318833.0, "utc": "2026-10-18 10:20:33"}
