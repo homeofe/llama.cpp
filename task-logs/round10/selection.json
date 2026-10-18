@@ -1,0 +1,14 @@
+{
+  "rule": "Prefer candidates beating code and tying/beating English; rank by minimum category/control ratio. Fill any remaining slot by code speed.",
+  "control": "ling-cache-mtp3",
+  "balanced": "ling-dspark-n3-p00",
+  "second": "ling-dspark-n4-p00",
+  "selected": [
+    "ling-dspark-n3-p00",
+    "ling-dspark-n4-p00",
+    "ling-dspark-n7-p70"
+  ],
+  "extension": "Also confirm the fastest code setting if English is within 1% of control. This screening boundary is not a final non-inferiority claim.",
+  "screening_only": true,
+  "utc": "2026-10-18 07:52:03 UTC"
+}

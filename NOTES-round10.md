@@ -6,21 +6,24 @@ Started 2026-10-18 07:00 UTC; deadline 11:00 UTC. Branch `l5-cache`. No system c
 
 The unchanged stage-B foreign-process gate is reused. A rejected request invalidates its whole prompt pass; restart the server before retrying, so the adaptive cache always sees the same warmup and eight-prompt history. Screening: MTP3 control and seven DSpark settings, four code and four English prompts per setting. Confirmation: best two candidates and control, three rotating rounds. Raw output hashes, draft counts, accepted lengths, CPU cost and exact configurations are archived.
 
-## Initial findings (screening, not confirmation)
+## Screening (completed; confirmation running)
 
-| Configuration | Code tok/s | English tok/s | Acceptance code / English |
-|---|---:|---:|---:|
-| ling-cache-mtp3 | 50.7452 | 47.4517 | 67.88% / 53.02% |
-| ling-dspark-n7-p00 | 77.3175 | 41.7307 | 78.28% / 32.87% |
-| ling-dspark-n3-p00 | 66.3210 | 51.6762 | 95.84% / 57.64% |
-| ling-dspark-n4-p00 | 69.8386 | 51.6521 | 86.64% / 48.45% |
-| ling-dspark-n5-p00 | 73.9066 | 49.5328 | 84.69% / 43.17% |
-| ling-dspark-n7-p30 | 76.6976 | 45.4170 | 79.02% / 43.26% |
-| ling-dspark-n7-p50 | 76.8802 | 47.1952 | 89.57% / 61.11% |
+| Configuration | Code tok/s | English tok/s | Acceptance code / English | Mean length code / English |
+|---|---:|---:|---:|---:|
+| ling-cache-mtp3 | 50.7452 | 47.4517 | 67.88% / 53.02% | 3.045 / 2.665 |
+| ling-dspark-n7-p00 | 77.3175 | 41.7307 | 78.28% / 32.87% | 7.135 / 3.425 |
+| ling-dspark-n3-p00 | 66.3210 | 51.6762 | 95.84% / 57.64% | 3.870 / 2.830 |
+| ling-dspark-n4-p00 | 69.8386 | 51.6521 | 86.64% / 48.45% | 4.755 / 3.155 |
+| ling-dspark-n5-p00 | 73.9066 | 49.5328 | 84.69% / 43.17% | 5.570 / 3.345 |
+| ling-dspark-n7-p30 | 76.6976 | 45.4170 | 79.02% / 43.26% | 7.040 / 3.570 |
+| ling-dspark-n7-p50 | 76.8802 | 47.1952 | 89.57% / 61.11% | 7.135 / 3.075 |
+| ling-dspark-n7-p70 | 78.3123 | 47.4197 | 89.35% / 79.02% | 7.040 / 3.180 |
 
-Four prompts per category, one complete clean pass per configuration. Foreign-load failures discard the entire pass before retrying with a fresh server/cache. Selection is pending the remaining screen and three interleaved confirmation rounds.
+Four prompts per category, one complete clean pass per configuration. Three foreign-load failures discarded the entire pass before retrying with a fresh server/cache. All 64 accepted requests are archived in `task-logs/round10/screen-results/`.
 
-The reported speed is the unchanged stage-B client first-to-last streamed-token metric. Raw server timing is also retained; a batched final token/stop event can produce a boundary difference, especially on short answers. Output hashes are recorded in `screen-summary.json`; the prompt texts and their SHA256 hashes are in `task-logs/round10/prompts.json`.
+The original selection rule chose n3/p0 and n4/p0: both beat code and English, ranked by the lower of their two category/control ratios. The fastest-code candidate n7/p0.7 had English just 0.0668% below control. Before confirmation, it was added as a boundary candidate (screening proximity within 1%, not a final non-inferiority criterion). Thus confirmation has the required best two plus control and one additional candidate, three rotating rounds, twelve requests per category per configuration. The initial control load was interrupted before any request; its artifacts are kept in `data/moe-quant/qwen38/round10-confirm-aborted-load/`.
+
+Mean length includes the bonus token and is the median of four request means. Speed uses the unchanged stage-B client first-to-last streamed-token metric. Raw server timing is also retained; a batched final token/stop event can produce a boundary difference, especially on short answers. Full output hashes are in `task-logs/round10/screen-summary.json`; input prompt texts and SHA256 hashes are in `task-logs/round10/prompts.json`.
 
 ## Panel protocol
 

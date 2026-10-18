@@ -45,16 +45,21 @@ def main():
         if name not in ranked:
             ranked.append(name)
     balanced, code = ranked[:2]
+    selected = [balanced, code]
+    boundary = max(grouped, key=lambda n: grouped[n]['code'])
+    if boundary not in selected and grouped[boundary]['english'] >= 0.99 * control['english']:
+        selected.append(boundary)
     utc = time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime())
     selection = dict(rule='Prefer candidates beating code and tying/beating English; rank by minimum category/control ratio. Fill any remaining slot by code speed.',
-                     control='ling-cache-mtp3', balanced=balanced, second=code, selected=[balanced, code],
+                     control='ling-cache-mtp3', balanced=balanced, second=code, selected=selected,
+                     extension='Also confirm the fastest code setting if English is within 1% of control. This screening boundary is not a final non-inferiority claim.',
                      screening_only=True, utc=utc)
     (OUT / 'selection.json').write_text(json.dumps(selection, indent=2) + '\n')
     print(json.dumps(selection), flush=True)
     with Path('/opt/llm-gateway/data/moe-quant/NOTE.log').open('a') as stream:
-        stream.write(utc + ' Round 10: Screening abgeschlossen; drei Bestaetigungsrunden fuer ' + balanced + ' und ' + code + ' gegen MTP3.\n')
-    command = ['python3', '-u', str(OUT / 'bench.py'), str(DATA / 'round10-confirm'), '09:00', '--rounds', '3',
-               '--only', 'ling-cache-mtp3', balanced, code]
+        stream.write(utc + ' Round 10: Screening abgeschlossen; drei Bestaetigungsrunden fuer ' + ', '.join(selected) + ' gegen MTP3.\n')
+    command = ['python3', '-u', str(OUT / 'bench.py'), str(DATA / 'round10-confirm'), '09:05', '--rounds', '3',
+               '--only', 'ling-cache-mtp3'] + selected
     process = None
     try:
         with (OUT / 'confirm.log').open('w') as stream:
@@ -67,7 +72,7 @@ def main():
             process.terminate()
             process.wait(timeout=65)
     result = summarize(DATA / 'round10-confirm')
-    assert result['complete'] and len(result['summary']) == 6
+    assert result['complete'] and len(result['summary']) == 2 * (1 + len(selected))
     assert all(r['requests'] == 12 and r['measured_lengths'] == 12 for r in result['summary'])
     (OUT / 'confirm-summary.json').write_text(json.dumps(result, indent=2) + '\n')
     archive(DATA / 'round10-confirm', OUT / 'confirm-results')
