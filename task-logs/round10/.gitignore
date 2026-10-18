@@ -5,3 +5,5 @@
 *.qdstrm
 *.nsys-rep
 *.sqlite
+pool-baseline-bin/
+pool-guard.so

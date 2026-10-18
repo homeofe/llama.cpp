@@ -73,7 +73,7 @@ def parse(directory):
     if len(stats) >= 2:
         stats_delta = {key: stats[-1][key] - stats[-2][key] for key in stats[-1] if key != 'epoch_us'}
     return dict(statistics=stats, request_statistics_delta=stats_delta, decode_times=decode_times, rounds=rounds,
-        scope='Log timestamps mark existing call sites. Posting-to-candidate includes host setup and sampling; verify-to-accepted includes draft catch-up and target sampling. These are enclosing intervals, not isolated kernel timers.')
+        scope='Log timestamps mark existing call sites. Posting-to-candidate includes host setup and draft sampling. With exactly two post-verify queue-yield ends, the first ends target verification and the second ends MTP catch-up; accepted ends target sampling/acceptance. These are enclosing intervals, not isolated kernel timers. n_batch effective is capacity, not the actual verify width.')
 
 
 if __name__ == '__main__':

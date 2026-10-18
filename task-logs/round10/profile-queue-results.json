@@ -1,0 +1,92 @@
+[
+  {
+    "command": [
+      "python3",
+      "-u",
+      "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/profile.py",
+      "code-duration"
+    ],
+    "exit": 0,
+    "epoch": 1792316851.3005798
+  },
+  {
+    "command": [
+      "python3",
+      "-u",
+      "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/profile.py",
+      "en-1"
+    ],
+    "exit": 0,
+    "epoch": 1792316965.3321598
+  },
+  {
+    "command": [
+      "python3",
+      "-u",
+      "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/profile.py",
+      "code-duration",
+      "--counters-only"
+    ],
+    "exit": 0,
+    "epoch": 1792317040.0949514
+  },
+  {
+    "command": [
+      "python3",
+      "-u",
+      "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/profile.py",
+      "en-1",
+      "--counters-only"
+    ],
+    "exit": 0,
+    "epoch": 1792317115.7833667
+  },
+  {
+    "command": [
+      "python3",
+      "-u",
+      "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/profile.py",
+      "code-duration",
+      "--graphs",
+      "--counters-only"
+    ],
+    "exit": 0,
+    "epoch": 1792317190.6917982
+  },
+  {
+    "command": [
+      "python3",
+      "-u",
+      "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/profile.py",
+      "en-1",
+      "--graphs",
+      "--counters-only"
+    ],
+    "exit": 0,
+    "epoch": 1792317266.3818402
+  },
+  {
+    "command": [
+      "python3",
+      "-u",
+      "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/profile.py",
+      "code-duration",
+      "--graphs",
+      "--plain"
+    ],
+    "exit": 0,
+    "epoch": 1792317341.195311
+  },
+  {
+    "command": [
+      "python3",
+      "-u",
+      "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/profile.py",
+      "en-1",
+      "--graphs",
+      "--plain"
+    ],
+    "exit": 0,
+    "epoch": 1792317416.8953679
+  }
+]

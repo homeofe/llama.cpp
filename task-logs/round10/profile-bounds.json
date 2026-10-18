@@ -1,0 +1,14 @@
+{
+  "code-duration": {
+    "cpu_expert_graph_ms": 35.88547473333334,
+    "gpu_dense_other_off_ms": 33.732446366666665,
+    "copies_off_ms": 11.03215545,
+    "plain_ms": 81.71583333333334
+  },
+  "en-1": {
+    "cpu_expert_graph_ms": 30.664301329411764,
+    "gpu_dense_other_off_ms": 33.73959794117647,
+    "copies_off_ms": 10.784260094117647,
+    "plain_ms": 76.09482352941177
+  }
+}

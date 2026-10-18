@@ -1,0 +1,7 @@
+{
+  "epoch_us": 1792316506345105,
+  "field_offset": 160,
+  "library": "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama-common.so.0.7.0",
+  "sha256": "94fe743aa165a86ab7867858366998f9f0c968581849042d8abba92f821c40b0",
+  "method": "Read-only parent /proc/PID/mem; layout checked against this existing binary disassembly."
+}

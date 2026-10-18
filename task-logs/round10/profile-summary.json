@@ -1,0 +1,906 @@
+{
+  "results": {
+    "code-duration": {
+      "off": {
+        "request": {
+          "kind": "profile_request",
+          "prompt": "code-duration",
+          "graphs": false,
+          "plain": false,
+          "counters_only": false,
+          "waited_s": 20,
+          "pre_busy_cores": 0.16,
+          "owned_profiler_processes": [
+            62324,
+            62326,
+            62334,
+            62351,
+            62352,
+            62353,
+            62358
+          ],
+          "foreign_cores": 0.18456123323746573,
+          "accepted": true,
+          "wall_s": 7.4771932100411505,
+          "tokens": 218,
+          "pieces": 217,
+          "decode_tok_s": 37.089919720495075,
+          "ttft_s": 1.6241400241851807,
+          "server_timings": {
+            "predicted_per_second": 37.08896411890551,
+            "draft_n": 180,
+            "draft_n_accepted": 158,
+            "predicted_n": 218
+          },
+          "text_head": "```python\nimport re\n\ndef parse_duration(s: str) -> int:\n    if not s:\n        raise ValueError(\"Empty string\")\n    \n    pattern = r'^(?:(\\d+)h)?(?:(\\d+)m)?(?:(\\",
+          "engine_cpu_s": 163.84,
+          "engine_busy_cores": 21.918471256305004,
+          "engine_cpu_s_per_token": 0.7515596330275229,
+          "text_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+          "mean_accepted_length_including_bonus": 3.63,
+          "epoch": 1792316830.3,
+          "utc": "2026-10-18 09:47:10"
+        },
+        "stats": {
+          "begin_calls": 1,
+          "draft_calls": 60,
+          "accept_calls": 60,
+          "draft_tokens": 180,
+          "accepted_tokens": 158,
+          "begin_ms": 0.005000000000000001,
+          "draft_ms": 577.087,
+          "accept_ms": 0.13199999999999998
+        },
+        "complete_three_step_rounds": 59,
+        "mean_complete_round_ms": 97.11589966101695,
+        "server_decode_ms": 5850.8,
+        "server_ms_per_request_round": 97.51333333333334,
+        "phase_means": {
+          "draft_1_with_setup": {
+            "wall_ms": 3.5074733559322033,
+            "dense_and_other_union_ms": 1.827108627118644,
+            "expert_masked_union_ms": 0.0,
+            "kernels_union_ms": 1.827108627118644,
+            "copies_union_ms": 0.3119540338983051,
+            "gpu_activity_union_ms": 2.1347396101694915,
+            "host_cuda_sync_union_ms": 1.5447860847457626,
+            "host_cuda_api_union_ms": 2.3050269830508476
+          },
+          "draft_2": {
+            "wall_ms": 2.9271170169491527,
+            "dense_and_other_union_ms": 1.829752186440678,
+            "expert_masked_union_ms": 0.0,
+            "kernels_union_ms": 1.829752186440678,
+            "copies_union_ms": 0.33033898305084747,
+            "gpu_activity_union_ms": 2.155840338983051,
+            "host_cuda_sync_union_ms": 1.5930678644067797,
+            "host_cuda_api_union_ms": 2.265028152542373
+          },
+          "draft_3": {
+            "wall_ms": 2.8215018305084745,
+            "dense_and_other_union_ms": 1.8271391186440678,
+            "expert_masked_union_ms": 0.0,
+            "kernels_union_ms": 1.8271391186440678,
+            "copies_union_ms": 0.22738038983050848,
+            "gpu_activity_union_ms": 2.050275186440678,
+            "host_cuda_sync_union_ms": 1.4904029830508474,
+            "host_cuda_api_union_ms": 2.1625276440677967
+          },
+          "draft_tail": {
+            "wall_ms": 0.3295544406779661,
+            "dense_and_other_union_ms": 0.0,
+            "expert_masked_union_ms": 0.0,
+            "kernels_union_ms": 0.0,
+            "copies_union_ms": 0.0,
+            "gpu_activity_union_ms": 0.0,
+            "host_cuda_sync_union_ms": 0.0,
+            "host_cuda_api_union_ms": 0.0
+          },
+          "verify_target": {
+            "wall_ms": 83.3778766101695,
+            "dense_and_other_union_ms": 27.6322676779661,
+            "expert_masked_union_ms": 5.015045220338983,
+            "kernels_union_ms": 32.64731289830508,
+            "copies_union_ms": 8.94021793220339,
+            "gpu_activity_union_ms": 41.28118255932203,
+            "host_cuda_sync_union_ms": 13.366897033898304,
+            "host_cuda_api_union_ms": 33.84096572881356
+          },
+          "mtp_catchup": {
+            "wall_ms": 2.538617491525424,
+            "dense_and_other_union_ms": 0.6176162711864407,
+            "expert_masked_union_ms": 0.271015,
+            "kernels_union_ms": 0.8886312711864407,
+            "copies_union_ms": 0.20165894915254237,
+            "gpu_activity_union_ms": 1.0811170169491526,
+            "host_cuda_sync_union_ms": 0.18977725423728814,
+            "host_cuda_api_union_ms": 0.8318608983050847
+          },
+          "sampling_accept_host": {
+            "wall_ms": 1.449814779661017,
+            "dense_and_other_union_ms": 0.0,
+            "expert_masked_union_ms": 0.0,
+            "kernels_union_ms": 0.0,
+            "copies_union_ms": 0.6338758813559322,
+            "gpu_activity_union_ms": 0.6338758813559322,
+            "host_cuda_sync_union_ms": 0.030763508474576273,
+            "host_cuda_api_union_ms": 0.030763508474576273
+          },
+          "emit_and_host": {
+            "wall_ms": 0.16394413559322032,
+            "dense_and_other_union_ms": 0.0,
+            "expert_masked_union_ms": 0.0,
+            "kernels_union_ms": 0.0,
+            "copies_union_ms": 0.016013457627118644,
+            "gpu_activity_union_ms": 0.016013457627118644,
+            "host_cuda_sync_union_ms": 0.0,
+            "host_cuda_api_union_ms": 0.0
+          }
+        },
+        "cpu_graph_counters": {
+          "calls": [
+            299,
+            180,
+            0,
+            0,
+            2940,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ms_per_request_round": [
+            0.1918129,
+            0.6674405333333334,
+            0.0,
+            0.0,
+            37.5501862,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "cpu_samples": 30428,
+        "cpu_leaf_modules": {
+          "/usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0": 19274,
+          "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml-cpu.so.0.27.0": 10045,
+          "/usr/lib/x86_64-linux-gnu/libc.so.6": 207,
+          "/usr/lib/x86_64-linux-gnu/nsight-systems/target-linux-x64/libToolsInjection64.so": 130,
+          "/usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04": 364,
+          "[vdso]": 32,
+          "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml-base.so.0.27.0": 106,
+          "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": 15,
+          "[kernel.kallsyms]": 47,
+          "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama-common.so.0.7.0": 14,
+          "/usr/lib/x86_64-linux-gnu/nsight-systems/target-linux-x64/libcupti.so.12.0": 104,
+          "/usr/lib/x86_64-linux-gnu/libcudart.so.12.0.146": 38,
+          "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama.so.0.7.0": 10,
+          "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml-cuda.so.0.27.0": 38,
+          "/usr/lib/x86_64-linux-gnu/nsight-systems/target-linux-x64/libToolsInjectionMemoryAllocator.so": 2,
+          "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama-server-impl.so": 1,
+          "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33": 1
+        },
+        "alignment_spread_ns": 4553,
+        "activity": {
+          "dense_and_other_union_ms": 2023.946782,
+          "expert_masked_union_ms": 317.285758,
+          "kernels_union_ms": 2341.23254,
+          "copies_union_ms": 661.929327,
+          "gpu_activity_union_ms": 2983.465104,
+          "host_cuda_sync_union_ms": 1113.872983,
+          "host_cuda_api_union_ms": 2506.964114
+        }
+      },
+      "off-counters": {
+        "request": {
+          "kind": "profile_request",
+          "prompt": "code-duration",
+          "graphs": false,
+          "plain": false,
+          "counters_only": true,
+          "waited_s": 5,
+          "pre_busy_cores": 0.19,
+          "owned_profiler_processes": [
+            63760,
+            63763
+          ],
+          "foreign_cores": 0.17019984973246519,
+          "accepted": true,
+          "wall_s": 6.462990429950878,
+          "tokens": 218,
+          "pieces": 217,
+          "decode_tok_s": 44.30110837953934,
+          "ttft_s": 1.5622835159301758,
+          "server_timings": {
+            "predicted_per_second": 44.3010930937454,
+            "draft_n": 180,
+            "draft_n_accepted": 158,
+            "predicted_n": 218
+          },
+          "text_head": "```python\nimport re\n\ndef parse_duration(s: str) -> int:\n    if not s:\n        raise ValueError(\"Empty string\")\n    \n    pattern = r'^(?:(\\d+)h)?(?:(\\d+)m)?(?:(\\",
+          "engine_cpu_s": 140.71,
+          "engine_busy_cores": 21.77913260300152,
+          "engine_cpu_s_per_token": 0.6454587155963303,
+          "text_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+          "mean_accepted_length_including_bonus": 3.63,
+          "epoch": 1792317026.2,
+          "utc": "2026-10-18 09:50:26"
+        },
+        "stats": {
+          "begin_calls": 1,
+          "draft_calls": 60,
+          "accept_calls": 60,
+          "draft_tokens": 180,
+          "accepted_tokens": 158,
+          "begin_ms": 0.004,
+          "draft_ms": 478.21000000000004,
+          "accept_ms": 0.1
+        },
+        "complete_three_step_rounds": 59,
+        "mean_complete_round_ms": 81.198,
+        "server_decode_ms": 4898.3,
+        "server_ms_per_request_round": 81.63833333333334,
+        "phase_means": {
+          "draft_1_with_setup": {
+            "wall_ms": 2.8209661016949155
+          },
+          "draft_2": {
+            "wall_ms": 2.4451186440677968
+          },
+          "draft_3": {
+            "wall_ms": 2.333728813559322
+          },
+          "draft_tail": {
+            "wall_ms": 0.06730508474576272
+          },
+          "verify_target": {
+            "wall_ms": 70.11349152542373
+          },
+          "mtp_catchup": {
+            "wall_ms": 1.967728813559322
+          },
+          "sampling_accept_host": {
+            "wall_ms": 1.3630169491525423
+          },
+          "emit_and_host": {
+            "wall_ms": 0.08664406779661017
+          }
+        },
+        "cpu_graph_counters": {
+          "calls": [
+            299,
+            180,
+            0,
+            0,
+            2940,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ms_per_request_round": [
+            0.18500375,
+            0.6522622333333333,
+            0.0,
+            0.0,
+            34.535702799999996,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "on-counters": {
+        "request": {
+          "kind": "profile_request",
+          "prompt": "code-duration",
+          "graphs": true,
+          "plain": false,
+          "counters_only": true,
+          "waited_s": 5,
+          "pre_busy_cores": 0.18,
+          "owned_profiler_processes": [
+            64525,
+            64528
+          ],
+          "foreign_cores": 0.2648270859597693,
+          "accepted": true,
+          "wall_s": 6.532564423047006,
+          "tokens": 218,
+          "pieces": 217,
+          "decode_tok_s": 43.93178535958494,
+          "ttft_s": 1.5907039642333984,
+          "server_timings": {
+            "predicted_per_second": 43.90682526540361,
+            "draft_n": 180,
+            "draft_n_accepted": 158,
+            "predicted_n": 218
+          },
+          "text_head": "```python\nimport re\n\ndef parse_duration(s: str) -> int:\n    if not s:\n        raise ValueError(\"Empty string\")\n    \n    pattern = r'^(?:(\\d+)h)?(?:(\\d+)m)?(?:(\\",
+          "engine_cpu_s": 142.18,
+          "engine_busy_cores": 21.77212774463249,
+          "engine_cpu_s_per_token": 0.6522018348623854,
+          "text_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+          "mean_accepted_length_including_bonus": 3.63,
+          "epoch": 1792317176.8,
+          "utc": "2026-10-18 09:52:56"
+        },
+        "stats": {
+          "begin_calls": 1,
+          "draft_calls": 60,
+          "accept_calls": 60,
+          "draft_tokens": 180,
+          "accepted_tokens": 158,
+          "begin_ms": 0.004999999999999999,
+          "draft_ms": 475.61299999999994,
+          "accept_ms": 0.121
+        },
+        "complete_three_step_rounds": 59,
+        "mean_complete_round_ms": 81.82133898305085,
+        "server_decode_ms": 4942.28,
+        "server_ms_per_request_round": 82.37133333333333,
+        "phase_means": {
+          "draft_1_with_setup": {
+            "wall_ms": 2.8174576271186442
+          },
+          "draft_2": {
+            "wall_ms": 2.4231525423728812
+          },
+          "draft_3": {
+            "wall_ms": 2.3155254237288134
+          },
+          "draft_tail": {
+            "wall_ms": 0.05454237288135593
+          },
+          "verify_target": {
+            "wall_ms": 70.81349152542373
+          },
+          "mtp_catchup": {
+            "wall_ms": 1.9614915254237288
+          },
+          "sampling_accept_host": {
+            "wall_ms": 1.3723728813559322
+          },
+          "emit_and_host": {
+            "wall_ms": 0.06330508474576271
+          }
+        },
+        "cpu_graph_counters": {
+          "calls": [
+            299,
+            179,
+            0,
+            0,
+            2940,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ms_per_request_round": [
+            0.18588405,
+            0.6346460333333332,
+            0.0,
+            0.0,
+            35.25082870000001,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "on-plain": {
+        "request": {
+          "kind": "profile_request",
+          "prompt": "code-duration",
+          "graphs": true,
+          "plain": true,
+          "counters_only": false,
+          "waited_s": 5,
+          "pre_busy_cores": 0.25,
+          "owned_profiler_processes": [
+            65367,
+            65370
+          ],
+          "foreign_cores": 0.17911977508477403,
+          "accepted": true,
+          "wall_s": 6.476113536045887,
+          "tokens": 218,
+          "pieces": 217,
+          "decode_tok_s": 44.25928115258026,
+          "ttft_s": 1.5717730522155762,
+          "server_timings": {
+            "predicted_per_second": 44.25904143890426,
+            "draft_n": 180,
+            "draft_n_accepted": 158,
+            "predicted_n": 218
+          },
+          "text_head": "```python\nimport re\n\ndef parse_duration(s: str) -> int:\n    if not s:\n        raise ValueError(\"Empty string\")\n    \n    pattern = r'^(?:(\\d+)h)?(?:(\\d+)m)?(?:(\\",
+          "engine_cpu_s": 140.98,
+          "engine_busy_cores": 21.773380627831532,
+          "engine_cpu_s_per_token": 0.646697247706422,
+          "text_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+          "mean_accepted_length_including_bonus": 3.63,
+          "epoch": 1792317327.3,
+          "utc": "2026-10-18 09:55:27"
+        },
+        "stats": {
+          "begin_calls": 1,
+          "draft_calls": 60,
+          "accept_calls": 60,
+          "draft_tokens": 180,
+          "accepted_tokens": 158,
+          "begin_ms": 0.004,
+          "draft_ms": 471.07899999999995,
+          "accept_ms": 0.10700000000000001
+        },
+        "complete_three_step_rounds": 0,
+        "mean_complete_round_ms": null,
+        "server_decode_ms": 4902.95,
+        "server_ms_per_request_round": 81.71583333333334,
+        "phase_means": {},
+        "cpu_graph_counters": null
+      }
+    },
+    "en-1": {
+      "off": {
+        "request": {
+          "kind": "profile_request",
+          "prompt": "en-1",
+          "graphs": false,
+          "plain": false,
+          "counters_only": false,
+          "waited_s": 5,
+          "pre_busy_cores": 0.33,
+          "owned_profiler_processes": [
+            63119,
+            63121,
+            63129,
+            63146,
+            63147,
+            63148,
+            63153
+          ],
+          "foreign_cores": 0.2391736211639038,
+          "accepted": true,
+          "wall_s": 8.780232492950745,
+          "tokens": 256,
+          "pieces": 256,
+          "decode_tok_s": 32.39432981759668,
+          "ttft_s": 0.9057340621948242,
+          "server_timings": {
+            "predicted_per_second": 32.382042062367816,
+            "draft_n": 253,
+            "draft_n_accepted": 170,
+            "predicted_n": 256
+          },
+          "text_head": "### Difference Between a Process and a Thread\n\nTo understand the difference, it helps to visualize them as organizational units within an operating system.\n\n###",
+          "engine_cpu_s": 194.74,
+          "engine_busy_cores": 22.185869126241805,
+          "engine_cpu_s_per_token": 0.760703125,
+          "text_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+          "mean_accepted_length_including_bonus": 3.0,
+          "epoch": 1792316942.6,
+          "utc": "2026-10-18 09:49:02"
+        },
+        "stats": {
+          "begin_calls": 1,
+          "draft_calls": 85,
+          "accept_calls": 85,
+          "draft_tokens": 253,
+          "accepted_tokens": 170,
+          "begin_ms": 0.005000000000000001,
+          "draft_ms": 823.823,
+          "accept_ms": 0.205
+        },
+        "complete_three_step_rounds": 83,
+        "mean_complete_round_ms": 92.45117995180723,
+        "server_decode_ms": 7874.73,
+        "server_ms_per_request_round": 92.64388235294118,
+        "phase_means": {
+          "draft_1_with_setup": {
+            "wall_ms": 3.6067469879518073,
+            "dense_and_other_union_ms": 1.8266890843373493,
+            "expert_masked_union_ms": 0.0,
+            "kernels_union_ms": 1.8266890843373493,
+            "copies_union_ms": 0.36279563855421687,
+            "gpu_activity_union_ms": 2.1850511325301203,
+            "host_cuda_sync_union_ms": 1.5736300361445783,
+            "host_cuda_api_union_ms": 2.3878076024096386
+          },
+          "draft_2": {
+            "wall_ms": 2.9393179759036143,
+            "dense_and_other_union_ms": 1.827229421686747,
+            "expert_masked_union_ms": 0.0,
+            "kernels_union_ms": 1.827229421686747,
+            "copies_union_ms": 0.26646306024096383,
+            "gpu_activity_union_ms": 2.0892288313253013,
+            "host_cuda_sync_union_ms": 1.5261371445783132,
+            "host_cuda_api_union_ms": 2.210288662650602
+          },
+          "draft_3": {
+            "wall_ms": 2.9242879999999998,
+            "dense_and_other_union_ms": 1.8278295662650603,
+            "expert_masked_union_ms": 0.0,
+            "kernels_union_ms": 1.8278295662650603,
+            "copies_union_ms": 0.29118436144578314,
+            "gpu_activity_union_ms": 2.1145114457831324,
+            "host_cuda_sync_union_ms": 1.5513461927710843,
+            "host_cuda_api_union_ms": 2.2360745542168674
+          },
+          "draft_tail": {
+            "wall_ms": 0.12215826506024097,
+            "dense_and_other_union_ms": 0.0,
+            "expert_masked_union_ms": 0.0,
+            "kernels_union_ms": 0.0,
+            "copies_union_ms": 0.0,
+            "gpu_activity_union_ms": 0.0,
+            "host_cuda_sync_union_ms": 0.0,
+            "host_cuda_api_union_ms": 0.0
+          },
+          "verify_target": {
+            "wall_ms": 78.76076568674699,
+            "dense_and_other_union_ms": 27.723606831325302,
+            "expert_masked_union_ms": 6.127243566265061,
+            "kernels_union_ms": 33.850850397590364,
+            "copies_union_ms": 8.85589513253012,
+            "gpu_activity_union_ms": 42.39932837349397,
+            "host_cuda_sync_union_ms": 13.437737530120481,
+            "host_cuda_api_union_ms": 33.75242531325301
+          },
+          "mtp_catchup": {
+            "wall_ms": 2.719645301204819,
+            "dense_and_other_union_ms": 0.6175710963855422,
+            "expert_masked_union_ms": 0.2680518192771084,
+            "kernels_union_ms": 0.8856229156626506,
+            "copies_union_ms": 0.20240401204819278,
+            "gpu_activity_union_ms": 1.0786447108433734,
+            "host_cuda_sync_union_ms": 0.18095596385542168,
+            "host_cuda_api_union_ms": 0.831924373493976
+          },
+          "sampling_accept_host": {
+            "wall_ms": 1.2574596626506025,
+            "dense_and_other_union_ms": 0.0,
+            "expert_masked_union_ms": 0.0,
+            "kernels_union_ms": 0.0,
+            "copies_union_ms": 0.6322372048192771,
+            "gpu_activity_union_ms": 0.6322372048192771,
+            "host_cuda_sync_union_ms": 0.026500012048192773,
+            "host_cuda_api_union_ms": 0.026500012048192773
+          },
+          "emit_and_host": {
+            "wall_ms": 0.12079807228915662,
+            "dense_and_other_union_ms": 0.0,
+            "expert_masked_union_ms": 0.0,
+            "kernels_union_ms": 0.0,
+            "copies_union_ms": 0.01772902409638554,
+            "gpu_activity_union_ms": 0.01772902409638554,
+            "host_cuda_sync_union_ms": 0.0,
+            "host_cuda_api_union_ms": 0.0
+          }
+        },
+        "cpu_graph_counters": {
+          "calls": [
+            424,
+            254,
+            49,
+            0,
+            4116,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ms_per_request_round": [
+            0.3636703176470588,
+            0.7262956470588235,
+            0.22640432941176472,
+            0.0,
+            32.300759835294116,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "cpu_samples": 40903,
+        "cpu_leaf_modules": {
+          "/usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0": 27258,
+          "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml-cpu.so.0.27.0": 12067,
+          "/usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04": 536,
+          "/usr/lib/x86_64-linux-gnu/nsight-systems/target-linux-x64/libToolsInjection64.so": 181,
+          "/usr/lib/x86_64-linux-gnu/libc.so.6": 307,
+          "[vdso]": 38,
+          "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml-base.so.0.27.0": 126,
+          "/usr/lib/x86_64-linux-gnu/nsight-systems/target-linux-x64/libcupti.so.12.0": 170,
+          "[kernel.kallsyms]": 59,
+          "/usr/lib/x86_64-linux-gnu/libcudart.so.12.0.146": 45,
+          "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": 13,
+          "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama-common.so.0.7.0": 9,
+          "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libggml-cuda.so.0.27.0": 66,
+          "/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama.so.0.7.0": 22,
+          "/usr/lib/x86_64-linux-gnu/nsight-systems/target-linux-x64/libToolsInjectionMemoryAllocator.so": 4,
+          "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33": 2
+        },
+        "alignment_spread_ns": 5422,
+        "activity": {
+          "dense_and_other_union_ms": 2867.865825,
+          "expert_masked_union_ms": 540.285653,
+          "kernels_union_ms": 3408.151478,
+          "copies_union_ms": 916.662108,
+          "gpu_activity_union_ms": 4296.864442,
+          "host_cuda_sync_union_ms": 1564.279106,
+          "host_cuda_api_union_ms": 3531.55744
+        }
+      },
+      "off-counters": {
+        "request": {
+          "kind": "profile_request",
+          "prompt": "en-1",
+          "graphs": false,
+          "plain": false,
+          "counters_only": true,
+          "waited_s": 5,
+          "pre_busy_cores": 0.16,
+          "owned_profiler_processes": [
+            64085,
+            64088
+          ],
+          "foreign_cores": 0.20073827114337944,
+          "accepted": true,
+          "wall_s": 7.372784430044703,
+          "tokens": 256,
+          "pieces": 256,
+          "decode_tok_s": 39.2445335472466,
+          "ttft_s": 0.8722293376922607,
+          "server_timings": {
+            "predicted_per_second": 39.24528998806481,
+            "draft_n": 253,
+            "draft_n_accepted": 170,
+            "predicted_n": 256
+          },
+          "text_head": "### Difference Between a Process and a Thread\n\nTo understand the difference, it helps to visualize them as organizational units within an operating system.\n\n###",
+          "engine_cpu_s": 162.52,
+          "engine_busy_cores": 22.051153651176044,
+          "engine_cpu_s_per_token": 0.63484375,
+          "text_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+          "mean_accepted_length_including_bonus": 3.0,
+          "epoch": 1792317101.9,
+          "utc": "2026-10-18 09:51:41"
+        },
+        "stats": {
+          "begin_calls": 1,
+          "draft_calls": 85,
+          "accept_calls": 85,
+          "draft_tokens": 253,
+          "accepted_tokens": 170,
+          "begin_ms": 0.004,
+          "draft_ms": 670.183,
+          "accept_ms": 0.156
+        },
+        "complete_three_step_rounds": 83,
+        "mean_complete_round_ms": 76.36444578313252,
+        "server_decode_ms": 6497.6,
+        "server_ms_per_request_round": 76.44235294117648,
+        "phase_means": {
+          "draft_1_with_setup": {
+            "wall_ms": 2.871012048192771
+          },
+          "draft_2": {
+            "wall_ms": 2.389867469879518
+          },
+          "draft_3": {
+            "wall_ms": 2.417855421686747
+          },
+          "draft_tail": {
+            "wall_ms": 0.06337349397590361
+          },
+          "verify_target": {
+            "wall_ms": 65.35150602409638
+          },
+          "mtp_catchup": {
+            "wall_ms": 2.0177228915662653
+          },
+          "sampling_accept_host": {
+            "wall_ms": 1.189421686746988
+          },
+          "emit_and_host": {
+            "wall_ms": 0.0636867469879518
+          }
+        },
+        "cpu_graph_counters": {
+          "calls": [
+            425,
+            255,
+            49,
+            0,
+            4116,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ms_per_request_round": [
+            0.211516,
+            0.7062130470588235,
+            0.20121528235294117,
+            0.0,
+            29.424884105882356,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "on-counters": {
+        "request": {
+          "kind": "profile_request",
+          "prompt": "en-1",
+          "graphs": true,
+          "plain": false,
+          "counters_only": true,
+          "waited_s": 5,
+          "pre_busy_cores": 0.19,
+          "owned_profiler_processes": [
+            65030,
+            65033
+          ],
+          "foreign_cores": 0.19132488160023103,
+          "accepted": true,
+          "wall_s": 7.369663517922163,
+          "tokens": 256,
+          "pieces": 256,
+          "decode_tok_s": 39.20246773609815,
+          "ttft_s": 0.8621435165405273,
+          "server_timings": {
+            "predicted_per_second": 39.203103901907994,
+            "draft_n": 253,
+            "draft_n_accepted": 170,
+            "predicted_n": 256
+          },
+          "text_head": "### Difference Between a Process and a Thread\n\nTo understand the difference, it helps to visualize them as organizational units within an operating system.\n\n###",
+          "engine_cpu_s": 162.44,
+          "engine_busy_cores": 22.04950933984774,
+          "engine_cpu_s_per_token": 0.63453125,
+          "text_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+          "mean_accepted_length_including_bonus": 3.0,
+          "epoch": 1792317252.5,
+          "utc": "2026-10-18 09:54:12"
+        },
+        "stats": {
+          "begin_calls": 1,
+          "draft_calls": 85,
+          "accept_calls": 85,
+          "draft_tokens": 253,
+          "accepted_tokens": 170,
+          "begin_ms": 0.004,
+          "draft_ms": 664.498,
+          "accept_ms": 0.13299999999999998
+        },
+        "complete_three_step_rounds": 83,
+        "mean_complete_round_ms": 76.45004819277108,
+        "server_decode_ms": 6504.59,
+        "server_ms_per_request_round": 76.52458823529412,
+        "phase_means": {
+          "draft_1_with_setup": {
+            "wall_ms": 2.8527469879518073
+          },
+          "draft_2": {
+            "wall_ms": 2.3709156626506025
+          },
+          "draft_3": {
+            "wall_ms": 2.39110843373494
+          },
+          "draft_tail": {
+            "wall_ms": 0.06659036144578313
+          },
+          "verify_target": {
+            "wall_ms": 65.53809638554218
+          },
+          "mtp_catchup": {
+            "wall_ms": 1.9829277108433736
+          },
+          "sampling_accept_host": {
+            "wall_ms": 1.1800481927710844
+          },
+          "emit_and_host": {
+            "wall_ms": 0.0676144578313253
+          }
+        },
+        "cpu_graph_counters": {
+          "calls": [
+            425,
+            255,
+            49,
+            0,
+            4116,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ms_per_request_round": [
+            0.21498857647058822,
+            0.7052747294117647,
+            0.19434615294117646,
+            0.0,
+            29.764680447058822,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "on-plain": {
+        "request": {
+          "kind": "profile_request",
+          "prompt": "en-1",
+          "graphs": true,
+          "plain": true,
+          "counters_only": false,
+          "waited_s": 5,
+          "pre_busy_cores": 0.18,
+          "owned_profiler_processes": [
+            65874,
+            65877
+          ],
+          "foreign_cores": 0.16647804415507544,
+          "accepted": true,
+          "wall_s": 7.3282936869654804,
+          "tokens": 256,
+          "pieces": 256,
+          "decode_tok_s": 39.423960254451835,
+          "ttft_s": 0.8586015701293945,
+          "server_timings": {
+            "predicted_per_second": 39.424464658286524,
+            "draft_n": 253,
+            "draft_n_accepted": 170,
+            "predicted_n": 256
+          },
+          "text_head": "### Difference Between a Process and a Thread\n\nTo understand the difference, it helps to visualize them as organizational units within an operating system.\n\n###",
+          "engine_cpu_s": 161.39,
+          "engine_busy_cores": 22.026941805703743,
+          "engine_cpu_s_per_token": 0.6304296875,
+          "text_sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801",
+          "mean_accepted_length_including_bonus": 3.0,
+          "epoch": 1792317403.0,
+          "utc": "2026-10-18 09:56:42"
+        },
+        "stats": {
+          "begin_calls": 1,
+          "draft_calls": 85,
+          "accept_calls": 85,
+          "draft_tokens": 253,
+          "accepted_tokens": 170,
+          "begin_ms": 0.004999999999999999,
+          "draft_ms": 659.349,
+          "accept_ms": 0.13799999999999998
+        },
+        "complete_three_step_rounds": 0,
+        "mean_complete_round_ms": null,
+        "server_decode_ms": 6468.06,
+        "server_ms_per_request_round": 76.09482352941177,
+        "phase_means": {},
+        "cpu_graph_counters": null
+      }
+    }
+  },
+  "scope": "One request per prompt/mode, diagnostic attribution, not a three-run performance claim. Full-round means omit first/last partial rounds. CPU graph clocks overlap GPU activity; bucket4 contains target verify plus MTP catch-up; sample percentages aggregate CPU activity across all threads."
+}

@@ -1,0 +1,62 @@
+
+/opt/llm-gateway/data/build/llama-l5/build-cuda/bin/libllama-common.so.0.7.0:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+00000000002e2670 <_ZZNSt9once_flag18_Prepare_executionC4IZSt9call_onceIZ15common_log_mainvEUlvE_JEEvRS_OT_DpOT0_EUlvE_EERS5_ENUlvE_4_FUNEv>:
+  2e2670:	f3 0f 1e fa          	endbr64
+  2e2674:	41 57                	push   %r15
+  2e2676:	bf d0 00 00 00       	mov    $0xd0,%edi
+  2e267b:	41 56                	push   %r14
+  2e267d:	41 55                	push   %r13
+  2e267f:	41 54                	push   %r12
+  2e2681:	55                   	push   %rbp
+  2e2682:	53                   	push   %rbx
+  2e2683:	48 83 ec 68          	sub    $0x68,%rsp
+  2e2687:	64 48 8b 04 25 28 00 	mov    %fs:0x28,%rax
+  2e268e:	00 00 
+  2e2690:	48 89 44 24 58       	mov    %rax,0x58(%rsp)
+  2e2695:	31 c0                	xor    %eax,%eax
+  2e2697:	e8 c4 f4 dd ff       	call   c1b60 <_Znwm@plt>
+  2e269c:	66 0f ef c0          	pxor   %xmm0,%xmm0
+  2e26a0:	48 c7 40 20 00 00 00 	movq   $0x0,0x20(%rax)
+  2e26a7:	00 
+  2e26a8:	48 89 c3             	mov    %rax,%rbx
+  2e26ab:	4c 8d 68 30          	lea    0x30(%rax),%r13
+  2e26af:	48 c7 40 28 00 00 00 	movq   $0x0,0x28(%rax)
+  2e26b6:	00 
+  2e26b7:	4c 89 ef             	mov    %r13,%rdi
+  2e26ba:	4c 8d 63 60          	lea    0x60(%rbx),%r12
+  2e26be:	0f 11 00             	movups %xmm0,(%rax)
+  2e26c1:	0f 11 40 10          	movups %xmm0,0x10(%rax)
+  2e26c5:	e8 c6 4e de ff       	call   c7590 <_ZNSt18condition_variableC1Ev@plt>
+  2e26ca:	4c 89 e7             	mov    %r12,%rdi
+  2e26cd:	e8 be 4e de ff       	call   c7590 <_ZNSt18condition_variableC1Ev@plt>
+  2e26d2:	c6 83 9c 00 00 00 00 	movb   $0x0,0x9c(%rbx)
+  2e26d9:	66 0f ef c0          	pxor   %xmm0,%xmm0
+  2e26dd:	48 8d 83 a8 00 00 00 	lea    0xa8(%rbx),%rax
+  2e26e4:	48 c7 83 b8 00 00 00 	movq   $0x0,0xb8(%rbx)
+  2e26eb:	00 00 00 00 
+  2e26ef:	48 c7 83 90 00 00 00 	movq   $0x0,0x90(%rbx)
+  2e26f6:	00 00 00 00 
+  2e26fa:	c7 83 98 00 00 00 01 	movl   $0x1,0x98(%rbx)
+  2e2701:	00 00 00 
+  2e2704:	0f 11 83 a8 00 00 00 	movups %xmm0,0xa8(%rbx)
+  2e270b:	48 89 04 24          	mov    %rax,(%rsp)
+  2e270f:	e8 3c 3b de ff       	call   c6250 <_ZNSt6chrono3_V212system_clock3nowEv@plt>
+  2e2714:	66 0f ef c0          	pxor   %xmm0,%xmm0
+  2e2718:	bf 00 01 00 00       	mov    $0x100,%edi
+  2e271d:	c7 44 24 20 02 00 00 	movl   $0x2,0x20(%rsp)
+  2e2724:	00 
+  2e2725:	48 89 c1             	mov    %rax,%rcx
+  2e2728:	0f 29 44 24 30       	movaps %xmm0,0x30(%rsp)
+  2e272d:	48 b8 cf f7 53 e3 a5 	movabs $0x20c49ba5e353f7cf,%rax
+  2e2734:	9b c4 20 
+  2e2737:	48 f7 e9             	imul   %rcx
+  2e273a:	48 c1 f9 3f          	sar    $0x3f,%rcx
+  2e273e:	48 c1 fa 07          	sar    $0x7,%rdx
+  2e2742:	48 29 ca             	sub    %rcx,%rdx
+  2e2745:	48 89 93 a0 00 00 00 	mov    %rdx,0xa0(%rbx)
+  2e274c:	e8                   	.byte 0xe8
+  2e274d:	0f f4 dd             	pmuludq %mm5,%mm3

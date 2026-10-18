@@ -1,0 +1,12 @@
+{
+  "command": [
+    "python3",
+    "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/profile_request.py",
+    "/opt/llm-gateway/data/build/llama-l5/task-logs/round10/profile-code-duration-off-counters",
+    "code-duration",
+    "--counters-only"
+  ],
+  "permission": "Owner explicitly authorized sudo and CPU sampling",
+  "production_source_changed": false,
+  "no_build": true
+}

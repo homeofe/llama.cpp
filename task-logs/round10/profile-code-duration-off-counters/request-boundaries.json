@@ -1,0 +1,6 @@
+{
+  "start_epoch_ns": 1792317019721769974,
+  "first_token_epoch_ns": 1792317021284104911,
+  "end_epoch_ns": 1792317026184735334,
+  "scope": "Client observation boundaries; first-token delivery can lag server emission."
+}

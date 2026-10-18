@@ -1,0 +1,314 @@
+{
+  "64088": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64091": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64092": {
+    "Name": "cuda00001400006",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64097": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64098": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64099": {
+    "Name": "cuda-EvtHandlr",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64100": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64101": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64102": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64103": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64104": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64105": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64106": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64107": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64108": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64109": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64110": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64111": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64112": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64113": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64114": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64115": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64116": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64117": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64118": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64119": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64120": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64121": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64122": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64123": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64124": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64125": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64126": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64127": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64128": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64129": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64130": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64131": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64132": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64133": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64134": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64135": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64136": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64137": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64138": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64139": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64140": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64141": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64142": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64143": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64144": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64145": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64146": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64147": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  },
+  "64291": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "1,25"
+  },
+  "64292": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "2,26"
+  },
+  "64293": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "3,27"
+  },
+  "64294": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "4,28"
+  },
+  "64295": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "5,29"
+  },
+  "64296": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "6,30"
+  },
+  "64297": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "7,31"
+  },
+  "64298": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "8,32"
+  },
+  "64299": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "9,33"
+  },
+  "64300": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "10,34"
+  },
+  "64301": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "11,35"
+  },
+  "64302": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "12,36"
+  },
+  "64303": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "13,37"
+  },
+  "64304": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "14,38"
+  },
+  "64305": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "15,39"
+  },
+  "64306": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "16,40"
+  },
+  "64307": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "17,41"
+  },
+  "64308": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "18,42"
+  },
+  "64309": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "19,43"
+  },
+  "64310": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "20,44"
+  },
+  "64311": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "21,45"
+  },
+  "64312": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "22,46"
+  },
+  "64313": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "23,47"
+  },
+  "64324": {
+    "Name": "llama-server",
+    "Cpus_allowed_list": "0,24"
+  }
+}

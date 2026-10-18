@@ -1,0 +1,40 @@
+
+/usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+00000000000256a0 <omp_get_num_procs@@OMP_1.0+0x2f0>:
+   256a0:	mov    0x300c1(%rip),%rsi        # 55768 <acc_update_self_async_array_h_@@OACC_2.5+0xeb40>
+   256a7:	mov    0x2fd6a(%rip),%rax        # 55418 <acc_update_self_async_array_h_@@OACC_2.5+0xe7f0>
+   256ae:	cmp    %rax,0x2fd6b(%rip)        # 55420 <acc_update_self_async_array_h_@@OACC_2.5+0xe7f8>
+   256b5:	jb     25720 <omp_get_num_procs@@OMP_1.0+0x370>
+   256b7:	xor    %eax,%eax
+   256b9:	test   %rsi,%rsi
+   256bc:	jne    256cb <omp_get_num_procs@@OMP_1.0+0x31b>
+   256be:	jmp    256e0 <omp_get_num_procs@@OMP_1.0+0x330>
+   256c0:	pause
+   256c2:	add    $0x1,%rax
+   256c6:	cmp    %rsi,%rax
+   256c9:	je     256e0 <omp_get_num_procs@@OMP_1.0+0x330>
+   256cb:	mov    (%rdi),%ecx
+   256cd:	cmp    %ecx,%edx
+   256cf:	je     256c0 <omp_get_num_procs@@OMP_1.0+0x310>
+   256d1:	mov    (%rdi),%eax
+   256d3:	cmp    %edx,%eax
+   256d5:	je     256a0 <omp_get_num_procs@@OMP_1.0+0x2f0>
+   256d7:	ret
+   256d8:	nopl   0x0(%rax,%rax,1)
+   256e0:	mov    0x2fd8a(%rip),%esi        # 55470 <acc_update_self_async_array_h_@@OACC_2.5+0xe848>
+   256e6:	xor    %r10d,%r10d
+   256e9:	mov    %r8d,%eax
+   256ec:	syscall
+   256ee:	cmp    $0xffffffffffffffda,%rax
+   256f2:	jne    256d1 <omp_get_num_procs@@OMP_1.0+0x321>
+   256f4:	mov    0x2fd76(%rip),%esi        # 55470 <acc_update_self_async_array_h_@@OACC_2.5+0xe848>
+   256fa:	xor    %r10d,%r10d
+   256fd:	mov    %r8d,%eax
+   25700:	.byte 0x81
+   25701:	.byte 0x25
+   25702:	push   $0xfffffffffffffffd
+   25704:	.byte 0x2

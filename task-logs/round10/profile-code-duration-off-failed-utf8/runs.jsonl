@@ -1,0 +1,3 @@
+{"kind": "profile_start", "pid": 60912, "graphs": false, "plain": false, "counters_only": false, "epoch": 1792316505.7, "utc": "2026-10-18 09:41:45"}
+{"kind": "gpu_released_before_trace_export", "epoch": 1792316615.6, "utc": "2026-10-18 09:43:35"}
+{"kind": "profile_exit", "exit": 1, "epoch": 1792316648.8, "utc": "2026-10-18 09:44:08"}

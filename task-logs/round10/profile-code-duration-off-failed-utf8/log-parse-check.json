@@ -1,0 +1,4483 @@
+{
+  "statistics": [
+    {
+      "epoch_us": 1792316587537266,
+      "begin_calls": 1,
+      "draft_calls": 3,
+      "accept_calls": 3,
+      "draft_tokens": 9,
+      "accepted_tokens": 4,
+      "begin_ms": 0.009,
+      "draft_ms": 82.797,
+      "accept_ms": 0.007
+    },
+    {
+      "epoch_us": 1792316601155994,
+      "begin_calls": 2,
+      "draft_calls": 63,
+      "accept_calls": 63,
+      "draft_tokens": 189,
+      "accepted_tokens": 162,
+      "begin_ms": 0.013,
+      "draft_ms": 664.372,
+      "accept_ms": 0.128
+    }
+  ],
+  "request_statistics_delta": {
+    "begin_calls": 1,
+    "draft_calls": 60,
+    "accept_calls": 60,
+    "draft_tokens": 180,
+    "accepted_tokens": 158,
+    "begin_ms": 0.004,
+    "draft_ms": 581.5749999999999,
+    "accept_ms": 0.121
+  },
+  "decode_times": [
+    {
+      "epoch_us": 1792316587537229,
+      "ms": 387.8,
+      "tokens": 8
+    },
+    {
+      "epoch_us": 1792316601155950,
+      "ms": 6057.3,
+      "tokens": 218
+    }
+  ],
+  "rounds": [
+    {
+      "start_us": 1792316586345592,
+      "candidate_us": {},
+      "events": [
+        {
+          "epoch_us": 1792316586345738,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        }
+      ],
+      "verify_start_us": 1792316586345738,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316586787158,
+        1792316586799649
+      ],
+      "next_round_us": 1792316586799662
+    },
+    {
+      "start_us": 1792316586799662,
+      "candidate_us": {},
+      "events": [
+        {
+          "epoch_us": 1792316586860680,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        }
+      ],
+      "verify_start_us": 1792316586860680,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316587144043,
+        1792316587147649
+      ],
+      "next_round_us": 1792316587149392
+    },
+    {
+      "start_us": 1792316587149392,
+      "candidate_us": {
+        "0": 1792316587205585,
+        "1": 1792316587207959,
+        "2": 1792316587210632
+      },
+      "events": [
+        {
+          "epoch_us": 1792316587205585,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:   1017 (   0.806) ' there'"
+        },
+        {
+          "epoch_us": 1792316587205588,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:     11 (   0.102) ','"
+        },
+        {
+          "epoch_us": 1792316587205589,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:      0 (   0.055) '!'"
+        },
+        {
+          "epoch_us": 1792316587207959,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:      0 (   0.809) '!'"
+        },
+        {
+          "epoch_us": 1792316587207962,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:     11 (   0.115) ','"
+        },
+        {
+          "epoch_us": 1792316587207963,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:     13 (   0.054) '.'"
+        },
+        {
+          "epoch_us": 1792316587210632,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2: 248046 (   0.975) '<|im_end|>'"
+        },
+        {
+          "epoch_us": 1792316587210635,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:   2500 (   0.006) ' How'"
+        },
+        {
+          "epoch_us": 1792316587210636,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:    353 (   0.006) ' I'"
+        },
+        {
+          "epoch_us": 1792316587210639,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 18, call_count = 1, gen = 3"
+        },
+        {
+          "epoch_us": 1792316587210702,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316587370938,
+          "message": "slot   operator(): id  0 | task 0 | add accepted tokens: sampled=11, ids.size=2, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316587210639,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316587210702,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316587367048,
+        1792316587368948
+      ],
+      "accepted_us": 1792316587370938,
+      "next_round_us": 1792316587371002
+    },
+    {
+      "start_us": 1792316587371002,
+      "candidate_us": {
+        "0": 1792316587374297,
+        "1": 1792316587377292,
+        "2": 1792316587379911
+      },
+      "events": [
+        {
+          "epoch_us": 1792316587374297,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:    821 (   0.526) ' my'"
+        },
+        {
+          "epoch_us": 1792316587374301,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:   1204 (   0.224) ' how'"
+        },
+        {
+          "epoch_us": 1792316587374302,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   6217 (   0.095) ' nice'"
+        },
+        {
+          "epoch_us": 1792316587377292,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:   4099 (   0.624) ' friend'"
+        },
+        {
+          "epoch_us": 1792316587377296,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:  23492 (   0.192) ' dear'"
+        },
+        {
+          "epoch_us": 1792316587377297,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:   1603 (   0.132) ' good'"
+        },
+        {
+          "epoch_us": 1792316587379911,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:     13 (   0.640) '.'"
+        },
+        {
+          "epoch_us": 1792316587379915,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:      0 (   0.189) '!'"
+        },
+        {
+          "epoch_us": 1792316587379916,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   1532 (   0.085) ' here'"
+        },
+        {
+          "epoch_us": 1792316587379918,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 20, call_count = 2, gen = 3"
+        },
+        {
+          "epoch_us": 1792316587379969,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316587451649,
+          "message": "slot   operator(): id  0 | task 0 | add accepted tokens: sampled=1204, ids.size=1, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316587379918,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316587379969,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316587448519,
+        1792316587450984
+      ],
+      "accepted_us": 1792316587451649,
+      "next_round_us": 1792316587451708
+    },
+    {
+      "start_us": 1792316587451708,
+      "candidate_us": {
+        "0": 1792316587458721,
+        "1": 1792316587461845,
+        "2": 1792316587464378
+      },
+      "events": [
+        {
+          "epoch_us": 1792316587458721,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:    513 (   0.996) ' are'"
+        },
+        {
+          "epoch_us": 1792316587458724,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:    628 (   0.002) ' can'"
+        },
+        {
+          "epoch_us": 1792316587458725,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:    635 (   0.001) ' do'"
+        },
+        {
+          "epoch_us": 1792316587461845,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    488 (   1.000) ' you'"
+        },
+        {
+          "epoch_us": 1792316587461848,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:   9053 (   0.000) 'you'"
+        },
+        {
+          "epoch_us": 1792316587461849,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:  14551 (   0.000) ' YOU'"
+        },
+        {
+          "epoch_us": 1792316587464378,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:     30 (   0.982) '?'"
+        },
+        {
+          "epoch_us": 1792316587464381,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:      0 (   0.008) '!'"
+        },
+        {
+          "epoch_us": 1792316587464382,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:     13 (   0.006) '.'"
+        },
+        {
+          "epoch_us": 1792316587464385,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 21, call_count = 3, gen = 3"
+        },
+        {
+          "epoch_us": 1792316587464431,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316587537162,
+          "message": "slot   operator(): id  0 | task 0 | add accepted tokens: sampled=248046, ids.size=4, n_draft=3"
+        },
+        {
+          "epoch_us": 1792316587537241,
+          "message": "slot print_timing: id  0 | task 0 | draft acceptance = 0.44444 (    4 accepted /     9 generated), mean len =  2.33"
+        },
+        {
+          "epoch_us": 1792316587537289,
+          "message": "slot      release: id  0 | task 0 | stop processing: n_tokens = 25, truncated = 0"
+        }
+      ],
+      "draft_end_us": 1792316587464385,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316587464431,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316587533533,
+        1792316587535689
+      ],
+      "accepted_us": 1792316587537162,
+      "release_us": 1792316587537289,
+      "next_round_us": 1792316593603927
+    },
+    {
+      "start_us": 1792316593603927,
+      "candidate_us": {},
+      "events": [
+        {
+          "epoch_us": 1792316593611885,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        }
+      ],
+      "verify_start_us": 1792316593611885,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316594761451,
+        1792316594800015
+      ],
+      "next_round_us": 1792316594800029
+    },
+    {
+      "start_us": 1792316594800029,
+      "candidate_us": {},
+      "events": [
+        {
+          "epoch_us": 1792316594861425,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        }
+      ],
+      "verify_start_us": 1792316594861425,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316595095783,
+        1792316595098022
+      ],
+      "next_round_us": 1792316595098617
+    },
+    {
+      "start_us": 1792316595098617,
+      "candidate_us": {
+        "0": 1792316595123954,
+        "1": 1792316595127412,
+        "2": 1792316595130498
+      },
+      "events": [
+        {
+          "epoch_us": 1792316595123954,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:  12305 (   1.000) 'python'"
+        },
+        {
+          "epoch_us": 1792316595123961,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:    727 (   0.000) 'def'"
+        },
+        {
+          "epoch_us": 1792316595123962,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:  29292 (   0.000) 'Python'"
+        },
+        {
+          "epoch_us": 1792316595127412,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    198 (   1.000) '"
+        },
+        {
+          "epoch_us": 1792316595127416,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1: 248046 (   0.000) '<|im_end|>'"
+        },
+        {
+          "epoch_us": 1792316595127418,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:    271 (   0.000) '"
+        },
+        {
+          "epoch_us": 1792316595130498,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    727 (   0.908) 'def'"
+        },
+        {
+          "epoch_us": 1792316595130502,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    464 (   0.071) 'import'"
+        },
+        {
+          "epoch_us": 1792316595130504,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   1445 (   0.011) 'from'"
+        },
+        {
+          "epoch_us": 1792316595130507,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 98, call_count = 4, gen = 3"
+        },
+        {
+          "epoch_us": 1792316595130660,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316595230377,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=464, ids.size=3, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316595130507,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316595130660,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316595224952,
+        1792316595228066
+      ],
+      "accepted_us": 1792316595230377,
+      "next_round_us": 1792316595230453
+    },
+    {
+      "start_us": 1792316595230453,
+      "candidate_us": {
+        "0": 1792316595235894,
+        "1": 1792316595239706,
+        "2": 1792316595242238
+      },
+      "events": [
+        {
+          "epoch_us": 1792316595235894,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:    311 (   0.998) ' re'"
+        },
+        {
+          "epoch_us": 1792316595235899,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:  19567 (   0.001) ' regex'"
+        },
+        {
+          "epoch_us": 1792316595235901,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:    854 (   0.000) ' time'"
+        },
+        {
+          "epoch_us": 1792316595239706,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    271 (   0.503) '"
+        },
+        {
+          "epoch_us": 1792316595239710,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:   1358 (   0.472) '"
+        },
+        {
+          "epoch_us": 1792316595239711,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:    198 (   0.024) '"
+        },
+        {
+          "epoch_us": 1792316595242238,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    727 (   1.000) 'def'"
+        },
+        {
+          "epoch_us": 1792316595242243,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:     31 (   0.000) '@'"
+        },
+        {
+          "epoch_us": 1792316595242244,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:    687 (   0.000) ' def'"
+        },
+        {
+          "epoch_us": 1792316595242247,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 101, call_count = 5, gen = 3"
+        },
+        {
+          "epoch_us": 1792316595242336,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316595337279,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=4563, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316595242247,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316595242336,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316595331850,
+        1792316595335157
+      ],
+      "accepted_us": 1792316595337279,
+      "next_round_us": 1792316595337377
+    },
+    {
+      "start_us": 1792316595337377,
+      "candidate_us": {
+        "0": 1792316595341235,
+        "1": 1792316595345045,
+        "2": 1792316595348760
+      },
+      "events": [
+        {
+          "epoch_us": 1792316595341235,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:  24647 (   1.000) '_duration'"
+        },
+        {
+          "epoch_us": 1792316595341243,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:  12574 (   0.000) 'Duration'"
+        },
+        {
+          "epoch_us": 1792316595341245,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:  51621 (   0.000) '_DURATION'"
+        },
+        {
+          "epoch_us": 1792316595345045,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:   1104 (   1.000) '(s'"
+        },
+        {
+          "epoch_us": 1792316595345053,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:   4060 (   0.000) '(str'"
+        },
+        {
+          "epoch_us": 1792316595345054,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:   1446 (   0.000) '(d'"
+        },
+        {
+          "epoch_us": 1792316595348760,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:     25 (   1.000) ':'"
+        },
+        {
+          "epoch_us": 1792316595348768,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:   1590 (   0.000) '):'"
+        },
+        {
+          "epoch_us": 1792316595348770,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:    535 (   0.000) ' :'"
+        },
+        {
+          "epoch_us": 1792316595348773,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 105, call_count = 6, gen = 3"
+        },
+        {
+          "epoch_us": 1792316595348921,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316595439608,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=592, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316595348773,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316595348921,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316595435139,
+        1792316595438104
+      ],
+      "accepted_us": 1792316595439608,
+      "next_round_us": 1792316595439692
+    },
+    {
+      "start_us": 1792316595439692,
+      "candidate_us": {
+        "0": 1792316595443375,
+        "1": 1792316595446525,
+        "2": 1792316595449737
+      },
+      "events": [
+        {
+          "epoch_us": 1792316595443375,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:      8 (   1.000) ')'"
+        },
+        {
+          "epoch_us": 1792316595443379,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:     11 (   0.000) ','"
+        },
+        {
+          "epoch_us": 1792316595443380,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   1411 (   0.000) ' ->'"
+        },
+        {
+          "epoch_us": 1792316595446525,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:   1411 (   1.000) ' ->'"
+        },
+        {
+          "epoch_us": 1792316595446530,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:  11069 (   0.000) ' \u2192'"
+        },
+        {
+          "epoch_us": 1792316595446532,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:    574 (   0.000) ' =>'"
+        },
+        {
+          "epoch_us": 1792316595449737,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    514 (   1.000) ' int'"
+        },
+        {
+          "epoch_us": 1792316595449741,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    390 (   0.000) 'int'"
+        },
+        {
+          "epoch_us": 1792316595449743,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   2153 (   0.000) ' float'"
+        },
+        {
+          "epoch_us": 1792316595449745,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 109, call_count = 7, gen = 3"
+        },
+        {
+          "epoch_us": 1792316595449837,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316595538903,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=25, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316595449745,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316595449837,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316595534506,
+        1792316595537407
+      ],
+      "accepted_us": 1792316595538903,
+      "next_round_us": 1792316595538991
+    },
+    {
+      "start_us": 1792316595538991,
+      "candidate_us": {
+        "0": 1792316595542889,
+        "1": 1792316595545526,
+        "2": 1792316595548118
+      },
+      "events": [
+        {
+          "epoch_us": 1792316595542889,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:    198 (   1.000) '"
+        },
+        {
+          "epoch_us": 1792316595542893,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:    695 (   0.000) ' "
+        },
+        {
+          "epoch_us": 1792316595542895,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:    262 (   0.000) '   '"
+        },
+        {
+          "epoch_us": 1792316595545526,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    262 (   1.000) '   '"
+        },
+        {
+          "epoch_us": 1792316595545530,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:  71093 (   0.000) '```'"
+        },
+        {
+          "epoch_us": 1792316595545532,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:   1031 (   0.000) '    "
+        },
+        {
+          "epoch_us": 1792316595548118,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    413 (   0.499) ' if'"
+        },
+        {
+          "epoch_us": 1792316595548122,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:   4071 (   0.480) ' \"\"\"'"
+        },
+        {
+          "epoch_us": 1792316595548124,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   1992 (   0.013) ' assert'"
+        },
+        {
+          "epoch_us": 1792316595548126,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 113, call_count = 8, gen = 3"
+        },
+        {
+          "epoch_us": 1792316595548214,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316595637309,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=524, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316595548126,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316595548214,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316595632954,
+        1792316595635819
+      ],
+      "accepted_us": 1792316595637309,
+      "next_round_us": 1792316595637400
+    },
+    {
+      "start_us": 1792316595637400,
+      "candidate_us": {
+        "0": 1792316595641255,
+        "1": 1792316595644077,
+        "2": 1792316595646550
+      },
+      "events": [
+        {
+          "epoch_us": 1792316595641255,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:    274 (   0.993) ' s'"
+        },
+        {
+          "epoch_us": 1792316595641260,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:  11074 (   0.007) ' isinstance'"
+        },
+        {
+          "epoch_us": 1792316595641261,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:    592 (   0.000) ' str'"
+        },
+        {
+          "epoch_us": 1792316595644077,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:     25 (   0.726) ':'"
+        },
+        {
+          "epoch_us": 1792316595644082,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:    466 (   0.273) ' or'"
+        },
+        {
+          "epoch_us": 1792316595644083,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:  16674 (   0.000) '.strip'"
+        },
+        {
+          "epoch_us": 1792316595646550,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    198 (   1.000) '"
+        },
+        {
+          "epoch_us": 1792316595646555,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    695 (   0.000) ' "
+        },
+        {
+          "epoch_us": 1792316595646557,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:    220 (   0.000) ' '"
+        },
+        {
+          "epoch_us": 1792316595646559,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 117, call_count = 9, gen = 3"
+        },
+        {
+          "epoch_us": 1792316595646648,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316595745340,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=285, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316595646559,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316595646648,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316595741285,
+        1792316595743816
+      ],
+      "accepted_us": 1792316595745340,
+      "next_round_us": 1792316595745423
+    },
+    {
+      "start_us": 1792316595745423,
+      "candidate_us": {
+        "0": 1792316595748708,
+        "1": 1792316595752003,
+        "2": 1792316595755215
+      },
+      "events": [
+        {
+          "epoch_us": 1792316595748708,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:   4673 (   0.999) ' raise'"
+        },
+        {
+          "epoch_us": 1792316595748713,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:    460 (   0.001) ' return'"
+        },
+        {
+          "epoch_us": 1792316595748714,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:  24096 (   0.000) ' raises'"
+        },
+        {
+          "epoch_us": 1792316595752003,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:  14953 (   1.000) ' ValueError'"
+        },
+        {
+          "epoch_us": 1792316595752007,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:   4997 (   0.000) ' Value'"
+        },
+        {
+          "epoch_us": 1792316595752009,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:  61264 (   0.000) '(ValueError'"
+        },
+        {
+          "epoch_us": 1792316595755215,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    437 (   0.997) '(\"'"
+        },
+        {
+          "epoch_us": 1792316595755220,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    925 (   0.002) '(f'"
+        },
+        {
+          "epoch_us": 1792316595755221,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:    482 (   0.001) '(''"
+        },
+        {
+          "epoch_us": 1792316595755224,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 121, call_count = 10, gen = 3"
+        },
+        {
+          "epoch_us": 1792316595755316,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316595845251,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=3406, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316595755224,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316595755316,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316595840929,
+        1792316595843735
+      ],
+      "accepted_us": 1792316595845251,
+      "next_round_us": 1792316595845335
+    },
+    {
+      "start_us": 1792316595845335,
+      "candidate_us": {
+        "0": 1792316595848800,
+        "1": 1792316595852128,
+        "2": 1792316595855145
+      },
+      "events": [
+        {
+          "epoch_us": 1792316595848800,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:   7836 (   0.912) ' duration'"
+        },
+        {
+          "epoch_us": 1792316595848804,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:    886 (   0.081) ' string'"
+        },
+        {
+          "epoch_us": 1792316595848805,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:    466 (   0.007) ' or'"
+        },
+        {
+          "epoch_us": 1792316595852128,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    886 (   0.997) ' string'"
+        },
+        {
+          "epoch_us": 1792316595852133,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:    871 (   0.003) '\")'"
+        },
+        {
+          "epoch_us": 1792316595852134,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:    369 (   0.000) ' is'"
+        },
+        {
+          "epoch_us": 1792316595855145,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    871 (   0.945) '\")'"
+        },
+        {
+          "epoch_us": 1792316595855149,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    369 (   0.052) ' is'"
+        },
+        {
+          "epoch_us": 1792316595855151,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   4021 (   0.002) ' cannot'"
+        },
+        {
+          "epoch_us": 1792316595855154,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 125, call_count = 11, gen = 3"
+        },
+        {
+          "epoch_us": 1792316595855246,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316595942782,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=886, ids.size=1, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316595855154,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316595855246,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316595939138,
+        1792316595942181
+      ],
+      "accepted_us": 1792316595942782,
+      "next_round_us": 1792316595942864
+    },
+    {
+      "start_us": 1792316595942864,
+      "candidate_us": {
+        "0": 1792316595947967,
+        "1": 1792316595951244,
+        "2": 1792316595953938
+      },
+      "events": [
+        {
+          "epoch_us": 1792316595947967,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:    871 (   0.921) '\")'"
+        },
+        {
+          "epoch_us": 1792316595947972,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:    369 (   0.053) ' is'"
+        },
+        {
+          "epoch_us": 1792316595947973,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   4021 (   0.017) ' cannot'"
+        },
+        {
+          "epoch_us": 1792316595951244,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    198 (   0.858) '"
+        },
+        {
+          "epoch_us": 1792316595951248,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:    271 (   0.142) '"
+        },
+        {
+          "epoch_us": 1792316595951250,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:    413 (   0.000) ' if'"
+        },
+        {
+          "epoch_us": 1792316595953938,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:   1031 (   0.930) '    "
+        },
+        {
+          "epoch_us": 1792316595953943,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    262 (   0.065) '   '"
+        },
+        {
+          "epoch_us": 1792316595953944,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   2228 (   0.003) '  "
+        },
+        {
+          "epoch_us": 1792316595953947,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 126, call_count = 12, gen = 3"
+        },
+        {
+          "epoch_us": 1792316595954033,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316596042771,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=262, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316595953947,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316595954033,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316596039309,
+        1792316596041250
+      ],
+      "accepted_us": 1792316596042771,
+      "next_round_us": 1792316596042871
+    },
+    {
+      "start_us": 1792316596042871,
+      "candidate_us": {
+        "0": 1792316596046814,
+        "1": 1792316596049699,
+        "2": 1792316596052896
+      },
+      "events": [
+        {
+          "epoch_us": 1792316596046814,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:   5215 (   0.495) ' pattern'"
+        },
+        {
+          "epoch_us": 1792316596046828,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:    653 (   0.422) ' #'"
+        },
+        {
+          "epoch_us": 1792316596046829,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   2702 (   0.058) ' total'"
+        },
+        {
+          "epoch_us": 1792316596049699,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    283 (   1.000) ' ='"
+        },
+        {
+          "epoch_us": 1792316596049704,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:     25 (   0.000) ':'"
+        },
+        {
+          "epoch_us": 1792316596049705,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:   1610 (   0.000) ' :='"
+        },
+        {
+          "epoch_us": 1792316596052896,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    311 (   0.602) ' re'"
+        },
+        {
+          "epoch_us": 1792316596052900,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    427 (   0.398) ' r'"
+        },
+        {
+          "epoch_us": 1792316596052902,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:  34833 (   0.000) ' rf'"
+        },
+        {
+          "epoch_us": 1792316596052904,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 130, call_count = 13, gen = 3"
+        },
+        {
+          "epoch_us": 1792316596052996,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316596140280,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=427, ids.size=3, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316596052904,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316596052996,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316596136345,
+        1792316596139061
+      ],
+      "accepted_us": 1792316596140280,
+      "next_round_us": 1792316596140364
+    },
+    {
+      "start_us": 1792316596140364,
+      "candidate_us": {
+        "0": 1792316596144099,
+        "1": 1792316596146541,
+        "2": 1792316596149831
+      },
+      "events": [
+        {
+          "epoch_us": 1792316596144099,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:      6 (   0.830) '''"
+        },
+        {
+          "epoch_us": 1792316596144103,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:  19600 (   0.159) ''^'"
+        },
+        {
+          "epoch_us": 1792316596144105,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:  56374 (   0.009) ''('"
+        },
+        {
+          "epoch_us": 1792316596146541,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:  12883 (   0.998) '^('"
+        },
+        {
+          "epoch_us": 1792316596146546,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:  32191 (   0.002) '(?'"
+        },
+        {
+          "epoch_us": 1792316596146547,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:   1148 (   0.000) '(('"
+        },
+        {
+          "epoch_us": 1792316596149831,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:     30 (   0.889) '?'"
+        },
+        {
+          "epoch_us": 1792316596149836,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:   4666 (   0.103) '?:'"
+        },
+        {
+          "epoch_us": 1792316596149837,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:     71 (   0.002) 'h'"
+        },
+        {
+          "epoch_us": 1792316596149840,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 133, call_count = 14, gen = 3"
+        },
+        {
+          "epoch_us": 1792316596149928,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316596230364,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=3164, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316596149840,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316596149928,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316596226109,
+        1792316596228861
+      ],
+      "accepted_us": 1792316596230364,
+      "next_round_us": 1792316596230447
+    },
+    {
+      "start_us": 1792316596230447,
+      "candidate_us": {
+        "0": 1792316596233541,
+        "1": 1792316596236186,
+        "2": 1792316596239497
+      },
+      "events": [
+        {
+          "epoch_us": 1792316596233541,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:     59 (   0.999) '\\'"
+        },
+        {
+          "epoch_us": 1792316596233545,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:     30 (   0.000) '?'"
+        },
+        {
+          "epoch_us": 1792316596233547,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   3312 (   0.000) '\\\\'"
+        },
+        {
+          "epoch_us": 1792316596236186,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:     67 (   1.000) 'd'"
+        },
+        {
+          "epoch_us": 1792316596236191,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:     86 (   0.000) 'w'"
+        },
+        {
+          "epoch_us": 1792316596236192,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:   5188 (   0.000) 'ds'"
+        },
+        {
+          "epoch_us": 1792316596239497,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:  35000 (   0.996) '+)'"
+        },
+        {
+          "epoch_us": 1792316596239502,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:  59749 (   0.003) '+h'"
+        },
+        {
+          "epoch_us": 1792316596239503,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   3636 (   0.001) '*)'"
+        },
+        {
+          "epoch_us": 1792316596239506,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 137, call_count = 15, gen = 3"
+        },
+        {
+          "epoch_us": 1792316596239595,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316596320244,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=71, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316596239506,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316596239595,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316596316079,
+        1792316596318755
+      ],
+      "accepted_us": 1792316596320244,
+      "next_round_us": 1792316596320321
+    },
+    {
+      "start_us": 1792316596320321,
+      "candidate_us": {
+        "0": 1792316596323533,
+        "1": 1792316596326263,
+        "2": 1792316596328954
+      },
+      "events": [
+        {
+          "epoch_us": 1792316596323533,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:  11504 (   1.000) ')?'"
+        },
+        {
+          "epoch_us": 1792316596323537,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:  85637 (   0.000) ')?$'"
+        },
+        {
+          "epoch_us": 1792316596323538,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:  32191 (   0.000) '(?'"
+        },
+        {
+          "epoch_us": 1792316596326263,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:  32191 (   1.000) '(?'"
+        },
+        {
+          "epoch_us": 1792316596326267,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:  64882 (   0.000) '(?:'"
+        },
+        {
+          "epoch_us": 1792316596326268,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:  51975 (   0.000) '/(?'"
+        },
+        {
+          "epoch_us": 1792316596328954,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:   3164 (   1.000) ':('"
+        },
+        {
+          "epoch_us": 1792316596328958,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:   4391 (   0.000) '=('"
+        },
+        {
+          "epoch_us": 1792316596328960,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   9991 (   0.000) '!('"
+        },
+        {
+          "epoch_us": 1792316596328963,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 141, call_count = 16, gen = 3"
+        },
+        {
+          "epoch_us": 1792316596329051,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316596421418,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=59, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316596328963,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316596329051,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316596416382,
+        1792316596419517
+      ],
+      "accepted_us": 1792316596421418,
+      "next_round_us": 1792316596421490
+    },
+    {
+      "start_us": 1792316596421490,
+      "candidate_us": {
+        "0": 1792316596425084,
+        "1": 1792316596428621,
+        "2": 1792316596431482
+      },
+      "events": [
+        {
+          "epoch_us": 1792316596425084,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:     67 (   1.000) 'd'"
+        },
+        {
+          "epoch_us": 1792316596425092,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:     86 (   0.000) 'w'"
+        },
+        {
+          "epoch_us": 1792316596425093,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:    613 (   0.000) 'dd'"
+        },
+        {
+          "epoch_us": 1792316596428621,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:  35000 (   0.998) '+)'"
+        },
+        {
+          "epoch_us": 1792316596428628,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:     10 (   0.002) '+'"
+        },
+        {
+          "epoch_us": 1792316596428630,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:  57838 (   0.000) '+m'"
+        },
+        {
+          "epoch_us": 1792316596431482,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:     76 (   1.000) 'm'"
+        },
+        {
+          "epoch_us": 1792316596431490,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:   1030 (   0.000) 'min'"
+        },
+        {
+          "epoch_us": 1792316596431491,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:    295 (   0.000) ' m'"
+        },
+        {
+          "epoch_us": 1792316596431494,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 145, call_count = 17, gen = 3"
+        },
+        {
+          "epoch_us": 1792316596431639,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316596522939,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=11504, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316596431494,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316596431639,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316596518894,
+        1792316596521460
+      ],
+      "accepted_us": 1792316596522939,
+      "next_round_us": 1792316596523019
+    },
+    {
+      "start_us": 1792316596523019,
+      "candidate_us": {
+        "0": 1792316596526176,
+        "1": 1792316596529228,
+        "2": 1792316596531839
+      },
+      "events": [
+        {
+          "epoch_us": 1792316596526176,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:  32191 (   1.000) '(?'"
+        },
+        {
+          "epoch_us": 1792316596526180,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:  64882 (   0.000) '(?:'"
+        },
+        {
+          "epoch_us": 1792316596526181,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:  43460 (   0.000) ' (?'"
+        },
+        {
+          "epoch_us": 1792316596529228,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:   3164 (   1.000) ':('"
+        },
+        {
+          "epoch_us": 1792316596529232,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:   6964 (   0.000) ':\\'"
+        },
+        {
+          "epoch_us": 1792316596529234,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:   4391 (   0.000) '=('"
+        },
+        {
+          "epoch_us": 1792316596531839,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:     59 (   1.000) '\\'"
+        },
+        {
+          "epoch_us": 1792316596531843,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:   3312 (   0.000) '\\\\'"
+        },
+        {
+          "epoch_us": 1792316596531845,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:  56749 (   0.000) '$\\'"
+        },
+        {
+          "epoch_us": 1792316596531847,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 149, call_count = 18, gen = 3"
+        },
+        {
+          "epoch_us": 1792316596531939,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316596616535,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=67, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316596531847,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316596531939,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316596613044,
+        1792316596615037
+      ],
+      "accepted_us": 1792316596616535,
+      "next_round_us": 1792316596616607
+    },
+    {
+      "start_us": 1792316596616607,
+      "candidate_us": {
+        "0": 1792316596620146,
+        "1": 1792316596622683,
+        "2": 1792316596625379
+      },
+      "events": [
+        {
+          "epoch_us": 1792316596620146,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:  35000 (   1.000) '+)'"
+        },
+        {
+          "epoch_us": 1792316596620151,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:  65511 (   0.000) '+s'"
+        },
+        {
+          "epoch_us": 1792316596620152,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:     10 (   0.000) '+'"
+        },
+        {
+          "epoch_us": 1792316596622683,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:     82 (   1.000) 's'"
+        },
+        {
+          "epoch_us": 1792316596622688,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:     67 (   0.000) 'd'"
+        },
+        {
+          "epoch_us": 1792316596622689,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:  53510 (   0.000) '?s'"
+        },
+        {
+          "epoch_us": 1792316596625379,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:  11504 (   0.795) ')?'"
+        },
+        {
+          "epoch_us": 1792316596625384,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:  85637 (   0.204) ')?$'"
+        },
+        {
+          "epoch_us": 1792316596625385,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:      8 (   0.001) ')'"
+        },
+        {
+          "epoch_us": 1792316596625387,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 153, call_count = 19, gen = 3"
+        },
+        {
+          "epoch_us": 1792316596625476,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316596707630,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=85637, ids.size=3, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316596625387,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316596625476,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316596704107,
+        1792316596706439
+      ],
+      "accepted_us": 1792316596707630,
+      "next_round_us": 1792316596707715
+    },
+    {
+      "start_us": 1792316596707715,
+      "candidate_us": {
+        "0": 1792316596710927,
+        "1": 1792316596714423,
+        "2": 1792316596716990
+      },
+      "events": [
+        {
+          "epoch_us": 1792316596710927,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:      6 (   1.000) '''"
+        },
+        {
+          "epoch_us": 1792316596710932,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:  93409 (   0.000) '|^'"
+        },
+        {
+          "epoch_us": 1792316596710934,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:     91 (   0.000) '|'"
+        },
+        {
+          "epoch_us": 1792316596714423,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    198 (   1.000) '"
+        },
+        {
+          "epoch_us": 1792316596714427,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:    271 (   0.000) '"
+        },
+        {
+          "epoch_us": 1792316596714429,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:    695 (   0.000) ' "
+        },
+        {
+          "epoch_us": 1792316596716990,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    262 (   0.826) '   '"
+        },
+        {
+          "epoch_us": 1792316596716994,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:   1031 (   0.173) '    "
+        },
+        {
+          "epoch_us": 1792316596716996,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   1726 (   0.000) '        "
+        },
+        {
+          "epoch_us": 1792316596716998,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 156, call_count = 20, gen = 3"
+        },
+        {
+          "epoch_us": 1792316596717085,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316596807931,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=2353, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316596716998,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316596717085,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316596804155,
+        1792316596806405
+      ],
+      "accepted_us": 1792316596807931,
+      "next_round_us": 1792316596808012
+    },
+    {
+      "start_us": 1792316596808012,
+      "candidate_us": {
+        "0": 1792316596812073,
+        "1": 1792316596814733,
+        "2": 1792316596817866
+      },
+      "events": [
+        {
+          "epoch_us": 1792316596812073,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:    283 (   1.000) ' ='"
+        },
+        {
+          "epoch_us": 1792316596812077,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:   1610 (   0.000) ' :='"
+        },
+        {
+          "epoch_us": 1792316596812079,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:      0 (   0.000) '!'"
+        },
+        {
+          "epoch_us": 1792316596814733,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:   5215 (   0.842) ' pattern'"
+        },
+        {
+          "epoch_us": 1792316596814737,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:    311 (   0.157) ' re'"
+        },
+        {
+          "epoch_us": 1792316596814739,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:   2353 (   0.001) ' match'"
+        },
+        {
+          "epoch_us": 1792316596817866,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:  10749 (   0.855) '.match'"
+        },
+        {
+          "epoch_us": 1792316596817870,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:  20874 (   0.145) '.full'"
+        },
+        {
+          "epoch_us": 1792316596817871,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   9012 (   0.000) '.search'"
+        },
+        {
+          "epoch_us": 1792316596817874,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 160, call_count = 21, gen = 3"
+        },
+        {
+          "epoch_us": 1792316596817965,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316596906429,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=311, ids.size=2, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316596817874,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316596817965,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316596902914,
+        1792316596905546
+      ],
+      "accepted_us": 1792316596906429,
+      "next_round_us": 1792316596906524
+    },
+    {
+      "start_us": 1792316596906524,
+      "candidate_us": {
+        "0": 1792316596911591,
+        "1": 1792316596914990,
+        "2": 1792316596918356
+      },
+      "events": [
+        {
+          "epoch_us": 1792316596911591,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:  10749 (   0.957) '.match'"
+        },
+        {
+          "epoch_us": 1792316596911595,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:  20874 (   0.043) '.full'"
+        },
+        {
+          "epoch_us": 1792316596911597,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   9012 (   0.000) '.search'"
+        },
+        {
+          "epoch_us": 1792316596914990,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:  29933 (   1.000) '(pattern'"
+        },
+        {
+          "epoch_us": 1792316596914995,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:  13927 (   0.000) 'pattern'"
+        },
+        {
+          "epoch_us": 1792316596914996,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:  37813 (   0.000) '.pattern'"
+        },
+        {
+          "epoch_us": 1792316596918356,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:     11 (   0.983) ','"
+        },
+        {
+          "epoch_us": 1792316596918360,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:      8 (   0.017) ')'"
+        },
+        {
+          "epoch_us": 1792316596918361,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:  44484 (   0.000) ',)'"
+        },
+        {
+          "epoch_us": 1792316596918364,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 162, call_count = 22, gen = 3"
+        },
+        {
+          "epoch_us": 1792316596918451,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316597004448,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=274, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316596918364,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316596918451,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316597000442,
+        1792316597002865
+      ],
+      "accepted_us": 1792316597004448,
+      "next_round_us": 1792316597004524
+    },
+    {
+      "start_us": 1792316597004524,
+      "candidate_us": {
+        "0": 1792316597007501,
+        "1": 1792316597010411,
+        "2": 1792316597013420
+      },
+      "events": [
+        {
+          "epoch_us": 1792316597007501,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:      8 (   0.999) ')'"
+        },
+        {
+          "epoch_us": 1792316597007505,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:     11 (   0.001) ','"
+        },
+        {
+          "epoch_us": 1792316597007506,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:  16674 (   0.000) '.strip'"
+        },
+        {
+          "epoch_us": 1792316597010411,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    198 (   1.000) '"
+        },
+        {
+          "epoch_us": 1792316597010416,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:    271 (   0.000) '"
+        },
+        {
+          "epoch_us": 1792316597010417,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:    413 (   0.000) ' if'"
+        },
+        {
+          "epoch_us": 1792316597013420,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:   1031 (   0.686) '    "
+        },
+        {
+          "epoch_us": 1792316597013425,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    262 (   0.310) '   '"
+        },
+        {
+          "epoch_us": 1792316597013426,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   1726 (   0.001) '        "
+        },
+        {
+          "epoch_us": 1792316597013429,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 166, call_count = 23, gen = 3"
+        },
+        {
+          "epoch_us": 1792316597013513,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316597101820,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=262, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316597013429,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316597013513,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316597098365,
+        1792316597100290
+      ],
+      "accepted_us": 1792316597101820,
+      "next_round_us": 1792316597101899
+    },
+    {
+      "start_us": 1792316597101899,
+      "candidate_us": {
+        "0": 1792316597105517,
+        "1": 1792316597108149,
+        "2": 1792316597111466
+      },
+      "events": [
+        {
+          "epoch_us": 1792316597105517,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:    413 (   0.994) ' if'"
+        },
+        {
+          "epoch_us": 1792316597105522,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:    653 (   0.006) ' #'"
+        },
+        {
+          "epoch_us": 1792316597105523,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   4071 (   0.000) ' \"\"\"'"
+        },
+        {
+          "epoch_us": 1792316597108149,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    524 (   0.997) ' not'"
+        },
+        {
+          "epoch_us": 1792316597108154,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:   2353 (   0.003) ' match'"
+        },
+        {
+          "epoch_us": 1792316597108155,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:    874 (   0.000) ' no'"
+        },
+        {
+          "epoch_us": 1792316597111466,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:   2353 (   1.000) ' match'"
+        },
+        {
+          "epoch_us": 1792316597111476,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:   1716 (   0.000) ' check'"
+        },
+        {
+          "epoch_us": 1792316597111477,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   8798 (   0.000) ' matches'"
+        },
+        {
+          "epoch_us": 1792316597111481,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 170, call_count = 24, gen = 3"
+        },
+        {
+          "epoch_us": 1792316597118784,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316597213253,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=25, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316597111481,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316597118784,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316597209346,
+        1792316597211740
+      ],
+      "accepted_us": 1792316597213253,
+      "next_round_us": 1792316597213372
+    },
+    {
+      "start_us": 1792316597213372,
+      "candidate_us": {
+        "0": 1792316597216551,
+        "1": 1792316597219460,
+        "2": 1792316597221895
+      },
+      "events": [
+        {
+          "epoch_us": 1792316597216551,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:    198 (   1.000) '"
+        },
+        {
+          "epoch_us": 1792316597216555,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:    695 (   0.000) ' "
+        },
+        {
+          "epoch_us": 1792316597216557,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:    220 (   0.000) ' '"
+        },
+        {
+          "epoch_us": 1792316597219460,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    285 (   1.000) '       '"
+        },
+        {
+          "epoch_us": 1792316597219464,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:    950 (   0.000) '      '"
+        },
+        {
+          "epoch_us": 1792316597219465,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:    309 (   0.000) '           '"
+        },
+        {
+          "epoch_us": 1792316597221895,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:   4673 (   0.999) ' raise'"
+        },
+        {
+          "epoch_us": 1792316597221899,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    460 (   0.001) ' return'"
+        },
+        {
+          "epoch_us": 1792316597221900,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:    653 (   0.000) ' #'"
+        },
+        {
+          "epoch_us": 1792316597221903,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 174, call_count = 25, gen = 3"
+        },
+        {
+          "epoch_us": 1792316597221984,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316597311728,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=14953, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316597221903,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316597221984,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316597308082,
+        1792316597310202
+      ],
+      "accepted_us": 1792316597311728,
+      "next_round_us": 1792316597311817
+    },
+    {
+      "start_us": 1792316597311817,
+      "candidate_us": {
+        "0": 1792316597315010,
+        "1": 1792316597317790,
+        "2": 1792316597320871
+      },
+      "events": [
+        {
+          "epoch_us": 1792316597315010,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:    925 (   0.753) '(f'"
+        },
+        {
+          "epoch_us": 1792316597315052,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:    437 (   0.246) '(\"'"
+        },
+        {
+          "epoch_us": 1792316597315054,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:  61264 (   0.000) '(ValueError'"
+        },
+        {
+          "epoch_us": 1792316597317790,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:      1 (   0.999) '\"'"
+        },
+        {
+          "epoch_us": 1792316597317794,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:  71029 (   0.001) '\"M'"
+        },
+        {
+          "epoch_us": 1792316597317796,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:  78358 (   0.000) '\"Not'"
+        },
+        {
+          "epoch_us": 1792316597320871,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:  28633 (   0.557) 'Mal'"
+        },
+        {
+          "epoch_us": 1792316597320875,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:   7678 (   0.442) 'Invalid'"
+        },
+        {
+          "epoch_us": 1792316597320877,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:  16579 (   0.000) 'Bad'"
+        },
+        {
+          "epoch_us": 1792316597320880,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 178, call_count = 26, gen = 3"
+        },
+        {
+          "epoch_us": 1792316597320969,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316597407781,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=9853, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316597320880,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316597320969,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316597403267,
+        1792316597406236
+      ],
+      "accepted_us": 1792316597407781,
+      "next_round_us": 1792316597407862
+    },
+    {
+      "start_us": 1792316597407862,
+      "candidate_us": {
+        "0": 1792316597411295,
+        "1": 1792316597415003,
+        "2": 1792316597417992
+      },
+      "events": [
+        {
+          "epoch_us": 1792316597411295,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:   7836 (   0.974) ' duration'"
+        },
+        {
+          "epoch_us": 1792316597411299,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:    886 (   0.024) ' string'"
+        },
+        {
+          "epoch_us": 1792316597411301,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   1879 (   0.000) ' input'"
+        },
+        {
+          "epoch_us": 1792316597415003,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    886 (   0.953) ' string'"
+        },
+        {
+          "epoch_us": 1792316597415007,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:     25 (   0.046) ':'"
+        },
+        {
+          "epoch_us": 1792316597415009,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:   3443 (   0.000) ' format'"
+        },
+        {
+          "epoch_us": 1792316597417992,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:     25 (   1.000) ':'"
+        },
+        {
+          "epoch_us": 1792316597417997,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    871 (   0.000) '\")'"
+        },
+        {
+          "epoch_us": 1792316597417998,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:  11240 (   0.000) ' '{'"
+        },
+        {
+          "epoch_us": 1792316597418001,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 182, call_count = 27, gen = 3"
+        },
+        {
+          "epoch_us": 1792316597418090,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316597514628,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=313, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316597418001,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316597418090,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316597509382,
+        1792316597512693
+      ],
+      "accepted_us": 1792316597514628,
+      "next_round_us": 1792316597514716
+    },
+    {
+      "start_us": 1792316597514716,
+      "candidate_us": {
+        "0": 1792316597518146,
+        "1": 1792316597520941,
+        "2": 1792316597523675
+      },
+      "events": [
+        {
+          "epoch_us": 1792316597518146,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:     82 (   1.000) 's'"
+        },
+        {
+          "epoch_us": 1792316597518155,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:  29828 (   0.000) 'repr'"
+        },
+        {
+          "epoch_us": 1792316597518156,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:     81 (   0.000) 'r'"
+        },
+        {
+          "epoch_us": 1792316597520941,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:  54084 (   0.970) '}\")'"
+        },
+        {
+          "epoch_us": 1792316597520949,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:      0 (   0.028) '!'"
+        },
+        {
+          "epoch_us": 1792316597520950,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:     92 (   0.002) '}'"
+        },
+        {
+          "epoch_us": 1792316597523675,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    198 (   1.000) '"
+        },
+        {
+          "epoch_us": 1792316597523682,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:   6987 (   0.000) '"
+        },
+        {
+          "epoch_us": 1792316597523684,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2: 248046 (   0.000) '<|im_end|>'"
+        },
+        {
+          "epoch_us": 1792316597523686,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 186, call_count = 28, gen = 3"
+        },
+        {
+          "epoch_us": 1792316597523838,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316597614116,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=1031, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316597523686,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316597523838,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316597610604,
+        1792316597612614
+      ],
+      "accepted_us": 1792316597614116,
+      "next_round_us": 1792316597614185
+    },
+    {
+      "start_us": 1792316597614185,
+      "candidate_us": {
+        "0": 1792316597617163,
+        "1": 1792316597619577,
+        "2": 1792316597622303
+      },
+      "events": [
+        {
+          "epoch_us": 1792316597617163,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:    262 (   1.000) '   '"
+        },
+        {
+          "epoch_us": 1792316597617168,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:    285 (   0.000) '       '"
+        },
+        {
+          "epoch_us": 1792316597617170,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   1031 (   0.000) '    "
+        },
+        {
+          "epoch_us": 1792316597619577,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:   3979 (   0.749) ' hours'"
+        },
+        {
+          "epoch_us": 1792316597619581,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:    653 (   0.188) ' #'"
+        },
+        {
+          "epoch_us": 1792316597619582,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:    304 (   0.031) ' h'"
+        },
+        {
+          "epoch_us": 1792316597622303,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    283 (   0.964) ' ='"
+        },
+        {
+          "epoch_us": 1792316597622308,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:     11 (   0.020) ','"
+        },
+        {
+          "epoch_us": 1792316597622309,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   2801 (   0.011) '_str'"
+        },
+        {
+          "epoch_us": 1792316597622311,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 190, call_count = 29, gen = 3"
+        },
+        {
+          "epoch_us": 1792316597622449,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316597706114,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=514, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316597622311,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316597622449,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316597702388,
+        1792316597704592
+      ],
+      "accepted_us": 1792316597706114,
+      "next_round_us": 1792316597706194
+    },
+    {
+      "start_us": 1792316597706194,
+      "candidate_us": {
+        "0": 1792316597709352,
+        "1": 1792316597711768,
+        "2": 1792316597714307
+      },
+      "events": [
+        {
+          "epoch_us": 1792316597709352,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:  24596 (   1.000) '(match'"
+        },
+        {
+          "epoch_us": 1792316597709357,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:   2353 (   0.000) ' match'"
+        },
+        {
+          "epoch_us": 1792316597709358,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   1212 (   0.000) '(m'"
+        },
+        {
+          "epoch_us": 1792316597711768,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:   5982 (   1.000) '.group'"
+        },
+        {
+          "epoch_us": 1792316597711772,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:  39282 (   0.000) '.groups'"
+        },
+        {
+          "epoch_us": 1792316597711774,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:   1809 (   0.000) ' group'"
+        },
+        {
+          "epoch_us": 1792316597714307,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:      7 (   1.000) '('"
+        },
+        {
+          "epoch_us": 1792316597714311,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    482 (   0.000) '(''"
+        },
+        {
+          "epoch_us": 1792316597714313,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   1889 (   0.000) '(i'"
+        },
+        {
+          "epoch_us": 1792316597714315,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 194, call_count = 30, gen = 3"
+        },
+        {
+          "epoch_us": 1792316597714453,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316597800255,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=16, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316597714315,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316597714453,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316597796347,
+        1792316597798748
+      ],
+      "accepted_us": 1792316597800255,
+      "next_round_us": 1792316597800341
+    },
+    {
+      "start_us": 1792316597800341,
+      "candidate_us": {
+        "0": 1792316597803626,
+        "1": 1792316597806836,
+        "2": 1792316597809441
+      },
+      "events": [
+        {
+          "epoch_us": 1792316597803626,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:    578 (   0.913) '))'"
+        },
+        {
+          "epoch_us": 1792316597803631,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:      8 (   0.087) ')'"
+        },
+        {
+          "epoch_us": 1792316597803632,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   5722 (   0.000) '));'"
+        },
+        {
+          "epoch_us": 1792316597806836,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    413 (   1.000) ' if'"
+        },
+        {
+          "epoch_us": 1792316597806841,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:    466 (   0.000) ' or'"
+        },
+        {
+          "epoch_us": 1792316597806843,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:    348 (   0.000) ' *'"
+        },
+        {
+          "epoch_us": 1792316597809441,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:   2353 (   1.000) ' match'"
+        },
+        {
+          "epoch_us": 1792316597809445,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:  10749 (   0.000) '.match'"
+        },
+        {
+          "epoch_us": 1792316597809447,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   8798 (   0.000) ' matches'"
+        },
+        {
+          "epoch_us": 1792316597809450,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 198, call_count = 31, gen = 3"
+        },
+        {
+          "epoch_us": 1792316597809551,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316597903639,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=5982, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316597809450,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316597809551,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316597898814,
+        1792316597901770
+      ],
+      "accepted_us": 1792316597903639,
+      "next_round_us": 1792316597903724
+    },
+    {
+      "start_us": 1792316597903724,
+      "candidate_us": {
+        "0": 1792316597907266,
+        "1": 1792316597910188,
+        "2": 1792316597913007
+      },
+      "events": [
+        {
+          "epoch_us": 1792316597907266,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:      7 (   1.000) '('"
+        },
+        {
+          "epoch_us": 1792316597907274,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:    482 (   0.000) '(''"
+        },
+        {
+          "epoch_us": 1792316597907275,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:    363 (   0.000) '()'"
+        },
+        {
+          "epoch_us": 1792316597910188,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:     16 (   1.000) '1'"
+        },
+        {
+          "epoch_us": 1792316597910196,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:     17 (   0.000) '2'"
+        },
+        {
+          "epoch_us": 1792316597910197,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:     18 (   0.000) '3'"
+        },
+        {
+          "epoch_us": 1792316597913007,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:      8 (   1.000) ')'"
+        },
+        {
+          "epoch_us": 1792316597913011,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:     60 (   0.000) ']'"
+        },
+        {
+          "epoch_us": 1792316597913013,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   7313 (   0.000) '\uff09'"
+        },
+        {
+          "epoch_us": 1792316597913016,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 202, call_count = 32, gen = 3"
+        },
+        {
+          "epoch_us": 1792316597913106,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316598002587,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=745, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316597913016,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316597913106,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316597998459,
+        1792316598001069
+      ],
+      "accepted_us": 1792316598002587,
+      "next_round_us": 1792316598002661
+    },
+    {
+      "start_us": 1792316598002661,
+      "candidate_us": {
+        "0": 1792316598006303,
+        "1": 1792316598009212,
+        "2": 1792316598011754
+      },
+      "events": [
+        {
+          "epoch_us": 1792316598006303,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:    220 (   1.000) ' '"
+        },
+        {
+          "epoch_us": 1792316598006308,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:   2168 (   0.000) ' None'"
+        },
+        {
+          "epoch_us": 1792316598006309,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   6942 (   0.000) ' zero'"
+        },
+        {
+          "epoch_us": 1792316598009212,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:     15 (   1.000) '0'"
+        },
+        {
+          "epoch_us": 1792316598009216,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:     16 (   0.000) '1'"
+        },
+        {
+          "epoch_us": 1792316598009217,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:     19 (   0.000) '4'"
+        },
+        {
+          "epoch_us": 1792316598011754,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    198 (   1.000) '"
+        },
+        {
+          "epoch_us": 1792316598011759,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    220 (   0.000) ' '"
+        },
+        {
+          "epoch_us": 1792316598011760,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   6987 (   0.000) '"
+        },
+        {
+          "epoch_us": 1792316598011763,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 206, call_count = 33, gen = 3"
+        },
+        {
+          "epoch_us": 1792316598011847,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316598098399,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=262, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316598011763,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316598011847,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316598094193,
+        1792316598096875
+      ],
+      "accepted_us": 1792316598098399,
+      "next_round_us": 1792316598098479
+    },
+    {
+      "start_us": 1792316598098479,
+      "candidate_us": {
+        "0": 1792316598101637,
+        "1": 1792316598105109,
+        "2": 1792316598107562
+      },
+      "events": [
+        {
+          "epoch_us": 1792316598101637,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:   4276 (   1.000) ' minutes'"
+        },
+        {
+          "epoch_us": 1792316598101642,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:  24049 (   0.000) ' mins'"
+        },
+        {
+          "epoch_us": 1792316598101643,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:  65373 (   0.000) '_minutes'"
+        },
+        {
+          "epoch_us": 1792316598105109,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    283 (   1.000) ' ='"
+        },
+        {
+          "epoch_us": 1792316598105114,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:     28 (   0.000) '='"
+        },
+        {
+          "epoch_us": 1792316598105115,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:     62 (   0.000) '_'"
+        },
+        {
+          "epoch_us": 1792316598107562,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    514 (   1.000) ' int'"
+        },
+        {
+          "epoch_us": 1792316598107567,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    390 (   0.000) 'int'"
+        },
+        {
+          "epoch_us": 1792316598107568,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:  12522 (   0.000) ' parseInt'"
+        },
+        {
+          "epoch_us": 1792316598107571,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 210, call_count = 34, gen = 3"
+        },
+        {
+          "epoch_us": 1792316598107657,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316598200681,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=24596, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316598107571,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316598107657,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316598197060,
+        1792316598199179
+      ],
+      "accepted_us": 1792316598200681,
+      "next_round_us": 1792316598200766
+    },
+    {
+      "start_us": 1792316598200766,
+      "candidate_us": {
+        "0": 1792316598204275,
+        "1": 1792316598206833,
+        "2": 1792316598209414
+      },
+      "events": [
+        {
+          "epoch_us": 1792316598204275,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:   5982 (   1.000) '.group'"
+        },
+        {
+          "epoch_us": 1792316598204279,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:   1809 (   0.000) ' group'"
+        },
+        {
+          "epoch_us": 1792316598204280,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   3938 (   0.000) 'group'"
+        },
+        {
+          "epoch_us": 1792316598206833,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:      7 (   1.000) '('"
+        },
+        {
+          "epoch_us": 1792316598206838,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:     58 (   0.000) '['"
+        },
+        {
+          "epoch_us": 1792316598206839,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:    482 (   0.000) '(''"
+        },
+        {
+          "epoch_us": 1792316598209414,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:     17 (   1.000) '2'"
+        },
+        {
+          "epoch_us": 1792316598209419,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:  24128 (   0.000) '\uff12'"
+        },
+        {
+          "epoch_us": 1792316598209420,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:     94 (   0.000) '\ufffd'"
+        },
+        {
+          "epoch_us": 1792316598209423,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 214, call_count = 35, gen = 3"
+        },
+        {
+          "epoch_us": 1792316598209503,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316598310760,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=578, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316598209423,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316598209503,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316598307048,
+        1792316598309249
+      ],
+      "accepted_us": 1792316598310760,
+      "next_round_us": 1792316598310850
+    },
+    {
+      "start_us": 1792316598310850,
+      "candidate_us": {
+        "0": 1792316598314089,
+        "1": 1792316598316713,
+        "2": 1792316598319155
+      },
+      "events": [
+        {
+          "epoch_us": 1792316598314089,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:    413 (   1.000) ' if'"
+        },
+        {
+          "epoch_us": 1792316598314094,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:    745 (   0.000) ' else'"
+        },
+        {
+          "epoch_us": 1792316598314096,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:    430 (   0.000) ' as'"
+        },
+        {
+          "epoch_us": 1792316598316713,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:   2353 (   1.000) ' match'"
+        },
+        {
+          "epoch_us": 1792316598316717,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:   6146 (   0.000) 'match'"
+        },
+        {
+          "epoch_us": 1792316598316719,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:  10749 (   0.000) '.match'"
+        },
+        {
+          "epoch_us": 1792316598319155,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:   5982 (   1.000) '.group'"
+        },
+        {
+          "epoch_us": 1792316598319160,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:   1809 (   0.000) ' group'"
+        },
+        {
+          "epoch_us": 1792316598319161,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   6090 (   0.000) '_group'"
+        },
+        {
+          "epoch_us": 1792316598319164,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 218, call_count = 36, gen = 3"
+        },
+        {
+          "epoch_us": 1792316598319248,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316598413293,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=7, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316598319164,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316598319248,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316598409560,
+        1792316598411763
+      ],
+      "accepted_us": 1792316598413293,
+      "next_round_us": 1792316598413406
+    },
+    {
+      "start_us": 1792316598413406,
+      "candidate_us": {
+        "0": 1792316598416545,
+        "1": 1792316598419098,
+        "2": 1792316598421527
+      },
+      "events": [
+        {
+          "epoch_us": 1792316598416545,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:     17 (   1.000) '2'"
+        },
+        {
+          "epoch_us": 1792316598416549,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:     18 (   0.000) '3'"
+        },
+        {
+          "epoch_us": 1792316598416551,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:     19 (   0.000) '4'"
+        },
+        {
+          "epoch_us": 1792316598419098,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:      8 (   1.000) ')'"
+        },
+        {
+          "epoch_us": 1792316598419102,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:   7313 (   0.000) '\uff09'"
+        },
+        {
+          "epoch_us": 1792316598419103,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:  44646 (   0.000) ')`'"
+        },
+        {
+          "epoch_us": 1792316598421527,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    745 (   1.000) ' else'"
+        },
+        {
+          "epoch_us": 1792316598421531,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:   1449 (   0.000) 'else'"
+        },
+        {
+          "epoch_us": 1792316598421533,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:    466 (   0.000) ' or'"
+        },
+        {
+          "epoch_us": 1792316598421535,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 222, call_count = 37, gen = 3"
+        },
+        {
+          "epoch_us": 1792316598421617,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316598516827,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=220, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316598421535,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316598421617,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316598513123,
+        1792316598515311
+      ],
+      "accepted_us": 1792316598516827,
+      "next_round_us": 1792316598516933
+    },
+    {
+      "start_us": 1792316598516933,
+      "candidate_us": {
+        "0": 1792316598519961,
+        "1": 1792316598522613,
+        "2": 1792316598525694
+      },
+      "events": [
+        {
+          "epoch_us": 1792316598519961,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:     15 (   1.000) '0'"
+        },
+        {
+          "epoch_us": 1792316598519965,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:     16 (   0.000) '1'"
+        },
+        {
+          "epoch_us": 1792316598519966,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:     21 (   0.000) '6'"
+        },
+        {
+          "epoch_us": 1792316598522613,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    198 (   1.000) '"
+        },
+        {
+          "epoch_us": 1792316598522618,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:   2228 (   0.000) '  "
+        },
+        {
+          "epoch_us": 1792316598522619,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:    695 (   0.000) ' "
+        },
+        {
+          "epoch_us": 1792316598525694,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    262 (   1.000) '   '"
+        },
+        {
+          "epoch_us": 1792316598525699,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:     92 (   0.000) '}'"
+        },
+        {
+          "epoch_us": 1792316598525701,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:  71093 (   0.000) '```'"
+        },
+        {
+          "epoch_us": 1792316598525703,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 226, call_count = 38, gen = 3"
+        },
+        {
+          "epoch_us": 1792316598525789,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316598624006,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=6283, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316598525703,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316598525789,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316598619397,
+        1792316598622081
+      ],
+      "accepted_us": 1792316598624006,
+      "next_round_us": 1792316598624093
+    },
+    {
+      "start_us": 1792316598624093,
+      "candidate_us": {
+        "0": 1792316598627547,
+        "1": 1792316598630826,
+        "2": 1792316598633770
+      },
+      "events": [
+        {
+          "epoch_us": 1792316598627547,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:    283 (   1.000) ' ='"
+        },
+        {
+          "epoch_us": 1792316598627555,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:     62 (   0.000) '_'"
+        },
+        {
+          "epoch_us": 1792316598627557,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   1610 (   0.000) ' :='"
+        },
+        {
+          "epoch_us": 1792316598630826,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    514 (   1.000) ' int'"
+        },
+        {
+          "epoch_us": 1792316598630834,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:    390 (   0.000) 'int'"
+        },
+        {
+          "epoch_us": 1792316598630835,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:   7151 (   0.000) ' intent'"
+        },
+        {
+          "epoch_us": 1792316598633770,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:  24596 (   1.000) '(match'"
+        },
+        {
+          "epoch_us": 1792316598633778,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2: 101998 (   0.000) '\u5339\u914d'"
+        },
+        {
+          "epoch_us": 1792316598633779,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:  38469 (   0.000) '(pass'"
+        },
+        {
+          "epoch_us": 1792316598633782,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 230, call_count = 39, gen = 3"
+        },
+        {
+          "epoch_us": 1792316598633943,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316598729698,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=5982, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316598633782,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316598633943,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316598726056,
+        1792316598728165
+      ],
+      "accepted_us": 1792316598729698,
+      "next_round_us": 1792316598729776
+    },
+    {
+      "start_us": 1792316598729776,
+      "candidate_us": {
+        "0": 1792316598732763,
+        "1": 1792316598735756,
+        "2": 1792316598738739
+      },
+      "events": [
+        {
+          "epoch_us": 1792316598732763,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:      7 (   1.000) '('"
+        },
+        {
+          "epoch_us": 1792316598732768,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:     58 (   0.000) '['"
+        },
+        {
+          "epoch_us": 1792316598732769,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:    482 (   0.000) '(''"
+        },
+        {
+          "epoch_us": 1792316598735756,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:     18 (   1.000) '3'"
+        },
+        {
+          "epoch_us": 1792316598735761,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:  32405 (   0.000) '\uff13'"
+        },
+        {
+          "epoch_us": 1792316598735762,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:  26952 (   0.000) 'three'"
+        },
+        {
+          "epoch_us": 1792316598738739,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    578 (   1.000) '))'"
+        },
+        {
+          "epoch_us": 1792316598738743,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:  84554 (   0.000) '))?'"
+        },
+        {
+          "epoch_us": 1792316598738745,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:  39996 (   0.000) '))['"
+        },
+        {
+          "epoch_us": 1792316598738747,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 234, call_count = 40, gen = 3"
+        },
+        {
+          "epoch_us": 1792316598738831,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316598832971,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=413, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316598738747,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316598738831,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316598829416,
+        1792316598831438
+      ],
+      "accepted_us": 1792316598832971,
+      "next_round_us": 1792316598833051
+    },
+    {
+      "start_us": 1792316598833051,
+      "candidate_us": {
+        "0": 1792316598836599,
+        "1": 1792316598839016,
+        "2": 1792316598841416
+      },
+      "events": [
+        {
+          "epoch_us": 1792316598836599,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:   2353 (   1.000) ' match'"
+        },
+        {
+          "epoch_us": 1792316598836603,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:   6146 (   0.000) 'match'"
+        },
+        {
+          "epoch_us": 1792316598836604,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   8072 (   0.000) 'Match'"
+        },
+        {
+          "epoch_us": 1792316598839016,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:   5982 (   1.000) '.group'"
+        },
+        {
+          "epoch_us": 1792316598839020,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:   1809 (   0.000) ' group'"
+        },
+        {
+          "epoch_us": 1792316598839021,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:   6090 (   0.000) '_group'"
+        },
+        {
+          "epoch_us": 1792316598841416,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:      7 (   1.000) '('"
+        },
+        {
+          "epoch_us": 1792316598841420,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    363 (   0.000) '()'"
+        },
+        {
+          "epoch_us": 1792316598841421,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   1212 (   0.000) '(m'"
+        },
+        {
+          "epoch_us": 1792316598841424,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 238, call_count = 41, gen = 3"
+        },
+        {
+          "epoch_us": 1792316598841507,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316598936255,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=18, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316598841424,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316598841507,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316598932884,
+        1792316598934770
+      ],
+      "accepted_us": 1792316598936255,
+      "next_round_us": 1792316598936339
+    },
+    {
+      "start_us": 1792316598936339,
+      "candidate_us": {
+        "0": 1792316598939868,
+        "1": 1792316598942793,
+        "2": 1792316598945759
+      },
+      "events": [
+        {
+          "epoch_us": 1792316598939868,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:      8 (   1.000) ')'"
+        },
+        {
+          "epoch_us": 1792316598939873,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:  11504 (   0.000) ')?'"
+        },
+        {
+          "epoch_us": 1792316598939874,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   7313 (   0.000) '\uff09'"
+        },
+        {
+          "epoch_us": 1792316598942793,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    745 (   1.000) ' else'"
+        },
+        {
+          "epoch_us": 1792316598942797,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:    413 (   0.000) ' if'"
+        },
+        {
+          "epoch_us": 1792316598942798,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:   1449 (   0.000) 'else'"
+        },
+        {
+          "epoch_us": 1792316598945759,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    220 (   1.000) ' '"
+        },
+        {
+          "epoch_us": 1792316598945764,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:   2168 (   0.000) ' None'"
+        },
+        {
+          "epoch_us": 1792316598945765,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   6942 (   0.000) ' zero'"
+        },
+        {
+          "epoch_us": 1792316598945768,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 242, call_count = 42, gen = 3"
+        },
+        {
+          "epoch_us": 1792316598945852,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316599042520,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=15, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316598945768,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316598945852,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316599038195,
+        1792316599040546
+      ],
+      "accepted_us": 1792316599042520,
+      "next_round_us": 1792316599042612
+    },
+    {
+      "start_us": 1792316599042612,
+      "candidate_us": {
+        "0": 1792316599045990,
+        "1": 1792316599049265,
+        "2": 1792316599052016
+      },
+      "events": [
+        {
+          "epoch_us": 1792316599045990,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:   6987 (   0.999) '"
+        },
+        {
+          "epoch_us": 1792316599045998,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:   8675 (   0.001) '"
+        },
+        {
+          "epoch_us": 1792316599045999,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:  13488 (   0.000) '"
+        },
+        {
+          "epoch_us": 1792316599049265,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    262 (   1.000) '   '"
+        },
+        {
+          "epoch_us": 1792316599049274,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:   1031 (   0.000) '    "
+        },
+        {
+          "epoch_us": 1792316599049275,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:     92 (   0.000) '}'"
+        },
+        {
+          "epoch_us": 1792316599052016,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    653 (   0.454) ' #'"
+        },
+        {
+          "epoch_us": 1792316599052024,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:   2702 (   0.262) ' total'"
+        },
+        {
+          "epoch_us": 1792316599052026,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:    413 (   0.154) ' if'"
+        },
+        {
+          "epoch_us": 1792316599052028,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 246, call_count = 43, gen = 3"
+        },
+        {
+          "epoch_us": 1792316599052173,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316599142685,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=4109, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316599052028,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316599052173,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316599138904,
+        1792316599141193
+      ],
+      "accepted_us": 1792316599142685,
+      "next_round_us": 1792316599142771
+    },
+    {
+      "start_us": 1792316599142771,
+      "candidate_us": {
+        "0": 1792316599146796,
+        "1": 1792316599149548,
+        "2": 1792316599152917
+      },
+      "events": [
+        {
+          "epoch_us": 1792316599146796,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:    413 (   0.705) ' if'"
+        },
+        {
+          "epoch_us": 1792316599146800,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:    421 (   0.292) ' that'"
+        },
+        {
+          "epoch_us": 1792316599146802,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:    364 (   0.001) ' for'"
+        },
+        {
+          "epoch_us": 1792316599149548,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    660 (   0.400) ' all'"
+        },
+        {
+          "epoch_us": 1792316599149553,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:    506 (   0.351) ' at'"
+        },
+        {
+          "epoch_us": 1792316599149554,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:    279 (   0.184) ' the'"
+        },
+        {
+          "epoch_us": 1792316599152917,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:   6599 (   0.511) ' components'"
+        },
+        {
+          "epoch_us": 1792316599152922,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:   5306 (   0.486) ' parts'"
+        },
+        {
+          "epoch_us": 1792316599152923,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   5038 (   0.001) ' groups'"
+        },
+        {
+          "epoch_us": 1792316599152925,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 250, call_count = 44, gen = 3"
+        },
+        {
+          "epoch_us": 1792316599153023,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316599238714,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=421, ids.size=1, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316599152925,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316599153023,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316599234542,
+        1792316599238125
+      ],
+      "accepted_us": 1792316599238714,
+      "next_round_us": 1792316599238792
+    },
+    {
+      "start_us": 1792316599238792,
+      "candidate_us": {
+        "0": 1792316599242511,
+        "1": 1792316599245699,
+        "2": 1792316599248982
+      },
+      "events": [
+        {
+          "epoch_us": 1792316599242511,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:    506 (   0.804) ' at'"
+        },
+        {
+          "epoch_us": 1792316599242516,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:    279 (   0.113) ' the'"
+        },
+        {
+          "epoch_us": 1792316599242517,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:    660 (   0.025) ' all'"
+        },
+        {
+          "epoch_us": 1792316599245699,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:   3140 (   1.000) ' least'"
+        },
+        {
+          "epoch_us": 1792316599245703,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:  53415 (   0.000) 'least'"
+        },
+        {
+          "epoch_us": 1792316599245705,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:  87401 (   0.000) ' Least'"
+        },
+        {
+          "epoch_us": 1792316599248982,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    799 (   0.998) ' one'"
+        },
+        {
+          "epoch_us": 1792316599248987,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:   2414 (   0.002) ' something'"
+        },
+        {
+          "epoch_us": 1792316599248988,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:    279 (   0.001) ' the'"
+        },
+        {
+          "epoch_us": 1792316599248991,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 251, call_count = 45, gen = 3"
+        },
+        {
+          "epoch_us": 1792316599249082,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316599333865,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=3566, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316599248991,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316599249082,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316599329056,
+        1792316599332339
+      ],
+      "accepted_us": 1792316599333865,
+      "next_round_us": 1792316599333947
+    },
+    {
+      "start_us": 1792316599333947,
+      "candidate_us": {
+        "0": 1792316599338235,
+        "1": 1792316599341645,
+        "2": 1792316599344670
+      },
+      "events": [
+        {
+          "epoch_us": 1792316599338235,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:    557 (   0.643) ' was'"
+        },
+        {
+          "epoch_us": 1792316599338240,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:    369 (   0.346) ' is'"
+        },
+        {
+          "epoch_us": 1792316599338241,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:  17515 (   0.008) ' matched'"
+        },
+        {
+          "epoch_us": 1792316599341645,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:   3766 (   0.590) ' provided'"
+        },
+        {
+          "epoch_us": 1792316599341650,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:   2945 (   0.254) ' present'"
+        },
+        {
+          "epoch_us": 1792316599341651,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:   5024 (   0.066) ' specified'"
+        },
+        {
+          "epoch_us": 1792316599344670,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    198 (   0.978) '"
+        },
+        {
+          "epoch_us": 1792316599344675,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    310 (   0.014) ' to'"
+        },
+        {
+          "epoch_us": 1792316599344676,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:    318 (   0.005) ' ('"
+        },
+        {
+          "epoch_us": 1792316599344679,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 255, call_count = 46, gen = 3"
+        },
+        {
+          "epoch_us": 1792316599344780,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316599441565,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=369, ids.size=1, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316599344679,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316599344780,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316599437452,
+        1792316599440950
+      ],
+      "accepted_us": 1792316599441565,
+      "next_round_us": 1792316599441644
+    },
+    {
+      "start_us": 1792316599441644,
+      "candidate_us": {
+        "0": 1792316599444875,
+        "1": 1792316599448598,
+        "2": 1792316599451980
+      },
+      "events": [
+        {
+          "epoch_us": 1792316599444875,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:   2945 (   0.991) ' present'"
+        },
+        {
+          "epoch_us": 1792316599444879,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:   5024 (   0.005) ' specified'"
+        },
+        {
+          "epoch_us": 1792316599444881,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   3766 (   0.002) ' provided'"
+        },
+        {
+          "epoch_us": 1792316599448598,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    198 (   0.947) '"
+        },
+        {
+          "epoch_us": 1792316599448603,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:    310 (   0.023) ' to'"
+        },
+        {
+          "epoch_us": 1792316599448604,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:    318 (   0.009) ' ('"
+        },
+        {
+          "epoch_us": 1792316599451980,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    262 (   1.000) '   '"
+        },
+        {
+          "epoch_us": 1792316599451984,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    331 (   0.000) 'if'"
+        },
+        {
+          "epoch_us": 1792316599451985,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:    413 (   0.000) ' if'"
+        },
+        {
+          "epoch_us": 1792316599451988,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 256, call_count = 47, gen = 3"
+        },
+        {
+          "epoch_us": 1792316599452083,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316599540676,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=413, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316599451988,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316599452083,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316599536340,
+        1792316599539139
+      ],
+      "accepted_us": 1792316599540676,
+      "next_round_us": 1792316599540776
+    },
+    {
+      "start_us": 1792316599540776,
+      "candidate_us": {
+        "0": 1792316599543894,
+        "1": 1792316599546336,
+        "2": 1792316599548812
+      },
+      "events": [
+        {
+          "epoch_us": 1792316599543894,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:   2353 (   0.491) ' match'"
+        },
+        {
+          "epoch_us": 1792316599543899,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:    524 (   0.397) ' not'"
+        },
+        {
+          "epoch_us": 1792316599543900,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   3979 (   0.103) ' hours'"
+        },
+        {
+          "epoch_us": 1792316599546336,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:   5982 (   0.999) '.group'"
+        },
+        {
+          "epoch_us": 1792316599546341,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:  39282 (   0.000) '.groups'"
+        },
+        {
+          "epoch_us": 1792316599546342,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:   4911 (   0.000) '.end'"
+        },
+        {
+          "epoch_us": 1792316599548812,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:      7 (   1.000) '('"
+        },
+        {
+          "epoch_us": 1792316599548816,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    363 (   0.000) '()'"
+        },
+        {
+          "epoch_us": 1792316599548818,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:    482 (   0.000) '(''"
+        },
+        {
+          "epoch_us": 1792316599548820,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 260, call_count = 48, gen = 3"
+        },
+        {
+          "epoch_us": 1792316599548941,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316599631229,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=524, ids.size=1, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316599548820,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316599548941,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316599628727,
+        1792316599630651
+      ],
+      "accepted_us": 1792316599631229,
+      "next_round_us": 1792316599631296
+    },
+    {
+      "start_us": 1792316599631296,
+      "candidate_us": {
+        "0": 1792316599634419,
+        "1": 1792316599636829,
+        "2": 1792316599639265
+      },
+      "events": [
+        {
+          "epoch_us": 1792316599634419,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:   2353 (   0.475) ' match'"
+        },
+        {
+          "epoch_us": 1792316599634424,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:    318 (   0.449) ' ('"
+        },
+        {
+          "epoch_us": 1792316599634425,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:    866 (   0.066) ' any'"
+        },
+        {
+          "epoch_us": 1792316599636829,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:   5982 (   0.999) '.group'"
+        },
+        {
+          "epoch_us": 1792316599636834,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:     25 (   0.000) ':'"
+        },
+        {
+          "epoch_us": 1792316599636835,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:  39282 (   0.000) '.groups'"
+        },
+        {
+          "epoch_us": 1792316599639265,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:      7 (   1.000) '('"
+        },
+        {
+          "epoch_us": 1792316599639269,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    482 (   0.000) '(''"
+        },
+        {
+          "epoch_us": 1792316599639271,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:  38935 (   0.000) '(any'"
+        },
+        {
+          "epoch_us": 1792316599639273,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 261, call_count = 49, gen = 3"
+        },
+        {
+          "epoch_us": 1792316599639376,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316599720803,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=318, ids.size=1, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316599639273,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316599639376,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316599718170,
+        1792316599720217
+      ],
+      "accepted_us": 1792316599720803,
+      "next_round_us": 1792316599720884
+    },
+    {
+      "start_us": 1792316599720884,
+      "candidate_us": {
+        "0": 1792316599723832,
+        "1": 1792316599726307,
+        "2": 1792316599729519
+      },
+      "events": [
+        {
+          "epoch_us": 1792316599723832,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:   6146 (   0.734) 'match'"
+        },
+        {
+          "epoch_us": 1792316599723837,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:  29393 (   0.255) 'hours'"
+        },
+        {
+          "epoch_us": 1792316599723839,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:     82 (   0.004) 's'"
+        },
+        {
+          "epoch_us": 1792316599726307,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:   5982 (   1.000) '.group'"
+        },
+        {
+          "epoch_us": 1792316599726312,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:  39282 (   0.000) '.groups'"
+        },
+        {
+          "epoch_us": 1792316599726313,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:  28356 (   0.000) '.any'"
+        },
+        {
+          "epoch_us": 1792316599729519,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:      7 (   1.000) '('"
+        },
+        {
+          "epoch_us": 1792316599729528,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    482 (   0.000) '(''"
+        },
+        {
+          "epoch_us": 1792316599729529,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:    437 (   0.000) '(\"'"
+        },
+        {
+          "epoch_us": 1792316599729532,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 262, call_count = 50, gen = 3"
+        },
+        {
+          "epoch_us": 1792316599733658,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316599838691,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=16, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316599729532,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316599733658,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316599835268,
+        1792316599837190
+      ],
+      "accepted_us": 1792316599838691,
+      "next_round_us": 1792316599838773
+    },
+    {
+      "start_us": 1792316599838773,
+      "candidate_us": {
+        "0": 1792316599841970,
+        "1": 1792316599844972,
+        "2": 1792316599847554
+      },
+      "events": [
+        {
+          "epoch_us": 1792316599841970,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:      8 (   0.999) ')'"
+        },
+        {
+          "epoch_us": 1792316599841975,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:    681 (   0.001) '),'"
+        },
+        {
+          "epoch_us": 1792316599841976,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:    578 (   0.000) '))'"
+        },
+        {
+          "epoch_us": 1792316599844972,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    466 (   0.999) ' or'"
+        },
+        {
+          "epoch_us": 1792316599844977,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:    369 (   0.001) ' is'"
+        },
+        {
+          "epoch_us": 1792316599844978,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:    321 (   0.000) ' and'"
+        },
+        {
+          "epoch_us": 1792316599847554,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:   2353 (   1.000) ' match'"
+        },
+        {
+          "epoch_us": 1792316599847559,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    524 (   0.000) ' not'"
+        },
+        {
+          "epoch_us": 1792316599847560,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   6696 (   0.000) ' mask'"
+        },
+        {
+          "epoch_us": 1792316599847563,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 266, call_count = 51, gen = 3"
+        },
+        {
+          "epoch_us": 1792316599847648,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316599933293,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=5982, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316599847563,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316599847648,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316599929413,
+        1792316599931771
+      ],
+      "accepted_us": 1792316599933293,
+      "next_round_us": 1792316599933403
+    },
+    {
+      "start_us": 1792316599933403,
+      "candidate_us": {
+        "0": 1792316599936529,
+        "1": 1792316599939438,
+        "2": 1792316599942014
+      },
+      "events": [
+        {
+          "epoch_us": 1792316599936529,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:      7 (   1.000) '('"
+        },
+        {
+          "epoch_us": 1792316599936533,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:     58 (   0.000) '['"
+        },
+        {
+          "epoch_us": 1792316599936535,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   1889 (   0.000) '(i'"
+        },
+        {
+          "epoch_us": 1792316599939438,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:     17 (   1.000) '2'"
+        },
+        {
+          "epoch_us": 1792316599939441,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:     18 (   0.000) '3'"
+        },
+        {
+          "epoch_us": 1792316599939443,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:     15 (   0.000) '0'"
+        },
+        {
+          "epoch_us": 1792316599942014,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:      8 (   1.000) ')'"
+        },
+        {
+          "epoch_us": 1792316599942019,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    578 (   0.000) '))'"
+        },
+        {
+          "epoch_us": 1792316599942020,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   1590 (   0.000) '):'"
+        },
+        {
+          "epoch_us": 1792316599942022,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 270, call_count = 52, gen = 3"
+        },
+        {
+          "epoch_us": 1792316599942106,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316600031540,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=466, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316599942022,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316599942106,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316600028119,
+        1792316600030042
+      ],
+      "accepted_us": 1792316600031540,
+      "next_round_us": 1792316600031616
+    },
+    {
+      "start_us": 1792316600031616,
+      "candidate_us": {
+        "0": 1792316600034797,
+        "1": 1792316600037230,
+        "2": 1792316600039647
+      },
+      "events": [
+        {
+          "epoch_us": 1792316600034797,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:   2353 (   1.000) ' match'"
+        },
+        {
+          "epoch_us": 1792316600034801,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:   6146 (   0.000) 'match'"
+        },
+        {
+          "epoch_us": 1792316600034803,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   8798 (   0.000) ' matches'"
+        },
+        {
+          "epoch_us": 1792316600037230,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:   5982 (   1.000) '.group'"
+        },
+        {
+          "epoch_us": 1792316600037235,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:   1809 (   0.000) ' group'"
+        },
+        {
+          "epoch_us": 1792316600037236,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:   6090 (   0.000) '_group'"
+        },
+        {
+          "epoch_us": 1792316600039647,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:      7 (   1.000) '('"
+        },
+        {
+          "epoch_us": 1792316600039651,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:   1212 (   0.000) '(m'"
+        },
+        {
+          "epoch_us": 1792316600039653,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   2784 (   0.000) '(a'"
+        },
+        {
+          "epoch_us": 1792316600039655,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 274, call_count = 53, gen = 3"
+        },
+        {
+          "epoch_us": 1792316600039736,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316600140663,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=18, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316600039655,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316600039736,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316600135374,
+        1792316600138604
+      ],
+      "accepted_us": 1792316600140663,
+      "next_round_us": 1792316600140789
+    },
+    {
+      "start_us": 1792316600140789,
+      "candidate_us": {
+        "0": 1792316600144272,
+        "1": 1792316600147569,
+        "2": 1792316600150837
+      },
+      "events": [
+        {
+          "epoch_us": 1792316600144272,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:  35497 (   0.999) ')):'"
+        },
+        {
+          "epoch_us": 1792316600144280,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:    578 (   0.001) '))'"
+        },
+        {
+          "epoch_us": 1792316600144281,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:      8 (   0.000) ')'"
+        },
+        {
+          "epoch_us": 1792316600147569,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    198 (   1.000) '"
+        },
+        {
+          "epoch_us": 1792316600147577,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:    220 (   0.000) ' '"
+        },
+        {
+          "epoch_us": 1792316600147579,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:    695 (   0.000) ' "
+        },
+        {
+          "epoch_us": 1792316600150837,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    285 (   1.000) '       '"
+        },
+        {
+          "epoch_us": 1792316600150846,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    260 (   0.000) '        '"
+        },
+        {
+          "epoch_us": 1792316600150848,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:    309 (   0.000) '           '"
+        },
+        {
+          "epoch_us": 1792316600150851,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 278, call_count = 54, gen = 3"
+        },
+        {
+          "epoch_us": 1792316600151004,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316600238007,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=4673, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316600150851,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316600151004,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316600234526,
+        1792316600236501
+      ],
+      "accepted_us": 1792316600238007,
+      "next_round_us": 1792316600238109
+    },
+    {
+      "start_us": 1792316600238109,
+      "candidate_us": {
+        "0": 1792316600241470,
+        "1": 1792316600244242,
+        "2": 1792316600247524
+      },
+      "events": [
+        {
+          "epoch_us": 1792316600241470,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:  14953 (   1.000) ' ValueError'"
+        },
+        {
+          "epoch_us": 1792316600241475,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:  61264 (   0.000) '(ValueError'"
+        },
+        {
+          "epoch_us": 1792316600241477,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   4997 (   0.000) ' Value'"
+        },
+        {
+          "epoch_us": 1792316600244242,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    437 (   0.633) '(\"'"
+        },
+        {
+          "epoch_us": 1792316600244247,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:    925 (   0.367) '(f'"
+        },
+        {
+          "epoch_us": 1792316600244248,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:  45943 (   0.000) '(...)'"
+        },
+        {
+          "epoch_us": 1792316600247524,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:  28633 (   0.647) 'Mal'"
+        },
+        {
+          "epoch_us": 1792316600247528,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:   3406 (   0.238) 'Empty'"
+        },
+        {
+          "epoch_us": 1792316600247530,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   7678 (   0.111) 'Invalid'"
+        },
+        {
+          "epoch_us": 1792316600247533,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 282, call_count = 55, gen = 3"
+        },
+        {
+          "epoch_us": 1792316600247626,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316600338840,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=925, ids.size=2, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316600247533,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316600247626,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316600334412,
+        1792316600337925
+      ],
+      "accepted_us": 1792316600338840,
+      "next_round_us": 1792316600338925
+    },
+    {
+      "start_us": 1792316600338925,
+      "candidate_us": {
+        "0": 1792316600342187,
+        "1": 1792316600345660,
+        "2": 1792316600348406
+      },
+      "events": [
+        {
+          "epoch_us": 1792316600342187,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:      1 (   0.993) '\"'"
+        },
+        {
+          "epoch_us": 1792316600342192,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:  37147 (   0.006) '\"No'"
+        },
+        {
+          "epoch_us": 1792316600342193,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:  71029 (   0.000) '\"M'"
+        },
+        {
+          "epoch_us": 1792316600345660,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:  28633 (   0.982) 'Mal'"
+        },
+        {
+          "epoch_us": 1792316600345665,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:   3406 (   0.012) 'Empty'"
+        },
+        {
+          "epoch_us": 1792316600345666,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:   7678 (   0.004) 'Invalid'"
+        },
+        {
+          "epoch_us": 1792316600348406,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:   9853 (   1.000) 'formed'"
+        },
+        {
+          "epoch_us": 1792316600348410,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:  13717 (   0.000) ' formed'"
+        },
+        {
+          "epoch_us": 1792316600348412,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:  91600 (   0.000) '-formed'"
+        },
+        {
+          "epoch_us": 1792316600348415,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 284, call_count = 56, gen = 3"
+        },
+        {
+          "epoch_us": 1792316600348510,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316600436995,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=7836, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316600348415,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316600348510,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316600432354,
+        1792316600435463
+      ],
+      "accepted_us": 1792316600436995,
+      "next_round_us": 1792316600437080
+    },
+    {
+      "start_us": 1792316600437080,
+      "candidate_us": {
+        "0": 1792316600440447,
+        "1": 1792316600443669,
+        "2": 1792316600446241
+      },
+      "events": [
+        {
+          "epoch_us": 1792316600440447,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:    886 (   1.000) ' string'"
+        },
+        {
+          "epoch_us": 1792316600440452,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:     25 (   0.000) ':'"
+        },
+        {
+          "epoch_us": 1792316600440453,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   8796 (   0.000) ' strings'"
+        },
+        {
+          "epoch_us": 1792316600443669,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:     25 (   1.000) ':'"
+        },
+        {
+          "epoch_us": 1792316600443674,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:    318 (   0.000) ' ('"
+        },
+        {
+          "epoch_us": 1792316600443675,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:     11 (   0.000) ','"
+        },
+        {
+          "epoch_us": 1792316600446241,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    313 (   1.000) ' {'"
+        },
+        {
+          "epoch_us": 1792316600446245,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:  11240 (   0.000) ' '{'"
+        },
+        {
+          "epoch_us": 1792316600446246,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:    874 (   0.000) ' no'"
+        },
+        {
+          "epoch_us": 1792316600446249,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 288, call_count = 57, gen = 3"
+        },
+        {
+          "epoch_us": 1792316600446349,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316600544065,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=82, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316600446249,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316600446349,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316600539005,
+        1792316600542137
+      ],
+      "accepted_us": 1792316600544065,
+      "next_round_us": 1792316600544156
+    },
+    {
+      "start_us": 1792316600544156,
+      "candidate_us": {
+        "0": 1792316600548020,
+        "1": 1792316600550501,
+        "2": 1792316600552956
+      },
+      "events": [
+        {
+          "epoch_us": 1792316600548020,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:  54084 (   1.000) '}\")'"
+        },
+        {
+          "epoch_us": 1792316600548025,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:   9571 (   0.000) '}\"'"
+        },
+        {
+          "epoch_us": 1792316600548026,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:     92 (   0.000) '}'"
+        },
+        {
+          "epoch_us": 1792316600550501,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:    198 (   1.000) '"
+        },
+        {
+          "epoch_us": 1792316600550506,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:    220 (   0.000) ' '"
+        },
+        {
+          "epoch_us": 1792316600550507,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:   6987 (   0.000) '"
+        },
+        {
+          "epoch_us": 1792316600552956,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:   1031 (   1.000) '    "
+        },
+        {
+          "epoch_us": 1792316600552960,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:   1726 (   0.000) '        "
+        },
+        {
+          "epoch_us": 1792316600552962,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   5690 (   0.000) '   "
+        },
+        {
+          "epoch_us": 1792316600552964,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 292, call_count = 58, gen = 3"
+        },
+        {
+          "epoch_us": 1792316600553048,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316600643489,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=262, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316600552964,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316600553048,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316600639860,
+        1792316600641950
+      ],
+      "accepted_us": 1792316600643489,
+      "next_round_us": 1792316600643557
+    },
+    {
+      "start_us": 1792316600643557,
+      "candidate_us": {
+        "0": 1792316600646562,
+        "1": 1792316600649039,
+        "2": 1792316600652168
+      },
+      "events": [
+        {
+          "epoch_us": 1792316600646562,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:    460 (   0.915) ' return'"
+        },
+        {
+          "epoch_us": 1792316600646567,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:   2702 (   0.085) ' total'"
+        },
+        {
+          "epoch_us": 1792316600646568,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:    653 (   0.000) ' #'"
+        },
+        {
+          "epoch_us": 1792316600649039,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:   3979 (   1.000) ' hours'"
+        },
+        {
+          "epoch_us": 1792316600649043,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:   6283 (   0.000) ' seconds'"
+        },
+        {
+          "epoch_us": 1792316600649045,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:   2756 (   0.000) ' days'"
+        },
+        {
+          "epoch_us": 1792316600652168,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    348 (   1.000) ' *'"
+        },
+        {
+          "epoch_us": 1792316600652172,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:      9 (   0.000) '*'"
+        },
+        {
+          "epoch_us": 1792316600652173,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:    478 (   0.000) ' +'"
+        },
+        {
+          "epoch_us": 1792316600652176,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 296, call_count = 59, gen = 3"
+        },
+        {
+          "epoch_us": 1792316600652263,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316600739967,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=220, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316600652176,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316600652263,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316600736257,
+        1792316600738447
+      ],
+      "accepted_us": 1792316600739967,
+      "next_round_us": 1792316600740041
+    },
+    {
+      "start_us": 1792316600740041,
+      "candidate_us": {
+        "0": 1792316600743255,
+        "1": 1792316600746933,
+        "2": 1792316600749643
+      },
+      "events": [
+        {
+          "epoch_us": 1792316600743255,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:     18 (   1.000) '3'"
+        },
+        {
+          "epoch_us": 1792316600743259,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:     17 (   0.000) '2'"
+        },
+        {
+          "epoch_us": 1792316600743260,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:     16 (   0.000) '1'"
+        },
+        {
+          "epoch_us": 1792316600746933,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:     21 (   1.000) '6'"
+        },
+        {
+          "epoch_us": 1792316600746937,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:     22 (   0.000) '7'"
+        },
+        {
+          "epoch_us": 1792316600746938,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:     15 (   0.000) '0'"
+        },
+        {
+          "epoch_us": 1792316600749643,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:     15 (   1.000) '0'"
+        },
+        {
+          "epoch_us": 1792316600749647,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:     21 (   0.000) '6'"
+        },
+        {
+          "epoch_us": 1792316600749649,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:     24 (   0.000) '9'"
+        },
+        {
+          "epoch_us": 1792316600749651,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 300, call_count = 60, gen = 3"
+        },
+        {
+          "epoch_us": 1792316600749739,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316600842190,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=15, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316600749651,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316600749739,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316600838150,
+        1792316600840691
+      ],
+      "accepted_us": 1792316600842190,
+      "next_round_us": 1792316600842272
+    },
+    {
+      "start_us": 1792316600842272,
+      "candidate_us": {
+        "0": 1792316600845834,
+        "1": 1792316600849350,
+        "2": 1792316600851997
+      },
+      "events": [
+        {
+          "epoch_us": 1792316600845834,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:    478 (   1.000) ' +'"
+        },
+        {
+          "epoch_us": 1792316600845838,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:    471 (   0.000) ' -'"
+        },
+        {
+          "epoch_us": 1792316600845840,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:     10 (   0.000) '+'"
+        },
+        {
+          "epoch_us": 1792316600849350,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:   4276 (   1.000) ' minutes'"
+        },
+        {
+          "epoch_us": 1792316600849354,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:   1262 (   0.000) ' min'"
+        },
+        {
+          "epoch_us": 1792316600849355,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:   6283 (   0.000) ' seconds'"
+        },
+        {
+          "epoch_us": 1792316600851997,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    348 (   1.000) ' *'"
+        },
+        {
+          "epoch_us": 1792316600852002,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:      9 (   0.000) '*'"
+        },
+        {
+          "epoch_us": 1792316600852003,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:  23985 (   0.000) ' \u00d7'"
+        },
+        {
+          "epoch_us": 1792316600852006,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 304, call_count = 61, gen = 3"
+        },
+        {
+          "epoch_us": 1792316600852093,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316600949505,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=220, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316600852006,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316600852093,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316600945575,
+        1792316600947990
+      ],
+      "accepted_us": 1792316600949505,
+      "next_round_us": 1792316600949582
+    },
+    {
+      "start_us": 1792316600949582,
+      "candidate_us": {
+        "0": 1792316600952587,
+        "1": 1792316600955116,
+        "2": 1792316600958423
+      },
+      "events": [
+        {
+          "epoch_us": 1792316600952587,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:     21 (   1.000) '6'"
+        },
+        {
+          "epoch_us": 1792316600952592,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0:     16 (   0.000) '1'"
+        },
+        {
+          "epoch_us": 1792316600952593,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:     18 (   0.000) '3'"
+        },
+        {
+          "epoch_us": 1792316600955116,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:     15 (   1.000) '0'"
+        },
+        {
+          "epoch_us": 1792316600955120,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1:  25191 (   0.000) '\uff10'"
+        },
+        {
+          "epoch_us": 1792316600955121,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:     16 (   0.000) '1'"
+        },
+        {
+          "epoch_us": 1792316600958423,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2:    478 (   1.000) ' +'"
+        },
+        {
+          "epoch_us": 1792316600958427,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    348 (   0.000) ' *'"
+        },
+        {
+          "epoch_us": 1792316600958428,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:     10 (   0.000) '+'"
+        },
+        {
+          "epoch_us": 1792316600958431,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 308, call_count = 62, gen = 3"
+        },
+        {
+          "epoch_us": 1792316600958513,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316601050714,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=6283, ids.size=4, n_draft=3"
+        }
+      ],
+      "draft_end_us": 1792316600958431,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316600958513,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316601047225,
+        1792316601049202
+      ],
+      "accepted_us": 1792316601050714,
+      "next_round_us": 1792316601050793
+    },
+    {
+      "start_us": 1792316601050793,
+      "candidate_us": {
+        "0": 1792316601053851,
+        "1": 1792316601057324,
+        "2": 1792316601060269
+      },
+      "events": [
+        {
+          "epoch_us": 1792316601053851,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   0:    198 (   1.000) '"
+        },
+        {
+          "epoch_us": 1792316601053856,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   0: 248046 (   0.000) '<|im_end|>'"
+        },
+        {
+          "epoch_us": 1792316601053857,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   0:   1358 (   0.000) '"
+        },
+        {
+          "epoch_us": 1792316601057324,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   1:  71093 (   1.000) '```'"
+        },
+        {
+          "epoch_us": 1792316601057335,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   1: 248069 (   0.000) '</think>'"
+        },
+        {
+          "epoch_us": 1792316601057336,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   1:  13475 (   0.000) '``'"
+        },
+        {
+          "epoch_us": 1792316601060269,
+          "message": "spec        draft:  - seq_id 0, draft candidate   0, pos   2: 248046 (   1.000) '<|im_end|>'"
+        },
+        {
+          "epoch_us": 1792316601060274,
+          "message": "spec        draft:  - seq_id 0, draft candidate   1, pos   2:    271 (   0.000) '"
+        },
+        {
+          "epoch_us": 1792316601060275,
+          "message": "spec        draft:  - seq_id 0, draft candidate   2, pos   2:   1358 (   0.000) '"
+        },
+        {
+          "epoch_us": 1792316601060278,
+          "message": "spec common_specu: called impl draft-mtp, hist size = 312, call_count = 63, gen = 3"
+        },
+        {
+          "epoch_us": 1792316601060375,
+          "message": "srv        decode: n_batch (effective) = 2048, off = 0"
+        },
+        {
+          "epoch_us": 1792316601155869,
+          "message": "slot   operator(): id  0 | task 6 | add accepted tokens: sampled=198, ids.size=4, n_draft=3"
+        },
+        {
+          "epoch_us": 1792316601155978,
+          "message": "slot print_timing: id  0 | task 6 | draft acceptance = 0.87778 (  158 accepted /   180 generated), mean len =  3.63"
+        },
+        {
+          "epoch_us": 1792316601156152,
+          "message": "slot      release: id  0 | task 6 | stop processing: n_tokens = 316, truncated = 0"
+        }
+      ],
+      "draft_end_us": 1792316601060278,
+      "drafted_tokens": 3,
+      "verify_tokens": 4,
+      "verify_start_us": 1792316601060375,
+      "batch_limit": 2048,
+      "verify_yield_ends_us": [
+        1792316601151659,
+        1792316601154355
+      ],
+      "accepted_us": 1792316601155869,
+      "release_us": 1792316601156152
+    }
+  ],
+  "scope": "Log timestamps mark existing call sites. Posting-to-candidate includes host setup and sampling; verify-to-accepted includes draft catch-up and target sampling. These are enclosing intervals, not isolated kernel timers."
+}

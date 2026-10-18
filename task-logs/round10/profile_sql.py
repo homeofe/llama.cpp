@@ -120,12 +120,15 @@ def summarize(directory):
         symbol_counts[(module, symbol)] += count
     api_counts = collections.Counter(name for _, _, name in apis)
     copy_bytes = collections.Counter()
-    for _, _, kind, size in copies:
+    copy_intervals = collections.defaultdict(list)
+    for a, b, kind, size in copies:
         copy_bytes[kind] += size
+        copy_intervals[kind].append((max(a, first), min(b, end)))
     return dict(request=request[2], first_token_ns=first, end_ns=end, decode_span_ms=(end-first)/1e6,
         server_pid=pid, epoch_to_trace_ns=offset, alignment_spread_ns=max(offsets)-min(offsets),
         activity={key+'_union_ms': union_ns(value.clip(first, end))/1e6 for key, value in indexed.items()},
         cuda_api_counts=dict(api_counts), copy_bytes_by_kind=dict(copy_bytes),
+        copy_union_ms_by_kind={kind: union_ns(values)/1e6 for kind, values in copy_intervals.items()},
         kernels=[dict(name=name,count=kernel_counts[name],sum_ms=duration/1e6) for name,duration in kernel_time.most_common()],
         cpu_samples=sample_count, cpu_leaf_modules=dict(module_counts),
         cpu_leaf_symbols=[dict(module=m,symbol=s,count=n) for (m,s),n in symbol_counts.most_common()],
