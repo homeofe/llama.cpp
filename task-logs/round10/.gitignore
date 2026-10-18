@@ -1,0 +1,7 @@
+**/tmp/
+**/cache/
+**/config/
+**/cuda-cache/
+*.qdstrm
+*.nsys-rep
+*.sqlite
