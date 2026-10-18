@@ -15,6 +15,7 @@ def parse(directory):
     epoch = json.loads((directory / 'logger-epoch.json').read_text())['epoch_us']
     entries = []
     stats = []
+    decode_times = []
     for line in (directory / 'q-warm-draft.server.log').read_text().splitlines():
         match = STAMP.match(line)
         if not match:
@@ -23,6 +24,10 @@ def parse(directory):
         timestamp = epoch + ((minute * 60 + second) * 1000 + milli) * 1000 + micro
         message = match[5]
         entries.append(dict(epoch_us=timestamp, message=message))
+        if 'prompt eval time' not in message:
+            timing = re.search(r'eval time =\s*([\d.]+) ms /\s*(\d+) tokens', message)
+            if timing:
+                decode_times.append(dict(epoch_us=timestamp, ms=float(timing[1]), tokens=int(timing[2])))
         stat = STATS.search(message)
         if stat:
             stats.append(dict(epoch_us=timestamp,
@@ -58,7 +63,7 @@ def parse(directory):
     stats_delta = None
     if len(stats) >= 2:
         stats_delta = {key: stats[-1][key] - stats[-2][key] for key in stats[-1] if key != 'epoch_us'}
-    return dict(statistics=stats, request_statistics_delta=stats_delta, rounds=rounds,
+    return dict(statistics=stats, request_statistics_delta=stats_delta, decode_times=decode_times, rounds=rounds,
         scope='Log timestamps mark existing call sites. Posting-to-candidate includes host setup and sampling; verify-to-accepted includes draft catch-up and target sampling. These are enclosing intervals, not isolated kernel timers.')
 
 

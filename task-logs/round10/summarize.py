@@ -16,7 +16,16 @@ def summarize(directory):
     control = {(r['round'], r['prompt']): r for r in requests if r['config'] == 'ling-cache-mtp3'}
     summary = []
     pairs = []
+    per_prompt = []
     for name, rows in grouped.items():
+        for prompt in dict.fromkeys(r['prompt'] for r in rows):
+            selected = [r for r in rows if r['prompt'] == prompt]
+            rates = [r['decode_tok_s'] for r in selected]
+            per_prompt.append(dict(config=name, prompt=prompt, requests=len(selected),
+                tok_s=statistics.median(rates), minimum=min(rates), maximum=max(rates),
+                server_tok_s=statistics.median(r['server_timings']['predicted_per_second'] for r in selected),
+                text_hashes=sorted({r['text_sha256'] for r in selected}),
+                draft_counts=[(r['server_timings']['draft_n'], r['server_timings']['draft_n_accepted']) for r in selected]))
         for category in ['code', 'english']:
             selected = [r for r in rows if r['prompt'].startswith('code-') == (category == 'code')]
             if not selected:
@@ -44,7 +53,7 @@ def summarize(directory):
                 measured_lengths=len(lengths), text_matches_control=matches,
                 max_foreign_cores=max(r['foreign_cores'] for r in selected),
                 peak_vram_mib=max(int(r['vram_mib']) for r in selected)))
-    return dict(complete=events[-1]['kind']=='all_complete', summary=summary, requests=pairs,
+    return dict(complete=events[-1]['kind']=='all_complete', summary=summary, requests=pairs, per_prompt=per_prompt,
         rejected_passes=sum(r.get('kind')=='requeue' for r in events),
         length_definition='Server mean includes bonus token; rounded to 2 decimal places.',
         hashes_definition='SHA256 of all streamed text, not the truncated preview.')
