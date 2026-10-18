@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the six whole-request Qwen measurements after the isolated panels."""
+"""Run whole-request Qwen measurements after the isolated panels."""
 import json
 from pathlib import Path
 import signal
@@ -20,8 +20,8 @@ def main():
         subprocess.run(['python3', str(OUT / 'panel_summary.py')], cwd=ROOT, stdout=stream, check=True)
     assert json.loads((OUT / 'panels/summary.json').read_text())['complete']
     with Path('/opt/llm-gateway/data/moe-quant/NOTE.log').open('a') as stream:
-        stream.write(time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime()) + ' Round 10: Ling-Panels abgeschlossen; Qwen-Gesamtrundenprofil startet (etwa 15-25 Minuten, sechs getrennte Serverlaeufe).\n')
-    jobs = [[prompt] + mode for mode in [[], ['--graphs', '--counters-only'], ['--graphs', '--plain']]
+        stream.write(time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime()) + ' Round 10: Ling-Panels abgeschlossen; Qwen-Gesamtrundenprofil startet (etwa 20-30 Minuten, acht getrennte Serverlaeufe).\n')
+    jobs = [[prompt] + mode for mode in [[], ['--counters-only'], ['--graphs', '--counters-only'], ['--graphs', '--plain']]
             for prompt in ['code-duration', 'en-1']]
     results = []
     process = None
