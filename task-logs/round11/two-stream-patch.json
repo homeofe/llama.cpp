@@ -1,0 +1,12 @@
+{
+  "base": "497f3fd1a5d53841113c5620a4fac83ecb164408",
+  "source_commit": "8ec4981476e647d46287dbd1024eade75a667acf",
+  "paths": [
+    "src/llama-moe-cache.cpp",
+    "ggml/src/ggml-cuda/ggml-cuda.cu",
+    "tests/test-moe-cache.cpp"
+  ],
+  "sha256": "cdc0f56ebc5c85d35977d7ab3f6376e13287c3b57e891bb764932f3fa68cf2a8",
+  "default": "off",
+  "live_installation": false
+}

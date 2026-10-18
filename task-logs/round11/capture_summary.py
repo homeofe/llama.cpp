@@ -66,9 +66,20 @@ def summarize(directory):
     api_counts = collections.Counter(strings[name] for (name,) in connection.execute(
         'select nameId from CUPTI_ACTIVITY_KIND_RUNTIME where globalTid>=? and globalTid<? and end>? and start<?',
         (global_pid, global_pid + (1 << 24), first, end)))
+    api_copies = collections.defaultdict(list)
+    for start, finish, size, source, stream in connection.execute('''
+        select r.start,r.end,m.bytes,m.srcKind,m.streamId
+        from CUPTI_ACTIVITY_KIND_RUNTIME r join CUPTI_ACTIVITY_KIND_MEMCPY m
+        on r.correlationId=m.correlationId
+        where r.globalTid>=? and r.globalTid<? and m.globalPid=?
+        and m.copyKind=1 and r.end>? and r.start<?''', (global_pid, global_pid + (1 << 24), global_pid, first, end)):
+        group = ('scalar_map' if size == 4 else 'bulk' if size >= 102400 else 'small') + '/' + memory_kinds[source]
+        api_copies[group].append((max(start, first), min(finish, end)))
     return dict(config=directory.name.removeprefix('capture-'), decode_span_ms=(end - first) / 1e6,
         kernel_union_ms=duration(compute) / 1e6, kernel_streams=sorted(kernel_streams), streams=per_stream,
         cuda_event_and_sync_calls={name: n for name, n in api_counts.items() if 'Event' in name or 'Synchronize' in name},
+        host_htod_api={name: dict(calls=len(values), union_ms=duration(values) / 1e6,
+            max_call_ms=max(b - a for a, b in values) / 1e6) for name, values in api_copies.items()},
         scope='One instrumented graph-off request; >=100 KiB host-to-device copies approximate expert uploads. Stream IDs and actual interval overlap prove scheduling, not uninstrumented end-to-end gain. CPU overlap is not included.')
 
 

@@ -80,10 +80,14 @@ def main():
         if r['request'].get('messages') and isinstance(r['request']['messages'][0].get('content'), str)), key=len)
     assert len(stress) > 50000, 'long-combine fixture missing'
     fixed = fit('ling-32k-off-fit', off, stress)
-    budget = min(4608, ((10700 - fixed) // 64) * 64)
-    if budget < 512:
+    if 10700 - fixed < 512:
         raise RuntimeError('not enough room for a useful cache')
-    attempts = []
+    # A small cache measures hybrid-only scratch space before approaching the VRAM ceiling.
+    base['env']['GGML_MOE_HYBRID_MIB'] = '512'
+    probe_memory = fit('ling-32k-cache-fit-512', base, stress)
+    budget = min(4608, 512 + ((10700 - probe_memory) // 64) * 64)
+    assert budget >= 512
+    attempts = [dict(cache_budget_mib=512, peak_vram_mib=probe_memory)]
     for attempt in range(1, 4):
         base['env']['GGML_MOE_HYBRID_MIB'] = str(budget)
         memory = fit('ling-32k-cache-fit-' + str(budget), base, stress)
