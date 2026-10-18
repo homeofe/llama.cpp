@@ -1,0 +1,153 @@
+{
+  "general": "ling-dspark-n3-p00",
+  "code_focused": "ling-dspark-n7-p70",
+  "basis": "n3 improves all eight prompt medians; n4 loses en-2; n7/p0.7 loses en-1 and its English category median is below control. No non-inferiority claim for n7.",
+  "per_prompt": [
+    {
+      "config": "ling-dspark-n3-p00",
+      "prompt": "code-duration",
+      "gain_pct": 35.98534549644192,
+      "same_text": false
+    },
+    {
+      "config": "ling-dspark-n3-p00",
+      "prompt": "code-intervals",
+      "gain_pct": 28.9588388269995,
+      "same_text": true
+    },
+    {
+      "config": "ling-dspark-n3-p00",
+      "prompt": "code-roman",
+      "gain_pct": 30.484118896483526,
+      "same_text": true
+    },
+    {
+      "config": "ling-dspark-n3-p00",
+      "prompt": "code-bugfix",
+      "gain_pct": 29.627101425792034,
+      "same_text": true
+    },
+    {
+      "config": "ling-dspark-n3-p00",
+      "prompt": "en-1",
+      "gain_pct": 4.318518599611432,
+      "same_text": false
+    },
+    {
+      "config": "ling-dspark-n3-p00",
+      "prompt": "en-2",
+      "gain_pct": 8.312131366933295,
+      "same_text": false
+    },
+    {
+      "config": "ling-dspark-n3-p00",
+      "prompt": "en-3",
+      "gain_pct": 12.87688034816905,
+      "same_text": false
+    },
+    {
+      "config": "ling-dspark-n3-p00",
+      "prompt": "en-4",
+      "gain_pct": 14.115210919681488,
+      "same_text": false
+    },
+    {
+      "config": "ling-dspark-n4-p00",
+      "prompt": "code-duration",
+      "gain_pct": 19.588615408882724,
+      "same_text": true
+    },
+    {
+      "config": "ling-dspark-n4-p00",
+      "prompt": "code-intervals",
+      "gain_pct": 39.10151874625121,
+      "same_text": true
+    },
+    {
+      "config": "ling-dspark-n4-p00",
+      "prompt": "code-roman",
+      "gain_pct": 38.53541884159628,
+      "same_text": true
+    },
+    {
+      "config": "ling-dspark-n4-p00",
+      "prompt": "code-bugfix",
+      "gain_pct": 34.79057484371639,
+      "same_text": true
+    },
+    {
+      "config": "ling-dspark-n4-p00",
+      "prompt": "en-1",
+      "gain_pct": 12.124412351273683,
+      "same_text": false
+    },
+    {
+      "config": "ling-dspark-n4-p00",
+      "prompt": "en-2",
+      "gain_pct": -8.748591663651418,
+      "same_text": false
+    },
+    {
+      "config": "ling-dspark-n4-p00",
+      "prompt": "en-3",
+      "gain_pct": 11.533719235400387,
+      "same_text": false
+    },
+    {
+      "config": "ling-dspark-n4-p00",
+      "prompt": "en-4",
+      "gain_pct": 5.771301346034519,
+      "same_text": false
+    },
+    {
+      "config": "ling-dspark-n7-p70",
+      "prompt": "code-duration",
+      "gain_pct": 17.74201814244556,
+      "same_text": true
+    },
+    {
+      "config": "ling-dspark-n7-p70",
+      "prompt": "code-intervals",
+      "gain_pct": 53.754118479980505,
+      "same_text": true
+    },
+    {
+      "config": "ling-dspark-n7-p70",
+      "prompt": "code-roman",
+      "gain_pct": 54.19772540917922,
+      "same_text": true
+    },
+    {
+      "config": "ling-dspark-n7-p70",
+      "prompt": "code-bugfix",
+      "gain_pct": 63.32457340601903,
+      "same_text": true
+    },
+    {
+      "config": "ling-dspark-n7-p70",
+      "prompt": "en-1",
+      "gain_pct": -5.363923941524929,
+      "same_text": false
+    },
+    {
+      "config": "ling-dspark-n7-p70",
+      "prompt": "en-2",
+      "gain_pct": -0.027405555379900193,
+      "same_text": false
+    },
+    {
+      "config": "ling-dspark-n7-p70",
+      "prompt": "en-3",
+      "gain_pct": 2.434694877073884,
+      "same_text": false
+    },
+    {
+      "config": "ling-dspark-n7-p70",
+      "prompt": "en-4",
+      "gain_pct": 4.8604825983519895,
+      "same_text": false
+    }
+  ],
+  "stable_hashes": true,
+  "scope": "8 fixed prompts, 3 repetitions; not a guarantee for other workloads; quality panels pending"
+}

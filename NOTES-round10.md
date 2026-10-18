@@ -6,7 +6,7 @@ Started 2026-10-18 07:00 UTC; deadline 11:00 UTC. Branch `l5-cache`. No system c
 
 The unchanged stage-B foreign-process gate is reused. A rejected request invalidates its whole prompt pass; restart the server before retrying, so the adaptive cache always sees the same warmup and eight-prompt history. Screening: MTP3 control and seven DSpark settings, four code and four English prompts per setting. Confirmation: best two candidates and control, three rotating rounds. Raw output hashes, draft counts, accepted lengths, CPU cost and exact configurations are archived.
 
-## Screening (completed; confirmation running)
+## Screening (completed)
 
 | Configuration | Code tok/s | English tok/s | Acceptance code / English | Mean length code / English |
 |---|---:|---:|---:|---:|
@@ -36,3 +36,22 @@ Ling card provenance: inclusionAI/Ling-3.0-flash README, revision `fcc60a52b34c6
 The ordinary llama-l5 backend has no GGML_SCHED_TRACE instrumentation. Its DEBUG_TIMINGS server scope is not compiled. No instrumentation build is made. The existing round-9 CPU graph interposer can provide measured graph totals, while Nsight records CPU stacks, CUDA APIs, kernels, transfers and request NVTX ranges. CPU sampling initially failed under perf_event_paranoid=4; after the owner explicitly authorized sudo, the unchanged kernel setting passes Nsight process-tree sampling checks. Use graph-disabled traces for individual GPU activity and separate graph-enabled wall measurements.
 
 A CPU-only Nsight smoke capture during model loading succeeded: 316 sample events, 4235 stack frames and a bounded 200 ms NVTX range. The UID-dropping launcher exited 134 without a trace; launching the measured process under the explicitly authorized sudo profiler succeeded. Captures therefore use root-owned measurement processes and worktree-local output/cache directories. No kernel settings changed. The installed CLI cannot locate its importer automatically; the matching existing `/usr/lib/nsight-systems/host-linux-x64/QdstrmImporter` plus `nsys export` successfully converts the raw capture. Plain-string capture ranges require the per-process `NSYS_NVTX_PROFILER_REGISTER_ONLY=0`, as documented in the [NVIDIA guide](https://docs.nvidia.com/nsight-systems/UserGuide/index.html). Evidence: `task-logs/round10/profiler-smoke/summary.json` and logs.
+
+## Confirmation (completed)
+
+96 accepted requests: four configurations, three rotating rounds, twelve requests per category/configuration. Three whole passes were discarded after the unchanged foreign-load gate rejected one request. Every configuration/prompt produced one stable output SHA256 and identical draft/accept counts across its three repetitions. Full hashes and per-prompt rates: `task-logs/round10/confirm-summary.json`; exact raw runs and logs: `confirm-results/`.
+
+| Configuration | Code tok/s | English tok/s | Acceptance code / English | Mean length code / English | Peak VRAM MiB |
+|---|---:|---:|---:|---:|---:|
+| ling-cache-mtp3 | 50.893 | 47.509 | 67.88% / 53.02% | 3.045 / 2.665 | 9940 |
+| ling-dspark-n3-p00 | 66.509 | 51.854 | 95.84% / 57.64% | 3.870 / 2.830 | 10138 |
+| ling-dspark-n4-p00 | 69.870 | 51.865 | 86.64% / 48.45% | 4.755 / 3.155 | 10246 |
+| ling-dspark-n7-p70 | 78.319 | 47.402 | 89.35% / 79.02% | 7.040 / 3.180 | 10672 |
+
+**General recommendation: DSpark n3, p_min 0, target cache 4608 MiB.** Code +30.68%, English +9.15% relative to MTP3/cache5120. All eight individual prompt medians improve. The four English gains are +4.32%, +8.31%, +12.88%, +14.12%. n4 raises the category medians (+37.29% code, +9.17% English), but loses 8.75% on en-2. This is why n3 is preferred for mixed workloads.
+
+**Code-focused alternative: n7, p_min 0.7.** Code +53.89%; English -0.23% overall, including -5.36% on en-1. This is not a demonstrated English tie. Selection and paired ratios are in `recommendation.json`. These findings cover the eight specified prompts, not all possible workloads.
+
+Across configurations, n3 matches MTP text on three of four code prompts; n4/n7 match all four. All English hashes differ from MTP. Repetition stability does not establish cross-configuration bit equivalence. Cache-off full-logit checks and the task panels provide separate evidence. Mean accepted lengths include the bonus token; category values are medians of request means, not token-weighted averages.
+
+Exact commands and environment are in `task-logs/round10/configs.json` and each raw run. The recommended profile uses `--spec-type draft-dspark --spec-draft-n-max 3 --spec-draft-p-min 0 -ngld 99 --spec-draft-n-ubatch 32`, the existing DSpark Q8_0 file, target IQ4_XS, context 8192, batch 2048, ubatch 512, 24 threads, full dense offload and CPU experts with adaptive GPU expert cache 4608 MiB (admit32, prefill1, decay128). Control uses MTP3/cache5120. No live profile has been changed.
