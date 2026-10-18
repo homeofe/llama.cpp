@@ -86,11 +86,16 @@ def main():
                     stdout=stream, stderr=subprocess.STDOUT, check=True, timeout=300)
     finally:
         try:
-            if proc is not None and proc.poll() is None:
-                owned_file = out / 'owned-pids.json'
-                if owned_file.exists():
-                    owned = json.loads(owned_file.read_text())
-                    for key in ['wrapper', 'server']:
+            owned_file = out / 'owned-pids.json'
+            if owned_file.exists():
+                owned = json.loads(owned_file.read_text())
+                for key in ['wrapper', 'server']:
+                    try:
+                        actual = Path(f'/proc/{owned[key]}/cmdline').read_bytes().split(b'\0')
+                    except FileNotFoundError:
+                        continue
+                    expected = str(bench.ROOT / ('task-logs/round10/profile_request.py' if key == 'wrapper' else 'build-cuda/bin/llama-server')).encode()
+                    if expected in actual:
                         if direct:
                             try:
                                 os.kill(owned[key], signal.SIGTERM)
@@ -98,6 +103,7 @@ def main():
                                 pass
                         else:
                             subprocess.run(['sudo', '-n', 'kill', '-TERM', str(owned[key])], check=False)
+            if proc is not None and proc.poll() is None:
                 if direct:
                     proc.terminate()
                 else:
