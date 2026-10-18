@@ -62,6 +62,20 @@ All three checks passed the unchanged foreign-process gate without system change
 
 Twelve test-de chunks, context512, batch512, ubatch4: cache off PPL **4.5559**, adaptive4608 PPL **4.5420** (-0.3051%, within +0.5%). Evaluation foreign CPU 0.559 / 0.660 cores. Both exactly reproduce the prior numerical estimates with the original compaction setting20. These are target/cache tests, not a perplexity measurement of speculative acceptance; actual DSpark behavior is checked by the response hashes and panels. Commands, raw logs, gates and comparison: `task-logs/round10/quality-summary.json` and its referenced directories.
 
-## Panel checkpoint
+## Panels (completed)
 
-Hard panel complete: **39/42**, all three misses are `long-combine` HTTP400 context rejections (about20,005 input tokens against8192 configured). All39 in-context cases pass: code15/15, tools9/9, German9/9, format6/6. At least one request (seed1 intervals, foreign1.213 cores) passed its pre-gate but exceeded the post-request gate. Its correctness result is retained and its timing is not a clean performance result; the final summary lists every such event separately. Agent panel still running. Actual spawned argv/environment are captured in `panels/actual-engine.json`.
+Three seeds, card sampling (temperature0.6, top_p0.95, top_k20), thinking enabled, the exact n3/p0/cache4608 profile through the isolated gateway8791.
+
+| Model / configuration | Hard | Agent | Scope |
+|---|---:|---:|---|
+| Ling DSpark n3/p0, cache4608, ctx8192 | **39/42** | **36/36** | Fresh, three runs each |
+| Qwen3.8 IQ3_S | 56/56 | 69/72 | Historical control, read only |
+| Bolt | 41/42 | 36/36 | Historical control, read only |
+
+Ling's three misses are all `long-combine` HTTP400 context rejections: about20,005 input tokens against8192 configured. All39 in-context hard cases pass: code15/15, tools9/9, German9/9, format6/6. Agent: escalation12/12, memory9/9, media9/9, documentation6/6. These small panels do not establish universal quality equivalence between the models; the historical controls have different configurations and sample counts.
+
+There were 137 HTTP chat requests, of which 135 passed the post-request foreign-load gate. Every request passed the pre-gate. Correctness outcomes of the 2 loaded requests are retained; their elapsed times are not clean performance measurements. The complete event list, seeds, input prefixes and hashes are in `panels/summary.json`, `runs.jsonl` and `responses.jsonl`. Panel elapsed times also include the added pre-request gate and must not be compared directly to ordinary user latency.
+
+The first code-duration answer used7693 completion tokens, largely thinking, while still passing its hidden tests. This illustrates why the short decode benchmark and complete-task latency are different measurements. No tuning was made from individual panel answers.
+
+Actual spawned argv/environment: `panels/actual-engine.json`; model-card entry: `model-entry.json`; panel command: `command.json`; raw selected history rows: `results.jsonl`; engine/bench logs are archived beside them. Historical raw control rows: `task-logs/round10/panel-controls.json`. The second gateway was unloaded and stopped, and its main-gateway hold released before Qwen profiling. The live settings and live benchmark history were not edited.

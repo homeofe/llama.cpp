@@ -1,0 +1,5 @@
+[llm-gateway] 0.7.0 on http://127.0.0.1:8791 - 10 models in /opt/llm-gateway/data/bench-home-keep75ud/models (API key required), JIT on, idle unload after 600 s
+[llm-gateway] ling-round10: loaded
+[llm-gateway] ling-round10: unloading
+[llm-gateway] ling-round10: not_loaded
+[llm-gateway] SIGTERM: no new requests; waiting for 0 running, then ending the engines
