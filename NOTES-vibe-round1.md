@@ -343,3 +343,44 @@ matches the shape of our measured server trajectory. Conclusion: closing the gap
 50-57 % on the same benchmark requires a structurally different admission policy (their adaptive
 tier plus their static profile, which scored only 10 % on our trace in the round-4 analysis),
 not a parameter change. All FACTS and NOTES are in English now for upstreaming.
+
+## Round 1 final stack: bf16-as-F16 + MMVQ table + int8 KV + 1779-slot cache
+
+The slots sweep of the policy simulation found the real lever: the hit rate scales linearly with
+the number of resident slots (1418 -> 43.7%, 1805 -> 49.0%, 2048 -> 51.9%, 2400 -> 55.7% cum in
+the sim). Strata's higher hit rate is a cache-SIZE effect, not a policy effect. Our VRAM was
+full, but int8 KV (`-ctk q8_0 -ctv q8_0`, supported with `-fa on` here) frees ~775 MiB:
+`GGML_MOE_HYBRID_MIB` 2944 -> 3640 grows the target cache from 1418 to 1779 slots.
+
+End to end (`vibe-kv8-e2e`, stage_b, 3 interleaved rounds, n=12 per config and category,
+0 requeues, foreign load 4-7):
+
+| config | code tok/s | english tok/s |
+|---|---:|---:|
+| q-vibe-plus (the package) | 49.2 | 40.6 |
+| **q-vibe-kv8 (package + int8 KV + 1779 slots)** | **50.2 (+2.0%)** | **41.6 (+2.5%)** |
+
+Quality: perplexity (test-de, 12 chunks) IMPROVES slightly with int8 KV (ub4 3.8363 -> 3.8167,
+-0.51%; ub512 3.8200 -> 3.8037; both within one standard error), and the greedy output of
+code-duration is bit-identical (sha 6085cbab37d9, same as the f16-KV package). Draft cache:
+101 realized slots keep 63.6% draft hits - the 512 MiB draft budget is oversized but shrinking
+it further hits a hard floor ("MoE cache is too small to hold the experts of one token" in the
+fit phase; GGML_MOE_HYBRID_MIB above ~3640 fails the fit with int8 KV), so 3640 is the practical
+optimum of this axis.
+
+Session totals against the same-session control (45.7 / 37.3 tok/s, foreign load throughout):
+**+9.8% code / +11.5% english**, stacked from three independent, individually measured changes
+(bf16-as-F16 +2.3/+3.6, MMVQ table +4.4/+3.2 on its own, int8 KV +2.0/+2.5 on top of both).
+Against the quiet baseline (47.7/39.4) the stack is ~+5.2%/+5.6% and needs one quiet
+confirmation before rollout.
+
+## Notes for the fusion work (measured, for the next session)
+
+The remaining elementwise tail is ~9 kernels per layer; the two cheapest chains fold their
+scales into the weights BIT-EXACTLY because hc = 4 makes every scale a power of two (0.25, 0.5):
+a bf16 weight times 2^-k changes only the exponent, so `(w/4) @ x` accumulates exactly
+`(w @ x)/4` in f32. Folding saves only ~2 of the 9 kernels (~0.2 ms/round); the real fusion
+(rms_norm+gamma, scale+silu, scale+sigmoid+scale) needs custom ops along the dsv4-hc trail
+(ggml.h, ggml.c, ggml-cpu/ops.cpp, ggml-cuda/dsv4-hc.cu, ggml-sycl, builder flags, probes) -
+about two hours of careful work for a ~1-1.5 ms/round bound. The int8-MMA grouped kernel
+(~4 ms/round, the Strata `mul_mat_q` approach) remains the largest single kernel item.
