@@ -33,6 +33,7 @@
 #include "ggml-cuda/mmq.cuh"
 #include "ggml-cuda/mmvf.cuh"
 #include "ggml-cuda/mmvq.cuh"
+#include "bf16_f16.cuh"
 #include "ggml-cuda/moe-weighted-reduction.cuh"
 #include "ggml-cuda/norm.cuh"
 #include "ggml-cuda/opt-step-adamw.cuh"
@@ -1948,6 +1949,10 @@ static bool ggml_cuda_match_shared_expert(const ggml_cgraph * graph, int routed_
 }
 
 static void ggml_cuda_mul_mat(ggml_backend_cuda_context & ctx, const ggml_tensor * src0, const ggml_tensor * src1, ggml_tensor * dst) {
+    if (src0->type == GGML_TYPE_BF16 && ggml_cuda_bf16_as_f16_registered(src0)) {
+        src0 = ggml_cuda_bf16_as_f16_view(src0);
+    }
+
     GGML_TENSOR_BINARY_OP_LOCALS
 
     if (ggml_cuda_op_mul_mat_use_fwht(dst) && ggml_cuda_op_fwht(ctx, src1, dst)) {
@@ -4688,6 +4693,8 @@ static enum ggml_status ggml_backend_cuda_graph_compute(ggml_backend_t backend, 
     ggml_backend_cuda_context * cuda_ctx = (ggml_backend_cuda_context *) backend->context;
 
     ggml_cuda_set_device(cuda_ctx->device);
+
+    ggml_cuda_bf16_as_f16_survey(*cuda_ctx, cgraph);
 
     bool use_cuda_graph             = false;
     bool cuda_graph_update_required = false;
