@@ -1,0 +1,1 @@
+/opt/llm-gateway/data/runtimes/strata/0.1.41-local-1cb045cb/engine/strata

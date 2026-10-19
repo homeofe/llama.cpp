@@ -1,0 +1,6 @@
+# raw captures stay local (round-10 practice): only text artifacts and reports are committed
+*.qdstrm
+*.nsys-rep
+*.sqlite
+tmp/
+cache/

@@ -1,0 +1,254 @@
+{
+ "trace": "strata-shim.sqlite",
+ "window_s": 5.649,
+ "bursts": [
+  {
+   "offset_s": 0.0,
+   "dur_s": 2.06
+  },
+  {
+   "offset_s": 27.7,
+   "dur_s": 1.39
+  },
+  {
+   "offset_s": 31.4,
+   "dur_s": 0.58
+  },
+  {
+   "offset_s": 62.2,
+   "dur_s": 5.65
+  }
+ ],
+ "kernels": [
+  {
+   "name": "dequant_kernel",
+   "count": 300,
+   "ms": 90.471
+  },
+  {
+   "name": "mul_mat_q",
+   "count": 494,
+   "ms": 56.892
+  },
+  {
+   "name": "copy16_kernel",
+   "count": 3595,
+   "ms": 27.186
+  },
+  {
+   "name": "bf16_to_f16_kernel",
+   "count": 872,
+   "ms": 12.214
+  },
+  {
+   "name": "turing_s1688gemm_fp16_256x128_ldg8_tn",
+   "count": 49,
+   "ms": 9.455
+  },
+  {
+   "name": "turing_s1688gemm_fp16_128x128_ldg8_stages_32x1_tn",
+   "count": 277,
+   "ms": 5.947
+  },
+  {
+   "name": "turing_s1688gemm_fp16_256x64_sliced1x2_ldg8_tn",
+   "count": 48,
+   "ms": 5.677
+  },
+  {
+   "name": "turing_s1688gemm_fp16_128x128_ldg8_tn",
+   "count": 36,
+   "ms": 4.393
+  },
+  {
+   "name": "gdn_rec_cols_pipe_kernel",
+   "count": 36,
+   "ms": 3.62
+  },
+  {
+   "name": "turing_s1688gemm_fp16_256x128_ldg8_stages_32x1_tn",
+   "count": 97,
+   "ms": 3.214
+  },
+  {
+   "name": "gr_write_norm_rs_kernel",
+   "count": 94,
+   "ms": 2.773
+  },
+  {
+   "name": "mul_mat_q_stream_k_fixup",
+   "count": 286,
+   "ms": 2.175
+  },
+  {
+   "name": "gr_mix_r_kernel",
+   "count": 97,
+   "ms": 2.002
+  },
+  {
+   "name": "splitKreduce_kernel",
+   "count": 457,
+   "ms": 1.968
+  },
+  {
+   "name": "quantize_mmq_q8_1",
+   "count": 297,
+   "ms": 1.682
+  },
+  {
+   "name": "swiglu_kernel",
+   "count": 245,
+   "ms": 1.304
+  },
+  {
+   "name": "copy_i32_kernel",
+   "count": 192,
+   "ms": 1.134
+  },
+  {
+   "name": "Kernel",
+   "count": 180,
+   "ms": 1.131
+  },
+  {
+   "name": "gdn_conv_tiled_kernel",
+   "count": 36,
+   "ms": 1.12
+  },
+  {
+   "name": "moe_combine4_kernel",
+   "count": 48,
+   "ms": 1.061
+  },
+  {
+   "name": "turing_s1688gemm_fp16_64x128_sliced1x2_ldg8_tn",
+   "count": 49,
+   "ms": 1.014
+  },
+  {
+   "name": "kv_append_kernel",
+   "count": 13,
+   "ms": 0.777
+  },
+  {
+   "name": "prompt_attn_kernel",
+   "count": 12,
+   "ms": 0.526
+  },
+  {
+   "name": "gdn_out_norm_kernel",
+   "count": 36,
+   "ms": 0.487
+  },
+  {
+   "name": "kernel",
+   "count": 48,
+   "ms": 0.327
+  },
+  {
+   "name": "route_kernel",
+   "count": 48,
+   "ms": 0.313
+  },
+  {
+   "name": "rms_rows_kernel",
+   "count": 39,
+   "ms": 0.25
+  },
+  {
+   "name": "gdn_l2_kernel",
+   "count": 36,
+   "ms": 0.227
+  },
+  {
+   "name": "gr_silu_kernel",
+   "count": 97,
+   "ms": 0.226
+  },
+  {
+   "name": "block_scores_simt_kernel",
+   "count": 12,
+   "ms": 0.202
+  },
+  {
+   "name": "swiglu_pair_kernel",
+   "count": 48,
+   "ms": 0.165
+  },
+  {
+   "name": "gate_attn_kernel",
+   "count": 12,
+   "ms": 0.138
+  },
+  {
+   "name": "split_q_kernel",
+   "count": 12,
+   "ms": 0.122
+  },
+  {
+   "name": "rope_kernel",
+   "count": 37,
+   "ms": 0.119
+  },
+  {
+   "name": "gdn_conv_hist_kernel",
+   "count": 36,
+   "ms": 0.099
+  },
+  {
+   "name": "gdn_gates_kernel",
+   "count": 36,
+   "ms": 0.09
+  },
+  {
+   "name": "rms_rep_kernel",
+   "count": 3,
+   "ms": 0.073
+  },
+  {
+   "name": "gr_norm_rs_kernel",
+   "count": 3,
+   "ms": 0.055
+  },
+  {
+   "name": "reset_kernel",
+   "count": 12,
+   "ms": 0.039
+  },
+  {
+   "name": "gr_write_kernel",
+   "count": 2,
+   "ms": 0.039
+  }
+ ],
+ "kernel_total_ms": 241.01,
+ "memcpy": {
+  "DtoH": {
+   "count": 142,
+   "bytes": 275307360,
+   "ms": 21.689,
+   "gbps": 12.69
+  },
+  "HtoD": {
+   "count": 4813,
+   "bytes": 9751944016,
+   "ms": 753.478,
+   "gbps": 12.94
+  },
+  "DtoD": {
+   "count": 5,
+   "bytes": 3973816,
+   "ms": 0.031,
+   "gbps": 129.35
+  }
+ },
+ "busy_ms": 933.557,
+ "gap_ms": 4715.193,
+ "per_round": {
+  "rounds": 70,
+  "window_ms_per_round": 80.696,
+  "kernel_ms_per_round": 3.443,
+  "busy_ms_per_round": 13.337,
+  "gap_ms_per_round": 67.36
+ }
+}
