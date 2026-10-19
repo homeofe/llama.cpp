@@ -10,25 +10,45 @@
 #include <unordered_map>
 #include <unordered_set>
 
-// in place bf16 -> f16: same element size, so the weight buffer can hold the converted data
+// in place bf16 -> f16, round to nearest even, subnormals included: same element size, so the
+// weight buffer can hold the converted data. The conversion is written as integer math because
+// the hardware cvt path flushes f16 subnormal results on this architecture.
 __global__ void ggml_cuda_bf16_to_f16_inplace_kernel(uint16_t * GGML_RESTRICT x, const int64_t n) {
     const int64_t stride = (int64_t) gridDim.x * blockDim.x;
     for (int64_t i = blockIdx.x*(int64_t)blockDim.x + threadIdx.x; i < n; i += stride) {
-        __nv_bfloat16 v;
-        memcpy(&v, x + i, sizeof(v));
-        __half h = __float2half(__bfloat162float(v));
-        memcpy(x + i, &h, sizeof(h));
+        const uint32_t f = (uint32_t) x[i] << 16;         // bf16 -> f32 is a plain shift
+        const uint32_t sign = (f >> 16) & 0x8000u;
+        int32_t exp = (int32_t) ((f >> 23) & 0xff) - 127 + 15;
+        uint16_t out;
+        if (exp >= 0x1f) {
+            out = (uint16_t) (sign | 0x7c00u);            // overflow becomes inf; inf and nan map to f16 inf/nan
+        } else if (exp > 0) {
+            // bf16 carries 7 mantissa bits and f16 keeps 10, so the normal range converts exactly
+            out = (uint16_t) (sign | ((uint32_t) exp << 10) | ((f >> 13) & 0x3ffu));
+        } else {
+            // below the f16 normal range: scale into the subnormal lattice, round to nearest even
+            const uint32_t man = 0x400u | ((f >> 13) & 0x3ffu);
+            const uint32_t shift = (uint32_t) (1 - exp);
+            uint32_t kept = shift >= 12 ? 0u : man >> shift;
+            const uint32_t rrem = shift >= 12 ? 0u : man & ((1u << shift) - 1);
+            const uint32_t half = shift >= 12 ? 0u : 1u << (shift - 1);
+            if (rrem > half || (rrem == half && (kept & 1))) {
+                kept++;
+            }
+            out = (uint16_t) (sign | kept);
+        }
+        x[i] = out;
     }
 }
-
-// data pointer -> nbytes of the converted area; guarded by g_mutex (set_tensor and compute may run on different threads)
-static std::unordered_map<const void *, int64_t> g_converted;
-static std::mutex g_mutex;
 
 void ggml_cuda_bf16_to_f16_inplace(uint16_t * x, const int64_t n, const cudaStream_t stream) {
     const int64_t blocks = (n + 255) / 256;
     ggml_cuda_bf16_to_f16_inplace_kernel<<<(int) blocks, 256, 0, stream>>>(x, n);
 }
+
+// data pointer -> nbytes of the converted area; guarded by g_mutex (set_tensor and compute may run on different threads)
+static std::unordered_map<const void *, int64_t> g_converted;
+static std::mutex g_mutex;
 
 static bool env_switch_on() {
     static const bool on = [] {
@@ -48,7 +68,7 @@ bool ggml_cuda_bf16_as_f16_useful(const int cc) {
 
 static bool buffer_is_cuda_weights(const ggml_tensor * t, const int device) {
     return t->buffer != nullptr
-        && t->buffer->buft == ggml_backend_cuda_buffer_type(device)
+        && ggml_backend_buffer_get_type(t->buffer) == ggml_backend_cuda_buffer_type(device)
         && ggml_backend_buffer_get_usage(t->buffer) == GGML_BACKEND_BUFFER_USAGE_WEIGHTS;
 }
 
