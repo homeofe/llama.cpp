@@ -306,5 +306,14 @@ absolute numbers are ~4-5% below the quiet baseline for all configs equally):
 | q-vibe-tuned (table) | 47.7 (+4.4%) | 38.5 (+3.2%) |
 | **q-vibe-plus (table + bf16-as-f16)** | **48.9 (+7.0%)** | **40.5 (+8.6%)** |
 
-Both clear the +3% adoption gate; the package is the recommendation. Perplexity for the table
-change follows below (the launch-config change alters float summation order).
+Both clear the +3% adoption gate; the package is the recommendation.
+
+Perplexity for the table change (deterministic, reproduced twice, back-to-back pairs):
+test-de, 12 chunks, ctx 512: **-ub 4: control 3.8181 -> tuned 3.8363 (+0.48%, inside the +0.5%
+gate with no margin)**; -ub 512: 3.8200 -> 3.8200 (identical, as expected - the MMVQ path is not
+used at large batches; this confirms the mechanism). The control value moved from this morning's
+3.7963 to 3.8181 between library builds (the only libggml-cuda change in between is the inert
+GGML_CUDA_FORCE_MMQ switch, env unset - not resolved); the gate comparison uses the same-session
+interleaved pair, which reproduces bit-identically. Deployment recommendation: adopt the package
+(bf16-as-f16 on + tuned table), accept the +0.48% ub4 PPL, and re-check PPL once on a quiet
+machine before flipping the live runtime.

@@ -73,3 +73,8 @@ Für den Eigentümer, alle Zahlen mit Quelle. Stand: 2026-10-19, Worktree `llama
   Kontrolle 45,7/37,3; nur Tabelle 47,7/38,5 (+4,4/+3,2%); Tabelle+bf16-als-F16 48,9/40,5
   (+7,0/+8,6%). Beide ueber dem +3%-Tor; Empfehlung: das Paket.
 - Perplexitaet der Tabellenaenderung: siehe NOTES (Abschnitt oben); Grenze +0,5%.
+- Perplexitaet der Tabellenaenderung (deterministisch, zweimal reproduziert, Paare hintereinander):
+  -ub 4: Kontrolle 3,8181 -> getunt 3,8363 (+0,48%, innerhalb +0,5% ohne Reserve);
+  -ub 512: identisch 3,8200 (MMVQ-Pfad dort unbenutzt, besttigt den Mechanismus).
+  Empfehlung: Paket uebernehmen (bf16-als-F16 an + getunte Tabelle), +0,48% akzeptieren,
+  PPL vor dem Live-Rollover noch einmal bei ruhiger Maschine nachmessen.
