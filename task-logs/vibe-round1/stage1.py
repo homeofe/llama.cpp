@@ -523,7 +523,7 @@ def cmd_strata_shim(a, out, log):
 def cmd_nsys_ours(a, out, log):
     end = time.time() + 3600
     cfg = stage_b.CONFIGS['q-r8-slots']
-    env = dict(os.environ, **cfg['env'], GGML_CUDA_DISABLE_GRAPHS='1')
+    env = dict(os.environ, **cfg['env'], GGML_CUDA_DISABLE_GRAPHS='1', GGML_CUDA_BF16_AS_F16='1')
     ours = str(ROOT / 'build-cuda/bin/llama-server')
     cmd_prefix = [(ours if c == stage_b.L5 else c) for c in cfg['cmd']]
     run_nsys(out, log, 'ours-code1', cmd_prefix, env, '', PROMPTS[a.prompt][1], 'llama-server', end,

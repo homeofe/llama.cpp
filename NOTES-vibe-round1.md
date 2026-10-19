@@ -216,3 +216,38 @@ gate-accepted requests; history medians in brackets): code 73.5 tok/s (69.5-76.6
 4. The dirty-trace caveat: Strata's profiled request ran under a foreign-load burst (12 cores);
    its per-phase GPU numbers are load-insensitive, but a quiet-window re-capture would firm up the
    host-side split. The capture pipeline (engine-shim) now works and is reusable.
+
+## Stage 2 executed: GGML_CUDA_BF16_AS_F16 (measured, not adopted as sole change)
+
+The dense-path bound identified the hyper-connection BF16 matrices as the largest single kernel
+loss: `hc_*_up` (10240x320) ran the row-wise MMVF kernel at 85.6 GB/s while the same shape in F16
+runs the tensor-core MMF path at 308-320 GB/s (3.7x, measured both in `bound/series2.sh` and with
+the patch on). The patch converts BF16 mul_mat-only weights to F16 in place on non-BF16-mma
+hardware, behind `GGML_CUDA_BF16_AS_F16`, off by default (`ggml/src/ggml-cuda/bf16_f16.cu`).
+
+Proof (all archived in `bound/` and FACTS-bf16-as-f16.md):
+
+- bit-exact conversion vs an F16C-verified software reference: 1542 bit patterns, 0 differ;
+  mutation cuts (sign: 339 differ; 1-ulp tie: 616 differ) both detected, restored to 0;
+- mul_mat vs the CPU reference on 4 hc shapes: nmse 0, switch off AND on;
+- kernel speed: hc_up 76.7 -> 20.5 us (85.4 -> 320 GB/s, 3.7x);
+- perplexity (test-de, 12 chunks, ctx 512): ub4 3.7963 -> 3.7990 (+0.07%), ub512 3.8200 -> 3.7949
+  (-0.66%); both inside the +0.5% gate; the control reproduces the round-10 value exactly;
+- end to end, stage_b, 3 interleaved rounds, n=12 per config and category, quiet gate:
+
+| config | code tok/s | english tok/s | ms/round (server clock) |
+|---|---:|---:|---:|
+| q-vibe-control | 47.7 | 39.4 | 79.0 / 75.9 |
+| q-vibe-patch | 48.8 (+2.3%) | 40.8 (+3.6%) | 77.8 / 74.5 |
+
+**Verdict: not adopted as the sole change** - the pre-declared gate of +3% on both categories is
+missed on code (+2.3%). The kernel saving (5.3 ms/round) mostly runs under the shadow of the CPU
+expert phase: the server clock shows only 1.2-1.4 ms of round-time reduction. GPU time that
+overlaps the CPU phase does not buy wall time; the next kernel step must attack the exposed
+timeline (the ~14 ms/round elementwise/norm/quantize tail, ~4,700 launches per round) rather than
+shadowed GPU bandwidth.
+
+The file-level retype measured in the same session and protocol (`q-vibe-hcfix`, the existing
+IQ3_S-hcfix GGUF: hc up/routers F16 AND hc down Q8_0) clears the gate with +6.1% code / +7.4%
+english (n=12 each, 3 rounds). For the owner: deploying the hcfix file needs no code change; the
+runtime patch remains proven groundwork that benefits any BF16-dense model on this GPU.

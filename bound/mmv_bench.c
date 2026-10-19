@@ -62,6 +62,7 @@ int main(int argc, char ** argv) {
     ggml_build_forward_expand(graph, out);
 
     ggml_backend_buffer_t buf = ggml_backend_alloc_ctx_tensors(ctx, backend);
+    ggml_backend_buffer_set_usage(buf, GGML_BACKEND_BUFFER_USAGE_WEIGHTS);
     if (!buf) {
         fprintf(stderr, "alloc failed\n");
         return 1;

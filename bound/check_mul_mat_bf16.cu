@@ -37,6 +37,7 @@ static float * run_on(ggml_backend_t backend, const uint16_t * w, const float * 
     struct ggml_cgraph * graph = ggml_new_graph(ctx);
     ggml_build_forward_expand(graph, out);
     ggml_backend_buffer_t buf = ggml_backend_alloc_ctx_tensors(ctx, backend);
+    ggml_backend_buffer_set_usage(buf, GGML_BACKEND_BUFFER_USAGE_WEIGHTS);
     ggml_backend_tensor_set(a, w, 0, ggml_nbytes(a));
     ggml_backend_tensor_set(b, x, 0, ggml_nbytes(b));
     ggml_backend_graph_compute(backend, graph);
