@@ -325,6 +325,10 @@ bool ggml_cuda_should_use_mmvq(enum ggml_type type, int cc, int64_t ne11) {
     if (!ggml_is_quantized(type)) {
         return false;
     }
+    // measurement switch, off by default: force the MMQ path wherever it is supported
+    if (getenv("GGML_CUDA_FORCE_MMQ") != nullptr && getenv("GGML_CUDA_FORCE_MMQ")[0] == '1') {
+        return false;
+    }
     // k-quants cost more to decode and mvq redoes that per column, so MMQ wins sooner.
     // Only list quant-types MMQ supports, others would fall back to cuBLAS.
     if (GGML_CUDA_CC_IS_NVIDIA(cc) && cc == GGML_CUDA_CC_TURING) {
@@ -560,7 +564,6 @@ static constexpr __host__ __device__ int calc_nwarps(ggml_type type, int ncols_d
             case 2:
             case 3:
             case 4:
-                return 4;
             case 5:
             case 6:
             case 7:
