@@ -48,6 +48,7 @@
 #include "ggml-cuda/scale.cuh"
 #include "ggml-cuda/snake.cuh"
 #include "ggml-cuda/softcap.cuh"
+#include "ggml-cuda/scale-unary-fused.cuh"
 #include "ggml-cuda/softmax.cuh"
 #include "ggml-cuda/ssm-conv.cuh"
 #include "ggml-cuda/ssm-scan.cuh"
@@ -3658,6 +3659,51 @@ static bool ggml_cuda_can_fuse(const struct ggml_cgraph *                cgraph,
         return true;
     }
 
+    if (ops.size() == 3 && ops.begin()[0] == GGML_OP_SCALE && ops.begin()[1] == GGML_OP_UNARY && ops.begin()[2] == GGML_OP_SCALE
+     && unary_ops.size() == 1 && unary_ops.begin()[0] == GGML_UNARY_OP_SIGMOID) {
+        const ggml_tensor *scale   = cgraph->nodes[node_idx];
+        const ggml_tensor *sigmoid = cgraph->nodes[node_idx+1];
+        const ggml_tensor *scale2  = cgraph->nodes[node_idx+2];
+
+        // the fused kernel is F32 only
+        if (scale->src[0]->type != GGML_TYPE_F32 || scale->type != GGML_TYPE_F32) {
+            return false;
+        }
+
+        if (ggml_get_unary_op(sigmoid) != GGML_UNARY_OP_SIGMOID) {
+            return false;
+        }
+
+        // Check for bias
+        if (ggml_get_op_params_f32(scale, 1) != 0.0f || ggml_get_op_params_f32(scale2, 1) != 0.0f) {
+            return false;
+        }
+
+        return true;
+    }
+
+    if (ops.size() == 2 && ops.begin()[0] == GGML_OP_SCALE && ops.begin()[1] == GGML_OP_UNARY
+     && unary_ops.size() == 1 && unary_ops.begin()[0] == GGML_UNARY_OP_SILU) {
+        const ggml_tensor *scale = cgraph->nodes[node_idx];
+        const ggml_tensor *silu  = cgraph->nodes[node_idx+1];
+
+        // the fused kernel is F32 only
+        if (scale->src[0]->type != GGML_TYPE_F32 || scale->type != GGML_TYPE_F32) {
+            return false;
+        }
+
+        if (ggml_get_unary_op(silu) != GGML_UNARY_OP_SILU) {
+            return false;
+        }
+
+        // Check for bias
+        if (ggml_get_op_params_f32(scale, 1) != 0.0f) {
+            return false;
+        }
+
+        return true;
+    }
+
     return false;
 }
 
@@ -4449,6 +4495,16 @@ static int ggml_cuda_try_fuse(ggml_backend_cuda_context * cuda_ctx, ggml_cgraph 
     if (ggml_cuda_can_fuse(cgraph, i, { GGML_OP_SCALE, GGML_OP_UNARY, GGML_OP_SCALE }, { GGML_UNARY_OP_TANH })) {
         ggml_cuda_op_softcap(*cuda_ctx, cgraph->nodes[i + 2], node);
         return 2;
+    }
+
+    if (ggml_cuda_can_fuse(cgraph, i, { GGML_OP_SCALE, GGML_OP_UNARY, GGML_OP_SCALE }, { GGML_UNARY_OP_SIGMOID })) {
+        ggml_cuda_op_scale_sigmoid_scale(*cuda_ctx, cgraph->nodes[i + 2], node);
+        return 2;
+    }
+
+    if (ggml_cuda_can_fuse(cgraph, i, { GGML_OP_SCALE, GGML_OP_UNARY }, { GGML_UNARY_OP_SILU })) {
+        ggml_cuda_op_scale_silu(*cuda_ctx, cgraph->nodes[i + 1], node);
+        return 1;
     }
 
     return 0;

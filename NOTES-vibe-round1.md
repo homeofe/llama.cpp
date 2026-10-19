@@ -384,3 +384,30 @@ a bf16 weight times 2^-k changes only the exponent, so `(w/4) @ x` accumulates e
 (ggml.h, ggml.c, ggml-cpu/ops.cpp, ggml-cuda/dsv4-hc.cu, ggml-sycl, builder flags, probes) -
 about two hours of careful work for a ~1-1.5 ms/round bound. The int8-MMA grouped kernel
 (~4 ms/round, the Strata `mul_mat_q` approach) remains the largest single kernel item.
+
+## Round 1 last item: scale+silu and scale+sigmoid+scale fusions (bit-exact, adopted)
+
+Two new pattern fusions in the existing CUDA fusion pass (`ggml/src/ggml-cuda/scale-unary-fused.cu`),
+mirroring the softcap template: `{SCALE, UNARY(SILU)}` (the hc_mix silu pre-scale chain) and
+`{SCALE, UNARY(SIGMOID), SCALE}` (the hc_combine scatter-weight chain, 3 kernels -> 1). The
+kernels use the exact float formulas of the unfused kernels (`ggml_cuda_op_silu_single`,
+`1/(1+expf(-x))`), so the fusion is bit-exact: all 12 test-de perplexity chunks are IDENTICAL to
+the unfused library (3.8363, every digit), and the greedy output of code-duration is unchanged
+(sha 6085cbab37d9). Note: `GGML_CUDA_DISABLE_FUSION=1` changes perplexity (3.8149) because it
+also disables the fork's pre-existing, not-bit-exact fusions (GLU in the matvec kernels etc.) -
+it is not an isolation switch for a single pattern.
+
+End to end (`vibe-fused-e2e`, 3 rounds, n=12, sustained foreign load 7-15):
+
+| config | code tok/s | english tok/s |
+|---|---:|---:|
+| q-vibe-kv8 before the fusions | 50.2 | 41.6 |
+| **q-vibe-kv8 with the fusions (the full stack)** | **50.4 (+0.4%)** | **41.9 (+0.7%)** |
+
+**Full stack vs the same-session control: +10.3% code / +12.3% english**, composed of five
+individually measured, individually verified changes:
+1. GGML_CUDA_BF16_AS_F16 (Turing dispatch fix, bit-exact conversion),
+2. MMVQ Turing table nwarps 4->2 (launch tuning),
+3. int8 KV (`-ctk/-ctv q8_0`) + 1779-slot expert cache (PPL improves, output unchanged),
+4. scale+silu fusion (bit-exact),
+5. scale+sigmoid+scale fusion (bit-exact).
