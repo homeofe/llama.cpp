@@ -40,10 +40,21 @@ Für den Eigentümer, alle Zahlen mit Quelle. Stand: 2026-10-19, Worktree `llama
 3. `bound/check_mul_mat_bf16`: 4 hc-Shapes, CPU-Referenz gegen CUDA: nmse 0 (bitweise gleich),
    Schalter aus UND ein.
 4. Geschwindigkeit (ruhig, 3 Runden): hc_up 76,7 -> 20,5 us (85,4 -> 320 GB/s, 3,7x).
-5. End-to-End: stage_b 3 Runden `q-vibe-control` vs `q-vibe-patch` (Original-GGUF, nur der
-   Schalter), Quiet-Gate, Hashes/Draft-Counts verglichen (folgt unten).
-6. Perplexität test-de, 12 Chunks, ctx 512, -ub 4 und -ub 512, Kontrolle gegen Patch (folgt
-   unten; Grenze +0,5 %).
+5. End-to-End: stage_b 3 Runden, je 12 saubere Anfragen pro Konfiguration und Kategorie
+   (`vibe-patch-e2e/`): Kontrolle 47,7 Code / 39,4 Englisch tok/s; Patch 48,8 (+2,3 %) /
+   40,8 (+3,6 %); Rundenzeit laut Server-Uhr 79,0/75,9 -> 77,8/74,5 ms. Unter dem deklarierten
+   Tor von +3 % auf BEIDEN Kategorien (Code fehlt). Der Kernel-Gewinn (5,3 ms/Runde) läuft
+   großteils im Schatten der CPU-Experten-Phase; an der Wand bleiben nur 1,2-1,4 ms.
+   => NICHT als alleinige Änderung übernommen.
+6. Perplexität test-de, 12 Chunks, ctx 512: -ub 4: 3,7963 -> 3,7990 (+0,07 %); -ub 512:
+   3,8200 -> 3,7949 (-0,66 %). Beides innerhalb der +0,5 %-Grenze; die Kontrolle trifft den
+   historischen Wert 3,7963 exakt (Schalter aus = unverändert).
+7. Vergleich Datei-Retype im selben Protokoll (IQ3_S-hcfix: hc up/Router F16 UND hc down Q8_0):
+   Code +6,1 %, Englisch +7,4 % - ÜBER dem Tor. Empfehlung: hcfix-Datei für iq3_s ausrollen
+   (keine Code-Änderung nötig); Runtime-Patch als bewiesene Grundlage behalten (hilft jedem
+   BF16-dichten Modell auf dieser GPU, und beim Qwen3.8 in Kombination mit weiteren
+   Kernel-Schritten, die die exponierte Zeitlinie angreifen: die ~14 ms/Runde
+   Elementwise-/Norm-Kette in ~4.700 Kerneln pro Runde).
 
 ## Offen / Empfehlung
 
