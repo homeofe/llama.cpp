@@ -306,7 +306,9 @@ absolute numbers are ~4-5% below the quiet baseline for all configs equally):
 | q-vibe-tuned (table) | 47.7 (+4.4%) | 38.5 (+3.2%) |
 | **q-vibe-plus (table + bf16-as-f16)** | **48.9 (+7.0%)** | **40.5 (+8.6%)** |
 
-Both clear the +3% adoption gate; the package is the recommendation.
+Both clear the +3% adoption gate; the package is the recommendation. An independent
+confirmation run (`vibe-plus-confirm/`, 3 rounds, n=12 per category, 0 requeues, foreign load
+7-10) reproduces it: control 45.7/37.4 -> plus 49.0/40.5 = **+7.2% code / +8.3% english**.
 
 Perplexity for the table change (deterministic, reproduced twice, back-to-back pairs):
 test-de, 12 chunks, ctx 512: **-ub 4: control 3.8181 -> tuned 3.8363 (+0.48%, inside the +0.5%
