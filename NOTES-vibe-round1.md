@@ -251,3 +251,36 @@ The file-level retype measured in the same session and protocol (`q-vibe-hcfix`,
 IQ3_S-hcfix GGUF: hc up/routers F16 AND hc down Q8_0) clears the gate with +6.1% code / +7.4%
 english (n=12 each, 3 rounds). For the owner: deploying the hcfix file needs no code change; the
 runtime patch remains proven groundwork that benefits any BF16-dense model on this GPU.
+
+## Fragmentation map (round-1 addendum, the basis for the fusion decision)
+
+Gap analysis of the round-10 decode window (6.28 s, 60 rounds, graph-off trace, nsys-inflated by
+~20%): 84% of all GPU idle (3.58 s of 4.26 s) sits in 21,558 gaps immediately before `k_bin_bcast`
+- the per-layer point where the GPU waits for the CPU experts. The CPU expert phase is almost
+fully EXPOSED, not overlapped; it is the round's dominant gate (~48-60 ms/round inflated).
+The dense kernels on the main stream run back-to-back (1.4 us inter-kernel): their execution time
+is wall time. Corrected block sizes per round:
+
+| block | ms/round (inflated) | note |
+|---|---:|---|
+| CPU expert wait (gaps before bin_bcast) | ~48-60 | the gate; hit rate ours 37.9% cumulative vs Strata ~50% |
+| GEMV families (mul_mat_vec_q 742 ms + _f 614 ms per request) | ~22.6 | 200-290 GB/s vs ~450 achievable |
+| elementwise tail (~2,700 kernels/round) | ~7 + ~2 gaps | quantize_q8_1 75, rms_norm 64, scale 63, bcast 61, unary 54 ms/request |
+| cache hits (mul_mat_vec_q_moe 328 ms) | ~5.5 | grouped kernels would take ~2 |
+| copies: 8.2 GB HtoD uploads + 2.4 GB DtoD split copies (23.4k calls, 20 GB/s) | ~13 | DtoD = per-layer split-boundary copies |
+
+Consequences, measured:
+- "Fusion of the tail" alone is worth ~9 ms/round, not 14 as first estimated.
+- Even Strata-level GEMVs + a fused tail land at ~60 ms/round; the last ~12 ms to Strata parity
+  live in the CPU expert gate (hit-rate gap + 23% more expert bytes), whose policy knobs are
+  already measured (round 11: admit8 +1.3%, more admission not better).
+- The two bounded patch proposals, in cost/benefit order:
+  1. GEMV batching for small batches (~10 ms/round bound): batch the ~377 mul_mat_vec_q launches
+     per round across same-K tensors / tune MMVQ for batch 4-5 on sm_75. Generic for every
+     quantized model. Multi-day kernel engineering; needs its own bounded task.
+  2. Elementwise-chain fusion in the CUDA backend (~9 ms/round bound): merge
+     quantize/scale/bcast/unary/rms_norm chains into one kernel per layer segment, ~500 lines,
+     pattern pass before capture. Generic for every model. High review risk (float reassociation
+     must stay within the nmse gates).
+Both only pay together with the bf16-as-f16 patch already in the tree (the hc_up kernels are part
+of the same exposed stream-17 time).
