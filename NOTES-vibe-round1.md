@@ -317,3 +317,27 @@ GGML_CUDA_FORCE_MMQ switch, env unset - not resolved); the gate comparison uses 
 interleaved pair, which reproduces bit-identically. Deployment recommendation: adopt the package
 (bf16-as-f16 on + tuned table), accept the +0.48% ub4 PPL, and re-check PPL once on a quiet
 machine before flipping the live runtime.
+
+## Policy simulation: the hit-rate gap to Strata is not a knob (negative result)
+
+`bound/sim_policy.py` replays the real bench-8 routing trace (8 prompts x 256 tokens,
+temperature 0, three back-to-back rounds to model stage_b's repeated prompts) through a faithful
+model of our adaptive LFU (decay x0.5 every N tokens, admit cap per ubatch, evict-coldest,
+1418 target slots):
+
+| policy | cumulative | steady (last round) |
+|---|---:|---:|
+| **ours (decay 128, admit 32)** | **43.7 %** | **43.5 %** |
+| decay 512 | 35.6 % | 34.9 % |
+| decay 2048 | 32.2 % | 31.9 % |
+| no decay | 31.7 % | 32.0 % |
+| admit 256 | 43.8 % | 43.5 % |
+
+Our policy is already the best of the swept LFU family; slower decay is WORSE (the eight prompts
+are different topics - fast decay adapts, and cross-round reuse is minimal: even with no decay at
+all, the same prompt one round later hits only 11 % because seven other requests evicted it).
+The simulated trajectory (0-6 % first request, 46-48 % warm, first request of later rounds 1-9 %)
+matches the shape of our measured server trajectory. Conclusion: closing the gap to Strata's
+50-57 % on the same benchmark requires a structurally different admission policy (their adaptive
+tier plus their static profile, which scored only 10 % on our trace in the round-4 analysis),
+not a parameter change. All FACTS and NOTES are in English now for upstreaming.

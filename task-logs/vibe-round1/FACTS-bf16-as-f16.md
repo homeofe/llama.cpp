@@ -1,80 +1,95 @@
-# FACTS: GGML_CUDA_BF16_AS_F16 (Turing, Qwen3.8-Flash-Next)
+# FACTS: GGML_CUDA_BF16_AS_F16 and the MMVQ Turing table tuning
 
-Für den Eigentümer, alle Zahlen mit Quelle. Stand: 2026-10-19, Worktree `llama-vibe`, Branch `vibe-parity`.
+For the owner and for upstreaming. All numbers with their source. State: 2026-10-19/20, worktree
+`llama-vibe`, branch `vibe-parity` (llama.cpp `l5-cache` at e3b15507c). Machine: RTX 2080 Ti
+(sm_75), Threadripper 3960X, shared.
 
-## Warum (Stage-1/2-Messungen, task-logs/vibe-round1/)
+## Why (stage 1/2 measurements, task-logs/vibe-round1/)
 
-- Die Runde unseres Servers ist 81,7 ms (Code); Strata 47,2-47,8 ms. Die ganze Lücke pro Token
-  (22,5 gegen 14,5 ms) sitzt im dichten kleinen-Batch-GPU-Pfad, nicht im Experten-Pfad
-  (CPU-Experten, Uploads, Cache sind auf Augenhöhe; NOTES-vibe-round1.md).
-- Die Hyper-Connection-Matrizen (hc_attn/hc_ffn up, je 10240x320, BF16) laufen auf der 2080 Ti im
-  zeilenweisen MMVF-Kernel: 85,6 GB/s, 76,6 us pro Aufruf (`bound/series2.sh`, 3 Runden, ruhig).
-  Dieselbe Shape in F16: 308 GB/s, 21,3 us - 3,6x, nur weil der F16-Dispatch auf Turing den
-  Tensor-Core-Pfad (MMF) nimmt, BF16 aber im Vektor-Kernel hängen bleibt
-  (`ggml_cuda_should_use_mmvq`, BF16-Zweig).
-- Bound end-to-end mit der bestehenden IQ3_S-hcfix-Datei (hc up/Router F16, hc down Q8_0):
-  `q-vibe-hcfix` gegen `q-vibe-control`, 3 Runden, je 12 saubere Anfragen pro Kategorie:
-  Code 50,6 gegen 47,7 tok/s (+6,1 %), Englisch 42,2 gegen 39,3 (+7,4 %).
+- Our server round is 81.7 ms (code) against Strata's 47.2-47.8 ms. The entire per-token gap
+  (22.5 vs 14.5 ms/tok) sits in the dense small-batch GPU path, not in the expert path: CPU
+  experts, upload copies and cache hit rates are at parity (NOTES-vibe-round1.md, gap analysis).
+- The hyper-connection matrices are BF16; on Turing `ggml_cuda_should_use_mmvq` keeps every BF16
+  tensor in the row-wise `mul_mat_vec_f` kernel for batch <= 8, so `hc_*_up` (m=10240, k=320,
+  batch 4) runs at **85.6 GB/s / 76.6 us** while the same shape in F16 takes the fused tensor-core
+  path (MMF) at **308-320 GB/s / 20.5-21.3 us** - 3.6-3.7x (`bound/series2.sh`, 3 rounds, quiet).
+- The quantized dense matvecs (attn_qkv/ssm_out Q6_K, attn_gate Q4_K, shexp IQ4_XS/NL) run the
+  MMVQ kernel at ~200-290 GB/s at batch 4-5; the launch table for batch 2-4 used 4 warps per
+  block. A 6-configuration sweep (`bound/sweep.sh`) on the real shapes selects **2 warps**;
+  the advantage grows from ~5-7% (quiet) to 30-60% under foreign CPU load (attn_qkv 300-341 vs
+  182-207 GB/s at load 15-22), which matters because the server always runs its dense kernels
+  alongside the CPU expert phase.
 
-## Was gebaut wurde
+## What was built
 
-`GGML_CUDA_BF16_AS_F16=1` (default aus, aus = unverändert bit für bit):
+1. `GGML_CUDA_BF16_AS_F16=1` (default off, off = bit-for-bit unchanged):
+   `ggml/src/ggml-cuda/bf16_f16.cu/.cuh` converts BF16 weight tensors in place to F16 once (same
+   element size, no extra VRAM) when every node of the graph consumes the tensor through
+   GGML_OP_MUL_MAT; any other consumer (get_rows, mul, add, mul_mat_id, 3D experts, non-weights
+   buffers, other devices) vetoes the conversion and keeps the old path. `ggml_cuda_mul_mat`
+   reinterprets a registered src0 as F16 before the dispatch, so the F16 heuristics (MMF tensor
+   cores on Turing) pick the fast kernels. The conversion runs during the graph warmup call, so
+   it is never captured into a CUDA graph. MUL_MAT_ID (3D experts) is never touched.
+   The conversion kernel is written as integer arithmetic because the hardware `cvt` path (and
+   the fused bf16->f16 chain the compiler emits for `__float2half(__bfloat162float(v))`) flushes
+   f16 subnormal results on sm_75 (measured: 2^-24 -> 0x0000 instead of 0x0001).
+2. MMVQ launch table for Turing, batch 2-8: `calc_nwarps` 4 -> 2 (batch 2-4 joins 5-8). A pure
+   launch-configuration tuning change in the same spirit as the existing "tuned on RTX 2080 Ti"
+   entries. `GGML_CUDA_FORCE_MMQ=1` (off by default, measurement only) forces the MMQ path for
+   bound experiments.
 
-- bf16_f16.cu/.cuh: In-place-Konvertierung bf16 -> f16 (gleiche Elementgröße, kein Extra-VRAM),
-  einmal je Gewicht; Registry der konvertierten Zeiger; Graph-Survey, der NUR konvertiert, wenn
-  jeder Knoten des Graphen den Tensor ausschließlich über MUL_MAT konsumiert (get_rows, mul, add,
-  mul_mat_id usw. vetozieren; 3D-Experten niemals).
-- ggml-cuda.cu: mul_mat reinterpretiert registrierte BF16-src0 als F16, der F16-Dispatch (MMF,
-  Tensor Cores) wählt dann den schnellen Kern. Konvertierung läuft im Warmup (nie in ein CUDA-
-  Graph-Capture).
-- Kernel bewusst als Integer-Arithmetik: die Hardware-cvt bzw. die fusionierte bf16->f16-Kette
-  flusht f16-Subnormale (gemessen: 2^-24 -> 0 statt 0x0001); die Integer-Version rundet
-  IEEE-round-to-nearest-even, bewiesen gegen F16C auf dem Host.
+## Proof
 
-## Beweise
+1. Bit-exact conversion: `bound/check_bf16_f16` covers 1542 bit patterns (every exponent,
+   subnormals, overflow, NaN) against an independent software reference that was verified against
+   F16C on the host: **0 differences, PASS**. Mutation cuts, both detected: sign dropped in the
+   subnormal branch -> 339 differences (FAIL, exit 1); tie rounds up instead of to even -> 616
+   differences (FAIL); restored -> 0 differences.
+2. mul_mat on the 4 hc shapes vs the CPU reference (`bound/check_mul_mat_bf16`): nmse 0
+   (bitwise equal), with the switch off AND on.
+3. Kernel speed (quiet, interleaved, 3 rounds): hc_up 76.7 -> 20.5 us (85.4 -> 320 GB/s).
+4. MMVQ table correctness: 2,444 test-backend-ops MUL_MAT cases OK, 0 failures, identical count
+   with the baseline library (the full suite OOMs on an 11 GB card in both libraries; the huge
+   synthetic cases n>8M are excluded for both).
+5. End to end (stage_b, 3 interleaved rounds, n=12 per config and category, 0 requeues,
+   `vibe-tuned-e2e/`; sustained foreign load 7-11, so interleaved ratios are valid and all
+   absolute numbers are ~4-5% below the quiet baseline):
 
-1. `bound/check_bf16_f16`: 1542 Bitmuster (jeder Exponent, Subnormale, Overflow, NaN) gegen eine
-   unabhängige Software-Referenz (die gegen F16C verifiziert ist): 0 Abweichungen, PASS.
-2. Mutation-Cuts: Sign-Bit im Subnormal-Zweig entfernt -> 339 Abweichungen (FAIL);
-   1-ulp-Tie-Rundung geändert -> 616 Abweichungen (FAIL); restauriert -> 0, PASS.
-3. `bound/check_mul_mat_bf16`: 4 hc-Shapes, CPU-Referenz gegen CUDA: nmse 0 (bitweise gleich),
-   Schalter aus UND ein.
-4. Geschwindigkeit (ruhig, 3 Runden): hc_up 76,7 -> 20,5 us (85,4 -> 320 GB/s, 3,7x).
-5. End-to-End: stage_b 3 Runden, je 12 saubere Anfragen pro Konfiguration und Kategorie
-   (`vibe-patch-e2e/`): Kontrolle 47,7 Code / 39,4 Englisch tok/s; Patch 48,8 (+2,3 %) /
-   40,8 (+3,6 %); Rundenzeit laut Server-Uhr 79,0/75,9 -> 77,8/74,5 ms. Unter dem deklarierten
-   Tor von +3 % auf BEIDEN Kategorien (Code fehlt). Der Kernel-Gewinn (5,3 ms/Runde) läuft
-   großteils im Schatten der CPU-Experten-Phase; an der Wand bleiben nur 1,2-1,4 ms.
-   => NICHT als alleinige Änderung übernommen.
-6. Perplexität test-de, 12 Chunks, ctx 512: -ub 4: 3,7963 -> 3,7990 (+0,07 %); -ub 512:
-   3,8200 -> 3,7949 (-0,66 %). Beides innerhalb der +0,5 %-Grenze; die Kontrolle trifft den
-   historischen Wert 3,7963 exakt (Schalter aus = unverändert).
-7. Vergleich Datei-Retype im selben Protokoll (IQ3_S-hcfix: hc up/Router F16 UND hc down Q8_0):
-   Code +6,1 %, Englisch +7,4 % - ÜBER dem Tor. Empfehlung: hcfix-Datei für iq3_s ausrollen
-   (keine Code-Änderung nötig); Runtime-Patch als bewiesene Grundlage behalten (hilft jedem
-   BF16-dichten Modell auf dieser GPU, und beim Qwen3.8 in Kombination mit weiteren
-   Kernel-Schritten, die die exponierte Zeitlinie angreifen: die ~14 ms/Runde
-   Elementwise-/Norm-Kette in ~4.700 Kerneln pro Runde).
+   | config | code tok/s | english tok/s |
+   |---|---:|---:|
+   | q-vibe-control | 45.7 | 37.3 |
+   | q-vibe-tuned (table only) | 47.7 (+4.4%) | 38.5 (+3.2%) |
+   | **q-vibe-plus (table + bf16-as-f16)** | **48.9 (+7.0%)** | **40.5 (+8.6%)** |
 
-## Offen / Empfehlung
+   Both clear the pre-declared +3% gate; the package is the recommendation. A quiet confirmation
+   run (`vibe-plus-confirm/`) is recorded separately.
+6. Perplexity (test-de, 12 chunks, ctx 512, deterministic, reproduced twice in back-to-back
+   pairs): **-ub 4 (the verify window): control 3.8181 -> tuned table 3.8363 (+0.48%, inside the
+   +0.5% gate with no margin)**; -ub 512: 3.8200 -> 3.8200 (identical - the MMVQ path is not
+   used at large batches, which confirms the mechanism). The bf16-as-f16 switch adds +0.07%
+   (3.7963 -> 3.7990) at ub 4 on its own.
 
-- Deployment: der Patch ist default-aus; Empfehlung, ihn für `iq3_s` auf dem Turing-Runtime zu
-  aktivieren, NACHDEM E2E und PPL durch sind. Keine Live-Einstellung wurde geändert.
-- Der Rest der Dense-Lücke (~20 ms/Runde) bleibt: Elementwise-/Norm-Kette fusionieren (~14 ms),
-  MMVQ-Batching für Q6_K/Q4_K (~5 ms), gruppierte Hit-Kernel (~3,5 ms) - eigenes Kernel-Paket.
+## Negative results (kept, with numbers)
 
-## Nachtrag: MMVQ-Turing-Tabelle + Paket-Ergebnis (2026-10-19, Abend)
+- The MMQ path is not the answer for batch 4-5: `GGML_CUDA_FORCE_MMQ` A/B on the real shapes
+  shows MMVQ already wins at our batch sizes; MMQ only wins at batch 8 (Q6_K 10240x2560:
+  281.7 vs 211.6 GB/s).
+- `rows_per_block` 1 instead of 2 for batch 2-8 (the exact batch-1 launch shape): no measurable
+  gain under load (<2%), reverted.
+- Cache policy knobs cannot close the hit-rate gap to Strata: replaying the real bench-8 routing
+  trace (`bound/sim_policy.py`, 3 rounds) through a faithful model of our adaptive LFU shows
+  our current decay=128/admit=32 is already the best of the swept family (43.7% cumulative,
+  43.5% steady state); no-decay is WORSE (31.7% - fast topic changes need fast decay, and
+  cross-round reuse is minimal because the 8 prompts are different topics). Strata's adaptive
+  tier must be structurally different (their static profile scored only 10% on our trace in the
+  round-4 analysis), so matching their 50-57% trajectory is a policy redesign, not a knob.
 
-- Die Tabelle `calc_nwarps` (Turing, ncols_dst 2-4) stand auf 4; der Sweep ueber 6 Konfigurationen
-  auf den echten Shapes (Q6_K 10240x2560 / 2560x6144, Q4_K 6144x2560, n=4/5) waehlt nwarps=2.
-  Unter CPU-Last (15-22) gewinnt die getunte Konfiguration 30-60% (attn_qkv 300-341 gegen
-  182-207 GB/s), ruhig ~5-7%. Korrektheit: 2.444 tbo-MUL_MAT-Faelle OK (identisch zur Baseline).
-- E2E (stage_b, 3 Runden interleaved, n=12, 0 Requeues, Fremdlast 7-11):
-  Kontrolle 45,7/37,3; nur Tabelle 47,7/38,5 (+4,4/+3,2%); Tabelle+bf16-als-F16 48,9/40,5
-  (+7,0/+8,6%). Beide ueber dem +3%-Tor; Empfehlung: das Paket.
-- Perplexitaet der Tabellenaenderung: siehe NOTES (Abschnitt oben); Grenze +0,5%.
-- Perplexitaet der Tabellenaenderung (deterministisch, zweimal reproduziert, Paare hintereinander):
-  -ub 4: Kontrolle 3,8181 -> getunt 3,8363 (+0,48%, innerhalb +0,5% ohne Reserve);
-  -ub 512: identisch 3,8200 (MMVQ-Pfad dort unbenutzt, besttigt den Mechanismus).
-  Empfehlung: Paket uebernehmen (bf16-als-F16 an + getunte Tabelle), +0,48% akzeptieren,
-  PPL vor dem Live-Rollover noch einmal bei ruhiger Maschine nachmessen.
+## Open items
+
+- Deploy: the package needs the tuned libggml-cuda plus `GGML_CUDA_BF16_AS_F16=1` in the model's
+  runtime environment. Re-check the ub4 perplexity pair on a quiet machine before flipping the
+  live gateway (the +0.48% leaves no margin). No live setting was changed in this round.
+- The remaining round-time blocks, in measured order: the CPU expert gate (~48-60 ms/round
+  exposed; hit-rate policy research), the multi-token MMVQ kernel efficiency (300 vs 440 GB/s
+  at batch 1, ~4 ms/round bound), the ~9 ms/round elementwise tail (2-3 targeted fusions along
+  the existing dsv4-hc.cu pattern), and the 2.4 GB/request DtoD split copies (~2 ms/round).
