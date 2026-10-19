@@ -59,7 +59,7 @@ class Hold:
 
     def _renew(self):
         while not self.stop_flag:
-            time.sleep(30)
+            time.sleep(20)
             if self.stop_flag or not self.held:
                 return
             try:
@@ -88,7 +88,7 @@ def wait_quiet(end, hold, timeout=900):
             return round(time.time() - t0)
         if time.time() - t0 > timeout:
             raise TimeoutError('no quiet window')
-        time.sleep(10)
+        time.sleep(3)
     raise TimeoutError('deadline')
 
 
@@ -270,7 +270,7 @@ def wait_ready(url, key, proc, end, log, timeout=600):
             pass
         if time.time() - t0 > timeout:
             raise TimeoutError('engine not loaded in time')
-        time.sleep(3)
+        time.sleep(1)
     raise TimeoutError('deadline while loading')
 
 
@@ -510,7 +510,7 @@ def cmd_strata_shim(a, out, log):
                     break
             if report:
                 break
-            time.sleep(5)
+            time.sleep(2)
         for p in own_pids('engine/strata') + own_pids('serve/server.py'):
             try:
                 os.kill(p, signal.SIGKILL)

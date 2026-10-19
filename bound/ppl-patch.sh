@@ -11,7 +11,7 @@ gw() { curl -s -X "$1" -H "$H" -H 'Content-Type: application/json' ${3:+-d "$3"}
 trap 'gw DELETE hold' EXIT
 for ub in 4 512; do
   for v in control patch; do
-    while [ "$(cut -d' ' -f1 /proc/loadavg | cut -d. -f1)" -ge 3 ]; do sleep 20; done
+    while [ "$(cut -d' ' -f1 /proc/loadavg | cut -d. -f1)" -ge 3 ]; do sleep 5; done
     gw POST free '{}'; gw POST hold '{"reason":"vibe: bf16-as-f16 perplexity","ttlS":1800}'
     envs=''
     [ "$v" = patch ] && envs='GGML_CUDA_BF16_AS_F16=1'
