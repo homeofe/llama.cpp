@@ -62,3 +62,14 @@ Für den Eigentümer, alle Zahlen mit Quelle. Stand: 2026-10-19, Worktree `llama
   aktivieren, NACHDEM E2E und PPL durch sind. Keine Live-Einstellung wurde geändert.
 - Der Rest der Dense-Lücke (~20 ms/Runde) bleibt: Elementwise-/Norm-Kette fusionieren (~14 ms),
   MMVQ-Batching für Q6_K/Q4_K (~5 ms), gruppierte Hit-Kernel (~3,5 ms) - eigenes Kernel-Paket.
+
+## Nachtrag: MMVQ-Turing-Tabelle + Paket-Ergebnis (2026-10-19, Abend)
+
+- Die Tabelle `calc_nwarps` (Turing, ncols_dst 2-4) stand auf 4; der Sweep ueber 6 Konfigurationen
+  auf den echten Shapes (Q6_K 10240x2560 / 2560x6144, Q4_K 6144x2560, n=4/5) waehlt nwarps=2.
+  Unter CPU-Last (15-22) gewinnt die getunte Konfiguration 30-60% (attn_qkv 300-341 gegen
+  182-207 GB/s), ruhig ~5-7%. Korrektheit: 2.444 tbo-MUL_MAT-Faelle OK (identisch zur Baseline).
+- E2E (stage_b, 3 Runden interleaved, n=12, 0 Requeues, Fremdlast 7-11):
+  Kontrolle 45,7/37,3; nur Tabelle 47,7/38,5 (+4,4/+3,2%); Tabelle+bf16-als-F16 48,9/40,5
+  (+7,0/+8,6%). Beide ueber dem +3%-Tor; Empfehlung: das Paket.
+- Perplexitaet der Tabellenaenderung: siehe NOTES (Abschnitt oben); Grenze +0,5%.

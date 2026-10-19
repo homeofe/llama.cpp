@@ -284,3 +284,27 @@ Consequences, measured:
      must stay within the nmse gates).
 Both only pay together with the bf16-as-f16 patch already in the tree (the hc_up kernels are part
 of the same exposed stream-17 time).
+
+## Round 1, performance package: MMVQ table tuning + bf16-as-f16 (adopted by measurement)
+
+Two changes, both in this worktree, measured together and separately:
+
+1. **MMVQ Turing table, batch 2-8 -> nwarps 2** (was 4 for batch 2-4): the sweep
+   (`bound/sweep.sh`, six configurations) found the n=1-like launch shape best for the verify
+   window; the win grows under CPU load (attn_qkv 300-341 vs 182-207 GB/s at load 15-22;
+   quiet ~+5-7%). Correctness: 2,444 test-backend-ops MUL_MAT cases OK, 0 failures (the same
+   count as the baseline library).
+2. **GGML_CUDA_BF16_AS_F16** (previous section), switch on in the candidate only.
+
+End to end (`vibe-tuned-e2e`, stage_b, 3 interleaved rounds, n=12 per config and category,
+0 requeues; note: sustained foreign load 7-11 during this run - interleaved ratios are valid,
+absolute numbers are ~4-5% below the quiet baseline for all configs equally):
+
+| config | code tok/s | english tok/s |
+|---|---:|---:|
+| q-vibe-control | 45.7 | 37.3 |
+| q-vibe-tuned (table) | 47.7 (+4.4%) | 38.5 (+3.2%) |
+| **q-vibe-plus (table + bf16-as-f16)** | **48.9 (+7.0%)** | **40.5 (+8.6%)** |
+
+Both clear the +3% adoption gate; the package is the recommendation. Perplexity for the table
+change follows below (the launch-config change alters float summation order).
