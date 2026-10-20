@@ -527,3 +527,26 @@ scores 10% alone; the hybrid wants the pin set learned from the CURRENT workload
 evict-protected residency, not the old static seeding. The sim must be fixed (the first
 pin-LFU implementation had eviction bugs; its pin-0 reference must reproduce 43.7%/38.3%)
 before the K-sweep results are trustworthy.
+
+## Round 12 pre-work complete: the pin hybrid is measured dead (clean sim, validated reference)
+
+`bound/sim_hybrid.py` implements the LFU + evict-protected pinned top-K hybrid with a clean
+two-heap structure; its pin-0 configuration reproduces the plain LFU (48.2% vs the 48.6%
+reference - the earlier 94.7%/21.2% runs were a divide-by-misses bug and a broken eviction
+loop, both fixed and re-run). The sweep over the benchmark trace, 3 rounds, 1779 slots:
+
+| pinned top-K | cumulative | novel (round 1) |
+|---|---:|---:|
+| 0 (pure LFU) | **48.2%** | **42.4%** |
+| 300 | 47.3% | 41.8% |
+| 600 | 46.2% | 41.0% |
+| 900 | 45.0% | 40.2% |
+| 1200 | 43.4% | 39.1% |
+
+Monotonically negative on BOTH metrics: the pinned all-time set is the average of all topics,
+and every pinned slot is capacity taken from the per-request adaptation that earns the LFU
+its rate. Strata's first-touch-freeze (and any pinned hybrid of it) wins only when
+conversation repetition dominates - the deployed gateway's pattern, not the stage_b benchmark
+and not novel-request agent traffic. The pin axis is closed with numbers; the remaining
+round-12 space is the LRU/recency flavor (low prior: the round-9 policy sweeps were flat) and
+the sim-to-server calibration. Round 13 (int8-MMA) remains the largest open item.

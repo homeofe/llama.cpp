@@ -150,13 +150,17 @@ quota. Consequences:
   **10.3% cumulative** - BUT 100% on the second occurrence of the same prompt (our LFU gets
   2% there). It is a memory, not a cache: perfect for repeats, poor for novel requests.
 - Our LFU (decay 128) is the opposite: 38.3% on novel requests, near-zero cross-round memory.
-- **The hybrid is the round-12 candidate: pin the all-time top-K (a profile learned from the
-  deployed workload - the `GGML_MOE_HYBRID_TRACE` + `PROFILE` mechanism already exists,
-  round 7) and let the LFU own the remaining slots.** The pinned set must be evict-protected
-  (push them to +inf in the eviction heap). K to sweep: 0 / 300 / 600 / 900.
-  The first sim attempts are in the round-1 history but buggy (their pin-0 reference must
-  reproduce 43.7% per-token / 38.3% per-ubatch - fix the eviction logic until it does, then
-  trust the pin sweep).
+- **The hybrid was simulated with a validated reference (`bound/sim_hybrid.py`; pin-0
+  reproduces the LFU at 48.2% vs the 48.6% reference) and is MEASURED DEAD**: every pin level
+  loses, monotonically (pin 300: 47.3%, 600: 46.2%, 900: 45.0%, 1200: 43.4% cumulative; novel
+  round-1 falls 42.4% -> 39.1%). The all-time top-K is the average of all topics; each request
+  is a distinct topic, and the pinned slots take capacity from exactly the per-request
+  adaptation that earns our LFU its hit rate. First-touch-freeze and pinned hybrids win only
+  when conversation repetition dominates (the deployed gateway's traffic pattern) - not on
+  novel-request workloads. The pin axis is closed; do not implement it against the stage_b
+  gate. If the owner later wants the conversation-repeat case specifically, that is a
+  prefix-seeding feature (recognize a repeated prompt, re-seed from its recorded expert set),
+  not a residency-policy change.
 - Caution: the stage_b bench repeats its 8 prompts 3 times, so a pin-happy policy games the
   benchmark. Report the round-1 (novel) average separately from the steady state, and judge
   the policy on BOTH: it must not lose novel-request performance (round-1 >= 38%).
