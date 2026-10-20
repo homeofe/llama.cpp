@@ -1,2 +1,7 @@
 libs-tuned/
 libs-baseline/
+mma8_bench
+mma8_bench_*
+mma8_dbg
+mma8_dump
+mma8_probe_*
