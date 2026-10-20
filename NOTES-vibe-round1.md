@@ -462,3 +462,17 @@ two bit-exact elementwise fusions + async cache uploads = 51.3 / 42.7 tok/s** ag
 quiet baseline 47.7 / 39.4 = **+7.5% code / +8.4% english**, and 48.4/40.1 was the previously
 deployed best (q-r8-slots), so the stack is **+6.0% / +6.5% over the deployed configuration**
 with the same outputs on the benchmark.
+
+## Post-push sweep: the last VRAM and policy knobs (all negative, config space closed for good)
+
+- **q4_0 KV cache** (`-ctv q4_0`, both alone and with `-ctk q4_0`): the MTP draft context fails
+  to initialize ("failed to create MTP context" during load) - the draft cannot run with a
+  quantized-q4 KV in this build. Axis closed; int8 KV stays.
+- **Draft cache removal** (DRAFT_MIB=0, +250 target slots instead): code 50.6 vs 51.7, english
+  41.2 vs 42.8 - the draft cache (101 realized slots, 63.6% draft hits, three draft steps per
+  round) is worth more than +2.7 target hit points once per round. The draft cache stays.
+- **Prefill burst sweep** (ADMIT_PREFILL 256 / 1024 / 4096): 51.3/42.8 vs 50.4/41.8 vs
+  50.9/41.1 - the round-7 default of 1024 is the measured optimum.
+
+Every configuration lever is now measured. The remaining round time is kernel engineering only:
+the int8-MMA grouped matmul (~4 ms/round bound) and the admission-tier study.
