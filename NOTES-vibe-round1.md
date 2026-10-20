@@ -495,3 +495,14 @@ the pushed branch. Writing them surfaced three new measured facts (CPU-only work
 Consequence: round 12's realistic total is +3-5% e2e (7 hit points max), and closing the
 8-point sim-to-server implementation gap may be as valuable as a new policy. Round 13 (int8-MMA)
 remains the bigger single item at ~4 ms/round.
+
+## The admission-volume knob, closed with a corrected simulation
+
+The sim with the server's true per-UBATCH admission semantics reproduces the server exactly
+(admit 32: 38.3% sim vs 40.6% server - the round-1 "8-point implementation gap" was the sim's
+per-token admission model). It then predicts +8-9 hit points at admit 128-256. The server
+screen measured the opposite: **admit 128 -5.7/-6.3%, admit 256 -3.1/-4.7%** (target hit rate
+rose only 2 points, to 42.6%; the upload/eviction cost dominated). Admit 32 is the measured
+optimum on this stack; the knob is closed. Consequences: (a) any future policy work must
+model upload cost (the sim as it stands overestimates gains at the margins), (b) the round-12
+question is now precisely "better eviction choices at constant admission volume".

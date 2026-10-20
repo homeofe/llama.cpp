@@ -120,10 +120,36 @@ to confirm the sim's prediction arrived.
 but it must clear the same bar). If the sim predicts +5 hit points, expect roughly +6-8%
 end to end - report the prediction error honestly.
 
+### Measured during round 1 (already done - do not repeat)
+
+The per-ubatch sim (`bound/sim_policy.py`, modeled with admission at ubatch boundaries) reproduces
+the server at admit 32 (38.3% sim vs 40.6% server - the earlier 8-point "implementation gap" was
+the sim modeling admission per-token). It predicts +8-9 hit points at admit 128-256. The REAL
+server screen (`vibe-adm-screen` in the moe-quant folder) says otherwise:
+
+| config | code | english | target hit rate |
+|---|---:|---:|---:|
+| admit 32 (current) | 51.0 | 42.7 | 40.6% |
+| admit 128 | 48.1 (-5.7%) | 40.0 (-6.3%) | 42.6% (+2 points only) |
+| admit 256 | 49.4 (-3.1%) | 40.7 (-4.7%) | - |
+
+The upload/eviction cost (up to 280 MB/round of HtoD at 128, plus reader-fence waits in the async
+path) eats far more than the small realized hit gain. Admission volume is a dead knob: 32 is the
+measured optimum on this stack too. The sim must be extended to model upload costs before its
+policy predictions are trusted (admissions x 2.18 MB at 12.9 GB/s, plus a fence-wait factor).
+
+**The sharpened round-12 question**: the remaining sim-to-oracle headroom (38.3% at the current
+knobs vs the 55.5% per-request oracle) is only reachable by a policy that gains hits WITHOUT
+raising admission volume - better eviction CHOICES, not more admissions. Strata's source is the
+one place to look for such a policy.
+
 ### Stop rules
 
-- The realistic ceiling is +7 hit points (55.5% oracle) - recalibrate expectations to it.
-  Stop and report if no simulated policy beats ours by >= 3 hit points at the same slots.
+- The realistic ceiling is +7 hit points (55.5% oracle), but part of it is already in the 40.6%
+  realized number - the honest headroom statement is: the oracle at CURRENT admission cost is
+  ~47-48% (the unlimited-admission sim), so a cost-neutral policy change is worth at most
+  ~+6-7 real hit points, of which the sim's predictive power is now known to be weak at the
+  margins (it predicted +8 and reality gave +2). Calibrate expectations accordingly.
 - Stop and report if Strata's source turns out to implement exactly our LFU (then the 67% is
   a workload artifact of the deployed log's longer conversations, not a policy gap - quantify
   the conversation length effect in the sim and document it).
