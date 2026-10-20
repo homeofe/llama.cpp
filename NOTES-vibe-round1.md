@@ -438,3 +438,27 @@ What remains is kernel engineering, not configuration:
    until batch 8) - the Strata `mul_mat_q` approach, multi-day.
 2. The admission-tier study for the CPU expert gate (knobs closed by simulation; Strata's
    remaining hit-rate edge is structural).
+
+## Async cache uploads re-tested on the larger cache: adopted
+
+Round 11's two-stream upload patch (GGML_MOE_HYBRID_ASYNC_UPLOAD, off by default, +1.68%/+1.86%
+on the 2944 MiB cache, then below the gate) was re-tested on the NEW base: the 1779-slot cache
+uploads 24% more bytes on the compute stream, so the blocking it removes grew. The ported patch
+applies cleanly to this tree (commit history) and behaves bit-for-bit with the switch off
+(round 11's host proofs, mutation cuts and ASan/UBSan runs carry over).
+
+End to end (`vibe-async-e2e`, 3 interleaved rounds, n=12 per config and category, 0 requeues,
+quiet start of each request, foreign load 3-9 during):
+
+| config | code tok/s | english tok/s |
+|---|---:|---:|
+| q-vibe-kv8 (sync uploads) | 50.4 | 42.0 |
+| **q-vibe-async (async uploads)** | **51.3 (+1.8%)** | **42.7 (+1.7%)** |
+
+All 24 paired outputs, draft counts and token counts are IDENTICAL between the two configs.
+
+**The final adopted stack: bf16-as-F16 + MMVQ table (nwarps 2) + int8 KV + 1779-slot cache +
+two bit-exact elementwise fusions + async cache uploads = 51.3 / 42.7 tok/s** against the
+quiet baseline 47.7 / 39.4 = **+7.5% code / +8.4% english**, and 48.4/40.1 was the previously
+deployed best (q-r8-slots), so the stack is **+6.0% / +6.5% over the deployed configuration**
+with the same outputs on the benchmark.
