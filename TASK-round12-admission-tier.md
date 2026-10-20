@@ -36,6 +36,11 @@ gate waits automatically (3 s polls).**
 - The within-request sequential reuse with an INFINITE cache is 91.1% - the binding constraint
   is the slot count, not the policy. One request touches up to 15,286 distinct experts against
   1779 slots.
+- TRACE SEMANTICS WARNING: the `cache` field in `traces/qwen38-bench8.jsonl` is
+  `l.use_cache` (whether the layer's ubatch ran through the cache path at all), NOT a hit
+  flag (`src/llama-moe-cache.cpp:1112`). The trace does not record per-expert hits; a fresh
+  trace with per-request hit accounting needs a small logging addition or the `slots` field
+  decoded. Do not parse it as hits (round 1 did and got a meaningless 95.8%).
 - Our real server realizes ~40.6% cumulative against the sim's 48.6% - an 8-point
   implementation gap (warm-up passes, multi-context effects, per-ubatch admission timing).
   Closing SIM-TO-SERVER may be cheaper than closing policy-to-oracle: instrument WHERE the

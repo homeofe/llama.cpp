@@ -476,3 +476,22 @@ with the same outputs on the benchmark.
 
 Every configuration lever is now measured. The remaining round time is kernel engineering only:
 the int8-MMA grouped matmul (~4 ms/round bound) and the admission-tier study.
+
+## Round 12/13 task files written; the admission premise re-measured
+
+`TASK-round12-admission-tier.md` and `TASK-round13-int8-mma.md` are in the worktree root and on
+the pushed branch. Writing them surfaced three new measured facts (CPU-only work, no GPU needed):
+
+1. **The per-request adaptive oracle at 1779 slots is 55.5%** (keep each request's own top-1779
+   with perfect foresight, bench-8 trace). Our LFU simulates 48.6% - the maximum any policy can
+   still gain on THIS benchmark is ~7 hit points. Strata's deployed-log 67% is a multi-turn
+   conversation effect and unreachable on 8 discrete prompts; their same-bench 50-57% is
+   essentially AT the oracle ceiling.
+2. The within-request sequential reuse with an infinite cache is 91.1%: the slot count is the
+   binding constraint (one request touches up to 15,286 distinct experts against 1779 slots).
+3. The trace's `cache` field is `use_cache` (the layer ran through the cache path), not a hit
+   flag - documented in the task file to prevent a repeat of the 95.8% parse artifact.
+
+Consequence: round 12's realistic total is +3-5% e2e (7 hit points max), and closing the
+8-point sim-to-server implementation gap may be as valuable as a new policy. Round 13 (int8-MMA)
+remains the bigger single item at ~4 ms/round.
