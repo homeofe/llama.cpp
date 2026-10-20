@@ -138,10 +138,28 @@ path) eats far more than the small realized hit gain. Admission volume is a dead
 measured optimum on this stack too. The sim must be extended to model upload costs before its
 policy predictions are trusted (admissions x 2.18 MB at 12.9 GB/s, plus a fence-wait factor).
 
-**The sharpened round-12 question**: the remaining sim-to-oracle headroom (38.3% at the current
-knobs vs the 55.5% per-request oracle) is only reachable by a policy that gains hits WITHOUT
-raising admission volume - better eviction CHOICES, not more admissions. Strata's source is the
-one place to look for such a policy.
+**Strata's cache policy, read from their source (`src/core/expert_cache.cpp:653`): FIRST
+TOUCH, NO EVICTION, EVER.** `if (next_free_ >= slots_) return kNotResident; // full: no
+eviction, deliberately` - the first `slots` distinct (layer, expert) pairs to be looked up
+are admitted in arrival order, and once the cache is full it is FROZEN for the lifetime of
+the process. No scoring, no decay, no LFU. The per-layer variant is the same with a per-layer
+quota. Consequences:
+
+- Their deployed-log 67% is a REPEAT-MEMORY effect: recurring conversations hit a frozen set
+  at 100%. Simulated on our bench trace (`bound/`, 3 rounds): first-touch-freeze scores only
+  **10.3% cumulative** - BUT 100% on the second occurrence of the same prompt (our LFU gets
+  2% there). It is a memory, not a cache: perfect for repeats, poor for novel requests.
+- Our LFU (decay 128) is the opposite: 38.3% on novel requests, near-zero cross-round memory.
+- **The hybrid is the round-12 candidate: pin the all-time top-K (a profile learned from the
+  deployed workload - the `GGML_MOE_HYBRID_TRACE` + `PROFILE` mechanism already exists,
+  round 7) and let the LFU own the remaining slots.** The pinned set must be evict-protected
+  (push them to +inf in the eviction heap). K to sweep: 0 / 300 / 600 / 900.
+  The first sim attempts are in the round-1 history but buggy (their pin-0 reference must
+  reproduce 43.7% per-token / 38.3% per-ubatch - fix the eviction logic until it does, then
+  trust the pin sweep).
+- Caution: the stage_b bench repeats its 8 prompts 3 times, so a pin-happy policy games the
+  benchmark. Report the round-1 (novel) average separately from the steady state, and judge
+  the policy on BOTH: it must not lose novel-request performance (round-1 >= 38%).
 
 ### Stop rules
 

@@ -506,3 +506,24 @@ rose only 2 points, to 42.6%; the upload/eviction cost dominated). Admit 32 is t
 optimum on this stack; the knob is closed. Consequences: (a) any future policy work must
 model upload cost (the sim as it stands overestimates gains at the margins), (b) the round-12
 question is now precisely "better eviction choices at constant admission volume".
+
+## Round 12 pre-work: Strata's cache policy found in their source
+
+`/opt/llm-gateway/data/runtimes/strata/.../src/core/expert_cache.cpp:653`:
+`if (next_free_ >= slots_) return kNotResident; // full: no eviction, deliberately`
+**Strata's expert cache is first-touch with no eviction at all** - admission in arrival
+order until the slots are full, then frozen for the process lifetime. No scoring, no decay.
+
+Simulated on our bench trace at 1779 slots: 10.3% cumulative (much worse than our LFU's
+38.3% per-ubatch) - but **100% on the second occurrence of the same prompt** (our LFU: 2%).
+Their deployed 67% is a repeat-memory effect of recurring conversations; the stage_b
+benchmark's own 3-round repetition rewards the same thing.
+
+The round-12 candidate is now sharply defined: **pin the all-time top-K experts (a profile
+learned from the deployed workload - the existing TRACE + PROFILE mechanism from round 7)
+and keep the adaptive LFU for the rest.** The existing `GGML_MOE_HYBRID_STATIC_PCT` pinning
+with the ROUND-4 profile was measured weak in round 7 ("adds little") - but that profile
+scores 10% alone; the hybrid wants the pin set learned from the CURRENT workload and an
+evict-protected residency, not the old static seeding. The sim must be fixed (the first
+pin-LFU implementation had eviction bugs; its pin-0 reference must reproduce 43.7%/38.3%)
+before the K-sweep results are trustworthy.
