@@ -411,3 +411,30 @@ individually measured, individually verified changes:
 3. int8 KV (`-ctk/-ctv q8_0`) + 1779-slot expert cache (PPL improves, output unchanged),
 4. scale+silu fusion (bit-exact),
 5. scale+sigmoid+scale fusion (bit-exact).
+
+## Config space closed: draft depth n4/n5, and the quiet full-stack number
+
+The last untested configuration lever was the MTP draft depth. Screen
+(`vibe-n45-screen`, one round, n=4 per category, quiet machine):
+
+| config | code tok/s | english tok/s |
+|---|---:|---:|
+| q-vibe-kv8 (n=3) | 50.8 | 41.6 |
+| q-vibe-kv8n4 | 52.0 (+2.4%) | 39.8 (-4.3%) |
+| q-vibe-kv8n5 | server aborts (draft-depth assertion in the speculative path) | - |
+
+n=4 trades english for code (acceptance 89%/60% vs 94%/69%) - the same pattern rounds 9/10
+measured for the other models; it fails the both-categories gate and is not adopted for the
+general config. The config space is now fully swept: draft depth, p_min, admission, decay,
+prefill warming, ubatch sizes, cache sizes, KV types, launch tables.
+
+The quiet screen also delivers the clean rollout number for the full stack (bf16-as-F16 +
+MMVQ table + int8 KV + 1779 slots + the two bit-exact fusions), measured on an idle machine:
+**50.8 code / 41.6 english tok/s against the quiet baseline 47.7 / 39.4 = +6.5% / +5.6%.**
+
+What remains is kernel engineering, not configuration:
+1. int8-MMA grouped matmul for the multi-token quantized path (~4 ms/round bound; the MMVQ
+   batch-4 path is INT-ALU saturated at ~300 GB/s vs 440 at batch 1, and MMQ does not win
+   until batch 8) - the Strata `mul_mat_q` approach, multi-day.
+2. The admission-tier study for the CPU expert gate (knobs closed by simulation; Strata's
+   remaining hit-rate edge is structural).
