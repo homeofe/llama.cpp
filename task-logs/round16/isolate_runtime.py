@@ -8,7 +8,7 @@ import shutil
 
 here = Path(__file__).resolve().parent
 parser = argparse.ArgumentParser()
-parser.add_argument('--name', choices=['isolated', 'global', 'reference', 'reference-dense'], default='isolated')
+parser.add_argument('--name', choices=['isolated', 'global', 'reference', 'reference-dense', 'reference-packed', 'reference-packed-v2'], default='isolated')
 args = parser.parse_args()
 old = here / 'e2e/original'
 new = here / 'e2e' / args.name

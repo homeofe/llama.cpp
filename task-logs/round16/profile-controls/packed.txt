@@ -1,0 +1,9 @@
+```python
+import re
+
+def parse_duration(s: str) -> int:
+    if not s:
+        raise ValueError("Empty string")
+    
+    pattern = r'^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$'
+    match =

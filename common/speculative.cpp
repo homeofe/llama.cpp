@@ -1764,6 +1764,9 @@ struct common_speculative_impl_draft_mtp : public common_speculative_impl {
                 common_sampler_reset(smpls[seq_id].get());
             }
 
+            if (strata_reference) {
+                strata_states[seq_id].first_guess = LLAMA_TOKEN_NULL;
+            }
             if (!is_mem_shared) {
                 llama_moe_cache_trace_speculation(ctx_dft, seq_id, dp.pos0, params.n_max + 1, -1);
             }
@@ -1911,7 +1914,9 @@ struct common_speculative_impl_draft_mtp : public common_speculative_impl {
                     (state.suffix.size() && state.suffix.history().back() != prompt[state.suffix.size() - 1])) {
                     state.suffix.reset();
                 }
-                state.suffix.append(prompt.data() + state.suffix.size(), prompt.size() - state.suffix.size());
+                if (state.suffix.size() < prompt.size()) {
+                    state.suffix.append(prompt.data() + state.suffix.size(), prompt.size() - state.suffix.size());
+                }
                 state.suffix.append(dp.id_last);
                 llama_token lookup[5];
                 const int k = state.suffix.propose(5, lookup);

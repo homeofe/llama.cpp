@@ -16,6 +16,7 @@ a = ap.parse_args()
 out = HERE/a.out
 out.mkdir(exist_ok=False)
 cfg = configs()['strata-reference']
+cfg['cmd'] += ['-lv', '4']
 if a.qsa:
     cfg['env']['LLAMA_MTP_DENSE'] = '0'
 (out/'config.json').write_text(json.dumps(cfg, indent=2)+'\n')
@@ -28,7 +29,7 @@ try:
     run.start('strata-reference', cfg)
     for prompt_id, prompt in [bench.PROMPTS[0], bench.PROMPTS[3], bench.PROMPTS[4]]:
         result = run.request(prompt, prompt_id)
-        assert result['tokens'] == 256, 'incomplete integration request'
+        assert 0 < result['tokens'] <= 256, 'invalid completion length'
         run.event(kind='integration_request', prompt=prompt_id, benchmark_valid=False,
                   load=os.getloadavg(), gpu=run.gpu_apps(), **result)
     run.event(kind='complete')

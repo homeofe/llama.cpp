@@ -92,11 +92,12 @@ def configs():
             cfg['cmd'][cfg['cmd'].index('--spec-draft-n-max')+1] = '4'
         result[name] = cfg
     cfg = dict(cmd=list(result['strata-gpu-global']['cmd']), env=dict(result['strata-gpu-global']['env']))
-    cfg['cmd'][0] = str(HERE / 'e2e/reference-dense/llama-server')
+    cfg['cmd'][0] = str(HERE / 'e2e/reference-packed-v2/llama-server')
     cfg['cmd'][cfg['cmd'].index('--spec-draft-n-max')+1] = '5'
     cfg['cmd'] += ['--spec-draft-p-min', '0.7']
     cfg['env'].update(LLAMA_MTP_STRATA_REFERENCE='1', LLAMA_MTP_DENSE='1', GGML_MOE_HYBRID_ADAPTIVE='0',
-                      GGML_MOE_HYBRID_MIB='4032', GGML_MOE_HYBRID_PROFILE=str(HERE/'strata-target.profile'))
+                      GGML_MOE_HYBRID_MIB='3600', GGML_MOE_HYBRID_PACK_PROFILE='1',
+                      GGML_MOE_HYBRID_PROFILE=str(HERE/'strata-target.profile'))
     result['strata-reference'] = cfg
     return result
 

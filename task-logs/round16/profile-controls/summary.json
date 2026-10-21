@@ -1,0 +1,62 @@
+{
+  "packed": {
+    "tokens": 64,
+    "usage": {
+      "completion_tokens": 64,
+      "prompt_tokens": 98,
+      "total_tokens": 162,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 98,
+      "prompt_ms": 1258.707,
+      "prompt_per_token_ms": 12.843948979591838,
+      "prompt_per_second": 77.85767458193209,
+      "predicted_n": 64,
+      "predicted_ms": 2398.574,
+      "predicted_per_token_ms": 38.072603174603174,
+      "predicted_per_second": 26.26560614765273
+    },
+    "sha256": "c6f83b78366ba03d4d7fa48a72c7fed24dcad1d7229522a179ef5ba5bbd583bc",
+    "wall_s": 3.6592951519414783,
+    "ttft_s": 1.2607397509273142,
+    "decode_tok_s": 26.267080584355114
+  },
+  "proportional": {
+    "tokens": 64,
+    "usage": {
+      "completion_tokens": 64,
+      "prompt_tokens": 98,
+      "total_tokens": 162,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 98,
+      "prompt_ms": 1276.67,
+      "prompt_per_token_ms": 13.027244897959184,
+      "prompt_per_second": 76.7622016652698,
+      "predicted_n": 64,
+      "predicted_ms": 2404.767,
+      "predicted_per_token_ms": 38.17090476190476,
+      "predicted_per_second": 26.197964293422192
+    },
+    "sha256": "c6f83b78366ba03d4d7fa48a72c7fed24dcad1d7229522a179ef5ba5bbd583bc",
+    "wall_s": 3.684829129022546,
+    "ttft_s": 1.2800974700367078,
+    "decode_tok_s": 26.199547869608494
+  },
+  "duplicate": {
+    "rejected": true,
+    "error": "invalid or duplicate packed MoE profile expert"
+  },
+  "budget": {
+    "rejected": true,
+    "error": "packed MoE profile exceeds device budget"
+  }
+}

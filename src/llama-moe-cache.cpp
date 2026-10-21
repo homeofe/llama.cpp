@@ -611,10 +611,60 @@ struct llama_moe_cache::impl {
             }
         }
 
+        // Measurement only: a frozen profile needs no unused slots in other quantization groups.
+        const bool pack_profile = llama_moe_cache_env_size("GGML_MOE_HYBRID_PACK_PROFILE", 0, 1) != 0;
+        std::vector<int32_t> profile_slots(groups.size(), 0);
+        if (pack_profile) {
+            if (!hybrid || adaptive || !profile) {
+                throw std::runtime_error("packed MoE profile requires frozen hybrid mode and a profile");
+            }
+            std::vector<int32_t> group_of(layers.size(), -1);
+            for (size_t ig = 0; ig < groups.size(); ++ig) {
+                for (int32_t il : groups[ig].layers) {
+                    group_of[il] = (int32_t) ig;
+                }
+            }
+            std::ifstream input(profile);
+            char header[64];
+            if (!input.getline(header, sizeof(header)) || std::string(header) != "llama-moe-profile-v1") {
+                throw std::runtime_error("invalid packed MoE profile header");
+            }
+            std::set<std::pair<int32_t, int32_t>> seen;
+            while (input >> std::ws && input.peek() != std::char_traits<char>::eof()) {
+                int64_t il, expert, count;
+                if (!(input >> il >> expert >> count) || il < 0 || il >= (int64_t) layers.size() || count < 0) {
+                    throw std::runtime_error("invalid packed MoE profile entry");
+                }
+                const int32_t ig = group_of[il];
+                if (ig < 0 || expert < 0 || expert >= groups[ig].ref[0]->ne[2] ||
+                    !seen.emplace((int32_t) il, (int32_t) expert).second || profile_slots[ig] == INT32_MAX) {
+                    throw std::runtime_error("invalid or duplicate packed MoE profile expert");
+                }
+                ++profile_slots[ig];
+            }
+            if (!input.eof()) {
+                throw std::runtime_error("invalid packed MoE profile data");
+            }
+            std::vector<size_t> packed_bytes(devices.size(), 0);
+            for (size_t ig = 0; ig < groups.size(); ++ig) {
+                const group & g = groups[ig];
+                if (profile_slots[ig] > 0) {
+                    const size_t bytes = alloc_size(g, profile_slots[ig]);
+                    const size_t budget = (size_t) ((double) size*devices[g.id].split/split_sum);
+                    if (bytes > budget || packed_bytes[g.id] > budget - bytes) {
+                        throw std::runtime_error("packed MoE profile exceeds device budget");
+                    }
+                    packed_bytes[g.id] += bytes;
+                }
+            }
+            LLAMA_LOG_WARN("llama_moe_cache: packed frozen profile: %zu experts\n", seen.size());
+        }
+
         // within a device the budget is split by the size of the experts, so each group caches the same fraction of its experts
         std::vector<size_t> n_tensors(devices.size(), 0);
         size_t n_tensors_host = 0;
-        for (group & g : groups) {
+        for (size_t ig = 0; ig < groups.size(); ++ig) {
+            group & g = groups[ig];
             const device & d = devices[g.id];
             const int32_t n_expert  = g.ref[0]->ne[2];
             const size_t  budget    = (size_t) ((double) size*d.split/split_sum*g.host_bytes/d.host_bytes);
@@ -622,8 +672,12 @@ struct llama_moe_cache::impl {
                 throw std::runtime_error("too many MoE hybrid cache keys");
             }
             const int32_t max_slots = g.layers.size()*n_expert;
-            while (g.n_slots < max_slots && alloc_size(g, g.n_slots + 1) <= budget) {
-                g.n_slots++;
+            if (pack_profile) {
+                g.n_slots = profile_slots[ig];
+            } else {
+                while (g.n_slots < max_slots && alloc_size(g, g.n_slots + 1) <= budget) {
+                    g.n_slots++;
+                }
             }
             if (hybrid && g.n_slots >= (1 << 24)) {
                 throw std::runtime_error("MoE hybrid slots must be exactly representable as F32");
