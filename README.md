@@ -66,6 +66,8 @@ the model is 85% in VRAM on 4 GPUs, so the first run only matches stock placemen
 
 \* from the previous release. GLM and MiMo were measured on release-candidate builds (MiMo also on b11509) before the last placement and thread commits, Qwen3.6 on the release binary. The available run history is in [`tools/bench/run-history.csv`](tools/bench/run-history.csv). It is incomplete: the D session has no raw logs, and several older headline rows cannot be matched to a fully specified recorded run. See the [performance audit](docs/performance-check-report.md).
 
+A separate controlled audit on a Threadripper 3960X / RTX 2080 Ti tested Qwen3.6 UD-Q4_K_M with the automatic cache, fixed 24/24 threads and tuning off. Raising `-ub 512` to `-ub 1024` improved 12k synthetic-prompt processing from 958 to 1377 tok/s (+43.7%), with decode unchanged within 0.1% and identical paired outputs (three fresh runs per setting). This is a microbatch comparison, not a cache-versus-upstream claim; [full settings, ranges and limitations](docs/performance-check-report.md#controlled-cache-microbatch-results) are recorded.
+
 ### Why the gain depends on how much of the model fits
 
 Time per token is a fixed floor plus the cost of what is served from slow memory: `T = T0 + m x (fraction served from the CPU)`. Stock serves from the CPU every weight

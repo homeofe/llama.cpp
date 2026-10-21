@@ -1,0 +1,41 @@
+0.00.000.986 I srv  llama_server: initializing ...
+0.00.120.071 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.120.216 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.124.349 I srv    load_model: loading model '/opt/llm-gateway/models/Qwen3.6-35B-A3B-MTP-GGUF/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf'
+0.00.406.659 I common_moe_cache_auto_impl: MoE placement: cache (autotune off: static rule, model 21.1 GiB, free VRAM 10.4 GiB)
+0.00.406.700 I common_moe_cache_auto_impl: MoE model (21.1 GiB) exceeds free VRAM (10.4 GiB): experts in RAM + GPU expert cache, no repack, ctx 16384, ubatch 1024, threads 24, weights mmap (settings you pass win)
+0.01.335.310 W llama_model_loader: tensor overrides to CPU are used with mmap enabled - consider using --load-mode none for better performance
+0.01.438.216 W model has unused tensor blk.40.attn_norm.weight (size = 8192 bytes) -- ignoring
+0.01.438.223 W model has unused tensor blk.40.post_attention_norm.weight (size = 8192 bytes) -- ignoring
+0.01.438.232 W model has unused tensor blk.40.attn_q.weight (size = 17825792 bytes) -- ignoring
+0.01.438.236 W model has unused tensor blk.40.attn_k.weight (size = 1114112 bytes) -- ignoring
+0.01.438.239 W model has unused tensor blk.40.attn_v.weight (size = 1114112 bytes) -- ignoring
+0.01.438.251 W model has unused tensor blk.40.attn_output.weight (size = 8912896 bytes) -- ignoring
+0.01.438.255 W model has unused tensor blk.40.attn_q_norm.weight (size = 1024 bytes) -- ignoring
+0.01.438.258 W model has unused tensor blk.40.attn_k_norm.weight (size = 1024 bytes) -- ignoring
+0.01.438.262 W model has unused tensor blk.40.ffn_gate_inp.weight (size = 1048576 bytes) -- ignoring
+0.01.438.265 W model has unused tensor blk.40.ffn_down_exps.weight (size = 184549376 bytes) -- ignoring
+0.01.438.272 W model has unused tensor blk.40.ffn_gate_exps.weight (size = 150994944 bytes) -- ignoring
+0.01.438.276 W model has unused tensor blk.40.ffn_up_exps.weight (size = 150994944 bytes) -- ignoring
+0.01.438.280 W model has unused tensor blk.40.ffn_gate_inp_shexp.weight (size = 4096 bytes) -- ignoring
+0.01.438.284 W model has unused tensor blk.40.ffn_gate_shexp.weight (size = 1114112 bytes) -- ignoring
+0.01.438.288 W model has unused tensor blk.40.ffn_up_shexp.weight (size = 1114112 bytes) -- ignoring
+0.01.438.292 W model has unused tensor blk.40.ffn_down_shexp.weight (size = 1114112 bytes) -- ignoring
+0.01.438.296 W model has unused tensor blk.40.nextn.eh_proj.weight (size = 8912896 bytes) -- ignoring
+0.01.438.299 W model has unused tensor blk.40.nextn.enorm.weight (size = 8192 bytes) -- ignoring
+0.01.438.304 W model has unused tensor blk.40.nextn.hnorm.weight (size = 8192 bytes) -- ignoring
+0.01.438.314 W model has unused tensor blk.40.nextn.shared_head_norm.weight (size = 8192 bytes) -- ignoring
+0.03.637.878 I cmn          init: llama threadpool init, n_threads = 24
+0.03.639.532 W moe-cache: 40 expert layers cached on CUDA0 (CUDA0), upload link fastest
+0.03.654.811 W moe-cache: 1 upload workers, from pageable host memory (mmap; --load-mode pin: faster uploads)
+0.05.256.176 W moe-cache: probe: links alone link 0 7.3 GB/s; CPU threads:GB/s alone/with links 1:23.4/28.0 2:42.5/43.1 3:58.2/57.1 4:68.2/65.8 5:75.5/71.5 6:82.5/73.3 7:82.6/76.5 8:84.7/76.8 9:84.8/79.0 -> CPU 84.8 GB/s (saturated by 6 threads), RAM budget 84.8 GB/s
+0.05.256.237 W operator(): MoE expert cache enabled: 40 layers, slots/layer 102..102, 2 inserts/step, 7508.5 MiB device memory
+0.05.477.405 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 16384, kv_unified = 'false'
+0.05.481.811 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.05.481.849 I srv  llama_server: model loaded
+0.05.481.853 I srv  llama_server: listening on http://127.0.0.1:18124
+0.06.354.824 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+0.06.354.874 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.08.035.000 I srv    operator(): operator(): cleaning up before exit...
+0.08.354.989 W srv          stop: cancel task, id_task = 0
+0.08.356.981 W moe-cache: steps=16 hits=3198 misses=2882 hit-rate=52.6%, prefill experts from cache 0/0, kept from prefill 0

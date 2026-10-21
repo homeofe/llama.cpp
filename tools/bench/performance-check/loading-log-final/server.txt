@@ -1,0 +1,37 @@
+0.00.001.083 I srv  llama_server: initializing ...
+0.00.119.353 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.119.499 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.123.683 I srv    load_model: loading model '/opt/llm-gateway/models/Qwen3.6-35B-A3B-MTP-GGUF/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf'
+0.00.409.288 I common_moe_cache_auto_impl: MoE placement: cache (autotune off: static rule, model 21.1 GiB, free VRAM 10.4 GiB)
+0.00.409.334 I common_moe_cache_auto_impl: MoE model (21.1 GiB) exceeds free VRAM (10.4 GiB): experts in RAM + GPU expert cache, no repack, ctx 16384, ubatch 512, threads 24, weights pinned (settings you pass win)
+0.01.333.993 W model has unused tensor blk.40.attn_norm.weight (size = 8192 bytes) -- ignoring
+0.01.334.002 W model has unused tensor blk.40.post_attention_norm.weight (size = 8192 bytes) -- ignoring
+0.01.334.011 W model has unused tensor blk.40.attn_q.weight (size = 17825792 bytes) -- ignoring
+0.01.334.015 W model has unused tensor blk.40.attn_k.weight (size = 1114112 bytes) -- ignoring
+0.01.334.018 W model has unused tensor blk.40.attn_v.weight (size = 1114112 bytes) -- ignoring
+0.01.334.030 W model has unused tensor blk.40.attn_output.weight (size = 8912896 bytes) -- ignoring
+0.01.334.034 W model has unused tensor blk.40.attn_q_norm.weight (size = 1024 bytes) -- ignoring
+0.01.334.038 W model has unused tensor blk.40.attn_k_norm.weight (size = 1024 bytes) -- ignoring
+0.01.334.041 W model has unused tensor blk.40.ffn_gate_inp.weight (size = 1048576 bytes) -- ignoring
+0.01.334.045 W model has unused tensor blk.40.ffn_down_exps.weight (size = 184549376 bytes) -- ignoring
+0.01.334.052 W model has unused tensor blk.40.ffn_gate_exps.weight (size = 150994944 bytes) -- ignoring
+0.01.334.056 W model has unused tensor blk.40.ffn_up_exps.weight (size = 150994944 bytes) -- ignoring
+0.01.334.060 W model has unused tensor blk.40.ffn_gate_inp_shexp.weight (size = 4096 bytes) -- ignoring
+0.01.334.064 W model has unused tensor blk.40.ffn_gate_shexp.weight (size = 1114112 bytes) -- ignoring
+0.01.334.068 W model has unused tensor blk.40.ffn_up_shexp.weight (size = 1114112 bytes) -- ignoring
+0.01.334.072 W model has unused tensor blk.40.ffn_down_shexp.weight (size = 1114112 bytes) -- ignoring
+0.01.334.076 W model has unused tensor blk.40.nextn.eh_proj.weight (size = 8912896 bytes) -- ignoring
+0.01.334.080 W model has unused tensor blk.40.nextn.enorm.weight (size = 8192 bytes) -- ignoring
+0.01.334.085 W model has unused tensor blk.40.nextn.hnorm.weight (size = 8192 bytes) -- ignoring
+0.01.334.096 W model has unused tensor blk.40.nextn.shared_head_norm.weight (size = 8192 bytes) -- ignoring
+0.23.436.052 I cmn          init: llama threadpool init, n_threads = 24
+0.23.437.785 W moe-cache: 40 expert layers cached on CUDA0 (CUDA0), upload link fastest
+0.23.453.258 W moe-cache: 1 upload workers, from pinned host memory (direct DMA)
+0.24.893.176 W moe-cache: probe: links alone link 0 11.6 GB/s; CPU threads:GB/s alone/with links 1:23.7/34.4 2:42.6/51.6 3:58.4/66.4 4:68.8/75.1 5:77.8/81.9 6:82.1/84.7 7:83.9/87.0 8:85.5/88.2 -> CPU 85.5 GB/s (saturated by 6 threads), RAM budget 88.2 GB/s
+0.24.893.247 W operator(): MoE expert cache enabled: 40 layers, slots/layer 103..103, 2 inserts/step, 7581.4 MiB device memory
+0.25.115.431 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 16384, kv_unified = 'false'
+0.25.119.867 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.25.119.905 I srv  llama_server: model loaded
+0.25.119.910 I srv  llama_server: listening on http://127.0.0.1:18124
+0.25.822.263 I srv    operator(): operator(): cleaning up before exit...
+0.25.824.659 W moe-cache: steps=1 hits=96 misses=544 hit-rate=15.0%, prefill experts from cache 0/0, kept from prefill 0

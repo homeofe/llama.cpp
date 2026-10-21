@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/opt/llm-gateway/data/build/llama-performance-check/tools/bench/performance-check/run_ubatch.py", line 83, in <module>
+    stop_child()
+  File "/opt/llm-gateway/data/build/llama-performance-check/tools/bench/performance-check/run_ubatch.py", line 38, in stop_child
+    try:child.wait(timeout=20)
+        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1264, in wait
+    return self._wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2047, in _wait
+    time.sleep(delay)
+  File "/opt/llm-gateway/data/build/llama-performance-check/tools/bench/performance-check/run_ubatch.py", line 41, in <lambda>
+    signal.signal(signal.SIGTERM,lambda *_:(_ for _ in ()).throw(KeyboardInterrupt('SIGTERM')))
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/llm-gateway/data/build/llama-performance-check/tools/bench/performance-check/run_ubatch.py", line 41, in <genexpr>
+    signal.signal(signal.SIGTERM,lambda *_:(_ for _ in ()).throw(KeyboardInterrupt('SIGTERM')))
+KeyboardInterrupt: SIGTERM

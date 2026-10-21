@@ -89,7 +89,7 @@ PASS means the stated, scoped behavior is supported by code and the named test. 
 | Check | Status | Evidence and limits |
 |---|---|---|
 | Flash Attention `-fa 1` with cache | PASS | Parser mapping and real tiny MoE / Qwen cache requests run with FA enabled. No claim that all model shapes/quantized KV combinations are supported. |
-| Larger `-ub`: PP gain with <10% decode loss | N/A | Explicit `-ub` precedence is proved. Throughput requires paired long-prompt and decode measurements; no gain inferred from the auto-ubatch model. Larger buffers can consume expert-cache VRAM and hurt decode. |
+| Larger `-ub`: PP gain with <10% decode loss | PASS for tested Qwen3.6 configuration | Complete ABBAAB, three fresh processes/configuration: 512 -> 1024 raises 12k PP 958.488 -> 1377.036 tok/s (+43.67%); short/long decode changes +0.034%/+0.051%. All six paired output hashes match. Cache slots fall 103 -> 102/layer. This does not establish the same result for larger Qwen3.8/GLM models. `ubatch-combined-summary.json`. |
 | `--n-cpu-moe`, `-ot` precedence | PASS by code and CPU-MoE fixture | `common/common.cpp:1489` keeps automatic cache off when placement is explicit. Explicit cache N/-1 can opt back in; only CPU expert tensors are eligible. The fixture exercises `--cpu-moe` plus cache=4. |
 
 ## Controlled stock-placement results
@@ -105,6 +105,20 @@ Each entry has three independent process runs per build in A B B A A B order. Ra
 | Qwen3.6 12k prompt processing | 381.195 [380.917, 381.462] | 380.878 [380.676, 381.108] | 0.9992x |
 
 The contaminated v1 attempt is excluded completely. V2 completed the six decode processes, then exhausted its bounded deadline during the separate prompt-processing case; only the complete decode case is used. V3 completes prompt-processing and both dense controls. Partial/interrupted rows remain in CSV with `ok=0` and blank rates. Source commits and exact binaries are recorded in `build-identities.json`; stale embedded fork version text is not used as source provenance.
+
+## Controlled cache microbatch results
+
+Qwen3.6-35B-A3B UD-Q4_K_M, automatic expert cache, pin loading, FA on, context 16384, batch 2048, explicit 24/24 threads, autotuning off and state disabled. Fresh process/cache per block; file page cache prewarmed outside timing. Each block runs a short request and a 12,288-token synthetic repeated-prose prompt, both generating 128 tokens. Six blocks in 512/1024/1024/512/512/1024 order; every accepted request starts below load1 2 and stays below one average foreign CPU core.
+
+| Metric | ub512 median [min,max] | ub1024 median [min,max] | Change |
+|---|---:|---:|---:|
+| Short decode tok/s | 10.503 [10.461,10.536] | 10.506 [10.447,10.523] | +0.034% |
+| 12k prompt processing tok/s | 958.488 [958.200,958.945] | 1377.036 [1373.404,1380.637] | +43.67% |
+| Decode after 12k tok/s | 10.708 [10.683,10.748] | 10.714 [10.701,10.714] | +0.051% |
+
+All six paired outputs are byte-identical. The larger microbatch consumes one cache slot per layer (103 -> 102). Request hit rates are about 81% short and 98% long; the latter includes the synthetic repetitive prompt and is not a decode-only hit-rate measure. These server requests have different placement and input sequences from the stock llama-bench controls above; their absolute rates cannot establish a cache-vs-stock speedup or regression.
+
+The six-block protocol spans `ubatch-v3/` (first four) and `ubatch-v4/` (last two). The runner was deliberately stopped between complete blocks to renew its bounded wall budget. No build, configuration change or other GPU run occurred between the segments; exact long-prompt token lists match. Both harness snapshots and the boundary record are retained. Twelve accepted CSV rows and raw responses support the combined summary. This is evidence for the requested microbatch check, not a universal default or gateway deployment.
 
 ## Fix commits and validation
 
@@ -127,7 +141,9 @@ The server ordering fix is `d19629860`: an actual `server_context::load_model` c
 
 The per-cache tuner candidate fix is `44f0ee12e`; both actual-function reload controls and the final real GPU fixture pass. `options-final.json` records the final parser/model-init regression checks.
 
-`run-history.csv` includes 24 additional functional audit rows with full command/environment/hardware and deliberately empty throughput fields. They are not performance samples. It also includes the new stock-control runs and excluded attempts; only complete clean cases have throughput fields. `build-identities.json` records exact final binary/library SHA256 values and embedded versions for both comparator builds.
+The loading-mode diagnostic fix is `17f07a496`: explicit `--load-mode pin` previously printed `weights mmap` in the automatic-cache summary, although the actual loader used pinned memory. The message now reports the selected enum rather than whether pinning was selected automatically. The pre-fix contradiction is preserved in `ubatch-v3/00-ub512.server.txt`. The CUDA `llama-common` target builds successfully, and the real Qwen3.6 server reaches healthy status with both the summary and DMA loader reporting pinned memory. `loading-log-final/summary.json` records these messages and new binary hashes, separately from the unchanged benchmark identities.
+
+`run-history.csv` includes 72 additional rows: 24 functional audit rows with deliberately empty throughput fields, 34 stock-control rows including excluded attempts, two excluded early microbatch rows and 12 accepted microbatch rows. Only the 42 complete clean performance rows have throughput fields. `build-identities.json` records exact benchmark binary/library SHA256 values and embedded versions for both comparator builds; the later logging-only rebuild is identified separately.
 
 Build compatibility is separate from performance. The optional MMVF fast path was not enabled to infer a speedup. No gateway settings were changed or runtime deployed.
 
@@ -136,3 +152,5 @@ Build compatibility is separate from performance. The optional MMVF fast path wa
 The initial dense-state test driver used the server parser's unresolved `n_parallel=-1` without the normal server resolution step. This caused a large test allocation and OOM-killed the driver. It was a harness error, corrected to `-np 1`; it is not counted as a fork model failure. An in-progress vibe comparison potentially affected by its memory pressure was discarded entirely. The older, already completed native Strata reference was unaffected.
 
 Functional fixture/MTP runs intentionally have `benchmark_valid=false`. Their raw timing fields are retained for traceability but must not be used as speedup evidence. Historical output files retain their original whitespace because hashes refer to the original bytes.
+
+Microbatch v1 used mmap and was stopped after one complete block to run the intended pin comparison; its rows are excluded with blank rates. An initial stop helper did not recognize Python's `-u` argument. A mistakenly continued v2 launch was rejected by the GPU occupancy guard before loading a model; it contributes no inference samples. Both processes exited before the clean v3/v4 series. Their raw events and corrections remain archived.

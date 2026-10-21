@@ -1,0 +1,77 @@
+0.00.001.289 I srv  llama_server: initializing ...
+0.00.120.225 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.120.368 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.124.430 I srv    load_model: loading model '/opt/llm-gateway/models/Qwen3.6-35B-A3B-MTP-GGUF/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf'
+0.00.412.184 I common_moe_cache_auto_impl: MoE placement: cache (autotune off: static rule, model 21.1 GiB, free VRAM 10.4 GiB)
+0.00.412.229 I common_moe_cache_auto_impl: MoE model (21.1 GiB) exceeds free VRAM (10.4 GiB): experts in RAM + GPU expert cache, no repack, ctx 16384, ubatch 512, threads 24, weights mmap (settings you pass win)
+0.01.334.255 W model has unused tensor blk.40.attn_norm.weight (size = 8192 bytes) -- ignoring
+0.01.334.263 W model has unused tensor blk.40.post_attention_norm.weight (size = 8192 bytes) -- ignoring
+0.01.334.273 W model has unused tensor blk.40.attn_q.weight (size = 17825792 bytes) -- ignoring
+0.01.334.276 W model has unused tensor blk.40.attn_k.weight (size = 1114112 bytes) -- ignoring
+0.01.334.280 W model has unused tensor blk.40.attn_v.weight (size = 1114112 bytes) -- ignoring
+0.01.334.292 W model has unused tensor blk.40.attn_output.weight (size = 8912896 bytes) -- ignoring
+0.01.334.295 W model has unused tensor blk.40.attn_q_norm.weight (size = 1024 bytes) -- ignoring
+0.01.334.299 W model has unused tensor blk.40.attn_k_norm.weight (size = 1024 bytes) -- ignoring
+0.01.334.302 W model has unused tensor blk.40.ffn_gate_inp.weight (size = 1048576 bytes) -- ignoring
+0.01.334.306 W model has unused tensor blk.40.ffn_down_exps.weight (size = 184549376 bytes) -- ignoring
+0.01.334.313 W model has unused tensor blk.40.ffn_gate_exps.weight (size = 150994944 bytes) -- ignoring
+0.01.334.317 W model has unused tensor blk.40.ffn_up_exps.weight (size = 150994944 bytes) -- ignoring
+0.01.334.321 W model has unused tensor blk.40.ffn_gate_inp_shexp.weight (size = 4096 bytes) -- ignoring
+0.01.334.324 W model has unused tensor blk.40.ffn_gate_shexp.weight (size = 1114112 bytes) -- ignoring
+0.01.334.328 W model has unused tensor blk.40.ffn_up_shexp.weight (size = 1114112 bytes) -- ignoring
+0.01.334.332 W model has unused tensor blk.40.ffn_down_shexp.weight (size = 1114112 bytes) -- ignoring
+0.01.334.336 W model has unused tensor blk.40.nextn.eh_proj.weight (size = 8912896 bytes) -- ignoring
+0.01.334.340 W model has unused tensor blk.40.nextn.enorm.weight (size = 8192 bytes) -- ignoring
+0.01.334.344 W model has unused tensor blk.40.nextn.hnorm.weight (size = 8192 bytes) -- ignoring
+0.01.334.355 W model has unused tensor blk.40.nextn.shared_head_norm.weight (size = 8192 bytes) -- ignoring
+0.24.142.056 I cmn          init: llama threadpool init, n_threads = 24
+0.24.143.780 W moe-cache: 40 expert layers cached on CUDA0 (CUDA0), upload link fastest
+0.24.159.214 W moe-cache: 1 upload workers, from pinned host memory (direct DMA)
+0.25.762.429 W moe-cache: probe: links alone link 0 11.6 GB/s; CPU threads:GB/s alone/with links 1:23.8/34.3 2:42.6/52.5 3:58.4/66.7 4:68.9/76.7 5:76.8/82.3 6:81.1/85.4 7:84.5/87.3 8:85.9/88.1 9:85.3/88.1 -> CPU 85.9 GB/s (saturated by 7 threads), RAM budget 88.1 GB/s
+0.25.762.502 W operator(): MoE expert cache enabled: 40 layers, slots/layer 103..103, 2 inserts/step, 7581.4 MiB device memory
+0.25.985.479 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 16384, kv_unified = 'false'
+0.25.990.140 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.25.990.178 I srv  llama_server: model loaded
+0.25.990.183 I srv  llama_server: listening on http://127.0.0.1:18124
+0.26.796.213 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+0.26.796.267 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.28.547.591 I slot print_timing: id  0 | task 0 | prompt eval time =     175.46 ms /     3 tokens (   58.49 ms per token,    17.10 tokens per second)
+0.28.547.596 I slot print_timing: id  0 | task 0 |        eval time =    1575.82 ms /    16 tokens (  105.05 ms per token,     9.52 tokens per second)
+0.28.547.596 I slot print_timing: id  0 | task 0 |       total time =    1751.28 ms /    19 tokens
+0.28.547.601 I slot print_timing: id  0 | task 0 |    graphs reused =         14
+0.28.547.634 I slot print_timing: id  0 | task 0 |        moe cache = on, hit 59.9% this request / 55.4% overall, 103..103 slots/layer, margin 0 gate 3 wait 1 big 0 predict 1
+0.28.547.639 I slot print_timing: id  0 | task 0 |        moe churn = 1535 uploads, 0 evictions, 2898.5 MiB uploaded (this request)
+0.28.547.640 I slot print_timing: id  0 | task 0 |          threads = 24 decode / 24 batch, batch 2048, ubatch 512
+0.28.547.674 I slot      release: id  0 | task 0 | stop processing: n_tokens = 18, truncated = 0
+1.18.654.741 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = 938812823106
+1.18.734.072 I slot launch_slot_: id  0 | task 17 | processing task, is_child = 0
+1.28.765.978 I slot print_timing: id  0 | task 17 | n_gen =    100, tg =  10.41 t/s, tg_3s =  10.51 t/s
+1.31.395.169 I slot print_timing: id  0 | task 17 | prompt eval time =     520.25 ms /    15 tokens (   34.68 ms per token,    28.83 tokens per second)
+1.31.395.174 I slot print_timing: id  0 | task 17 |        eval time =   12140.83 ms /   128 tokens (   95.60 ms per token,    10.46 tokens per second)
+1.31.395.174 I slot print_timing: id  0 | task 17 |       total time =   12661.07 ms /   143 tokens
+1.31.395.175 I slot print_timing: id  0 | task 17 |    graphs reused =        140
+1.31.395.200 I slot print_timing: id  0 | task 17 |        moe cache = on, hit 81.4% this request / 78.1% overall, 103..103 slots/layer, margin 0 gate 3 wait 1 big 0 predict 1
+1.31.395.202 I slot print_timing: id  0 | task 17 |        moe churn = 5872 uploads, 4033 evictions, 10730.0 MiB uploaded (this request)
+1.31.395.203 I slot print_timing: id  0 | task 17 |          threads = 24 decode / 24 batch, batch 2048, ubatch 512
+1.31.395.227 I slot      release: id  0 | task 17 | stop processing: n_tokens = 142, truncated = 0
+2.35.434.746 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = 938875670660
+2.35.550.314 I slot launch_slot_: id  0 | task 147 | processing task, is_child = 0
+2.38.601.409 I slot print_timing: id  0 | task 147 | prompt processing, n_tokens =   2048, progress = 0.17, t =   3.05 s / 671.24 tokens per second
+2.40.628.369 I slot print_timing: id  0 | task 147 | prompt processing, n_tokens =   4096, progress = 0.33, t =   5.08 s / 806.61 tokens per second
+2.42.428.566 I slot print_timing: id  0 | task 147 | prompt processing, n_tokens =   6144, progress = 0.50, t =   6.88 s / 893.26 tokens per second
+2.44.313.973 I slot print_timing: id  0 | task 147 | prompt processing, n_tokens =   8192, progress = 0.67, t =   8.76 s / 934.77 tokens per second
+2.46.172.145 I slot print_timing: id  0 | task 147 | prompt processing, n_tokens =  10240, progress = 0.83, t =  10.62 s / 964.06 tokens per second
+2.47.630.529 I slot print_timing: id  0 | task 147 | prompt processing, n_tokens =  11772, progress = 0.96, t =  12.08 s / 974.49 tokens per second
+2.48.169.277 I slot print_timing: id  0 | task 147 | prompt processing, n_tokens =  12284, progress = 1.00, t =  12.62 s / 973.46 tokens per second
+2.57.564.815 I slot print_timing: id  0 | task 147 | n_gen =    100, tg =  10.77 t/s, tg_3s =  10.88 t/s
+3.00.190.153 I slot print_timing: id  0 | task 147 | prompt eval time =   12824.05 ms / 12288 tokens (    1.04 ms per token,   958.20 tokens per second)
+3.00.190.157 I slot print_timing: id  0 | task 147 |        eval time =   11815.77 ms /   128 tokens (   93.04 ms per token,    10.75 tokens per second)
+3.00.190.158 I slot print_timing: id  0 | task 147 |       total time =   24639.82 ms / 12416 tokens
+3.00.190.159 I slot print_timing: id  0 | task 147 |    graphs reused =        265
+3.00.190.182 I slot print_timing: id  0 | task 147 |        moe cache = on, hit 98.1% this request / 87.0% overall, 103..103 slots/layer, margin 0 gate 3 wait 1 big 0 predict 1
+3.00.190.183 I slot print_timing: id  0 | task 147 |        moe churn = 2041 uploads, 5692 evictions, 3702.5 MiB uploaded (this request)
+3.00.190.184 I slot print_timing: id  0 | task 147 |          threads = 24 decode / 24 batch, batch 2048, ubatch 512
+3.00.190.500 I slot      release: id  0 | task 147 | stop processing: n_tokens = 12415, truncated = 0
+3.00.192.924 I srv    operator(): operator(): cleaning up before exit...
+3.00.195.283 W moe-cache: steps=281 hits=81613 misses=12147 hit-rate=87.0%, prefill experts from cache 205943/302673, kept from prefill 3651
+Received second interrupt, terminating immediately.

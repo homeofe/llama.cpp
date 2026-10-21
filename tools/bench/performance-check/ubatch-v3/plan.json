@@ -1,0 +1,40 @@
+{
+  "order": [
+    512,
+    1024,
+    1024,
+    512,
+    512,
+    1024
+  ],
+  "base": [
+    "/opt/llm-gateway/data/build/llama-performance-check/build-cuda/bin/llama-server",
+    "-m",
+    "/opt/llm-gateway/models/Qwen3.6-35B-A3B-MTP-GGUF/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "-np",
+    "1",
+    "-c",
+    "16384",
+    "-b",
+    "2048",
+    "-t",
+    "24",
+    "-tb",
+    "24",
+    "-fa",
+    "1",
+    "--load-mode",
+    "pin",
+    "-at",
+    "off",
+    "--no-warmup",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "18124"
+  ],
+  "env": {
+    "LLAMA_MOE_STATE": "0"
+  },
+  "note": "Synthetic repeated prose at exactly 12288 input token IDs; fresh server per block; short then long request; fixed threads and tuning off; automatic cache capacity can change with buffers."
+}

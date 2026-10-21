@@ -1,0 +1,9 @@
+{
+  "reason": "Stop after the four complete ABBA blocks before the original global deadline. Resume the remaining AB blocks in a new directory with the same binary, model, prompt, flags and fresh-process protocol; no intervening GPU workload.",
+  "next_block": 4,
+  "next_order": [
+    512,
+    1024
+  ],
+  "utc": "2026-10-21T12:49:43Z"
+}

@@ -1,0 +1,4 @@
+{
+  "reason": "Single mmap cache request was slow; stop the incomplete series and compare both microbatch settings under the server automatic cache path default pin mode. No paired mode comparison or cause is established by this single request.",
+  "benchmark_valid": false
+}

@@ -1,0 +1,4 @@
+{
+  "reason": "The replacement launch was attempted before the preceding owned runner had stopped. The GPU-occupancy assertion rejected it before starting a model. No inference or valid measurement occurred. Both runners finished before v3 was started.",
+  "benchmark_valid": false
+}

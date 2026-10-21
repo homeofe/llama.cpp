@@ -1,0 +1,16 @@
+{
+  "source_commit": "17f07a49665ee905e28d658176859a865b227454",
+  "health": "ok",
+  "auto_summary": [
+    "0.00.409.334 I common_moe_cache_auto_impl: MoE model (21.1 GiB) exceeds free VRAM (10.4 GiB): experts in RAM + GPU expert cache, no repack, ctx 16384, ubatch 512, threads 24, weights pinned (settings you pass win)"
+  ],
+  "loader": [
+    "0.23.453.258 W moe-cache: 1 upload workers, from pinned host memory (direct DMA)"
+  ],
+  "benchmark_valid": false,
+  "hashes": {
+    "llama-server": "d184070ee18a8adb73ae99a940cc51d58d38442e4ac8f64581c9f1f823ffc3a2",
+    "libllama-common.so": "e95fe78ad5a6b1be1eafc5d785a3bf047d70948c00cd0c7aae2577e584b2a534",
+    "libllama.so": "f8249f1f148b24b728bb93fd0bb5171139993aeb657a942fe568728f2fe8085e"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "appended": 0,
+  "summary": {
+    "valid_comparison": false,
+    "protocol": "ABBAAB, n=3/configuration/workload, identical synthetic prompts, page cache prewarmed outside timing, fixed threads, autotuning off, fresh model/cache per block",
+    "cases": {},
+    "output_pairs": []
+  }
+}

@@ -2,7 +2,7 @@
 """Compare 512/1024 microbatches with the real automatic MoE cache, ABBAAB."""
 import argparse,hashlib,json,os,pathlib,signal,subprocess,time,urllib.request
 ROOT=pathlib.Path(__file__).resolve().parents[3];HERE=pathlib.Path(__file__).resolve().parent
-ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--minutes',type=int,default=18);a=ap.parse_args()
+ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--minutes',type=int,default=18);ap.add_argument('--order',nargs='+',type=int,choices=[512,1024],default=[512,1024,1024,512,512,1024]);ap.add_argument('--start-block',type=int,default=0);a=ap.parse_args()
 OUT=HERE/a.out;OUT.mkdir(exist_ok=False);end=time.monotonic()+60*a.minutes
 KEY=pathlib.Path('/opt/llm-gateway/data/api-key').read_text().strip();HZ=os.sysconf('SC_CLK_TCK')
 model='/opt/llm-gateway/models/Qwen3.6-35B-A3B-MTP-GGUF/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf'
@@ -40,12 +40,19 @@ def stop_child():
   child=None
 signal.signal(signal.SIGTERM,lambda *_:(_ for _ in ()).throw(KeyboardInterrupt('SIGTERM')))
 env={k:v for k,v in os.environ.items() if not k.startswith(('LLAMA_','GGML_MOE','GGML_CUDA_'))};env['LLAMA_MOE_STATE']='0'
-base=[str(ROOT/'build-cuda/bin/llama-server'),'-m',model,'-np','1','-c','16384','-b','2048','-t','24','-tb','24','-fa','1','--load-mode','mmap','--moe-expert-cache','-1','-at','off','--no-warmup','--host','127.0.0.1','--port','18124']
-(OUT/'plan.json').write_text(json.dumps(dict(order=[512,1024,1024,512,512,1024],base=base,env={'LLAMA_MOE_STATE':'0'},note='Synthetic repeated prose at exactly 12288 input token IDs; fresh server per block; short then long request; fixed threads and tuning off; automatic cache capacity can change with buffers.'),indent=2)+'\n')
+base=[str(ROOT/'build-cuda/bin/llama-server'),'-m',model,'-np','1','-c','16384','-b','2048','-t','24','-tb','24','-fa','1','--load-mode','pin','-at','off','--no-warmup','--host','127.0.0.1','--port','18124']
+(OUT/'plan.json').write_text(json.dumps(dict(order=a.order,start_block=a.start_block,base=base,env={'LLAMA_MOE_STATE':'0'},note='Synthetic repeated prose at exactly 12288 input token IDs; fresh server per block; short then long request; fixed threads and tuning off; automatic cache capacity can change with buffers.'),indent=2)+'\n')
 try:
  quiet();renew();gw('POST','/api/v1/gpu/free',{})
  assert not subprocess.check_output(['nvidia-smi','--query-compute-apps=pid','--format=csv,noheader'],text=True).strip()
- for block,ub in enumerate([512,1024,1024,512,512,1024]):
+ # The previous experiment released this file's page cache; prewarm it outside timing.
+ warm_start=time.monotonic();warm_bytes=0
+ with open(model,'rb',buffering=0) as f:
+  while chunk:=f.read(8*1024*1024):
+   warm_bytes+=len(chunk)
+   if time.monotonic()>end:raise TimeoutError('file warmup deadline')
+ event(kind='file_warmup',bytes=warm_bytes,wall_s=time.monotonic()-warm_start)
+ for block,ub in enumerate(a.order,start=a.start_block):
   quiet();renew();cmd=base+['-ub',str(ub)];tag=f'{block:02d}-ub{ub}'
   with (OUT/(tag+'.server.txt')).open('w') as log:
    child=subprocess.Popen(cmd,env=env,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
@@ -60,7 +67,7 @@ try:
    api('/completion',dict(prompt='Say hello.',n_predict=16,ignore_eos=True,temperature=0,seed=1,cache_prompt=False))
    long_tokens=api('/tokenize',dict(content=('A cache stores frequently used data. Larger batches can improve processing throughput while consuming additional memory. '*1500),add_special=False))['tokens'][:12288]
    assert len(long_tokens)==12288
-   if block==0:(OUT/'long-prompt-tokens.json').write_text(json.dumps(long_tokens)+'\n')
+   if block==a.start_block:(OUT/'long-prompt-tokens.json').write_text(json.dumps(long_tokens)+'\n')
    for case,prompt in [('short','Complete this Python function. Return only code.\ndef fibonacci(n):\n'),('long',long_tokens)]:
     load=quiet();b,o,t=busy(),own(),time.monotonic()
     body=dict(prompt=prompt,n_predict=128,ignore_eos=True,temperature=0,seed=1,cache_prompt=False)
