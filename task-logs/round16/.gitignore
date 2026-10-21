@@ -3,3 +3,7 @@ e2e/
 check_head
 check_head_san
 check_load
+check_norm
+**/workspace/
+check_confidence
+check_policy

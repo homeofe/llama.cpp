@@ -1,0 +1,11 @@
+ggml_cuda_init: found 1 CUDA devices (Total VRAM: 10820 MiB):
+  Device 0: NVIDIA GeForce RTX 2080 Ti, compute capability 7.5, VMM: yes, VRAM: 10820 MiB
+tokens=1 global=0 errors=0 wrong_mode_errors=9963 max_abs_error=2.23507059e-07
+tokens=1 global=1 errors=0 wrong_mode_errors=9963 max_abs_error=3.15065795e-07
+tokens=2 global=0 errors=0 wrong_mode_errors=19927 max_abs_error=2.23507059e-07
+tokens=2 global=1 errors=0 wrong_mode_errors=19927 max_abs_error=3.15065795e-07
+tokens=4 global=0 errors=0 wrong_mode_errors=39853 max_abs_error=2.23507059e-07
+tokens=4 global=1 errors=0 wrong_mode_errors=39853 max_abs_error=3.15065795e-07
+tokens=7 global=0 errors=0 wrong_mode_errors=69743 max_abs_error=2.23507059e-07
+tokens=7 global=1 errors=0 wrong_mode_errors=69743 max_abs_error=3.26801476e-07
+NORM_CHECK_OK

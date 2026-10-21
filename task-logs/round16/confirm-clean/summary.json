@@ -1,0 +1,721 @@
+{
+  "categories": {
+    "code": {
+      "base": {
+        "stream": {
+          "n": 8,
+          "median": 51.08752416603619,
+          "minimum": 47.21427868568143,
+          "maximum": 53.15585183821163
+        },
+        "server": {
+          "n": 8,
+          "median": 50.5371245650734,
+          "minimum": 46.26874550505534,
+          "maximum": 51.894410544618616
+        },
+        "tokens": 1438,
+        "draft_generated": 1136,
+        "draft_accepted": 1050,
+        "foreign_cores": {
+          "n": 8,
+          "median": 0.32895604823060354,
+          "minimum": 0.25682679090789273,
+          "maximum": 0.4445878916732364
+        }
+      },
+      "q6gpu": {
+        "stream": {
+          "n": 8,
+          "median": 50.685813579542675,
+          "minimum": 49.41454402019666,
+          "maximum": 52.89097816963161
+        },
+        "server": {
+          "n": 8,
+          "median": 50.68645533221316,
+          "minimum": 49.41553041309562,
+          "maximum": 52.89133050942026
+        },
+        "tokens": 1438,
+        "draft_generated": 1184,
+        "draft_accepted": 1036,
+        "foreign_cores": {
+          "n": 8,
+          "median": 0.33508480606233815,
+          "minimum": 0.23181817205621477,
+          "maximum": 0.4677708961648101
+        }
+      },
+      "stream_gain_pct": -0.786318368429717,
+      "server_gain_pct": 0.29548726490655763
+    },
+    "en": {
+      "base": {
+        "stream": {
+          "n": 8,
+          "median": 42.55268671268732,
+          "minimum": 41.85336475419633,
+          "maximum": 43.3015220123732
+        },
+        "server": {
+          "n": 8,
+          "median": 42.552446236365796,
+          "minimum": 41.853853238068496,
+          "maximum": 43.3016506759048
+        },
+        "tokens": 2048,
+        "draft_generated": 2002,
+        "draft_accepted": 1366,
+        "foreign_cores": {
+          "n": 8,
+          "median": 0.26695836336199663,
+          "minimum": 0.21563808393183542,
+          "maximum": 0.33220336664654887
+        }
+      },
+      "q6gpu": {
+        "stream": {
+          "n": 8,
+          "median": 43.02838491031249,
+          "minimum": 40.017329537629955,
+          "maximum": 46.07872881027268
+        },
+        "server": {
+          "n": 8,
+          "median": 43.02853026190208,
+          "minimum": 40.017312587940005,
+          "maximum": 46.07849426322746
+        },
+        "tokens": 2048,
+        "draft_generated": 2104,
+        "draft_accepted": 1332,
+        "foreign_cores": {
+          "n": 8,
+          "median": 0.3635879752775657,
+          "minimum": 0.2613416645406672,
+          "maximum": 0.9576867258986271
+        }
+      },
+      "stream_gain_pct": 1.117904025278249,
+      "server_gain_pct": 1.1188170543516618
+    }
+  },
+  "prompts": {
+    "code-bugfix": {
+      "base": {
+        "stream": {
+          "n": 2,
+          "median": 53.1115830561517,
+          "minimum": 53.06731427409177,
+          "maximum": 53.15585183821163
+        },
+        "server": {
+          "n": 2,
+          "median": 50.757306572295484,
+          "minimum": 50.69260820010171,
+          "maximum": 50.82200494448926
+        },
+        "hashes": {
+          "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47": 2
+        }
+      },
+      "q6gpu": {
+        "stream": {
+          "n": 2,
+          "median": 51.14355943968049,
+          "minimum": 50.96496097936396,
+          "maximum": 51.322157899997016
+        },
+        "server": {
+          "n": 2,
+          "median": 51.144415224017045,
+          "minimum": 50.965941598511144,
+          "maximum": 51.32288884952295
+        },
+        "hashes": {
+          "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47": 2
+        }
+      }
+    },
+    "code-duration": {
+      "base": {
+        "stream": {
+          "n": 2,
+          "median": 47.24115518752342,
+          "minimum": 47.21427868568143,
+          "maximum": 47.268031689365415
+        },
+        "server": {
+          "n": 2,
+          "median": 46.33705750631083,
+          "minimum": 46.26874550505534,
+          "maximum": 46.40536950756632
+        },
+        "hashes": {
+          "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7": 2
+        }
+      },
+      "q6gpu": {
+        "stream": {
+          "n": 2,
+          "median": 49.52864491959553,
+          "minimum": 49.41454402019666,
+          "maximum": 49.6427458189944
+        },
+        "server": {
+          "n": 2,
+          "median": 49.5294267159519,
+          "minimum": 49.41553041309562,
+          "maximum": 49.64332301880819
+        },
+        "hashes": {
+          "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7": 2
+        }
+      }
+    },
+    "code-intervals": {
+      "base": {
+        "stream": {
+          "n": 2,
+          "median": 50.31682147106335,
+          "minimum": 50.25276393189576,
+          "maximum": 50.38087901023094
+        },
+        "server": {
+          "n": 2,
+          "median": 50.31751764778376,
+          "minimum": 50.25339436552242,
+          "maximum": 50.381640930045094
+        },
+        "hashes": {
+          "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4": 2
+        }
+      },
+      "q6gpu": {
+        "stream": {
+          "n": 2,
+          "median": 50.110440133168495,
+          "minimum": 49.8142140866156,
+          "maximum": 50.40666617972139
+        },
+        "server": {
+          "n": 2,
+          "median": 50.110820939081336,
+          "minimum": 49.8146728122475,
+          "maximum": 50.40696906591518
+        },
+        "hashes": {
+          "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4": 2
+        }
+      }
+    },
+    "code-roman": {
+      "base": {
+        "stream": {
+          "n": 2,
+          "median": 51.84414420885157,
+          "minimum": 51.79416932184144,
+          "maximum": 51.8941190958617
+        },
+        "server": {
+          "n": 2,
+          "median": 51.84413265773115,
+          "minimum": 51.79385477084368,
+          "maximum": 51.894410544618616
+        },
+        "hashes": {
+          "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39": 2
+        }
+      },
+      "q6gpu": {
+        "stream": {
+          "n": 2,
+          "median": 52.87162223307226,
+          "minimum": 52.85226629651291,
+          "maximum": 52.89097816963161
+        },
+        "server": {
+          "n": 2,
+          "median": 52.87183922971657,
+          "minimum": 52.85234795001288,
+          "maximum": 52.89133050942026
+        },
+        "hashes": {
+          "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39": 2
+        }
+      }
+    },
+    "en-1": {
+      "base": {
+        "stream": {
+          "n": 2,
+          "median": 42.4451460053223,
+          "minimum": 42.34151529180045,
+          "maximum": 42.54877671884415
+        },
+        "server": {
+          "n": 2,
+          "median": 42.444951224269715,
+          "minimum": 42.34129775911588,
+          "maximum": 42.54860468942355
+        },
+        "hashes": {
+          "7b5c2a0194d61ec500d7ac4ce677310dc805f534985b49b6c0d9886d84e7aa03": 2
+        }
+      },
+      "q6gpu": {
+        "stream": {
+          "n": 2,
+          "median": 40.306039439890014,
+          "minimum": 40.017329537629955,
+          "maximum": 40.59474934215008
+        },
+        "server": {
+          "n": 2,
+          "median": 40.30595520902764,
+          "minimum": 40.017312587940005,
+          "maximum": 40.59459783011527
+        },
+        "hashes": {
+          "f38b05147349ef9640b59171c49a20c46e70ab3f340902dc1478489cd9fe5f98": 2
+        }
+      }
+    },
+    "en-2": {
+      "base": {
+        "stream": {
+          "n": 2,
+          "median": 42.02120113107078,
+          "minimum": 41.85336475419633,
+          "maximum": 42.18903750794523
+        },
+        "server": {
+          "n": 2,
+          "median": 42.02200087783193,
+          "minimum": 41.853853238068496,
+          "maximum": 42.19014851759536
+        },
+        "hashes": {
+          "183bbc34c6578089821976157c25f24a456c07bdd1b56b3e5c7299bab9c2d76a": 2
+        }
+      },
+      "q6gpu": {
+        "stream": {
+          "n": 2,
+          "median": 43.44844126581725,
+          "minimum": 43.32071056573947,
+          "maximum": 43.57617196589504
+        },
+        "server": {
+          "n": 2,
+          "median": 43.448341562245645,
+          "minimum": 43.32057103647779,
+          "maximum": 43.576112088013495
+        },
+        "hashes": {
+          "f8b5e5dc15015efec7a160a70793bd71bc0909cc8806c82e65ebb1f78d25eff5": 2
+        }
+      }
+    },
+    "en-3": {
+      "base": {
+        "stream": {
+          "n": 2,
+          "median": 43.158154747949325,
+          "minimum": 43.01478748352546,
+          "maximum": 43.3015220123732
+        },
+        "server": {
+          "n": 2,
+          "median": 43.15838191252568,
+          "minimum": 43.01511314914655,
+          "maximum": 43.3016506759048
+        },
+        "hashes": {
+          "e6d7f81c47536e2b6c247a0c9b8f2dc64efc41285c1087a98b9cf4806bf6040b": 2
+        }
+      },
+      "q6gpu": {
+        "stream": {
+          "n": 2,
+          "median": 45.86402549793496,
+          "minimum": 45.649322185597235,
+          "maximum": 46.07872881027268
+        },
+        "server": {
+          "n": 2,
+          "median": 45.86372936942264,
+          "minimum": 45.64896447561782,
+          "maximum": 46.07849426322746
+        },
+        "hashes": {
+          "786e2bee37ac76d1be673e30e0d19db5d9b7845cf36b52bd7cce9586add92d90": 2
+        }
+      }
+    },
+    "en-4": {
+      "base": {
+        "stream": {
+          "n": 2,
+          "median": 42.61122094843314,
+          "minimum": 42.55659670653049,
+          "maximum": 42.6658451903358
+        },
+        "server": {
+          "n": 2,
+          "median": 42.61086864278478,
+          "minimum": 42.55628778330805,
+          "maximum": 42.66544950226152
+        },
+        "hashes": {
+          "39074c237a97f458cd3502aa46fcf3f4bfe766fb952f5d986054a8e497a9bf06": 2
+        }
+      },
+      "q6gpu": {
+        "stream": {
+          "n": 2,
+          "median": 42.72609610083733,
+          "minimum": 42.71613294678915,
+          "maximum": 42.73605925488551
+        },
+        "server": {
+          "n": 2,
+          "median": 42.72662070301024,
+          "minimum": 42.71675191869411,
+          "maximum": 42.73648948732637
+        },
+        "hashes": {
+          "2ad70f17bb6e0c494776a3335a2fe89815f824ae2039af6aa9f64dab27bbcf90": 2
+        }
+      }
+    }
+  },
+  "pairs": [
+    {
+      "prompt": "code-bugfix",
+      "round": 0,
+      "same_output": true,
+      "tokens": [
+        94,
+        94
+      ],
+      "draft_generated": [
+        72,
+        75
+      ],
+      "draft_accepted": [
+        69,
+        68
+      ],
+      "stream_ratio": 0.958783637490826,
+      "server_ratio": 1.0028321718944206
+    },
+    {
+      "prompt": "code-bugfix",
+      "round": 1,
+      "same_output": true,
+      "tokens": [
+        94,
+        94
+      ],
+      "draft_generated": [
+        72,
+        75
+      ],
+      "draft_accepted": [
+        69,
+        68
+      ],
+      "stream_ratio": 0.9671142887487946,
+      "server_ratio": 1.012433383718062
+    },
+    {
+      "prompt": "code-duration",
+      "round": 0,
+      "same_output": true,
+      "tokens": [
+        218,
+        218
+      ],
+      "draft_generated": [
+        180,
+        183
+      ],
+      "draft_accepted": [
+        157,
+        157
+      ],
+      "stream_ratio": 1.0466016932962803,
+      "server_ratio": 1.0680110271780863
+    },
+    {
+      "prompt": "code-duration",
+      "round": 1,
+      "same_output": true,
+      "tokens": [
+        218,
+        218
+      ],
+      "draft_generated": [
+        180,
+        183
+      ],
+      "draft_accepted": [
+        157,
+        157
+      ],
+      "stream_ratio": 1.0502393276122657,
+      "server_ratio": 1.0697754062859886
+    },
+    {
+      "prompt": "code-intervals",
+      "round": 0,
+      "same_output": true,
+      "tokens": [
+        151,
+        151
+      ],
+      "draft_generated": [
+        120,
+        129
+      ],
+      "draft_accepted": [
+        110,
+        107
+      ],
+      "stream_ratio": 0.9887523811662701,
+      "server_ratio": 0.9887465333138945
+    },
+    {
+      "prompt": "code-intervals",
+      "round": 1,
+      "same_output": true,
+      "tokens": [
+        151,
+        151
+      ],
+      "draft_generated": [
+        120,
+        129
+      ],
+      "draft_accepted": [
+        110,
+        107
+      ],
+      "stream_ratio": 1.0030625628479701,
+      "server_ratio": 1.0030560065112362
+    },
+    {
+      "prompt": "code-roman",
+      "round": 0,
+      "same_output": true,
+      "tokens": [
+        256,
+        256
+      ],
+      "draft_generated": [
+        196,
+        205
+      ],
+      "draft_accepted": [
+        189,
+        186
+      ],
+      "stream_ratio": 1.0184635025576072,
+      "server_ratio": 1.0184593561298982
+    },
+    {
+      "prompt": "code-roman",
+      "round": 1,
+      "same_output": true,
+      "tokens": [
+        256,
+        256
+      ],
+      "draft_generated": [
+        196,
+        205
+      ],
+      "draft_accepted": [
+        189,
+        186
+      ],
+      "stream_ratio": 1.0211762996134712,
+      "server_ratio": 1.0211893040869857
+    },
+    {
+      "prompt": "en-1",
+      "round": 0,
+      "same_output": false,
+      "tokens": [
+        256,
+        256
+      ],
+      "draft_generated": [
+        248,
+        275
+      ],
+      "draft_accepted": [
+        171,
+        162
+      ],
+      "stream_ratio": 0.9540755921232239,
+      "server_ratio": 0.9540758886555452
+    },
+    {
+      "prompt": "en-1",
+      "round": 1,
+      "same_output": false,
+      "tokens": [
+        256,
+        256
+      ],
+      "draft_generated": [
+        248,
+        275
+      ],
+      "draft_accepted": [
+        171,
+        162
+      ],
+      "stream_ratio": 0.9451085834280338,
+      "server_ratio": 0.9451130387075692
+    },
+    {
+      "prompt": "en-2",
+      "round": 0,
+      "same_output": false,
+      "tokens": [
+        256,
+        256
+      ],
+      "draft_generated": [
+        261,
+        264
+      ],
+      "draft_accepted": [
+        168,
+        166
+      ],
+      "stream_ratio": 1.0350592077879717,
+      "server_ratio": 1.035043793699626
+    },
+    {
+      "prompt": "en-2",
+      "round": 1,
+      "same_output": false,
+      "tokens": [
+        256,
+        256
+      ],
+      "draft_generated": [
+        261,
+        264
+      ],
+      "draft_accepted": [
+        168,
+        166
+      ],
+      "stream_ratio": 1.0328790259244143,
+      "server_ratio": 1.0328504074793696
+    },
+    {
+      "prompt": "en-3",
+      "round": 0,
+      "same_output": false,
+      "tokens": [
+        256,
+        256
+      ],
+      "draft_generated": [
+        246,
+        249
+      ],
+      "draft_accepted": [
+        172,
+        171
+      ],
+      "stream_ratio": 1.0612471862863624,
+      "server_ratio": 1.0612308357143894
+    },
+    {
+      "prompt": "en-3",
+      "round": 1,
+      "same_output": false,
+      "tokens": [
+        256,
+        256
+      ],
+      "draft_generated": [
+        246,
+        249
+      ],
+      "draft_accepted": [
+        172,
+        171
+      ],
+      "stream_ratio": 1.0641364707020207,
+      "server_ratio": 1.0641278922160775
+    },
+    {
+      "prompt": "en-4",
+      "round": 0,
+      "same_output": false,
+      "tokens": [
+        256,
+        256
+      ],
+      "draft_generated": [
+        246,
+        264
+      ],
+      "draft_accepted": [
+        172,
+        167
+      ],
+      "stream_ratio": 1.0042170324284292,
+      "server_ratio": 1.0042344319348502
+    },
+    {
+      "prompt": "en-4",
+      "round": 1,
+      "same_output": false,
+      "tokens": [
+        256,
+        256
+      ],
+      "draft_generated": [
+        246,
+        264
+      ],
+      "draft_accepted": [
+        172,
+        167
+      ],
+      "stream_ratio": 1.0011786419846838,
+      "server_ratio": 1.0012024346873427
+    }
+  ],
+  "contamination_retries": 0,
+  "adoption_eligible_protocol": false,
+  "discarded_blocks": 0,
+  "same_output_pairs": 8,
+  "total_pairs": 16,
+  "wall_seconds": 1575.1000001430511,
+  "accepted_request_wall_seconds": 192.1241307449527,
+  "paired_server_ratios": {
+    "code": {
+      "n": 8,
+      "median": 1.0154463699239802,
+      "minimum": 0.9887465333138945,
+      "maximum": 1.0697754062859886
+    },
+    "en": {
+      "n": 8,
+      "median": 1.01854241970711,
+      "minimum": 0.9451130387075692,
+      "maximum": 1.0641278922160775
+    }
+  }
+}

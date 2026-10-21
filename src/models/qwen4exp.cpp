@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <cinttypes>
+#include <cstdlib>
 
 // bad metadata must be catchable: GGML_ASSERT aborts the whole process
 static void qwen4exp_require_nonzero(const llama_model_loader & ml, llm_kv kid, uint32_t value) {
@@ -591,7 +592,15 @@ llama_model_qwen4exp::graph_mtp::graph_mtp(const llama_model & model, const llm_
     ggml_tensor * inp_pos     = build_inp_pos();
     ggml_tensor * inp_out_ids = build_inp_out_ids();
 
-    ggml_tensor * h_norm = build_norm(ggml_reshape_3d(ctx0, h, n_embd, hc, n_tokens), layer.nextn.hnorm, nullptr, LLM_NORM_RMS, il);
+    ggml_tensor * h_norm;
+    const char * hnorm_global = std::getenv("LLAMA_MTP_HNORM_GLOBAL");
+    if (hnorm_global && hnorm_global[0] == '1' && hnorm_global[1] == '\0') {
+        // Measurement only: match Strata's whole-hidden draft normalization.
+        h_norm = build_norm(h, ggml_reshape_1d(ctx0, layer.nextn.hnorm, n_embd*hc), nullptr, LLM_NORM_RMS, il);
+        h_norm = ggml_reshape_3d(ctx0, h_norm, n_embd, hc, n_tokens);
+    } else {
+        h_norm = build_norm(ggml_reshape_3d(ctx0, h, n_embd, hc, n_tokens), layer.nextn.hnorm, nullptr, LLM_NORM_RMS, il);
+    }
     cb(h_norm, "mtp_hnorm", il);
 
     ggml_tensor * e_norm = build_norm(tok_embd, layer.nextn.enorm, nullptr, LLM_NORM_RMS, il);

@@ -1,17 +1,21 @@
 # HANDOFF - the Qwen3.8-Flash-Next decode-speed effort, state after round 14
 
 **Round 16 in progress (2026-10-21): `NOTES-round16-draft-parity.md`.**
-Q2 experts and a reduced Q6_K draft head now run in llama.cpp, with the draft fully
-on GPU. The two-prompt screen improved from 47.34/41.40 to 49.68/45.46 tok/s;
-these are not aggregate/adoption numbers. Correctness controls pass. A three-round,
-eight-prompt comparison is running under `task-logs/round16/confirm-clean/`; quality checks
-are still required. Live settings are unchanged. Do not launch a second GPU job
-while that runner holds the GPU. The source/build is newer than the round-14 stack;
-the preserved old runtime is `task-logs/round16/e2e/original/` and the isolated
-candidate differs only in libllama (`e2e/isolated/`).
-The abandoned `confirm/` run encountered a foreign-load burst. Its partial results
-are excluded. The updated runner discards and reloads an entire configuration block
-after contamination, so a retry cannot benefit from a uniquely warmed expert cache.
+Q2 experts and a reduced Q6_K draft head run in llama.cpp, with the draft fully on
+GPU. The initial two-prompt gain DID NOT generalize: clean A B B A, n=8/category,
+shows only +0.30% code / +1.12% English by server time (`confirm-clean/`). Stopped
+early below the +3% gate; no adoption. The head mapping correctness controls pass.
+Current GPU work: `task-logs/round16/global-screen/`, an eight-prompt check of Strata's
+whole-hidden MTP norm, behind `LLAMA_MTP_HNORM_GLOBAL=1` (default off, draft only).
+CPU/CUDA reference checks pass. Do not launch another GPU job while its runner holds
+the GPU. Two head-only fallback model files with original Q8 experts are also ready
+(`q8exp-q8subset` / `q8exp-q6subset`); not yet measured.
+Live settings are unchanged. The old runtime is `task-logs/round16/e2e/original/`;
+`e2e/isolated/` differs only in libllama (reduced head), `e2e/global/` additionally
+has the experimental norm switch. Source checkpoint: `2bf16dd2b`, local, not yet
+pushed. The abandoned `confirm/` run encountered foreign load and is excluded.
+The updated runner discards/reloads a whole block after contamination to prevent
+uniquely warmed retry caches. Final selection still needs 3 rounds and quality.
 
 **Round-15 correction (2026-10-21): read `NOTES-round15-strata-comparison.md` first.**
 The old Strata trace omitted CUDA graph nodes, the archived n5 crash was graph-allocation

@@ -1,0 +1,30 @@
+{
+  "reason": "early stop for no code gain after A B B A; below the 3 percent adoption gate",
+  "code_server_medians": {
+    "base": 50.5371245650734,
+    "q6gpu": 50.68645533221316
+  },
+  "gain_pct": 0.29548726490655763,
+  "completed_blocks": [
+    [
+      "base",
+      0,
+      0
+    ],
+    [
+      "base",
+      1,
+      0
+    ],
+    [
+      "q6gpu",
+      0,
+      0
+    ],
+    [
+      "q6gpu",
+      1,
+      0
+    ]
+  ]
+}

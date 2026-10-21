@@ -1,0 +1,16 @@
+### Difference Between a Process and a Thread
+
+To understand the difference, it helps to visualize them as **containers for execution**.
+
+#### 1. Process
+A **process** is an independent instance of a program in execution. It is the fundamental unit of resource allocation in an operating system.
+
+*   **Isolation:** Each process has its own **virtual memory space** (heap, stack, code segment). If one process crashes, it does not affect other processes.
+*   **Overhead:** Creating and switching between processes is **expensive** because the OS must manage separate memory maps, page tables, and kernel data structures.
+*   **Communication:** Processes communicate via **Inter-Process Communication (IPC)** mechanisms (e.g., pipes, sockets, shared memory), which are slower and more complex.
+*   **Security:** Strong isolation makes processes more secure against bugs or malicious code in one process affecting another.
+
+#### 2. Thread
+A **thread** is the smallest unit of execution within a process. Multiple threads can exist within a single process.
+
+*   **Shared Resources:** Threads within the same process **share the same memory space** (heap, global variables, file descriptors). Each thread has its own stack and register set

@@ -1,0 +1,121 @@
+{
+  "categories": {
+    "code": {
+      "base": {
+        "stream": {
+          "n": 8,
+          "median": 51.08752416603619,
+          "minimum": 47.21427868568143,
+          "maximum": 53.15585183821163
+        },
+        "server": {
+          "n": 8,
+          "median": 50.5371245650734,
+          "minimum": 46.26874550505534,
+          "maximum": 51.894410544618616
+        },
+        "tokens": 1438,
+        "draft_generated": 1136,
+        "draft_accepted": 1050,
+        "foreign_cores": {
+          "n": 8,
+          "median": 0.32895604823060354,
+          "minimum": 0.25682679090789273,
+          "maximum": 0.4445878916732364
+        }
+      },
+      "q6gpu": {
+        "stream": {
+          "n": 8,
+          "median": 50.685813579542675,
+          "minimum": 49.41454402019666,
+          "maximum": 52.89097816963161
+        },
+        "server": {
+          "n": 8,
+          "median": 50.68645533221316,
+          "minimum": 49.41553041309562,
+          "maximum": 52.89133050942026
+        },
+        "tokens": 1438,
+        "draft_generated": 1184,
+        "draft_accepted": 1036,
+        "foreign_cores": {
+          "n": 8,
+          "median": 0.33508480606233815,
+          "minimum": 0.23181817205621477,
+          "maximum": 0.4677708961648101
+        }
+      },
+      "stream_gain_pct": -0.786318368429717,
+      "server_gain_pct": 0.29548726490655763
+    },
+    "en": {
+      "base": {
+        "stream": {
+          "n": 8,
+          "median": 42.55268671268732,
+          "minimum": 41.85336475419633,
+          "maximum": 43.3015220123732
+        },
+        "server": {
+          "n": 8,
+          "median": 42.552446236365796,
+          "minimum": 41.853853238068496,
+          "maximum": 43.3016506759048
+        },
+        "tokens": 2048,
+        "draft_generated": 2002,
+        "draft_accepted": 1366,
+        "foreign_cores": {
+          "n": 8,
+          "median": 0.26695836336199663,
+          "minimum": 0.21563808393183542,
+          "maximum": 0.33220336664654887
+        }
+      },
+      "q6gpu": {
+        "stream": {
+          "n": 8,
+          "median": 43.02838491031249,
+          "minimum": 40.017329537629955,
+          "maximum": 46.07872881027268
+        },
+        "server": {
+          "n": 8,
+          "median": 43.02853026190208,
+          "minimum": 40.017312587940005,
+          "maximum": 46.07849426322746
+        },
+        "tokens": 2048,
+        "draft_generated": 2104,
+        "draft_accepted": 1332,
+        "foreign_cores": {
+          "n": 8,
+          "median": 0.3635879752775657,
+          "minimum": 0.2613416645406672,
+          "maximum": 0.9576867258986271
+        }
+      },
+      "stream_gain_pct": 1.117904025278249,
+      "server_gain_pct": 1.1188170543516618
+    }
+  },
+  "same_output_pairs": 8,
+  "total_pairs": 16,
+  "wall_seconds": 1575.1000001430511,
+  "paired_server_ratios": {
+    "code": {
+      "n": 8,
+      "median": 1.0154463699239802,
+      "minimum": 0.9887465333138945,
+      "maximum": 1.0697754062859886
+    },
+    "en": {
+      "n": 8,
+      "median": 1.01854241970711,
+      "minimum": 0.9451130387075692,
+      "maximum": 1.0641278922160775
+    }
+  }
+}

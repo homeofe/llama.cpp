@@ -10,10 +10,15 @@ ap = argparse.ArgumentParser()
 ap.add_argument('folder')
 ap.add_argument('--baseline', default='base')
 ap.add_argument('--candidate', default='q6gpu')
+ap.add_argument('--rounds', type=int, default=3)
+ap.add_argument('--early-stopped', action='store_true')
 a = ap.parse_args()
 folder = Path(a.folder)
 events = [json.loads(line) for line in (folder/'runs.jsonl').read_text().splitlines()]
-assert any(row['kind'] == 'complete' for row in events), 'run did not complete'
+if a.early_stopped:
+    assert (folder/'early-stop.json').exists() and events[-1]['kind'] == 'released'
+else:
+    assert any(row['kind'] == 'complete' for row in events), 'run did not complete'
 complete_blocks = {(row['config'], row['round'], row['block_attempt']) for row in events if row['kind'] == 'block_complete'}
 rows = [row for row in events if row['kind'] == 'request' and row['accepted'] and
         (row['config'], row['round'], row['block_attempt']) in complete_blocks]
@@ -24,7 +29,7 @@ names = [a.baseline, a.candidate]
 prompts = sorted({row['prompt'] for row in rows})
 by_key = {(row['config'], row['round'], row['prompt']): row for row in rows}
 rounds = sorted({row['round'] for row in rows})
-assert len(rounds) == 3 and len(prompts) == 8
+assert a.rounds >= 1 and len(rounds) == a.rounds and len(prompts) == 8
 assert len(rows) == len(names)*len(rounds)*len(prompts)
 
 def stats(values):
@@ -32,12 +37,13 @@ def stats(values):
 
 report = dict(categories={}, prompts={}, pairs=[], contamination_retries=sum(
     row['kind'] == 'request' and not row['accepted'] for row in events))
+report['adoption_eligible_protocol'] = a.rounds >= 3 and not a.early_stopped
 report['discarded_blocks'] = sum(row['kind'] == 'block_discarded' for row in events)
 for category in ('code', 'en'):
     report['categories'][category] = {}
     for name in names:
         group = [r for r in rows if r['config'] == name and r['prompt'].startswith(category+'-')]
-        assert len(group) == 12
+        assert len(group) == 4*a.rounds
         report['categories'][category][name] = dict(
             stream=stats([r['decode_tok_s'] for r in group]),
             server=stats([r['timings']['predicted_per_second'] for r in group]),

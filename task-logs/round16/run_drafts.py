@@ -56,7 +56,7 @@ class Run(Probe):
 def configs():
     base = bench.CONFIGS['q-vibe-async']
     result = {}
-    for name in ('base', 'base-new', 'q2', 'q2id', 'q8sub', 'q6sub', 'resident', 'resident-n4', 'q8gpu', 'q6gpu', 'q6gpu-cache', 'q6gpu-n4'):
+    for name in ('base', 'base-new', 'q2', 'q2id', 'q8sub', 'q6sub', 'resident', 'resident-n4', 'q8gpu', 'q6gpu', 'q6gpu-cache', 'q6gpu-n4', 'q8exp-q8sub', 'q8exp-q8sub-cache', 'q8exp-q6sub', 'q8exp-q6sub-cache', 'q6gpu-p7', 'q6gpu-global', 'strata-gpu', 'strata-gpu-global'):
         cfg = dict(cmd=list(base['cmd']), env=dict(base['env']))
         cfg['env'].pop('LD_LIBRARY_PATH', None)
         if name == 'base':
@@ -65,6 +65,10 @@ def configs():
             cfg['cmd'][0] = str(HERE / 'e2e/isolated/llama-server')
         if name not in ('base', 'base-new'):
             variant = {'q2':'q2', 'q2id':'q2-identity', 'q8sub':'q2-q8subset', 'q8gpu':'q2-q8subset'}.get(name, 'q2-q6subset')
+            if name.startswith('q8exp-'):
+                variant = 'q8exp-q8subset' if name.startswith('q8exp-q8sub') else 'q8exp-q6subset'
+            if name.startswith('strata-'):
+                variant = 'strata-q6subset'
             cfg['cmd'][cfg['cmd'].index('-md')+1] = str(MODELS / (variant + '.gguf'))
         if name.startswith('resident'):
             cfg['env'].update(GGML_MOE_HYBRID_DRAFT_MIB='704', GGML_MOE_HYBRID_DRAFT_STATIC_PCT='100',
@@ -75,6 +79,15 @@ def configs():
             cfg['env']['GGML_MOE_HYBRID_DRAFT_MIB'] = '0'
         if name == 'q6gpu-cache':
             cfg['env']['GGML_MOE_HYBRID_MIB'] = '3896'
+        if name == 'q8exp-q6sub-cache':
+            cfg['env']['GGML_MOE_HYBRID_MIB'] = '4024'
+        if name == 'q8exp-q8sub-cache':
+            cfg['env']['GGML_MOE_HYBRID_MIB'] = '3960'
+        if name == 'q6gpu-p7':
+            cfg['cmd'] += ['--spec-draft-p-min', '0.7']
+        if name in ('q6gpu-global', 'strata-gpu-global'):
+            cfg['cmd'][0] = str(HERE / 'e2e/global/llama-server')
+            cfg['env']['LLAMA_MTP_HNORM_GLOBAL'] = '1'
         if name in ('resident-n4', 'q6gpu-n4'):
             cfg['cmd'][cfg['cmd'].index('--spec-draft-n-max')+1] = '4'
         result[name] = cfg

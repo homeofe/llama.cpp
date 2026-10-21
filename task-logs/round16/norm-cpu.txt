@@ -1,0 +1,9 @@
+tokens=1 global=0 errors=0 wrong_mode_errors=9963 max_abs_error=1.89385877e-07
+tokens=1 global=1 errors=0 wrong_mode_errors=9963 max_abs_error=3.15065795e-07
+tokens=2 global=0 errors=0 wrong_mode_errors=19927 max_abs_error=2.33996446e-07
+tokens=2 global=1 errors=0 wrong_mode_errors=19927 max_abs_error=4.69040124e-07
+tokens=4 global=0 errors=0 wrong_mode_errors=39853 max_abs_error=2.33996446e-07
+tokens=4 global=1 errors=0 wrong_mode_errors=39853 max_abs_error=4.69040124e-07
+tokens=7 global=0 errors=0 wrong_mode_errors=69743 max_abs_error=2.33996446e-07
+tokens=7 global=1 errors=0 wrong_mode_errors=69743 max_abs_error=4.69040124e-07
+NORM_CHECK_OK

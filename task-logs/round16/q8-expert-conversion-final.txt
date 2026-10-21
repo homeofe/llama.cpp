@@ -1,0 +1,2 @@
+{"variant": "q8exp-q8subset", "mib": 3578.1692810058594, "checks": "passed"}
+{"variant": "q8exp-q6subset", "mib": 3515.3170166015625, "checks": "passed"}
