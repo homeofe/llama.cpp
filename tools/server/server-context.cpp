@@ -1150,18 +1150,17 @@ private:
 
         const bool is_resume = sleeping;
 
-        common_spec_auto(params); // may skip drafting where it would be slower
         params_base = params;
         const auto output_limits = server_output_limits(params_base);
         params_base.n_outputs_max = output_limits.total;
         params_base.n_outputs_max_per_seq = output_limits.per_seq;
 
         const bool has_mmproj = !params.mmproj.path.empty();
-        const bool has_draft = params.speculative.has_dft();
-        const bool spec_mtp = std::find(params_base.speculative.types.begin(),
+        bool has_draft = params.speculative.has_dft();
+        bool spec_mtp = std::find(params_base.speculative.types.begin(),
                                         params_base.speculative.types.end(),
                                         COMMON_SPECULATIVE_TYPE_DRAFT_MTP) != params_base.speculative.types.end();
-        const bool has_spec = has_draft || spec_mtp;
+        bool has_spec = has_draft || spec_mtp;
 
         if (callback_state) {
             std::vector<std::string> stages = {"text_model"};
@@ -1238,6 +1237,10 @@ private:
         }
 
         llama_init = common_init_from_params(params_base);
+        has_draft = params_base.speculative.has_dft();
+        spec_mtp = std::find(params_base.speculative.types.begin(), params_base.speculative.types.end(),
+                            COMMON_SPECULATIVE_TYPE_DRAFT_MTP) != params_base.speculative.types.end();
+        has_spec = has_draft || spec_mtp;
         spec_depth_tuner::start = params_base.speculative.draft.n_start;
         spec_depth_tuner::enabled = common_autotune_on(params_base);
 
