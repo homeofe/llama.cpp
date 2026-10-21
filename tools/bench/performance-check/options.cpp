@@ -52,6 +52,13 @@ int main(int argc, char ** argv) {
             const int depth = p.speculative.draft.n_max;
             common_spec_auto(p);
             require(p.speculative.types == types && p.speculative.draft.n_max == depth && p.speculative.has_dft(), "stock path changed explicit speculative configuration");
+        } else if (which == "margin") {
+            require(argc == 3, "model required");
+            auto p = parse({"-m", argv[2], "-ngl", "0", "-c", "512", "-np", "1", "-t", "1", "-tb", "1", "--no-warmup", "-fit", "off", "--moe", "cache=-1,MARGIN_MB=501"});
+            auto init = common_init_from_params(p);
+            require(init->context() != nullptr, "margin fixture failed to load");
+            std::cout << "options after init: " << p.moe_opts << '\n';
+            require(p.moe_opts.find("margin_mb=") == std::string::npos, "automatic margin overwrote explicit uppercase MARGIN_MB");
         } else if (which == "dense-state" || which == "manual-state") {
             require(argc == 4, "model and private state file required");
             setenv("LLAMA_MOE_STATE", argv[3], 1);
