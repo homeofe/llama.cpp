@@ -28,6 +28,8 @@ if not mtp_only and 'split.count' in reader.fields and reader.fields['split.coun
     raise ValueError('sharded trunks require --mtp-only; merge the trunk first to write a combined model')
 arch = 'glm5-next'
 n_layer = int(reader.fields[f'{arch}.block_count'].contents())
+nextn = reader.fields.get(f'{arch}.nextn_predict_layers')
+n_layer -= int(nextn.contents()) if nextn else 0
 mtp = f'blk.{n_layer}.'
 
 # find the MTP tensors in the remote shards (headers only)
@@ -84,7 +86,7 @@ writer.add_key_value(f'{arch}.nextn_predict_layers', 1, gguf.GGUFValueType.UINT3
 if f'{arch}.expert_shared_feed_forward_length' not in reader.fields:
     writer.add_key_value(f'{arch}.expert_shared_feed_forward_length', 2048, gguf.GGUFValueType.UINT32)
 
-trunk = [] if mtp_only else reader.tensors
+trunk = [] if mtp_only else [t for t in reader.tensors if not t.name.startswith(mtp)]
 for t in trunk:
     writer.add_tensor_info(t.name, t.data.shape, t.data.dtype, t.data.nbytes, t.tensor_type)
 arrays = []

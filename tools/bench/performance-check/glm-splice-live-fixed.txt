@@ -1,0 +1,32 @@
+29 MTP tensors, 4.26 GiB
+got blk.45.attn_k_b.weight 8.5 MiB
+got blk.45.attn_kv_a_mqa.weight 2.1 MiB
+got blk.45.attn_kv_a_norm.weight 0.0 MiB
+got blk.45.attn_norm.weight 0.0 MiB
+got blk.45.attn_output.weight 68.0 MiB
+got blk.45.attn_q_a.weight 6.4 MiB
+got blk.45.attn_q_a_norm.weight 0.0 MiB
+got blk.45.attn_q_b.weight 25.5 MiB
+got blk.45.attn_v_b.weight 8.5 MiB
+got blk.45.exp_probs_b.bias 0.0 MiB
+got blk.45.ffn_down_exps.weight 1584.0 MiB
+got blk.45.ffn_down_shexp.weight 8.5 MiB
+got blk.45.ffn_gate_exps.weight 1296.0 MiB
+got blk.45.ffn_gate_inp.weight 4.5 MiB
+got blk.45.ffn_gate_shexp.weight 8.5 MiB
+got blk.45.ffn_norm.weight 0.0 MiB
+got blk.45.ffn_up_exps.weight 1296.0 MiB
+got blk.45.ffn_up_shexp.weight 8.5 MiB
+got blk.45.indexer.attn_k.weight 0.5 MiB
+got blk.45.indexer.attn_q_b.weight 6.4 MiB
+got blk.45.indexer.k_norm.bias 0.0 MiB
+got blk.45.indexer.k_norm.weight 0.0 MiB
+got blk.45.indexer.proj.weight 0.5 MiB
+got blk.45.indexer_compressor_ape.weight 0.0 MiB
+got blk.45.indexer_compressor_gate.weight 0.5 MiB
+got blk.45.nextn.eh_proj.weight 34.0 MiB
+got blk.45.nextn.enorm.weight 0.0 MiB
+got blk.45.nextn.hnorm.weight 0.0 MiB
+got blk.45.nextn.shared_head_norm.weight 0.0 MiB
+Duplicated key name 'glm5-next.nextn_predict_layers', overwriting it with new value 1 of type UINT32
+wrote /opt/llm-gateway/data/moe-quant/audit/GLM-5.3-Flash-MTP-Q4_K.gguf

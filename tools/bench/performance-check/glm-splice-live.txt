@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/opt/llm-gateway/data/build/llama-performance-check/tools/bench/glm_splice_mtp.py", line 47, in <module>
+    assert new, f'no {mtp}* tensors found in {repo}'
+           ^^^
+AssertionError: no blk.46.* tensors found in https://huggingface.co/unsloth/GLM-5.3-Flash-GGUF/resolve/main/UD-Q4_K_XL/GLM-5.3-Flash-UD-Q4_K_XL

@@ -17,10 +17,18 @@ from check_remote_ranges import source
 
 class SpliceChecks(unittest.TestCase):
     def test_mtp_head_is_a_single_file(self):
+        self.splice(False)
+
+    def test_existing_nextn_layer_is_not_counted_twice(self):
+        self.splice(True)
+
+    def splice(self, already_mtp):
         with tempfile.TemporaryDirectory() as tmp:
             trunk, head = (pathlib.Path(tmp) / n for n in ('trunk.gguf', 'head.gguf'))
             w = gguf.GGUFWriter(trunk, 'glm5-next')
-            w.add_block_count(2)
+            w.add_block_count(3 if already_mtp else 2)
+            if already_mtp:
+                w.add_key_value('glm5-next.nextn_predict_layers', 1, gguf.GGUFValueType.UINT32)
             w.add_key_value('split.count', 4, gguf.GGUFValueType.UINT16)
             w.add_key_value('split.no', 0, gguf.GGUFValueType.UINT16)
             w.add_key_value('split.tensors.count', 100, gguf.GGUFValueType.INT32)

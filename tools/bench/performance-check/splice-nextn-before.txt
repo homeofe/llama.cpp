@@ -1,0 +1,26 @@
+test_existing_nextn_layer_is_not_counted_twice (__main__.SpliceChecks.test_existing_nextn_layer_is_not_counted_twice) ... FAIL
+test_mtp_head_is_a_single_file (__main__.SpliceChecks.test_mtp_head_is_a_single_file) ... 1 MTP tensors, 0.00 GiB
+got blk.2.attn_norm.weight 0.0 MiB
+ok
+
+======================================================================
+FAIL: test_existing_nextn_layer_is_not_counted_twice (__main__.SpliceChecks.test_existing_nextn_layer_is_not_counted_twice)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/llm-gateway/data/build/llama-performance-check/tools/bench/performance-check/check_glm_splice.py", line 23, in test_existing_nextn_layer_is_not_counted_twice
+    self.splice(True)
+  File "/opt/llm-gateway/data/build/llama-performance-check/tools/bench/performance-check/check_glm_splice.py", line 50, in splice
+    runpy.run_path(str(HERE.parents[1] / 'glm_splice_mtp.py'), run_name='__main__')
+  File "<frozen runpy>", line 286, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/opt/llm-gateway/data/build/llama-performance-check/tools/bench/glm_splice_mtp.py", line 47, in <module>
+    assert new, f'no {mtp}* tensors found in {repo}'
+           ^^^
+AssertionError: no blk.3.* tensors found in https://huggingface.co/unsloth/GLM-5.3-Flash-GGUF/resolve/main/UD-Q4_K_XL/GLM-5.3-Flash-UD-Q4_K_XL
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.080s
+
+FAILED (failures=1)
+wrote /tmp/tmpfcgn52nj/head.gguf
