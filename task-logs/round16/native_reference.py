@@ -33,6 +33,7 @@ class Reference(Run):
         super().__init__(out, end)
         self.native = False
         self.engine = None
+        self.native_attempt = 0
         self.auth = secrets.token_hex(24)
         self.url = f'http://127.0.0.1:{bench.PORT}'
 
@@ -62,6 +63,8 @@ class Reference(Run):
 
     def start(self, name, cfg):
         self.native = name == 'strata'
+        if self.native:
+            self.native_attempt += 1
         self.url = f'http://127.0.0.1:{18100 if self.native else bench.PORT}'
         if not self.native:
             return super().start(name, cfg)
@@ -81,7 +84,7 @@ class Reference(Run):
         env.pop('LD_LIBRARY_PATH', None)
         cmd = [PYTHON, str(STRATA/'serve/server.py'), '--engine', 'strata',
                '--config', str(cfg_path), '--host', '127.0.0.1', '--port', '18100',
-               '--engine-background', '--workspace-dir', str(self.out/'workspace'), '--idle-unload', '0']
+               '--engine-background', '--workspace-dir', str(self.out/'workspace'/f'attempt-{self.native_attempt}'), '--idle-unload', '0']
         with (self.out/'strata.server.txt').open('a') as log:
             self.child = subprocess.Popen(cmd, env=env, stdin=subprocess.DEVNULL,
                                           stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
