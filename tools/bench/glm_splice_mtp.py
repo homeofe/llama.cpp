@@ -24,6 +24,8 @@ quant = args[2] if len(args) > 2 else 'UD-Q4_K_XL'
 repo = f'https://huggingface.co/unsloth/GLM-5.3-Flash-GGUF/resolve/main/{quant}/GLM-5.3-Flash-{quant}'
 
 reader = gguf.GGUFReader(src)
+if not mtp_only and 'split.count' in reader.fields and reader.fields['split.count'].contents() > 1:
+    raise ValueError('sharded trunks require --mtp-only; merge the trunk first to write a combined model')
 arch = 'glm5-next'
 n_layer = int(reader.fields[f'{arch}.block_count'].contents())
 mtp = f'blk.{n_layer}.'
@@ -64,7 +66,7 @@ for t in new:
 
 writer = gguf.GGUFWriter(dst, arch=arch, endianess=reader.endianess)
 for field in reader.fields.values():
-    if field.name == gguf.Keys.General.ARCHITECTURE or field.name.startswith('GGUF.'):
+    if field.name == gguf.Keys.General.ARCHITECTURE or field.name.startswith(('GGUF.', 'split.')):
         continue
     vt = field.types[0]
     st = field.types[-1] if vt == gguf.GGUFValueType.ARRAY else None

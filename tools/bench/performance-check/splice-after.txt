@@ -1,0 +1,9 @@
+test_mtp_head_is_a_single_file (__main__.SpliceChecks.test_mtp_head_is_a_single_file) ... 1 MTP tensors, 0.00 GiB
+got blk.2.attn_norm.weight 0.0 MiB
+ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.525s
+
+OK
+wrote /tmp/tmpbr_hv11q/head.gguf

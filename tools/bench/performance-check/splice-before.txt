@@ -1,0 +1,17 @@
+test_mtp_head_is_a_single_file (__main__.SpliceChecks.test_mtp_head_is_a_single_file) ... 1 MTP tensors, 0.00 GiB
+got blk.2.attn_norm.weight 0.0 MiB
+FAIL
+
+======================================================================
+FAIL: test_mtp_head_is_a_single_file (__main__.SpliceChecks.test_mtp_head_is_a_single_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/llm-gateway/data/build/llama-performance-check/tools/bench/performance-check/check_glm_splice.py", line 41, in test_mtp_head_is_a_single_file
+    self.assertFalse(any(k.startswith('split.') for k in r.fields), 'MTP head must not reference nonexistent shards')
+AssertionError: True is not false : MTP head must not reference nonexistent shards
+
+----------------------------------------------------------------------
+Ran 1 test in 0.525s
+
+FAILED (failures=1)
+wrote /tmp/tmpc6mgdr0w/head.gguf
