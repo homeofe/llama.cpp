@@ -1,0 +1,283 @@
+{
+  "benchmark_valid": false,
+  "quiet": false,
+  "request": {
+    "kind": "profiled_request",
+    "benchmark_valid": false,
+    "load_start": 1.8740234375,
+    "foreign_cores": 1.2775266385786377,
+    "quiet": false,
+    "tokens": 218,
+    "usage": {
+      "prompt_tokens": 98,
+      "completion_tokens": 218,
+      "total_tokens": 316,
+      "prompt_tokens_details": {
+        "cached_tokens": 91
+      }
+    },
+    "timings": {
+      "cache_n": 91,
+      "prompt_n": 7,
+      "prompt_ms": 221.0,
+      "prompt_per_token_ms": 31.571,
+      "prompt_per_second": 31.7,
+      "predicted_n": 218,
+      "predicted_ms": 3432.6,
+      "predicted_per_token_ms": 15.746,
+      "predicted_per_second": 63.5,
+      "draft_n": 169,
+      "draft_n_accepted": 151
+    },
+    "sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+    "wall_s": 3.6599356540245935,
+    "ttft_s": 0.25722275907173753,
+    "decode_tok_s": 63.78287274643815,
+    "epoch": 1792593782.7,
+    "utc": "2026-10-21 14:43:02"
+  },
+  "window_ms": 3660.675787,
+  "productive_union_ms": 2157.768511,
+  "wait_only_ms": 1117.220631,
+  "device_idle_ms": 385.686645,
+  "clock_alignment": {
+    "offset_ns": -945736058221846.0,
+    "observed_envelope_ns": 1275.0,
+    "anchors": [
+      {
+        "mono": 945736059523550,
+        "width_ns": 13160,
+        "offset_mid_ns": -945736058217231.0
+      },
+      {
+        "mono": 945736059538420,
+        "width_ns": 3860,
+        "offset_mid_ns": -945736058221201.0
+      },
+      {
+        "mono": 945736059542960,
+        "width_ns": 2550,
+        "offset_mid_ns": -945736058221846.0
+      },
+      {
+        "mono": 945739719799663,
+        "width_ns": 12150,
+        "offset_mid_ns": -945736058217786.0
+      }
+    ],
+    "note": "Intersection of all four clock brackets, including the request end; assumes a constant offset. Not a bound on uprobe overhead or unobserved clock drift."
+  },
+  "coverage": {
+    "dispatch": 3360,
+    "doorbells": 3360,
+    "consumers": 3360,
+    "phases": 6650
+  },
+  "transition_definition": "Same-order one-to-one doorbell / dispatch / mapped-result-copy. Negative deltas may reflect publish-before-kernel-end, clock envelope or uprobe overhead; do not clamp them into a saving.",
+  "phases": {
+    "5": {
+      "n": 3325,
+      "sum_ms": 876.573629,
+      "median_us": 247.469,
+      "p95_us": 539.748,
+      "min_us": 22.17,
+      "max_us": 6142.644
+    },
+    "6": {
+      "n": 3325,
+      "sum_ms": 525.326839,
+      "median_us": 143.939,
+      "p95_us": 335.148,
+      "min_us": 11.09,
+      "max_us": 1146.526
+    }
+  },
+  "cpu_ranges": {
+    "n": 3360,
+    "sum_ms": 1502.409573,
+    "median_us": 422.4585,
+    "p95_us": 887.546,
+    "min_us": 3.89,
+    "max_us": 7339.66
+  },
+  "cpu_without_productive_gpu": {
+    "n": 3360,
+    "sum_ms": 1121.365571,
+    "median_us": 290.105,
+    "p95_us": 796.652,
+    "min_us": 0.672,
+    "max_us": 7258.677
+  },
+  "by_tokens": {
+    "1": {
+      "after_publish_kernel_ns": {
+        "n": 432,
+        "sum_ms": 0.569948,
+        "median_us": 1.1915,
+        "p95_us": 1.608,
+        "min_us": 0.922,
+        "max_us": 23.225
+      },
+      "before_consume_kernel_ns": {
+        "n": 432,
+        "sum_ms": 5.957984,
+        "median_us": 3.45,
+        "p95_us": 99.657,
+        "min_us": 2.651,
+        "max_us": 131.18
+      },
+      "cpu_ns": {
+        "n": 432,
+        "sum_ms": 69.231477,
+        "median_us": 158.094,
+        "p95_us": 304.388,
+        "min_us": 3.89,
+        "max_us": 385.059
+      },
+      "pool_phase_ns": {
+        "n": 432,
+        "sum_ms": 62.643811,
+        "median_us": 142.409,
+        "p95_us": 284.138,
+        "min_us": 0.0,
+        "max_us": 351.759
+      }
+    },
+    "2": {
+      "after_publish_kernel_ns": {
+        "n": 192,
+        "sum_ms": 0.299239,
+        "median_us": 1.2425,
+        "p95_us": 1.817,
+        "min_us": 0.982,
+        "max_us": 39.315
+      },
+      "before_consume_kernel_ns": {
+        "n": 192,
+        "sum_ms": 7.423217,
+        "median_us": 3.4205,
+        "p95_us": 124.702,
+        "min_us": 2.707,
+        "max_us": 3333.637
+      },
+      "cpu_ns": {
+        "n": 192,
+        "sum_ms": 42.200691,
+        "median_us": 202.594,
+        "p95_us": 463.668,
+        "min_us": 4.86,
+        "max_us": 688.117
+      },
+      "pool_phase_ns": {
+        "n": 192,
+        "sum_ms": 38.457373,
+        "median_us": 182.599,
+        "p95_us": 435.428,
+        "min_us": 0.0,
+        "max_us": 637.197
+      }
+    },
+    "3": {
+      "after_publish_kernel_ns": {
+        "n": 240,
+        "sum_ms": 0.33964,
+        "median_us": 1.3185,
+        "p95_us": 1.837,
+        "min_us": 0.954,
+        "max_us": 6.209
+      },
+      "before_consume_kernel_ns": {
+        "n": 240,
+        "sum_ms": 2.730326,
+        "median_us": 3.3045,
+        "p95_us": 78.047,
+        "min_us": 2.751,
+        "max_us": 146.824
+      },
+      "cpu_ns": {
+        "n": 240,
+        "sum_ms": 84.222867,
+        "median_us": 342.884,
+        "p95_us": 645.618,
+        "min_us": 7.51,
+        "max_us": 1155.035
+      },
+      "pool_phase_ns": {
+        "n": 240,
+        "sum_ms": 77.804581,
+        "median_us": 313.154,
+        "p95_us": 608.018,
+        "min_us": 0.0,
+        "max_us": 1117.975
+      }
+    },
+    "4": {
+      "after_publish_kernel_ns": {
+        "n": 2400,
+        "sum_ms": 3.660554,
+        "median_us": 1.334,
+        "p95_us": 1.809,
+        "min_us": 0.989,
+        "max_us": 122.277
+      },
+      "before_consume_kernel_ns": {
+        "n": 2400,
+        "sum_ms": 16.269302,
+        "median_us": 3.312,
+        "p95_us": 16.948,
+        "min_us": 2.596,
+        "max_us": 185.413
+      },
+      "cpu_ns": {
+        "n": 2400,
+        "sum_ms": 1225.784457,
+        "median_us": 488.283,
+        "p95_us": 904.456,
+        "min_us": 7.11,
+        "max_us": 7339.66
+      },
+      "pool_phase_ns": {
+        "n": 2400,
+        "sum_ms": 1146.477095,
+        "median_us": 454.603,
+        "p95_us": 860.706,
+        "min_us": 0.0,
+        "max_us": 7289.17
+      }
+    },
+    "6": {
+      "after_publish_kernel_ns": {
+        "n": 96,
+        "sum_ms": 0.142654,
+        "median_us": 1.3645,
+        "p95_us": 1.781,
+        "min_us": 1.073,
+        "max_us": 8.62
+      },
+      "before_consume_kernel_ns": {
+        "n": 96,
+        "sum_ms": 2.003366,
+        "median_us": 3.684,
+        "p95_us": 4.636,
+        "min_us": 2.808,
+        "max_us": 1529.315
+      },
+      "cpu_ns": {
+        "n": 96,
+        "sum_ms": 80.970081,
+        "median_us": 798.441,
+        "p95_us": 1405.034,
+        "min_us": 217.459,
+        "max_us": 2148.191
+      },
+      "pool_phase_ns": {
+        "n": 96,
+        "sum_ms": 76.517608,
+        "median_us": 747.2965,
+        "p95_us": 1359.974,
+        "min_us": 189.939,
+        "max_us": 2092.342
+      }
+    }
+  }
+}

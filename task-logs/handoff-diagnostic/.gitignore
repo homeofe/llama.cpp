@@ -1,0 +1,9 @@
+*.so
+*.qdstrm
+*.nsys-rep
+*.sqlite
+__pycache__/
+*/tmp/
+*/config/
+*/cache/
+*/workspace/

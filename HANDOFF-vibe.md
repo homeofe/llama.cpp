@@ -1,5 +1,16 @@
 # Qwen3.8-Flash-Next decode optimization: status and evidence
 
+**Bounded handoff diagnosis (2026-10-21): `NOTES-handoff-diagnostic.md`, branch `handoff-diagnostic`.**
+Two captures only. Aligned passes the quiet gate; native fails at 1.278 foreign
+CPU cores and is excluded from latency comparison. All 3312 aligned target CPU
+ranges map to input-event readiness and GPU weighted reduction. Input-handoff
+device idle totals 23.721 ms; return-to-GPU idle totals 562.486 ms in a 6404.268 ms
+instrumented request. The latter is an 8.78% zero-cost envelope, not an expected
+speedup: profiler overhead is unbounded here. Native hooks cover 3360 complete
+handshakes, but no speed ratio is valid. No third capture, optimization or runtime
+change. Four diagnostic history rows retained; GPU released at 14:43:13 UTC.
+REA was not executed; installed bpftrace/Nsight supplied the custom measurements.
+
 **Round 17 (2026-10-21): `NOTES-round17-graph-reuse.md`, experiment branch `graph-reuse`.**
 The bounded CUDA graph-variant cache passes exact arithmetic and deliberate-failure
 checks, but is not adopted. Four variants exhaust VRAM; two variants retain the same

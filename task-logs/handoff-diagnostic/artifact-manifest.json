@@ -1,0 +1,86 @@
+{
+  "scope": "Two diagnostic captures; no adoption benchmark",
+  "files": {
+    "/opt/llm-gateway/data/build/llama-vibe/task-logs/handoff-diagnostic/cpu_ranges.so": {
+      "bytes": 16360,
+      "sha256": "702dbcf06fb299fe6236efe6240afc4fc7158842fdc80f8e30eb5d805bdb6e84"
+    },
+    "/opt/llm-gateway/data/runtimes/strata/0.1.41-local-1cb045cb/engine/strata": {
+      "bytes": 64621656,
+      "sha256": "9eff6533faf261c8d21e9d6a239b4e8c0b9288e33d92e0ceb950f2f5cd614264"
+    },
+    "/opt/llm-gateway/data/build/llama-vibe/task-logs/handoff-diagnostic/aligned/trace.sqlite": {
+      "bytes": 43134976,
+      "sha256": "bccf79455b127d7dd142b7a4e10590c64b00f6aa08cf7dce01d155de1cf692a5"
+    },
+    "/opt/llm-gateway/data/build/llama-vibe/task-logs/handoff-diagnostic/aligned/trace.qdstrm": {
+      "bytes": 28406572,
+      "sha256": "0de7d6842c8010c6f4ca58098bdf9f43a6e4799d0805680f795d066fbd0f9c45"
+    },
+    "/opt/llm-gateway/data/build/llama-vibe/task-logs/handoff-diagnostic/aligned/trace.nsys-rep": {
+      "bytes": 17390651,
+      "sha256": "ce3501e08f897bfbed88fc32bb82aefc27b0026bf1cb96074d6b3ede627e29ef"
+    },
+    "/opt/llm-gateway/data/build/llama-vibe/task-logs/handoff-diagnostic/native/trace.sqlite": {
+      "bytes": 15036416,
+      "sha256": "e5262a27190069617cc17d60a80ae4c63bb27784109830ecbe374083d46be5a7"
+    },
+    "/opt/llm-gateway/data/build/llama-vibe/task-logs/handoff-diagnostic/native/trace.qdstrm": {
+      "bytes": 605311348,
+      "sha256": "80e8bdc207a865ca874277f1e8879edab2bd4aff63e2cd80e4b3db24ff36cb9b"
+    },
+    "/opt/llm-gateway/data/build/llama-vibe/task-logs/handoff-diagnostic/native/trace.nsys-rep": {
+      "bytes": 5435586,
+      "sha256": "ec08386e3a6e7949cd568f1580c599d961785fcd34e1b9116330cc7fd1c076f2"
+    },
+    "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/e2e/reference-packed-v2/llama-perplexity": {
+      "bytes": 15968,
+      "sha256": "c0626769fda9350ca395eab9b6db909b3bbe1956d489de981bc8ff3ce7f07ea6"
+    },
+    "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/e2e/reference-packed-v2/libllama-common.so.0.7.0": {
+      "bytes": 6417208,
+      "sha256": "c7d27b0b5a0bb99197fa98271953c4de2dcabe3f3e05ab32a70e86ea825fce92"
+    },
+    "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/e2e/reference-packed-v2/libggml-base.so.0.27.0": {
+      "bytes": 930472,
+      "sha256": "7e219a7632c0fd0e350180bbb00519f1298d68a55d800dd0102fb05509eaff98"
+    },
+    "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/e2e/reference-packed-v2/libllama.so.0.7.0": {
+      "bytes": 5296592,
+      "sha256": "f804b75854861da7d43f2bbd67b283e5515bf412c202692284961ac5bfb33b17"
+    },
+    "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/e2e/reference-packed-v2/libggml.so.0.27.0": {
+      "bytes": 56208,
+      "sha256": "a8e1c0118458de3272f993c47923e28e88326e0a86c91e52ac90d920c59a67a6"
+    },
+    "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/e2e/reference-packed-v2/libggml-cuda.so.0.27.0": {
+      "bytes": 211009224,
+      "sha256": "b41e953d482f013b07d060ae915a679c969317ff11feb46719b3618ec3e1fc78"
+    },
+    "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/e2e/reference-packed-v2/libllama-server-impl.so": {
+      "bytes": 7351560,
+      "sha256": "7b5f2429fdc63c161bc6b6c4345dc9624f88fce9142e8614d08ccf9cb9a627fc"
+    },
+    "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/e2e/reference-packed-v2/libmtmd.so.0.7.0": {
+      "bytes": 2021496,
+      "sha256": "5700b6dcb59f7935e3904330190e11bf94817413fe5cf45bc38715740d2e6b00"
+    },
+    "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/e2e/reference-packed-v2/libllama-perplexity-impl.so": {
+      "bytes": 164776,
+      "sha256": "cef290b743bf12332b1ca218a8d706be689e202109c45c852c98057fda22aff7"
+    },
+    "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/e2e/reference-packed-v2/test-backend-ops": {
+      "bytes": 1429680,
+      "sha256": "adfd2841d513b1f6f53708e5501b496029d6a6fab8c1522d6b4099d7ae51079c"
+    },
+    "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/e2e/reference-packed-v2/llama-server": {
+      "bytes": 17888,
+      "sha256": "762347da2ece595c7de89ddfa02a9f8dbaa95adb926f2a5cd7896985d37a785a"
+    },
+    "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/e2e/reference-packed-v2/libggml-cpu.so.0.27.0": {
+      "bytes": 1410376,
+      "sha256": "04a99633b6c5189988ee38df4b4bc6d06ffe44e31d4fdfecda41aa4be3ba6d45"
+    }
+  },
+  "build_command": "g++ -shared -fPIC -O2 -I ggml/include task-logs/handoff-diagnostic/cpu_ranges.cpp -o task-logs/handoff-diagnostic/cpu_ranges.so -ldl -l:libnvToolsExt.so.1"
+}

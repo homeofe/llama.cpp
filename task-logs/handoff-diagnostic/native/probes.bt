@@ -1,0 +1,5 @@
+BEGIN { printf("READY\n"); }
+uprobe:/opt/llm-gateway/data/runtimes/strata/0.1.41-local-1cb045cb/engine/strata:_ZN12_GLOBAL__N_116drive_pool_multiEPvPKfPKillPfl /pid == 3589043/ { printf("B,dispatch,%llu,%d,%lld,%lld\n", nsecs, tid, arg3, *(int64 *)(reg("sp") + 8)); }
+uretprobe:/opt/llm-gateway/data/runtimes/strata/0.1.41-local-1cb045cb/engine/strata:_ZN12_GLOBAL__N_116drive_pool_multiEPvPKfPKillPfl /pid == 3589043/ { printf("E,dispatch,%llu,%d,0,0\n", nsecs, tid); }
+uprobe:/opt/llm-gateway/data/runtimes/strata/0.1.41-local-1cb045cb/engine/strata:_ZN6strata7kernels3cpu10ExpertPool9run_phaseEii /pid == 3589043/ { printf("B,phase,%llu,%d,%lld,%lld\n", nsecs, tid, arg1, arg2); }
+uretprobe:/opt/llm-gateway/data/runtimes/strata/0.1.41-local-1cb045cb/engine/strata:_ZN6strata7kernels3cpu10ExpertPool9run_phaseEii /pid == 3589043/ { printf("E,phase,%llu,%d,0,0\n", nsecs, tid); }
