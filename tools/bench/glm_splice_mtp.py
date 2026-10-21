@@ -8,7 +8,7 @@ The MTP block only drafts tokens; the trunk verifies them, so its quant affects 
 usage: glm_splice_mtp.py [--mtp-only] <local.gguf> <out.gguf> [unsloth quant dir, default UD-Q4_K_XL]
 --mtp-only: write only the NextN block + metadata (a -md draft for any GLM-5.3-Flash trunk)
 """
-import os, sys, urllib.request
+import os, sys
 import numpy as np
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', '..', 'gguf-py'))  # repo's gguf-py
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
@@ -52,11 +52,14 @@ for t in new:
     f = os.path.join(cache, t['name'])
     if os.path.exists(f) and os.path.getsize(f) == t['size']:
         continue
-    req = urllib.request.Request(t['url'], headers={'Range': f"bytes={t['start']}-{t['start'] + t['size'] - 1}"})
-    with urllib.request.urlopen(req) as r, open(f, 'wb') as o:
-        while chunk := r.read(1 << 24):
-            o.write(chunk)
-    assert os.path.getsize(f) == t['size'], t['name']
+    part = f + '.tmp'
+    try:
+        with open(part, 'wb') as o:
+            gguf_remote.copy_range(t['url'], t['start'], t['size'], o)
+        os.replace(part, f)
+    finally:
+        if os.path.exists(part):
+            os.unlink(part)
     print('got', t['name'], f"{t['size'] / 2**20:.1f} MiB", flush=True)
 
 writer = gguf.GGUFWriter(dst, arch=arch, endianess=reader.endianess)

@@ -1,0 +1,42 @@
+test_reject_ignored_range (__main__.RangeChecks.test_reject_ignored_range) ... FAIL
+test_reject_length_mismatch (__main__.RangeChecks.test_reject_length_mismatch) ... FAIL
+test_reject_short_nonfinal_range (__main__.RangeChecks.test_reject_short_nonfinal_range) ... FAIL
+test_reject_wrong_offset (__main__.RangeChecks.test_reject_wrong_offset) ... FAIL
+test_valid_short_final_header_range (__main__.RangeChecks.test_valid_short_final_header_range) ... ok
+
+======================================================================
+FAIL: test_reject_ignored_range (__main__.RangeChecks.test_reject_ignored_range)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/llm-gateway/data/build/llama-performance-check/tools/bench/performance-check/check_remote_ranges.py", line 42, in test_reject_ignored_range
+    with source(status=200) as url, self.assertRaises(ValueError):
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_reject_length_mismatch (__main__.RangeChecks.test_reject_length_mismatch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/llm-gateway/data/build/llama-performance-check/tools/bench/performance-check/check_remote_ranges.py", line 54, in test_reject_length_mismatch
+    with source(body=b'x' * 31) as url, self.assertRaises(ValueError):
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_reject_short_nonfinal_range (__main__.RangeChecks.test_reject_short_nonfinal_range)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/llm-gateway/data/build/llama-performance-check/tools/bench/performance-check/check_remote_ranges.py", line 50, in test_reject_short_nonfinal_range
+    with source(content_range='bytes 0-31/64') as url, self.assertRaises(ValueError):
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_reject_wrong_offset (__main__.RangeChecks.test_reject_wrong_offset)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/llm-gateway/data/build/llama-performance-check/tools/bench/performance-check/check_remote_ranges.py", line 46, in test_reject_wrong_offset
+    with source(content_range='bytes 1-32/33') as url, self.assertRaises(ValueError):
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 5 tests in 2.529s
+
+FAILED (failures=4)

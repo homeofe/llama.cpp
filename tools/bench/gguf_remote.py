@@ -4,13 +4,42 @@
 usage: gguf_remote.py <url> [name-filter]   -> prints kv keys and matching tensors with byte ranges
 As a module: header(url) -> (kv dict, tensors list, data_start)
 """
-import struct, sys, urllib.request
+import io, re, struct, sys, urllib.request
 
 T = {0: 'B', 1: 'b', 2: 'H', 3: 'h', 4: 'I', 5: 'i', 6: 'f', 7: '?', 10: 'Q', 11: 'q', 12: 'd'}  # 8 str, 9 arr
 # bytes per block and block size for the ggml types used here (others: extend as needed)
 GGML = {0: (4, 1), 1: (2, 1), 8: (34, 32), 10: (84, 256), 11: (110, 256), 12: (144, 256), 13: (176, 256),
         14: (210, 256), 16: (66, 256), 17: (74, 256), 18: (98, 256), 19: (50, 256), 20: (36, 32), 21: (110, 256),
         22: (82, 256), 23: (136, 256), 29: (56, 256), 30: (2, 1), 39: (17, 32)}
+
+
+def copy_range(url, start, size, out, allow_short=False):
+    """Copy a verified byte range; reject a full-file response before reading its body."""
+    if start < 0 or size <= 0:
+        raise ValueError('invalid byte range')
+    end = start + size - 1
+    req = urllib.request.Request(url, headers={'Range': f'bytes={start}-{end}'})
+    with urllib.request.urlopen(req, timeout=120) as r:
+        match = re.fullmatch(r'bytes (\d+)-(\d+)/(\d+)', r.headers.get('Content-Range', ''))
+        if r.status != 206 or not match:
+            raise ValueError('server did not return an HTTP 206 byte range')
+        first, last, total = map(int, match.groups())
+        expected_last = min(end, total - 1) if allow_short else end
+        if first != start or last != expected_last or last < first or last >= total:
+            raise ValueError('server returned the wrong byte range')
+        remaining = last - first + 1
+        length = r.headers.get('Content-Length')
+        if length is not None and int(length) != remaining:
+            raise ValueError('range Content-Length mismatch')
+        while remaining:
+            chunk = r.read(min(1 << 24, remaining))
+            if not chunk:
+                raise ValueError('truncated byte range')
+            out.write(chunk)
+            remaining -= len(chunk)
+        if r.read(1):
+            raise ValueError('extra bytes after byte range')
+
 
 
 class Remote:
@@ -20,8 +49,9 @@ class Remote:
     def need(self, n):
         while len(self.buf) < self.pos + n:  # fetch in growing chunks
             want = max(1 << 22, len(self.buf))
-            req = urllib.request.Request(self.url, headers={'Range': f'bytes={len(self.buf)}-{len(self.buf) + want - 1}'})
-            self.buf += urllib.request.urlopen(req).read()
+            chunk = io.BytesIO()
+            copy_range(self.url, len(self.buf), want, chunk, allow_short=True)
+            self.buf += chunk.getvalue()
 
     def read(self, n):
         self.need(n)
