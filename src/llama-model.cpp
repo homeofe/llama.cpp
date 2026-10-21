@@ -2021,6 +2021,22 @@ bool llama_model_base::load_tensors(llama_model_loader & ml) {
         }
     }
 
+    if (arch == LLM_ARCH_QWEN4EXP && d2t) {
+        const int64_t n_vocab = vocab.n_tokens();
+        if (d2t->type != GGML_TYPE_I64 || !ggml_is_vector(d2t) || d2t->ne[0] <= 0 || d2t->ne[0] > n_vocab) {
+            throw std::runtime_error("d2t must be an I64 vector no larger than the target vocabulary");
+        }
+        std::vector<int64_t> ids(d2t->ne[0]);
+        ggml_backend_tensor_get(d2t, ids.data(), 0, ids.size()*sizeof(int64_t));
+        std::vector<bool> seen(n_vocab, false);
+        for (const int64_t id : ids) {
+            if (id < 0 || id >= n_vocab || seen[id]) {
+                throw std::runtime_error("d2t contains an invalid or duplicate target token ID");
+            }
+            seen[id] = true;
+        }
+    }
+
     load_tensors_hadamard();
 
     return true;

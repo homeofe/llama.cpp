@@ -1,0 +1,9 @@
+{
+  "status": "quiet_gate_timeout",
+  "quiet_gate_seconds": 180,
+  "gpu_acquired": false,
+  "model_started": false,
+  "trace_created": false,
+  "reason": "Unrelated CI/browser load; observed load 12-16 during wait",
+  "source": "profile_strata.py first attempt; process exited 1 before hold"
+}

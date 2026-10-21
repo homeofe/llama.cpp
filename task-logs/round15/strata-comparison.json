@@ -1,0 +1,82 @@
+{
+  "versions": {
+    "llama_base": "6c8bfda89",
+    "strata_measured": "0.1.41-local-1cb045cb",
+    "strata_upstream_head": "9de04cd44e927a9a3df6bbc0e94fc1be8b844ba4"
+  },
+  "trace_audit": {
+    "strata_old": {
+      "path": "/opt/llm-gateway/data/build/llama-vibe/task-logs/vibe-round1/strata-shim/strata-shim.sqlite",
+      "kernel_count": 8586,
+      "graph_node_ids": 0,
+      "visible_kernel_ms": 245.84591,
+      "graph_api_calls": [
+        {
+          "name": "cudaGraphDestroy_v10000",
+          "count": 16,
+          "host_ms": 4.227113
+        },
+        {
+          "name": "cudaGraphInstantiate_v12000",
+          "count": 16,
+          "host_ms": 57.000392
+        },
+        {
+          "name": "cudaGraphLaunch_v10000",
+          "count": 356,
+          "host_ms": 59.051134
+        },
+        {
+          "name": "cudaGraphUpload_v10000",
+          "count": 15,
+          "host_ms": 4.590494
+        }
+      ]
+    },
+    "llama_round14": {
+      "path": "/opt/llm-gateway/data/build/llama-vibe/task-logs/vibe-round14/trace.sqlite",
+      "kernel_count": 266109,
+      "graph_node_ids": 0,
+      "visible_kernel_ms": 2256.54172,
+      "graph_api_calls": []
+    },
+    "verdict": "Old Strata capture omits graph nodes; its visible kernel sum is not total GPU work."
+  },
+  "draft": {
+    "path": "/opt/llm-gateway/models/Qwen3.8-Flash-Next/MTP/mtp-Qwen3.8-Flash-Next-Q8_0.gguf",
+    "architecture": "qwen4exp",
+    "full_vocab": 248320,
+    "subset_vocab": 106299,
+    "subset_ids_sha256": "b1e1d3a7a9e4bf862dcd5923ce661fb59bbd07907e594df5cf86a62ac235cb91",
+    "q8_head_bytes": 675430400,
+    "q8_subset_bytes": 289133280,
+    "q8_subset_saving_mib": 368.4016418457031,
+    "strata_native_subset_bytes": 223227900,
+    "q8_vs_strata_head_saving_mib": 431.25391006469727,
+    "q8_experts_bytes": 2673868800,
+    "strata_q2_experts_bytes": 707788800
+  },
+  "draft_head_bound": {
+    "kernel": "void mul_mat_vec_q<(ggml_type)8, (int)1, (bool)0, (bool)0, (bool)0>(const void *, const void *, const int *, ggml_cuda_mmvq_args, float *, unsigned int, uint3, unsigned int, unsigned int, unsigned int, uint3, unsigned int, unsigned int, unsigned int, uint3, unsigned int, unsigned int, unsigned int, unsigned int)",
+    "launches": 180,
+    "rounds": 60,
+    "measured_graph_off_ms_per_round": 3.4992160833333332,
+    "row_fraction": 0.4280726481958763,
+    "linear_subset_estimated_saving_ms": 2.0012973879312312,
+    "limitations": [
+      "Graph-off trace; not a graph-on speedup measurement.",
+      "Linear row scaling is an estimate, not a measured kernel time.",
+      "Draft acceptance and target verify-window numerics can change.",
+      "VRAM savings do not include extra mappings, graph storage or buffers."
+    ]
+  },
+  "source_sha256": {
+    "/opt/llm-gateway/data/runtimes/strata/0.1.41-local-1cb045cb/src/core/verify.cpp": "82ae6a6f374c544346a87c2b206bcc4b38432e6d8f47e3744d5a2fe6b232725b",
+    "/opt/llm-gateway/data/runtimes/strata/0.1.41-local-1cb045cb/include/strata/core/verify.hpp": "81e7b9c5eb7686f1c16d3a89ffd1b497443401d12cbc7a685b0f378e35be70d2",
+    "/opt/llm-gateway/data/runtimes/strata/0.1.41-local-1cb045cb/src/core/mtp.cpp": "1df8882931b959688e60ef7d7e00a3d5387aa70063d9488f1278db76ed20dc57",
+    "/opt/llm-gateway/data/runtimes/strata/0.1.41-local-1cb045cb/tools/mtp_rt.py": "2d128e3a62f8f4810e1837cf4292d0e8473c80c384c2f2e10e2c9bfc4e94a531",
+    "/opt/llm-gateway/data/build/llama-vibe/src/models/qwen4exp.cpp": "db80782772e2ab65ac2b25c37ece9cc0fd4ce71c83673652437932eeb7f18308",
+    "/opt/llm-gateway/data/build/llama-vibe/src/models/dflash.cpp": "9bf7fee141396a7e488b0957eeb228e6e06f8dd5fb259a10feee597ffc981b8d",
+    "/opt/llm-gateway/data/build/llama-vibe/ggml/src/ggml-backend.cpp": "1398357b823fb6b7e9e8a9435a800c582b9258596d4f4ab58306fd8365dc8532"
+  }
+}

@@ -1,0 +1,27 @@
+[
+  {
+    "case": "valid",
+    "returncode": 0,
+    "expected": 0
+  },
+  {
+    "case": "negative",
+    "returncode": 1,
+    "expected": 1
+  },
+  {
+    "case": "too-large",
+    "returncode": 1,
+    "expected": 1
+  },
+  {
+    "case": "duplicate",
+    "returncode": 1,
+    "expected": 1
+  },
+  {
+    "case": "restored",
+    "returncode": 0,
+    "expected": 0
+  }
+]

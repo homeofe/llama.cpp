@@ -1,0 +1,40 @@
+0.00.122.026 I srv  llama_server: initializing ...
+0.00.122.040 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.122.151 I srv  init_listene: The UI is disabled
+0.00.122.153 I srv  init_listene: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
+0.00.122.235 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.125.978 I srv    load_model: loading model '/opt/llm-gateway/models/Qwen3.8-Flash-Next/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf'
+0.01.496.132 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 99, abort
+0.39.774.928 W impl: MoE cache budget is too small for 1 layers, they are not cached
+0.39.774.934 W impl: MoE cache budget is too small for 1 layers, they are not cached
+0.39.781.854 W llama_moe_cache: 40 profile entries name layers without a cache group, skipped
+0.39.943.451 W llama_moe_cache: adaptive warm start: 998 experts, 1939.26 MiB (excluded from runtime uploads)
+0.39.943.473 W llama_moe_cache: adaptive LFU: 1779 slots, admit <= 32 experts/ubatch, decay every 128 tokens
+0.39.943.474 W llama_moe_cache: context = 828869601622 (target), prefill 1024, static 0%
+0.39.987.964 I cmn          init: llama threadpool init, n_threads = 24
+0.40.117.668 I common_speculative_init_result: loading draft model '/opt/llm-gateway/models/Qwen3.8-Flash-Next/MTP/mtp-Qwen3.8-Flash-Next-Q8_0.gguf'
+0.43.027.802 W llama_moe_cache: adaptive LFU: 101 slots, admit <= 32 experts/ubatch, decay every 128 tokens
+0.43.027.807 W llama_moe_cache: context = 828869601623 (draft), prefill 1024, static 0%
+0.43.033.676 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 8192, kv_unified = 'false'
+0.43.057.050 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.43.057.092 I srv  llama_server: model loaded
+0.43.057.096 I srv  llama_server: listening on http://127.0.0.1:8799
+0.44.433.206 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 0, t_last = -1
+0.44.433.290 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.45.127.743 W llama_moe_cache: prefill burst: context = 828869601622, uploads = 1024, MiB = 2017.68, enqueue = 115.337 ms (device completion not timed)
+0.45.204.104 W llama_moe_cache: prefill burst: context = 828869601623, uploads = 99, MiB = 493.07, enqueue = 0.873 ms (device completion not timed)
+/opt/llm-gateway/data/build/llama-vibe/ggml/src/ggml-cuda/ggml-cuda.cu:111: CUDA error
+0.45.515.162 E CUDA error: out of memory
+0.45.515.168 E   current device: 0, in function ggml_cuda_graph_evaluate_and_capture at /opt/llm-gateway/data/build/llama-vibe/ggml/src/ggml-cuda/ggml-cuda.cu:4717
+0.45.515.169 E   cudaGraphInstantiate(&graph->instance, graph->graph, __null, __null, 0)
+[New LWP 2724420]
+[New LWP 2723849]
+[New LWP 2723848]
+[New LWP 2723847]
+[New LWP 2723846]
+[New LWP 2723845]
+[New LWP 2723844]
+[New LWP 2723843]
+[New LWP 2723842]
+[New LWP 2723841]
+[New LWP 2723840]

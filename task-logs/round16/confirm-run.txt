@@ -1,0 +1,38 @@
+{"kind": "start_config", "config": "base", "round": 0, "epoch": 1792571852.3, "utc": "2026-10-21 08:37:32"}
+{"kind": "request", "config": "base", "round": 0, "prompt": "code-duration", "attempt": 0, "load_start": 1.9755859375, "load_end": 3.82177734375, "waited_s": 40.01637291908264, "foreign_cores": 1.2069500485541886, "accepted": false, "gpu": {"784194": 10506}, "tokens": 218, "sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7", "decode_tok_s": 45.00474112003608, "ttft_s": 1.7193259129999205, "wall_s": 6.636562970932573, "timings": {"cache_n": 0, "prompt_n": 98, "prompt_ms": 1496.986, "prompt_per_token_ms": 15.275367346938777, "prompt_per_second": 65.4648740869988, "predicted_n": 218, "predicted_ms": 4916.796, "predicted_per_token_ms": 22.65804608294931, "predicted_per_second": 44.13443226035817, "draft_n": 180, "draft_n_accepted": 157}, "epoch": 1792571950.9, "utc": "2026-10-21 08:39:10"}
+{"kind": "request", "config": "base", "round": 0, "prompt": "code-duration", "attempt": 1, "load_start": 1.853515625, "load_end": 3.70751953125, "waited_s": 56.02705955505371, "foreign_cores": 0.3436952800895496, "accepted": true, "gpu": {"784194": 10506}, "tokens": 217, "sha256": "f761084f92ba0de854a76609ba2d5eca26d350b1a71823f497d1f20e96d99265", "decode_tok_s": 49.76528405330851, "ttft_s": 1.5657360720215365, "wall_s": 5.906394756049849, "timings": {"cache_n": 0, "prompt_n": 98, "prompt_ms": 1392.286, "prompt_per_token_ms": 14.207, "prompt_per_second": 70.38783698176955, "predicted_n": 217, "predicted_ms": 4340.351, "predicted_per_token_ms": 20.094217592592592, "predicted_per_second": 49.765560435089235, "draft_n": 174, "draft_n_accepted": 159}, "epoch": 1792572012.9, "utc": "2026-10-21 08:40:12"}
+{"kind": "request", "config": "base", "round": 0, "prompt": "code-intervals", "attempt": 0, "load_start": 1.93603515625, "load_end": 3.783203125, "waited_s": 44.01837515830994, "foreign_cores": 0.9884219279389381, "accepted": true, "gpu": {"784194": 10508}, "tokens": 151, "sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4", "decode_tok_s": 47.99499075182696, "ttft_s": 1.3056999440304935, "wall_s": 4.431305979960598, "timings": {"cache_n": 0, "prompt_n": 70, "prompt_ms": 1119.573, "prompt_per_token_ms": 15.993900000000002, "prompt_per_second": 62.52383721293743, "predicted_n": 151, "predicted_ms": 3125.28, "predicted_per_token_ms": 20.8352, "predicted_per_second": 47.995699585317155, "draft_n": 120, "draft_n_accepted": 110}, "epoch": 1792572061.3, "utc": "2026-10-21 08:41:01"}
+{"kind": "request", "config": "base", "round": 0, "prompt": "code-roman", "attempt": 0, "load_start": 1.87255859375, "load_end": 3.64453125, "waited_s": 50.02133655548096, "foreign_cores": 0.26372303421192633, "accepted": true, "gpu": {"784194": 10508}, "tokens": 256, "sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39", "decode_tok_s": 51.43141465646769, "ttft_s": 1.3740732528967783, "wall_s": 6.33240097889211, "timings": {"cache_n": 0, "prompt_n": 75, "prompt_ms": 1189.347, "prompt_per_token_ms": 15.85796, "prompt_per_second": 63.05981349429561, "predicted_n": 256, "predicted_ms": 4958.067, "predicted_per_token_ms": 19.4434, "predicted_per_second": 51.431334025941965, "draft_n": 199, "draft_n_accepted": 188}, "epoch": 1792572117.7, "utc": "2026-10-21 08:41:57"}
+{"kind": "request", "config": "base", "round": 0, "prompt": "code-bugfix", "attempt": 0, "load_start": 1.96923828125, "load_end": 3.73388671875, "waited_s": 40.01858425140381, "foreign_cores": 0.2310936194690745, "accepted": true, "gpu": {"784194": 10508}, "tokens": 94, "sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47", "decode_tok_s": 52.92524974715152, "ttft_s": 2.129301334032789, "wall_s": 3.9810705380514264, "timings": {"cache_n": 0, "prompt_n": 147, "prompt_ms": 1944.288, "prompt_per_token_ms": 13.226448979591837, "prompt_per_second": 75.60608304942478, "predicted_n": 94, "predicted_ms": 1851.499, "predicted_per_token_ms": 19.908591397849463, "predicted_per_second": 50.22957074240926, "draft_n": 72, "draft_n_accepted": 69}, "epoch": 1792572161.7, "utc": "2026-10-21 08:42:41"}
+{"kind": "request", "config": "base", "round": 0, "prompt": "en-1", "attempt": 0, "load_start": 1.93408203125, "load_end": 3.220703125, "waited_s": 50.02172327041626, "foreign_cores": 1.3655512815872122, "accepted": false, "gpu": {"784194": 10508}, "tokens": 256, "sha256": "d1300b79420a2969a422ad3597b4db7fe17f2faf600cdaf7a562cead7a5251f5", "decode_tok_s": 40.75904708315417, "ttft_s": 1.0078140369150788, "wall_s": 7.264465372893028, "timings": {"cache_n": 0, "prompt_n": 37, "prompt_ms": 835.871, "prompt_per_token_ms": 22.59110810810811, "prompt_per_second": 44.265203601991225, "predicted_n": 256, "predicted_ms": 6256.254, "predicted_per_token_ms": 24.534329411764705, "predicted_per_second": 40.75921469940319, "draft_n": 244, "draft_n_accepted": 173}, "epoch": 1792572219.0, "utc": "2026-10-21 08:43:39"}
+{"kind": "request", "config": "base", "round": 0, "prompt": "en-1", "attempt": 1, "load_start": 1.96923828125, "load_end": 3.73388671875, "waited_s": 38.016242027282715, "foreign_cores": 0.39881090276122777, "accepted": true, "gpu": {"784194": 10508}, "tokens": 256, "sha256": "6b875f1abf21cc6ca2fbfde72d3906b1ca9f1676045ded0ce964c41fce8b1801", "decode_tok_s": 43.466880002530324, "ttft_s": 0.9283445830224082, "wall_s": 6.795200385036878, "timings": {"cache_n": 0, "prompt_n": 37, "prompt_ms": 755.73, "prompt_per_token_ms": 20.425135135135136, "prompt_per_second": 48.95928440051341, "predicted_n": 256, "predicted_ms": 5866.514, "predicted_per_token_ms": 23.005937254901962, "predicted_per_second": 43.46704022184213, "draft_n": 253, "draft_n_accepted": 170}, "epoch": 1792572263.9, "utc": "2026-10-21 08:44:23"}
+{"kind": "released", "epoch": 1792572321.9, "utc": "2026-10-21 08:45:21"}
+Traceback (most recent call last):
+  File "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/run_drafts.py", line 135, in <module>
+    main()
+  File "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/run_drafts.py", line 113, in main
+    res = run.request(name, cfgs[name], prompt, a.tokens, tag)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/llm-gateway/data/build/llama-vibe/task-logs/round15/probe.py", line 51, in request
+    for line in response:
+  File "/usr/lib/python3.12/http/client.py", line 706, in readline
+    return super().readline(limit)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 698, in peek
+    return self._peek_chunked(n)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 736, in _peek_chunked
+    chunk_left = self._get_chunk_left()
+                 ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 584, in _get_chunk_left
+    chunk_left = self._read_next_chunk_size()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 544, in _read_next_chunk_size
+    line = self.fp.readline(_MAXLINE + 1)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/run_drafts.py", line 95, in stop
+    raise KeyboardInterrupt('SIGTERM')
+KeyboardInterrupt: SIGTERM

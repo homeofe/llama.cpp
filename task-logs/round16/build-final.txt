@@ -1,0 +1,7 @@
+[  5%] Built target ggml-base
+[ 13%] Built target ggml-cpu
+[ 81%] Built target ggml-cuda
+[ 81%] Built target ggml
+[ 81%] Building CXX object src/CMakeFiles/llama.dir/llama-model.cpp.o
+[ 81%] Linking CXX shared library ../bin/libllama.so
+[100%] Built target llama

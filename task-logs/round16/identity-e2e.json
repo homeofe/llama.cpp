@@ -1,0 +1,18 @@
+[
+  {
+    "prompt": "code-duration",
+    "hash": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+    "tokens": 218,
+    "draft": 186,
+    "accepted": 156,
+    "passed": true
+  },
+  {
+    "prompt": "en-1",
+    "hash": "d903e1d6b9194c9e0a458c92027d9c6b21479fac562722d94a02b22964ab3734",
+    "tokens": 256,
+    "draft": 265,
+    "accepted": 166,
+    "passed": true
+  }
+]

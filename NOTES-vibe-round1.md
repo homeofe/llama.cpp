@@ -1,5 +1,13 @@
 # Vibe round 1: Strata parity, stage by stage
 
+**Round-15 audit notice (2026-10-21):** Read `NOTES-round15-strata-comparison.md`
+before using this historical comparison. The Strata trace omitted CUDA graph-node
+activity: its 3.44 ms/round kernel sum is not total GPU work. The archived n5 crash
+is CUDA OOM in cudaGraphInstantiate, not a draft-depth assertion. Strata's draft
+uses Q2_0 resident experts and a reduced 106,299-token head; our external draft uses
+Q8_0 experts and the full vocabulary. The measurements below are preserved as
+history; those interpretations are corrected.
+
 Worktree `llama-vibe`, branch `vibe-parity` (llama.cpp `l5-cache` at e3b15507c). Task:
 `TASK-vibe-strata-parity.md`. Started 2026-10-18 17:36 UTC. Budget 3 h wall clock, stage 1 at most
 75 min of it. Machine: RTX 2080 Ti, Threadripper 3960X, shared.

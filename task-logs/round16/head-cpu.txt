@@ -1,0 +1,9 @@
+outputs=1 rows=17 clean=0 swapped=2 tiny=1 restored=0
+outputs=1 rows=5 clean=0 swapped=2 tiny=1 restored=0
+outputs=2 rows=17 clean=0 swapped=4 tiny=2 restored=0
+outputs=2 rows=5 clean=0 swapped=4 tiny=2 restored=0
+outputs=4 rows=17 clean=0 swapped=8 tiny=3 restored=0
+outputs=4 rows=5 clean=0 swapped=8 tiny=3 restored=0
+outputs=7 rows=17 clean=0 swapped=14 tiny=6 restored=0
+outputs=7 rows=5 clean=0 swapped=14 tiny=6 restored=0
+HEAD_CHECK_OK backend=CPU cases=8

@@ -1,0 +1,4 @@
+{"variant": "q2", "mib": 2070.7598876953125, "checks": "passed"}
+{"variant": "q2-identity", "mib": 2072.6544494628906, "checks": "passed"}
+{"variant": "q2-q8subset", "mib": 1703.1692810058594, "checks": "passed"}
+{"variant": "q2-q6subset", "mib": 1640.3170166015625, "checks": "passed"}

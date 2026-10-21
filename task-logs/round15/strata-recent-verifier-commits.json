@@ -1,0 +1,27 @@
+[
+  {
+    "sha": "efa888b1430328276f1347375eea6eb133808236",
+    "date": "2026-10-17T23:32:22Z",
+    "message": "Merge commit 'b1e0fdaa4' into f-split-int"
+  },
+  {
+    "sha": "ba2c2d5fb7666797840666acb62ed8a046ee9f13",
+    "date": "2026-10-17T19:45:38Z",
+    "message": "sm_120: four bitwise decode switches on by default on a 12.0 card\n\nMeasured on an RTX PRO 5000 Blackwell 72 GB (IQ3_S, every expert in VRAM),\nfixed 4-token verify rounds, story / code, the same text as before:\n  STRATA_SIDE_MIXER=2   13.67 -> 13.15 ms a round\n  STRATA_ATTN_DAILY=1   -> 13.31\n  STRATA_GR_DOWN_TG=2   -> 13.34\n  STRATA_GR_UP75=1      -> 13.44\n  all four              13.70 -> 12.23 ms (2-token rounds 10.37 -> 9.59)\nEach is bitwise equal to the kernels it replaces (their parity tests; the\nidentity gate).  include/strata/core/sm120_series.hpp holds the rule: on for\ncompute capability 12.0 unless STRATA_SM120_PERF=0; each switch's own\nvariable still wins in both directions on any card.  The down projection's\ntoken pairs run at every even launch there (Turing keeps 4 and 6 only).\nSTRATA_ATTN_DAILY / STRATA_ATTN_MERGE_V2 and STRATA_SIDE_MIXER are now\ndecided per device (a layer split can mix cards).  Other cards: unchanged."
+  },
+  {
+    "sha": "75fabbd94152f62ff787abcc7d861d0cc60b18f9",
+    "date": "2026-10-17T19:45:28Z",
+    "message": "mmvq_il: 5-8 column interleaved kernels and the sm_120 tables (bitwise)\n\nA verify window of 5+ rows fell from the interleaved small-batch kernels (1-4\ncolumns) back to native_mmvq_multi: on an RTX PRO 5000 Blackwell the dense\nprojections of a round jumped +2.0 ms from T=4 to T=5 (the main Q5_K head\n521 -> 1011 us).  native_mmvq_il_kernel now also runs 5-8 columns from the\ncp = 8 interleaved copy (1-2 rows a warp), every value bitwise native_mmvq's\n(mmvq_il_parity, T 1-8, every rows choice).\n\nTables for compute capability 12.0, read off mmvq_il_parity --bench\n--emit-table on the RTX PRO 5000 (3% rule): kIlRows_120 for 2-4 columns (it\ntakes the interleaved kernels in more cells than the shared table, e.g. the\nhead at 2 columns 507 -> 367 us) and kIlRows58_120 for 5-8 columns (the head\nat 5 / 8 columns 899 -> 491 / 1178 -> 667 us).  Other cards keep their\ntables and native_mmvq at 5+ columns.\n\nSTRATA_MMVQ_IL_WIDE=0 turns the 5-8 column path off; STRATA_MMVQ_IL_120=0\ngives a 12.0 card the shared 2-4 column table again."
+  },
+  {
+    "sha": "a6759787c3e4236630730fce97770ac7ec05f4ac",
+    "date": "2026-10-17T18:09:14Z",
+    "message": "Merge f-146-int (b7505b72a, 0.1.46 engine: Volta perf PRs + QSA_WARP sm<75 fix) into f-split-146\n\nConflict in src/prefill/prefill.cpp (step 2b): the split rotates mixed into Xr (APR, had_gu)\nbefore 0.1.45's quantize_scatter (NVFP4 activations keep the gather); 0.1.46 adds the pf_wmma\nFP16 gather branch. Both kept: wmma_l gathers FP16 rows (and rotates Xs / the swiglu output Hh\nin fp16 when the layer is Hadamard-folded), otherwise the split's rotate then quantize_scatter\nor the NVFP4 gather."
+  },
+  {
+    "sha": "8b3a96779e88ce55aec459228b2e8519d8d0d20a",
+    "date": "2026-10-17T12:00:21Z",
+    "message": "Merge f-145-pp-volta into f-146-volta (0.1.46): the community Volta/Pascal perf-PR group (35 commits)\n\nMerge resolution as in f-145-perfprs-withvolta: iq_kernels.cu (IQ3_XXS / IQ3_S staged sign-mask tables over the EXPDEC grid staging), prefill/kernels.cu and prefill/prefill.cpp keep both sides; CMakeLists keeps both test blocks."
+  }
+]

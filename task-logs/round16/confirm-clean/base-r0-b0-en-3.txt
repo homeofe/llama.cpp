@@ -1,0 +1,50 @@
+# Usage
+
+## Basic Sync
+
+To sync your local directory to an S3 bucket:
+
+```bash
+s3-sync ./local-folder s3://my-bucket/path/
+```
+
+This will upload new files, update modified files, and delete files in the bucket that no longer exist locally.
+
+## Common Options
+
+### Dry Run
+
+Preview changes without actually syncing:
+
+```bash
+s3-sync ./local-folder s3://my-bucket/path/ --dry-run
+```
+
+### Exclude Patterns
+
+Exclude files or directories using glob patterns:
+
+```bash
+s3-sync ./local-folder s3://my-bucket/path/ --exclude "*.log" --exclude "node_modules/"
+```
+
+### Include Only Specific Files
+
+Sync only files matching a pattern:
+
+```bash
+s3-sync ./local-folder s3://my-bucket/path/ --include "*.jpg" --include "*.png"
+```
+
+### Delete Extra Files
+
+Remove files in the bucket that don't exist locally (default behavior):
+
+```bash
+s3-sync ./local-folder s3://my-bucket/path/ --delete
+```
+
+To keep extra files in the bucket:
+
+```bash
+s3-sync ./local-folder s3://my-bucket/path/

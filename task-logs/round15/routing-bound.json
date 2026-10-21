@@ -1,0 +1,124 @@
+{
+  "trace": "/opt/llm-gateway/data/moe-quant/traces/qwen38-bench8.jsonl",
+  "trace_sha256": "08cabf636ef6da9a9578a2862fc8903e9e952c24b7f6add8304897148fe0ca07",
+  "predictor": "Previous target verify window union, same layer; reset on prefill/request boundary",
+  "counts": {
+    "pairs": 24816,
+    "actual": 666742,
+    "predicted": 668284,
+    "correct": 277346,
+    "actual_bytes": 1363446988800,
+    "predicted_bytes": 1366694323200,
+    "correct_bytes": 568413491200
+  },
+  "per_request": [
+    {
+      "pairs": 96,
+      "actual": 2297,
+      "predicted": 2416,
+      "correct": 1309,
+      "actual_bytes": 4719155200,
+      "predicted_bytes": 4960076800,
+      "correct_bytes": 2683520000
+    },
+    {
+      "pairs": 2832,
+      "actual": 78681,
+      "predicted": 78570,
+      "correct": 31614,
+      "actual_bytes": 160965017600,
+      "predicted_bytes": 160774860800,
+      "correct_bytes": 64763596800
+    },
+    {
+      "pairs": 1872,
+      "actual": 50749,
+      "predicted": 50555,
+      "correct": 19658,
+      "actual_bytes": 103841152000,
+      "predicted_bytes": 103475788800,
+      "correct_bytes": 40339200000
+    },
+    {
+      "pairs": 3168,
+      "actual": 88629,
+      "predicted": 88971,
+      "correct": 33201,
+      "actual_bytes": 181133235200,
+      "predicted_bytes": 181849600000,
+      "correct_bytes": 67988249600
+    },
+    {
+      "pairs": 1104,
+      "actual": 33274,
+      "predicted": 33124,
+      "correct": 10731,
+      "actual_bytes": 67923046400,
+      "predicted_bytes": 67628416000,
+      "correct_bytes": 22062208000
+    },
+    {
+      "pairs": 3888,
+      "actual": 100197,
+      "predicted": 100605,
+      "correct": 42848,
+      "actual_bytes": 204854118400,
+      "predicted_bytes": 205685196800,
+      "correct_bytes": 87730560000
+    },
+    {
+      "pairs": 3936,
+      "actual": 101628,
+      "predicted": 102237,
+      "correct": 43325,
+      "actual_bytes": 207846400000,
+      "predicted_bytes": 209088691200,
+      "correct_bytes": 88801382400
+    },
+    {
+      "pairs": 3888,
+      "actual": 103262,
+      "predicted": 103237,
+      "correct": 47533,
+      "actual_bytes": 211123891200,
+      "predicted_bytes": 211073664000,
+      "correct_bytes": 97440486400
+    },
+    {
+      "pairs": 4032,
+      "actual": 108025,
+      "predicted": 108569,
+      "correct": 47127,
+      "actual_bytes": 221040972800,
+      "predicted_bytes": 222158028800,
+      "correct_bytes": 96604288000
+    }
+  ],
+  "recall": 0.4159719951645464,
+  "precision": 0.41501218045022775,
+  "byte_precision": 0.41590389420006335,
+  "oracle_sanity": {
+    "pairs": 24816,
+    "actual": 666742,
+    "predicted": 666742,
+    "correct": 666742,
+    "actual_bytes": 1363446988800,
+    "predicted_bytes": 1363446988800,
+    "correct_bytes": 1363446988800
+  },
+  "shifted_id_negative_control": {
+    "pairs": 24816,
+    "actual": 666742,
+    "predicted": 668284,
+    "correct": 35623,
+    "actual_bytes": 1363446988800,
+    "predicted_bytes": 1366694323200,
+    "correct_bytes": 72713472000
+  },
+  "limitations": [
+    "Cache residency is not present in this trace; cache=true means use_cache, not hit.",
+    "Counts include resident and nonresident experts; no miss-only speedup is inferred.",
+    "Old n3 trace, not a benchmark of a routing implementation.",
+    "Expert IDs do not provide the activation inputs needed to compute future layers."
+  ]
+}

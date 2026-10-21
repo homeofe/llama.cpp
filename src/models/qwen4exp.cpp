@@ -187,7 +187,20 @@ void llama_model_qwen4exp::load_arch_tensors(llama_model_loader & ml) {
     hc_head_down = create_tensor(tn(LLM_TENSOR_HC_HEAD_DOWN, "weight"), { hc_dim, hc_lr }, trunk_flags);
     hc_head_up   = create_tensor(tn(LLM_TENSOR_HC_HEAD_UP,   "weight"), { hc_lr, hc_dim }, trunk_flags);
 
-    output = create_tensor(tn(LLM_TENSOR_OUTPUT, "weight"), { n_embd, n_vocab }, TENSOR_NOT_REQUIRED);
+    int64_t n_vocab_draft = n_vocab;
+    if (const auto * map = ml.get_tensor_meta("d2t")) {
+        if (!(trunk_flags & TENSOR_NOT_REQUIRED) || hparams.n_layer_nextn != 1 || !ml.load_mtp) {
+            throw std::runtime_error("qwen4exp d2t requires an MTP-only model with MTP enabled");
+        }
+        if (map->type != GGML_TYPE_I64 || !ggml_is_vector(map) || map->ne[0] <= 0 || map->ne[0] > n_vocab) {
+            throw std::runtime_error("qwen4exp d2t must be an I64 vector no larger than the target vocabulary");
+        }
+        n_vocab_draft = map->ne[0];
+        d2t = create_tensor(tn(LLM_TENSOR_D2T), { n_vocab_draft }, 0);
+        LLAMA_LOG_INFO("%s: MTP draft vocabulary = %" PRId64 " of %" PRId64 " tokens\n", __func__, n_vocab_draft, n_vocab);
+    }
+
+    output = create_tensor(tn(LLM_TENSOR_OUTPUT, "weight"), { n_embd, n_vocab_draft }, d2t ? 0 : TENSOR_NOT_REQUIRED);
     if (output == NULL) {
         output = create_tensor(tn(LLM_TENSOR_TOKEN_EMBD, "weight"), { n_embd, n_vocab }, TENSOR_DUPLICATED);
     }
@@ -611,6 +624,16 @@ llama_model_qwen4exp::graph_mtp::graph_mtp(const llama_model & model, const llm_
     res->t_embd = cur;
 
     cur = build_lora_mm(model.output, cur, model.output_s);
+    if (model.d2t) {
+        const int64_t n_draft_vocab = cur->ne[0];
+        const int64_t n_outputs = cur->ne[1];
+        const int64_t n_vocab = model.vocab.n_tokens();
+        ggml_tensor * logits = ggml_fill(ctx0, ggml_new_tensor_3d(ctx0, GGML_TYPE_F32, 1, n_vocab, n_outputs), -INFINITY);
+        cur = ggml_set_rows(ctx0, logits,
+                ggml_reshape_3d(ctx0, cur, 1, n_draft_vocab, n_outputs),
+                ggml_reshape_3d(ctx0, model.d2t, n_draft_vocab, 1, 1));
+        cur = ggml_reshape_2d(ctx0, cur, n_vocab, n_outputs);
+    }
     cb(cur, "result_output", -1);
     res->t_logits = cur;
 }

@@ -1,7 +1,26 @@
 # HANDOFF - the Qwen3.8-Flash-Next decode-speed effort, state after round 14
 
-For the next agent. Everything here is measured and sourced in the files named; nothing is
-a guess. Read order: this file, then `NOTES-vibe-round1.md`, `NOTES-round13.md`,
+**Round 16 in progress (2026-10-21): `NOTES-round16-draft-parity.md`.**
+Q2 experts and a reduced Q6_K draft head now run in llama.cpp, with the draft fully
+on GPU. The two-prompt screen improved from 47.34/41.40 to 49.68/45.46 tok/s;
+these are not aggregate/adoption numbers. Correctness controls pass. A three-round,
+eight-prompt comparison is running under `task-logs/round16/confirm-clean/`; quality checks
+are still required. Live settings are unchanged. Do not launch a second GPU job
+while that runner holds the GPU. The source/build is newer than the round-14 stack;
+the preserved old runtime is `task-logs/round16/e2e/original/` and the isolated
+candidate differs only in libllama (`e2e/isolated/`).
+The abandoned `confirm/` run encountered a foreign-load burst. Its partial results
+are excluded. The updated runner discards and reloads an entire configuration block
+after contamination, so a retry cannot benefit from a uniquely warmed expert cache.
+
+**Round-15 correction (2026-10-21): read `NOTES-round15-strata-comparison.md` first.**
+The old Strata trace omitted CUDA graph nodes, the archived n5 crash was graph-allocation
+OOM, and the software ceiling was overstated. Strata's reduced draft vocabulary and
+compressed resident draft experts are concrete unisolated differences. The measured
+51.3/42.7 stack remains valid; no new speedup is claimed by the audit.
+
+For the next agent. Historical round-14 state follows, with corrections below.
+Read order after the round-15 audit: this file, then `NOTES-vibe-round1.md`, `NOTES-round13.md`,
 `NOTES-round14.md`, `TASK-round12-admission-tier.md`.
 
 ## The goal and where it ended up
@@ -11,8 +30,8 @@ Original goal: reach Strata's decode speed for Qwen3.8-Flash-Next-IQ3_S in llama
 owner then directed: extract ALL available performance, keep going, and push everything.
 
 Result: **51.3/42.7 tok/s (+6.0/+6.5% over deployed), all on branch `vibe-parity`,
-pushed to `homeofe/llama.cpp`**. The remaining gap to Strata is structural on this
-hardware and is quantified below - it is not a knob anyone forgot to turn.
+pushed to `homeofe/llama.cpp`**. The remaining gap includes architectural differences;
+the measurements below do not establish that all software options are exhausted.
 
 ## Machine, rules, locations
 
@@ -80,8 +99,9 @@ Source: `task-logs/vibe-round14/trace.sqlite` (nsys, capture-range recipe, graph
 - More slots (round 14): **252 MiB VRAM free** at the current config - dead. The hit
   rate is LINEAR in slots (sim: 1418->43.7%, 1779->48.6%, 2048->51.9%, 2400->55.7%),
   so this axis is pure VRAM.
-- q4 KV crashes MTP draft init; draft-cache removal -2/-3.7%; n5 draft depth crashes
-  on a draft-depth assert (unfixed); n4 trades english for code; CUDA graphs are worth
+- q4 KV failed MTP draft init; draft-cache removal -2/-3.7%; the archived n5 failure
+  was CUDA graph-allocation OOM (round 15 runs with 256 MiB extra headroom, but loses
+  English speed in a short screen); n4 trades english for code; CUDA graphs are worth
   1.7 ms/round (already on in production); prefill 1024 optimal.
 - The CPU expert phase is DDR4-bandwidth-bound (2.19 GB at 55-66 GB/s) - no CPU-side
   kernel work can fix it; only fewer bytes (more cache hits = more VRAM) or overlap
@@ -89,16 +109,22 @@ Source: `task-logs/vibe-round14/trace.sqlite` (nsys, capture-range recipe, graph
 
 ## What a next agent can actually do (ranked)
 
+**The round-15 source comparison supersedes this ordering:** first bound the reduced
+MTP vocabulary/head (368.4 MiB Q8_0 head savings; about 2.0 ms/round at estimated linear
+scaling), then isolate resident Q2_0 draft experts. Re-capture Strata with graph nodes
+before sizing a whole-verifier synchronization change. See the new audit for checks,
+cost bounds and limits. The earlier hardware/routing options remain below for context.
+
 1. **Hardware**: a GPU with more VRAM. The expert cache is the whole game: at 3640 MiB
    the hit rate is ~41-49%; every +600 MiB is ~+3 hit points and the CPU phase shrinks
    proportionally. On a 24 GB card this model's decode likely lands near Strata.
 2. **Speculative expert routing** (research): hide the 32 ms/round CPU-expert exposure
    by predicting the next layer's topk before it runs and prefetching/computing CPU
-   experts ahead. Nothing in rounds 5-14 tried this; it is the only structural attack
-   on the idle that does not need new VRAM.
-3. **The n5 draft-depth assert** (known crash, `--spec-draft-n-max 5`): a contained bug
-   fix; unlocks the deeper MTP path (n4 already trades english for code, so gate on
-   BOTH categories).
+   experts ahead. Nothing in rounds 5-14 tried this. Round 15's previous-window-union
+   predictor reaches only 41.5% precision; better predictors remain open.
+3. **n5 memory headroom** (`--spec-draft-n-max 5`): the archived crash is OOM during
+   cudaGraphInstantiate. It starts with a smaller target cache, but the short round-15
+   screen loses English throughput; no adoption. Gate on BOTH categories.
 4. **Elementwise fusions** only if they come free with other work (~1-1.5 ms/round,
    launch-bound tail; the round-1 fusion infra in ggml-cuda is the template).
 5. **Upstreaming the stack** to ggml-org/llama.cpp (bf16-as-f16, MMVQ nwarps, fusions,
