@@ -1,0 +1,17 @@
+Introducing a message queue (MQ) between two services is a classic architectural decision that shifts the system from **synchronous coupling** to **asynchronous decoupling**. Here’s a breakdown of the trade-offs:
+
+### ✅ What It Buys You (Benefits)
+
+1. **Decoupling**
+   - **Temporal Decoupling**: The producer doesn’t need to wait for the consumer to be available. If the consumer is down, messages are stored until it recovers.
+   - **Logical Decoupling**: Producers don’t need to know *who* consumes the message or *how many* consumers exist. This enables easier evolution of services.
+
+2. **Load Leveling (Peak Shaving)**
+   - Buffers bursts of traffic. A sudden spike in requests won’t overwhelm the consumer service; instead, messages queue up and are processed at a steady rate.
+
+3. **Reliability & Durability**
+   - Messages can be persisted to disk, ensuring no data loss even if services crash.
+   - Supports retry mechanisms and dead-letter queues for failed processing.
+
+4. **Scalability**
+   - Consumers can be scaled horizontally independently of producers. You can add more consumer instances to drain the queue faster

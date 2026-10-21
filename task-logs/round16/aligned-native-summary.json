@@ -1,0 +1,189 @@
+{
+  "protocol": "sequential pilot, not interleaved adoption proof",
+  "sources": [
+    {
+      "directory": "task-logs/round16/aligned-clean-v2",
+      "config": "strata-reference",
+      "attempt": 1
+    },
+    {
+      "directory": "task-logs/round16/native-clean-v3",
+      "config": "strata",
+      "attempt": 0
+    }
+  ],
+  "summary": {
+    "strata": {
+      "code-novel": {
+        "n": 4,
+        "tokens": [
+          218,
+          151,
+          256,
+          94
+        ],
+        "server": {
+          "median": 68.6,
+          "min": 62.4,
+          "max": 71.6
+        },
+        "stream": {
+          "median": 70.06153399391121,
+          "min": 62.58094906884857,
+          "max": 73.58156822538322
+        },
+        "draft_accepted": 519,
+        "draft_offered": 573
+      },
+      "code-repeat": {
+        "n": 4,
+        "tokens": [
+          218,
+          151,
+          256,
+          94
+        ],
+        "server": {
+          "median": 69.65,
+          "min": 68.1,
+          "max": 74.1
+        },
+        "stream": {
+          "median": 71.1186950286467,
+          "min": 69.25449826837833,
+          "max": 74.44928754104032
+        },
+        "draft_accepted": 515,
+        "draft_offered": 565
+      },
+      "en-novel": {
+        "n": 4,
+        "tokens": [
+          256,
+          256,
+          256,
+          256
+        ],
+        "server": {
+          "median": 60.95,
+          "min": 59.3,
+          "max": 64.1
+        },
+        "stream": {
+          "median": 61.09699589887464,
+          "min": 59.40814138802362,
+          "max": 64.2955275871538
+        },
+        "draft_accepted": 617,
+        "draft_offered": 766
+      },
+      "en-repeat": {
+        "n": 4,
+        "tokens": [
+          256,
+          256,
+          256,
+          256
+        ],
+        "server": {
+          "median": 62.3,
+          "min": 61.8,
+          "max": 66.2
+        },
+        "stream": {
+          "median": 62.47577101099941,
+          "min": 61.923903380421535,
+          "max": 66.41081951392232
+        },
+        "draft_accepted": 614,
+        "draft_offered": 763
+      }
+    },
+    "strata-reference": {
+      "code-novel": {
+        "n": 4,
+        "tokens": [
+          218,
+          151,
+          256,
+          94
+        ],
+        "server": {
+          "median": 41.679133127930704,
+          "min": 40.34606887055364,
+          "max": 43.83763107098161
+        },
+        "stream": {
+          "median": 41.67885951306193,
+          "min": 40.34607667961441,
+          "max": 43.83739269340801
+        },
+        "draft_accepted": 511,
+        "draft_offered": 567
+      },
+      "code-repeat": {
+        "n": 4,
+        "tokens": [
+          217,
+          151,
+          256,
+          94
+        ],
+        "server": {
+          "median": 42.30495150702417,
+          "min": 40.56955904457937,
+          "max": 45.14523659502004
+        },
+        "stream": {
+          "median": 42.304805843590955,
+          "min": 40.569560279773754,
+          "max": 45.144107300560016
+        },
+        "draft_accepted": 508,
+        "draft_offered": 567
+      },
+      "en-novel": {
+        "n": 4,
+        "tokens": [
+          256,
+          256,
+          256,
+          256
+        ],
+        "server": {
+          "median": 37.373911562183295,
+          "min": 33.862135957139834,
+          "max": 38.15452402680153
+        },
+        "stream": {
+          "median": 37.37399075628255,
+          "min": 33.86197500967642,
+          "max": 38.15459010138093
+        },
+        "draft_accepted": 614,
+        "draft_offered": 763
+      },
+      "en-repeat": {
+        "n": 4,
+        "tokens": [
+          256,
+          256,
+          256,
+          256
+        ],
+        "server": {
+          "median": 36.92868568435247,
+          "min": 34.090384974027806,
+          "max": 37.836533710571
+        },
+        "stream": {
+          "median": 36.92864929813531,
+          "min": 34.09021596560056,
+          "max": 37.83640579256
+        },
+        "draft_accepted": 616,
+        "draft_offered": 785
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "source": "task-logs/round16/profile-aligned-v1/trace.sqlite",
+  "benchmark_valid": false,
+  "window": "complete decode-audit NVTX range",
+  "note": "Capture includes reused-prefix processing. Kernel/API sums are descriptive and overlap; only interval unions partition device time. Non-wait kernels are not a proof of useful arithmetic. No draft/target attribution is inferred from shared quantization names.",
+  "window_ms": 6430.389074,
+  "gpu_activity_ms": 2287.064745,
+  "non_wait_kernel_copy_memset_union_ms": 2287.064745,
+  "wait_only_ms": 0.0,
+  "device_idle_ms": 4143.324329,
+  "kernel_count": 276335,
+  "graph_kernel_count": 183708,
+  "wait_kernel_count": 0,
+  "copy_count": 54757,
+  "copy_bytes_by_kind": {
+    "8": 3989483648,
+    "1": 1599289416,
+    "2": 641551552
+  }
+}

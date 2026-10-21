@@ -1,0 +1,30 @@
+{
+  "cmd": [
+    "nsys",
+    "profile",
+    "--trace=cuda,nvtx,osrt",
+    "--sample=none",
+    "--cpuctxsw=none",
+    "--cuda-graph-trace=node",
+    "--capture-range=nvtx",
+    "--nvtx-capture=decode-audit",
+    "--capture-range-end=stop",
+    "--env-var=NSYS_NVTX_PROFILER_REGISTER_ONLY=0",
+    "--kill=none",
+    "--duration=720",
+    "--export=none",
+    "-o",
+    "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/profile-native-v1/trace",
+    "/usr/bin/python3",
+    "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/profile_engine.py",
+    "--engine",
+    "strata",
+    "--out",
+    "profile-native-v1",
+    "--minutes",
+    "12",
+    "--driver"
+  ],
+  "benchmark_valid": false,
+  "note": "Capture includes the short reused-prefix prompt processing and the generated response; do not treat profiler timings as benchmark rates."
+}

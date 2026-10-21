@@ -1,0 +1,18 @@
+HTTP caching reduces bandwidth and latency by allowing clients (like browsers) to reuse previously fetched resources instead of downloading them again. It works through a combination of **freshness checks** (using `Cache-Control`) and **validation** (using `ETag` and `If-None-Match`).
+
+### Key Mechanisms
+
+1. **`Cache-Control` (Freshness)**
+   - Sent by the server in the response.
+   - Tells the client how long the resource is considered "fresh" (e.g., `max-age=3600` means valid for 1 hour).
+   - If the resource is fresh, the client uses the cached copy **without contacting the server**.
+
+2. **`ETag` (Entity Tag)**
+   - A unique identifier (often a hash) for the specific version of a resource.
+   - Sent by the server in the response.
+   - Used for **conditional requests** to check if the cached version is still identical to the server’s version.
+
+3. **`If-None-Match` (Validation)**
+   - Sent by the client in a subsequent request.
+   - Includes the `ETag` from the previous response.
+   - The server compares it

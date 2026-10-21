@@ -1,0 +1,155 @@
+{
+  "source": "task-logs/round16/profile-native-v1/trace.sqlite",
+  "benchmark_valid": false,
+  "window": "complete decode-audit NVTX range",
+  "note": "Capture includes reused-prefix processing. Kernel/API sums are descriptive and overlap; only interval unions partition device time. Non-wait kernels are not a proof of useful arithmetic. No draft/target attribution is inferred from shared quantization names.",
+  "window_ms": 3599.955696,
+  "gpu_activity_ms": 3216.584019,
+  "non_wait_kernel_copy_memset_union_ms": 2135.03873,
+  "wait_only_ms": 1081.545289,
+  "device_idle_ms": 383.371677,
+  "kernel_count": 160449,
+  "graph_kernel_count": 160449,
+  "wait_kernel_count": 9792,
+  "copy_count": 1680,
+  "copy_bytes_by_kind": {
+    "8": 492216,
+    "1": 3247339112,
+    "2": 118573872
+  },
+  "top_kernel_summed_ms": {
+    "strata::kernels::<unnamed>::wait_flag_ge_kernel(const volatile unsigned int *, unsigned int)": {
+      "count": 9792,
+      "summed_ms": 1103.4689170000004
+    },
+    "void strata::kernels::<unnamed>::native_mmvq_multi_kernel<strata::kernels::<unnamed>::Q6KTraits, (int)4, (int)4, (int)2, (bool)0, (bool)0>(const T1::Block *, const strata::kernels::<unnamed>::Q81Block *, float *, int, int, const T1::Block *, float *)": {
+      "count": 6450,
+      "summed_ms": 317.28954099999925
+    },
+    "void strata::kernels::<unnamed>::gr_up_multi_kernel<(int)4, (bool)1>(strata::kernels::<unnamed>::GrMulti)": {
+      "count": 4890,
+      "summed_ms": 143.89047300000044
+    },
+    "void strata::kernels::<unnamed>::gr_down_staged_kernel<(int)4, (bool)1>(strata::kernels::<unnamed>::GrMulti)": {
+      "count": 4890,
+      "summed_ms": 126.74261499999943
+    },
+    "void strata::kernels::<unnamed>::native_q6_k_mmvq_kernel<(bool)0>(const strata::kernels::<unnamed>::Q6KBlock *, const strata::kernels::<unnamed>::Q81Block *, float *, int, int)": {
+      "count": 957,
+      "summed_ms": 102.01087199999995
+    },
+    "void strata::kernels::<unnamed>::native_down_multi_kernel<(int)20, (bool)1>(const unsigned long long *, const int *, const int *, const int *, const block_q8_1 *, strata::kernels::NativeExpertLayout, float *)": {
+      "count": 5304,
+      "summed_ms": 84.62907999999861
+    },
+    "void strata::kernels::<unnamed>::native_gu_multi_kernel<(int)22, (bool)1, (bool)1>(const unsigned long long *, const int *, const int *, const int *, const block_q8_1 *, strata::kernels::NativeExpertLayout, float *, float *)": {
+      "count": 2720,
+      "summed_ms": 70.61310299999977
+    },
+    "void strata::kernels::<unnamed>::native_mmvq_multi_kernel<strata::kernels::<unnamed>::Q5KTraits, (int)4, (int)4, (int)2, (bool)0, (bool)0>(const T1::Block *, const strata::kernels::<unnamed>::Q81Block *, float *, int, int, const T1::Block *, float *)": {
+      "count": 1750,
+      "summed_ms": 69.96440999999999
+    },
+    "void strata::kernels::<unnamed>::native_gu_multi_kernel<(int)18, (bool)0, (bool)1>(const unsigned long long *, const int *, const int *, const int *, const block_q8_1 *, strata::kernels::NativeExpertLayout, float *, float *)": {
+      "count": 2312,
+      "summed_ms": 65.52174999999978
+    },
+    "void strata::kernels::<unnamed>::attn_chunk_kernel<(int)1, (bool)0>(const float *, strata::kernels::QsaAttnPools, const int *, const int *, int, int, float, float *, float *, float *, int, int, long long)": {
+      "count": 999,
+      "summed_ms": 57.902361000000006
+    },
+    "strata::kernels::copy_rows_from_mapped_kernel(float4 *, const volatile float4 *, long, const int *, const int *)": {
+      "count": 3264,
+      "summed_ms": 57.07805500000007
+    },
+    "void strata::kernels::<unnamed>::bf16_f32_mmvf_multi_kernel<(int)256, (int)4, (bool)1>(const float *, long, const unsigned short *, float *, long, int, int)": {
+      "count": 6100,
+      "summed_ms": 55.981682999999975
+    },
+    "void strata::kernels::<unnamed>::native_mmvq_multi_kernel<strata::kernels::<unnamed>::Q4KTraits, (int)4, (int)4, (int)2, (bool)0, (bool)0>(const T1::Block *, const strata::kernels::<unnamed>::Q81Block *, float *, int, int, const T1::Block *, float *)": {
+      "count": 2350,
+      "summed_ms": 53.277417000000035
+    },
+    "void strata::kernels::<unnamed>::native_gu_multi_kernel<(int)21, (bool)0, (bool)1>(const unsigned long long *, const int *, const int *, const int *, const block_q8_1 *, strata::kernels::NativeExpertLayout, float *, float *)": {
+      "count": 1360,
+      "summed_ms": 52.272760999999875
+    },
+    "void strata::kernels::<unnamed>::native_mmvq_multi_kernel<strata::kernels::<unnamed>::IQ4XSTraits, (int)4, (int)4, (int)2, (bool)0, (bool)0>(const T1::Block *, const strata::kernels::<unnamed>::Q81Block *, float *, int, int, const T1::Block *, float *)": {
+      "count": 2100,
+      "summed_ms": 52.05437900000008
+    },
+    "void strata::kernels::<unnamed>::gdn_step_commit_kernel<(bool)0>(float *, const float *, int, const float *, const float *, int, int, const int *, int)": {
+      "count": 2232,
+      "summed_ms": 32.829239999999984
+    },
+    "strata::kernels::<unnamed>::gr_norm_split_kernel(strata::kernels::<unnamed>::GrMulti)": {
+      "count": 7146,
+      "summed_ms": 32.60947099999909
+    },
+    "void strata::kernels::<unnamed>::gdn_step_norm_multi_kernel<(bool)1, (bool)0>(float *, const float *, int, const float *, const float *, const float *, const float *, float, float *, int, int, int, const int *, int, strata::kernels::<unnamed>::GdnQ81 *)": {
+      "count": 2232,
+      "summed_ms": 31.100894000000086
+    },
+    "strata::kernels::doorbell_publish_res_kernel(const float *, const int *, const int *, int, int, int, float *, int *, unsigned int *)": {
+      "count": 3264,
+      "summed_ms": 29.506907000000027
+    },
+    "void strata::kernels::<unnamed>::native_mmvq_multi_kernel<strata::kernels::<unnamed>::Q6KTraits, (int)6, (int)4, (int)2, (bool)0, (bool)0>(const T1::Block *, const strata::kernels::<unnamed>::Q81Block *, float *, int, int, const T1::Block *, float *)": {
+      "count": 387,
+      "summed_ms": 28.382831999999986
+    },
+    "void strata::kernels::<unnamed>::native_small_mmvq_kernel<strata::kernels::<unnamed>::Q80Block, (int)8, (bool)0>(const T1 *, const strata::kernels::<unnamed>::Q81Block *, float *, int, int)": {
+      "count": 1107,
+      "summed_ms": 23.494440000000004
+    },
+    "void strata::kernels::<unnamed>::native_mmvq_multi_kernel<strata::kernels::<unnamed>::SmallTraits<strata::kernels::<unnamed>::IQ4NLBlock, (int)4>, (int)4, (int)4, (int)2, (bool)0, (bool)0>(const T1::Block *, const strata::kernels::<unnamed>::Q81Block *, float *, int, int, const T1::Block *, float *)": {
+      "count": 2350,
+      "summed_ms": 22.598281999999866
+    },
+    "void strata::kernels::<unnamed>::native_mmvq_multi_kernel<strata::kernels::<unnamed>::Q6KTraits, (int)2, (int)4, (int)2, (bool)0, (bool)0>(const T1::Block *, const strata::kernels::<unnamed>::Q81Block *, float *, int, int, const T1::Block *, float *)": {
+      "count": 645,
+      "summed_ms": 21.902869999999968
+    },
+    "strata::kernels::<unnamed>::native_quantize_q8_1_kernel(const float *, strata::kernels::<unnamed>::Q81Block *, int)": {
+      "count": 11071,
+      "summed_ms": 20.943964999999647
+    },
+    "void strata::kernels::<unnamed>::native_mmvq_multi_kernel<strata::kernels::<unnamed>::Q6KTraits, (int)3, (int)4, (int)2, (bool)0, (bool)0>(const T1::Block *, const strata::kernels::<unnamed>::Q81Block *, float *, int, int, const T1::Block *, float *)": {
+      "count": 516,
+      "summed_ms": 20.890903
+    }
+  },
+  "host_api_summed_ms": {
+    "CUPTI_ACTIVITY_KIND_RUNTIME": {
+      "cudaEventSynchronize_v3020": {
+        "count": 19,
+        "summed_ms": 225.19817099999997
+      },
+      "cudaGraphLaunch_v10000": {
+        "count": 314,
+        "summed_ms": 184.299832
+      },
+      "cudaStreamSynchronize_v3020": {
+        "count": 153,
+        "summed_ms": 118.12212400000003
+      },
+      "cudaMemcpy_v3020": {
+        "count": 181,
+        "summed_ms": 39.013818000000015
+      },
+      "cudaMemcpyAsync_v3020": {
+        "count": 1545,
+        "summed_ms": 5.919155000000001
+      },
+      "cudaEventRecord_v3020": {
+        "count": 78,
+        "summed_ms": 0.260918
+      },
+      "cudaDeviceSynchronize_v3020": {
+        "count": 1,
+        "summed_ms": 0.00843
+      }
+    },
+    "CUPTI_ACTIVITY_KIND_DRIVER": {}
+  }
+}

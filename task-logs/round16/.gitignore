@@ -12,3 +12,10 @@ check_confidence_san
 qwen-architecture.png
 qwen-tech-report.pdf
 qwen-report-extracted.txt
+
+*.qdstrm
+*.nsys-rep
+*.sqlite
+profile-*/tmp/
+profile-*/config/
+profile-*/cache/

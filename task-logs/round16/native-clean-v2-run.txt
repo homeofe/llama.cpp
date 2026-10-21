@@ -1,0 +1,17 @@
+{"kind": "start_config", "config": "strata", "block_attempt": 0, "epoch": 1792584834.9, "utc": "2026-10-21 12:13:54"}
+{"kind": "request", "config": "strata", "block_attempt": 0, "prompt": "code-duration", "phase": "novel", "load_start": 1.90869140625, "load_end": 3.677734375, "waited_s": 126.06603860855103, "foreign_cores": 0.4954644338060704, "accepted": true, "gpu": {"2786552": 10472}, "tokens": 217, "usage": {"prompt_tokens": 98, "completion_tokens": 217, "total_tokens": 315, "prompt_tokens_details": {"cached_tokens": 0}}, "timings": {"cache_n": 0, "prompt_n": 98, "prompt_ms": 970.7, "prompt_per_token_ms": 9.905, "prompt_per_second": 101.0, "predicted_n": 217, "predicted_ms": 3523.7, "predicted_per_token_ms": 16.238, "predicted_per_second": 61.6, "draft_n": 172, "draft_n_accepted": 151}, "sha256": "f761084f92ba0de854a76609ba2d5eca26d350b1a71823f497d1f20e96d99265", "wall_s": 4.500827603042126, "ttft_s": 1.0000190100399777, "decode_tok_s": 61.703624139620736, "epoch": 1792585004.7, "utc": "2026-10-21 12:16:44"}
+{"kind": "metrics", "prompt": "code-duration", "phase": "novel", "block_attempt": 0, "metrics": null, "epoch": 1792585004.7, "utc": "2026-10-21 12:16:44"}
+{"kind": "request", "config": "strata", "block_attempt": 0, "prompt": "code-duration", "phase": "repeat", "load_start": 1.91552734375, "load_end": 1.91552734375, "waited_s": 50.02720069885254, "foreign_cores": 1.1463561687648898, "accepted": false, "gpu": {"2786552": 10472}, "tokens": 217, "usage": {"prompt_tokens": 98, "completion_tokens": 217, "total_tokens": 315, "prompt_tokens_details": {"cached_tokens": 91}}, "timings": {"cache_n": 91, "prompt_n": 7, "prompt_ms": 216.6, "prompt_per_token_ms": 30.943, "prompt_per_second": 32.3, "predicted_n": 217, "predicted_ms": 3147.0, "predicted_per_token_ms": 14.502, "predicted_per_second": 69.0, "draft_n": 171, "draft_n_accepted": 151}, "sha256": "f761084f92ba0de854a76609ba2d5eca26d350b1a71823f497d1f20e96d99265", "wall_s": 3.3671908479882404, "ttft_s": 0.24700332002248615, "decode_tok_s": 69.24113562817328, "epoch": 1792585058.1, "utc": "2026-10-21 12:17:38"}
+{"kind": "block_discarded", "config": "strata", "block_attempt": 0, "error": "reset whole process after foreign load", "epoch": 1792585058.1, "utc": "2026-10-21 12:17:38"}
+{"kind": "start_config", "config": "strata", "block_attempt": 1, "epoch": 1792585068.2, "utc": "2026-10-21 12:17:48"}
+{"kind": "released", "gpu": {}, "epoch": 1792585282.9, "utc": "2026-10-21 12:21:22"}
+Traceback (most recent call last):
+  File "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/native_reference.py", line 222, in <module>
+    main()
+  File "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/native_reference.py", line 187, in main
+    run.start(name, cfgs.get(name))
+  File "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/native_reference.py", line 105, in start
+    time.sleep(2)
+  File "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/native_reference.py", line 179, in stop
+    raise KeyboardInterrupt('SIGTERM')
+KeyboardInterrupt: SIGTERM

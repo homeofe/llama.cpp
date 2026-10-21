@@ -1,0 +1,27 @@
+{
+  "observed_utc": "2026-10-21T12:00:00Z",
+  "context": "After the first block was discarded for 1.208 foreign CPU cores, while the retry loaded the large model. This snapshot does not attribute all previous-request CPU time causally.",
+  "cpu_sample_seconds": 2,
+  "top_processes": [
+    {
+      "pid": 2717446,
+      "name": "llama-server",
+      "cpu_percent": 99.8
+    },
+    {
+      "pid": 322,
+      "name": "kcompactd0",
+      "cpu_percent": 99.8
+    },
+    {
+      "pid": 117263,
+      "name": "codex",
+      "cpu_percent": 5.4
+    }
+  ],
+  "thp_enabled": "always [madvise] never",
+  "thp_defrag": "always defer defer+madvise [madvise] never",
+  "compaction_proactiveness": 20,
+  "system_settings_changed": false,
+  "discarded_block": 0
+}

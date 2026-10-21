@@ -1,0 +1,4 @@
+{
+  "reason": "Attempt 0 contaminated by foreign CPU work. Attempt 1 reused the wrapper workspace whose /engine/stop action persists a stopped flag, so no native engine loaded. Runner stopped; no complete block exists. Each future start uses a fresh nested workspace.",
+  "benchmark_valid": false
+}

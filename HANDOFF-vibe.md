@@ -1,4 +1,4 @@
-# HANDOFF - the Qwen3.8-Flash-Next decode-speed effort, state after round 14
+# Qwen3.8-Flash-Next decode optimization: status and evidence
 
 **Round 16 in progress (2026-10-21): `NOTES-round16-draft-parity.md` and `NOTES-round16-qwen-architecture.md`.**
 The initial Q2/reduced-Q6/GPU draft failed the clean A B B A confirmation (+0.30%
@@ -22,7 +22,15 @@ Actual Strata has one complete clean paired novel/repeat block in `native-refere
 Medians across four prompts/category: novel 69.15/60.70; repeat 73.65/63.30 tok/s
 (code/English). `native-reference-summary.json` preserves ranges and sample counts.
 The runner was stopped after that complete Strata block because foreign load consumed
-its deadline; baseline/candidate llama blocks still need a separate timed run.
+its deadline; The aligned llama block is now complete separately in `aligned-clean-v2/`: novel
+41.68/37.37, repeat 42.30/36.93 tok/s (code/English, n=4/category/phase).
+Attempt 0 was discarded; only complete clean attempt 1 enters its summary.
+A fresh native block is complete in `native-clean-v3/`, attempt 0: novel
+68.60/60.95, repeat 69.65/62.30 tok/s. Acceptance is nearly equal between engines
+(novel code 90.1% aligned / 90.6% native; English 80.5% / 80.5%). Only 7/16 outputs
+are byte-identical; all prompt-token counts match. `aligned-native-summary.json`
+and `aligned-native-output-comparison.json` preserve the complete comparison.
+This is a sequential diagnostic pilot, not an interleaved adoption result.
 Do not confuse partial/discarded blocks or loaded-machine integration rates with gains.
 
 The later `aligned-reference/` llama block is DISCARDED: an audit test-driver memory
@@ -33,14 +41,31 @@ FLARE review: `NOTES-round16-flare.md`. Its cache-only accepted-history MTP grap
 a concrete next port candidate; full FLARE needs about 67 GiB GPU weights and a
 Blackwell backend. No FLARE code or speedup is claimed here.
 
+REA review: `NOTES-round16-diagnostics-tools.md`. Useful static GPU/GGUF readers
+and optional Frida evidence, but no GPU timeline, SASS or host-launch correlation.
+The GPU/GGUF readers exist on reviewed main, not the latest 6.7.0 release tag.
+Nothing was installed. CUDA graph-node traces are now complete; see
+`NOTES-round16-graph-diagnostics.md`. They expose 4579 vs 314 graph launches and
+33047 vs 153 stream synchronizations (aligned vs native). Native's residual CPU
+counter includes the profiler and fails the quiet gate, so its timing is diagnostic
+only. Repeated graph construction/partitioning is a concrete next investigation;
+the traces do not yet isolate a deployable change or the MTP cache-only saving.
+
+The separate release audit is pushed on `performance-check`: twelve minimal fixes,
+the complete [checklist report](https://github.com/homeofe/llama.cpp/blob/performance-check/docs/performance-check-report.md),
+and 72 new CSV rows. Its Qwen3.6 microbatch comparison gains 43.7% in 12k prompt
+processing with unchanged decode; that is not a Qwen3.8 decode improvement.
+
 Qwen's report gives a further concrete design: reuse QSA top-k indices across MTP
 steps (Table 4 mean accepted lengths 4.06 full attention / 4.07 QSA, Qwen's numbers).
 Our QSA draft recomputes them; this Strata version uses dense draft attention instead.
 N-gram embedding prefetch and four-stream gated residuals already exist in both.
 QSA reuse is not implemented here. The software ceiling is NOT established.
 
-Latest reference code checkpoint: `002602e39` (packed cache), following `92cdb84a1`,
-`c5e335102`, `2bf16dd2b`. The archived proofs include the rejected controls.
+Latest reference code checkpoint: `b44adddb7` (packed cache), following `fa5a3cc12`,
+`8add132ca`, `a13ccaf63`. The archived proofs include the rejected controls.
+Commit titles were normalized on 2026-10-21; all file trees and archived binary hashes
+are unchanged. Historical artifacts retain the source IDs recorded when they ran.
 Live settings are unchanged. Final selection requires an actual positive quiet pilot,
 three interleaved rounds and affected quality panels; no new deployment is justified.
 
@@ -209,9 +234,9 @@ cost bounds and limits. The earlier hardware/routing options remain below for co
 - Debug-dump kernels: launch a SINGLE block and use per-lane dump slots; multi-block
   dumps collide and lie.
 
-## Current branch state
+## Historical round-14 branch state
 
-`vibe-parity`, pushed through `7954e8c53` (round 14). History: round-1 final stack
+The round-14 checkpoint is `e6d8b170d` (formerly `7954e8c53`). History: round-1 final stack
 commits, round-12 task files and analysis, round-13 int8-MMA negative result, round-14
 re-baseline. German one-liners for every phase are in `/opt/llm-gateway/data/moe-quant/
 NOTE.log`. The live gateway settings were never touched; adopting `q-vibe-async` as a

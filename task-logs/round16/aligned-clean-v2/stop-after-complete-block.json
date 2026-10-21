@@ -1,0 +1,5 @@
+{
+  "reason": "The aligned block completed; stop between engines to give the native block its own full quiet-window budget. No partial block is combined with a later run.",
+  "utc": "2026-10-21T12:13:22Z",
+  "completed_engine": "strata-reference"
+}

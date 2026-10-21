@@ -1,0 +1,50 @@
+{
+  "utc": "2026-10-21T13:12:20Z",
+  "benchmark_valid": false,
+  "files": [
+    {
+      "path": "task-logs/round16/profile-aligned-v1/trace.qdstrm",
+      "bytes": 603406395,
+      "sha256": "7acde62213737ec043db19befb087babe3fa45ff74c88fe328e53cb19e540ea8",
+      "tracked": false
+    },
+    {
+      "path": "task-logs/round16/profile-aligned-v1/trace.nsys-rep",
+      "bytes": 17322964,
+      "sha256": "f3d48950f8b5abaa0e8b6068f8ad7f150cda595b72fdfa1fc9da2a5a7269d8c9",
+      "tracked": false
+    },
+    {
+      "path": "task-logs/round16/profile-aligned-v1/trace.sqlite",
+      "bytes": 42881024,
+      "sha256": "a546f7b30bb36cf51aef3cf52910090e0681c61c34f55cf584202c66c3f07051",
+      "tracked": false
+    },
+    {
+      "path": "task-logs/round16/profile-native-v1/trace.qdstrm",
+      "bytes": 605191182,
+      "sha256": "fcad58534a5eaea6f401a0c0352c8cb92a20c6d372fdcdc2fb7d571435cbd26a",
+      "tracked": false
+    },
+    {
+      "path": "task-logs/round16/profile-native-v1/trace.nsys-rep",
+      "bytes": 5295256,
+      "sha256": "330d6bfe7c2356b7c6704473bc8a02a80cc89c1eb5d8f4ba13c4ea3b6d5ecbe5",
+      "tracked": false
+    },
+    {
+      "path": "task-logs/round16/profile-native-v1/trace.sqlite",
+      "bytes": 14635008,
+      "sha256": "3624f65af978bdd730a05f4b29a0746843874685a15be35a7c642e2eaeb0c25b",
+      "tracked": false
+    }
+  ],
+  "coverage": {
+    "profile-aligned-v1": {
+      "kernels_outside_nvtx": 0
+    },
+    "profile-native-v1": {
+      "kernels_outside_nvtx": 0
+    }
+  }
+}

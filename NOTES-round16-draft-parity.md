@@ -1,4 +1,4 @@
-# Round 16: reproduce Strata's smaller MTP draft in llama.cpp
+# Round 16: MTP draft footprint, normalization and selection policy
 
 2026-10-21. Work in progress; the screening below is not an adoption result. The live gateway configuration is unchanged.
 
@@ -106,3 +106,35 @@ Actual Strata completed a clean block (attempt 1, after discarding attempt 0 for
 Source: `native-reference/runs.jsonl`, only the completed Strata attempt 1. A long foreign-load interval required 1177.9 seconds of quiet waiting before its final request. The overall runner was stopped after this complete Strata block because its original deadline was consumed; the llama blocks must run separately. No cross-engine gain can yet be derived from this table. The old runner's shutdown POST returned HTTP 415; its owned-engine PID fallback stopped it and released the GPU. The harness now sends JSON with the required Content-Type.
 
 Remaining engine differences include arithmetic/reduction order, draft K/V formats, dense projection concatenation versus separate sums, KV-only versus full-graph draft catch-up, first-window handling, prefix-cache implementation, and target scheduler/CUDA-graph boundaries. These are explicitly not made equivalent by sharing draft weights and policy.
+
+## Completed aligned-engine pilot
+
+The aligned llama.cpp engine completed all 16 novel/repeat requests in `aligned-clean-v2/`, attempt 1. Attempt 0 was discarded in full after foreign CPU averaged 1.208 cores during its second request. The successful block starts with a fresh process and the same warmup. Each result below is the median [minimum, maximum] across four distinct prompts, one execution per phase. Output SHA256 values, token counts and accepted/offered drafts are retained in the summary and raw rows.
+
+| Phase | Code tok/s | English tok/s |
+|---|---:|---:|
+| novel | 41.68 [40.35, 43.84] | 37.37 [33.86, 38.15] |
+| repeat | 42.30 [40.57, 45.15] | 36.93 [34.09, 37.84] |
+
+This is a sequential engine-reference pilot, not an adoption comparison against the original stack. It does not justify deploying the complete reference configuration. The original Q2/Q6/GPU-only candidate also remains rejected on its separate interleaved evidence.
+
+The native repeat attempt in `native-clean-v2/` is discarded: its first block was contaminated, and its restart reused the wrapper workspace after `/engine/stop` had persisted a stopped flag. The wrapper therefore started without an engine. The harness now creates a fresh workspace under `workspace/attempt-N` for each native start. This changes only benchmark isolation, not the engine or gateway.
+
+A sample taken after the first aligned discard found `kcompactd0` at one CPU core during model reloading. This is an observation, not proof that it caused every earlier outlier. The original load gates remain intact. Before the next native attempt, `POSIX_FADV_DONTNEED` released cached pages of the now-unused stock-control Qwen3.6 and Phi model files; memory snapshots are archived. File contents and system settings were not changed.
+
+The new native startup log explicitly selects **PROFILE, ranked by routing frequency, no eviction**, with 1815 entries pre-filled. The older generic first-touch explanation does not describe this measured profile configuration. Native prefill temporarily borrows 1600 cache slots and refills them afterwards (`generate.cpp:515`); identical selected IDs do not make the two prefill/refill schedules or routed-token sequences identical. The native head log also hard-codes the text "Q5_K" (`generate.cpp:4021`); tensor metadata and the 521,472,000-byte payload identify the actual Q6_K head. The draft-subset converter uses tensor metadata and readback hashes, not that log label.
+
+## Fresh native block and remaining runtime gap
+
+`native-clean-v3/` completed all 16 requests in clean attempt 0. Same four distinct prompts/category and novel/repeat protocol as the aligned block:
+
+| Phase | Code tok/s median [min,max] | English tok/s median [min,max] |
+|---|---:|---:|
+| novel | 68.60 [62.4, 71.6] | 60.95 [59.3, 64.1] |
+| repeat | 69.65 [68.1, 74.1] | 62.30 [61.8, 66.2] |
+
+Novel code acceptance is 519/573 (90.58%) native versus 511/567 (90.12%) aligned; English is 617/766 (80.55%) versus 614/763 (80.47%). This points away from acceptance rate alone as an explanation of the large remaining runtime gap, but does not isolate an individual scheduler or kernel cause. Only 7 of 16 full outputs are byte-identical, despite matching prompt-token counts in all cases. No quality-equivalence claim is made.
+
+`aligned-native-summary.json` retains medians, ranges, generated-token counts and acceptance totals. `aligned-native-output-comparison.json` retains pairwise token counts and hashes. These are sequential clean blocks, not interleaved adoption evidence. No new runtime is selected for the gateway.
+
+The prepared `profile_engine.py` captures one warmed repeated request with `--cuda-graph-trace=node` and explicit NVTX capture. It labels profiler rates invalid for benchmark comparison. Analysis must distinguish arithmetic/copy intervals, wait-only kernels and true device idle; summing overlapping streams or interpreting a spinning wait kernel as arithmetic would misstate the bottleneck. REA's potential supporting role and release limits are documented separately in `NOTES-round16-diagnostics-tools.md`.

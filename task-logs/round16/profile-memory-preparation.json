@@ -1,0 +1,20 @@
+{
+  "utc": "2026-10-21T13:00:54Z",
+  "operation": "POSIX_FADV_DONTNEED on two now-unused stock-control model files; no content or system-setting change",
+  "files": [
+    "/opt/llm-gateway/models/Qwen3.6-35B-A3B-MTP-GGUF/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "/opt/llm-gateway/models/Phi-4-mini-reasoning-GGUF/Phi-4-mini-reasoning-Q4_K_M.gguf"
+  ],
+  "before_kib": {
+    "MemFree": 60055796,
+    "MemAvailable": 123788012,
+    "Cached": 64307760,
+    "Shmem": 97352
+  },
+  "after_kib": {
+    "MemFree": 62560216,
+    "MemAvailable": 123793608,
+    "Cached": 61813132,
+    "Shmem": 97352
+  }
+}

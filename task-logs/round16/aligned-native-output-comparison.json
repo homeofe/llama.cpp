@@ -1,0 +1,182 @@
+{
+  "protocol": "completed sequential pilot blocks; output hashes are not a semantic quality verdict",
+  "same_outputs": 7,
+  "pairs": [
+    {
+      "prompt": "code-duration",
+      "phase": "novel",
+      "same_output": true,
+      "llama_tokens": 218,
+      "native_tokens": 218,
+      "llama_prompt_tokens": 98,
+      "native_prompt_tokens": 98,
+      "llama_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+      "native_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7"
+    },
+    {
+      "prompt": "code-duration",
+      "phase": "repeat",
+      "same_output": false,
+      "llama_tokens": 217,
+      "native_tokens": 218,
+      "llama_prompt_tokens": 98,
+      "native_prompt_tokens": 98,
+      "llama_sha256": "f761084f92ba0de854a76609ba2d5eca26d350b1a71823f497d1f20e96d99265",
+      "native_sha256": "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7"
+    },
+    {
+      "prompt": "code-intervals",
+      "phase": "novel",
+      "same_output": true,
+      "llama_tokens": 151,
+      "native_tokens": 151,
+      "llama_prompt_tokens": 70,
+      "native_prompt_tokens": 70,
+      "llama_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+      "native_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4"
+    },
+    {
+      "prompt": "code-intervals",
+      "phase": "repeat",
+      "same_output": true,
+      "llama_tokens": 151,
+      "native_tokens": 151,
+      "llama_prompt_tokens": 70,
+      "native_prompt_tokens": 70,
+      "llama_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4",
+      "native_sha256": "0caf993d67c694efb00cf3f27cf18b1a0e11f99f2beca651731f48d748a3bca4"
+    },
+    {
+      "prompt": "code-roman",
+      "phase": "novel",
+      "same_output": true,
+      "llama_tokens": 256,
+      "native_tokens": 256,
+      "llama_prompt_tokens": 75,
+      "native_prompt_tokens": 75,
+      "llama_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+      "native_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39"
+    },
+    {
+      "prompt": "code-roman",
+      "phase": "repeat",
+      "same_output": true,
+      "llama_tokens": 256,
+      "native_tokens": 256,
+      "llama_prompt_tokens": 75,
+      "native_prompt_tokens": 75,
+      "llama_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39",
+      "native_sha256": "2033a0d5c042d2994b25ee6222d797fa0d883d9c6997727bc50e589b5f346c39"
+    },
+    {
+      "prompt": "code-bugfix",
+      "phase": "novel",
+      "same_output": true,
+      "llama_tokens": 94,
+      "native_tokens": 94,
+      "llama_prompt_tokens": 147,
+      "native_prompt_tokens": 147,
+      "llama_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+      "native_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47"
+    },
+    {
+      "prompt": "code-bugfix",
+      "phase": "repeat",
+      "same_output": true,
+      "llama_tokens": 94,
+      "native_tokens": 94,
+      "llama_prompt_tokens": 147,
+      "native_prompt_tokens": 147,
+      "llama_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47",
+      "native_sha256": "ed8822989c8dbbecc54c5937c4e388cdf3a504fb12a51b913c70dd8760169e47"
+    },
+    {
+      "prompt": "en-1",
+      "phase": "novel",
+      "same_output": false,
+      "llama_tokens": 256,
+      "native_tokens": 256,
+      "llama_prompt_tokens": 37,
+      "native_prompt_tokens": 37,
+      "llama_sha256": "005c333257c6003f6f7cca49e8a2fe29736b003caae2696cf6cb338edeecaa68",
+      "native_sha256": "53ac51ca9cfd6711768b1ae049d6381d7e05a9e928be2e24d479425c0a2cfdfb"
+    },
+    {
+      "prompt": "en-1",
+      "phase": "repeat",
+      "same_output": false,
+      "llama_tokens": 256,
+      "native_tokens": 256,
+      "llama_prompt_tokens": 37,
+      "native_prompt_tokens": 37,
+      "llama_sha256": "14501e421132d464b70111e37d059edbbd745219a92da4603b7e9008bba61976",
+      "native_sha256": "d1300b79420a2969a422ad3597b4db7fe17f2faf600cdaf7a562cead7a5251f5"
+    },
+    {
+      "prompt": "en-2",
+      "phase": "novel",
+      "same_output": false,
+      "llama_tokens": 256,
+      "native_tokens": 256,
+      "llama_prompt_tokens": 36,
+      "native_prompt_tokens": 36,
+      "llama_sha256": "8bfab5b18b78e67b5ae45b2c874feb0e91818d81cb8631e8096af6240c9a9065",
+      "native_sha256": "dfc971b62b9ec346bd76526425844babc89371de0abafa30d55285381022e492"
+    },
+    {
+      "prompt": "en-2",
+      "phase": "repeat",
+      "same_output": false,
+      "llama_tokens": 256,
+      "native_tokens": 256,
+      "llama_prompt_tokens": 36,
+      "native_prompt_tokens": 36,
+      "llama_sha256": "8bfab5b18b78e67b5ae45b2c874feb0e91818d81cb8631e8096af6240c9a9065",
+      "native_sha256": "f8b5e5dc15015efec7a160a70793bd71bc0909cc8806c82e65ebb1f78d25eff5"
+    },
+    {
+      "prompt": "en-3",
+      "phase": "novel",
+      "same_output": false,
+      "llama_tokens": 256,
+      "native_tokens": 256,
+      "llama_prompt_tokens": 38,
+      "native_prompt_tokens": 38,
+      "llama_sha256": "704c6ce260663cf37013db76561dbfc6224b2455b2a7dde02414b3393c525871",
+      "native_sha256": "0726c8fe2f290caf0980a30bbd537819ac61bc0945bcc74f4e230a0a72ea68b5"
+    },
+    {
+      "prompt": "en-3",
+      "phase": "repeat",
+      "same_output": false,
+      "llama_tokens": 256,
+      "native_tokens": 256,
+      "llama_prompt_tokens": 38,
+      "native_prompt_tokens": 38,
+      "llama_sha256": "c3a4d4d13b2eaf99dfd315fd057873ee908669b1bbcc1714fe1bd0bdfddae7e7",
+      "native_sha256": "9f14fcae5df3f0b3a8f8acda8d5ce59cea822bec54e912c3eb5aa9b0e4ff1d94"
+    },
+    {
+      "prompt": "en-4",
+      "phase": "novel",
+      "same_output": false,
+      "llama_tokens": 256,
+      "native_tokens": 256,
+      "llama_prompt_tokens": 37,
+      "native_prompt_tokens": 37,
+      "llama_sha256": "0e4887aaa233f3ef24bd2891d0425f1c20889887225be8594ab9c0a23280cb7a",
+      "native_sha256": "312878d16cba60d965f42201531a2948b9b007cfa4f9ebd724b8388ba6f1c2ae"
+    },
+    {
+      "prompt": "en-4",
+      "phase": "repeat",
+      "same_output": false,
+      "llama_tokens": 256,
+      "native_tokens": 256,
+      "llama_prompt_tokens": 37,
+      "native_prompt_tokens": 37,
+      "llama_sha256": "282617afad5c89d0133e78af83e1039277f689b04b535f6abe6fb1481a292249",
+      "native_sha256": "6ebf7b9107c5c627866e9ce26356db58798b510610b55644337e4736ea33adaa"
+    }
+  ]
+}

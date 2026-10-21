@@ -1,0 +1,20 @@
+{
+  "source": "task-logs/round16/profile-native-v1/trace.sqlite",
+  "benchmark_valid": false,
+  "window": "complete decode-audit NVTX range",
+  "note": "Capture includes reused-prefix processing. Kernel/API sums are descriptive and overlap; only interval unions partition device time. Non-wait kernels are not a proof of useful arithmetic. No draft/target attribution is inferred from shared quantization names.",
+  "window_ms": 3599.955696,
+  "gpu_activity_ms": 3216.584019,
+  "non_wait_kernel_copy_memset_union_ms": 2135.03873,
+  "wait_only_ms": 1081.545289,
+  "device_idle_ms": 383.371677,
+  "kernel_count": 160449,
+  "graph_kernel_count": 160449,
+  "wait_kernel_count": 9792,
+  "copy_count": 1680,
+  "copy_bytes_by_kind": {
+    "8": 492216,
+    "1": 3247339112,
+    "2": 118573872
+  }
+}
