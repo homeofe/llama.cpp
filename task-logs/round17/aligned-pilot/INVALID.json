@@ -1,0 +1,9 @@
+{
+  "benchmark_valid": false,
+  "reasons": [
+    "Both processes used absolute build-directory RUNPATH libraries, not the claimed isolated runtime libraries.",
+    "Candidate aborted in cudaGraphInstantiate: CUDA out of memory.",
+    "Pilot interrupted after inspecting the crash; no candidate request completed."
+  ],
+  "control_rows_valid_for_adoption": false
+}

@@ -1,0 +1,65 @@
+{
+  "source_commit": "2727f948f7a16a534fb2d874978e1f205f5e58e5",
+  "files": {
+    "llama-perplexity": {
+      "baseline": "c0626769fda9350ca395eab9b6db909b3bbe1956d489de981bc8ff3ce7f07ea6",
+      "candidate": "c0626769fda9350ca395eab9b6db909b3bbe1956d489de981bc8ff3ce7f07ea6",
+      "identical": true
+    },
+    "libllama-common.so.0.7.0": {
+      "baseline": "c7d27b0b5a0bb99197fa98271953c4de2dcabe3f3e05ab32a70e86ea825fce92",
+      "candidate": "c7d27b0b5a0bb99197fa98271953c4de2dcabe3f3e05ab32a70e86ea825fce92",
+      "identical": true
+    },
+    "libggml-base.so.0.27.0": {
+      "baseline": "7e219a7632c0fd0e350180bbb00519f1298d68a55d800dd0102fb05509eaff98",
+      "candidate": "7e219a7632c0fd0e350180bbb00519f1298d68a55d800dd0102fb05509eaff98",
+      "identical": true
+    },
+    "libllama.so.0.7.0": {
+      "baseline": "f804b75854861da7d43f2bbd67b283e5515bf412c202692284961ac5bfb33b17",
+      "candidate": "f804b75854861da7d43f2bbd67b283e5515bf412c202692284961ac5bfb33b17",
+      "identical": true
+    },
+    "libggml.so.0.27.0": {
+      "baseline": "a8e1c0118458de3272f993c47923e28e88326e0a86c91e52ac90d920c59a67a6",
+      "candidate": "a8e1c0118458de3272f993c47923e28e88326e0a86c91e52ac90d920c59a67a6",
+      "identical": true
+    },
+    "libggml-cuda.so.0.27.0": {
+      "baseline": "b41e953d482f013b07d060ae915a679c969317ff11feb46719b3618ec3e1fc78",
+      "candidate": "3d12b9f3b0249659922361bd3e24341f1246beb5bf23d85cba59c640085e5c58",
+      "identical": false
+    },
+    "libllama-server-impl.so": {
+      "baseline": "7b5f2429fdc63c161bc6b6c4345dc9624f88fce9142e8614d08ccf9cb9a627fc",
+      "candidate": "7b5f2429fdc63c161bc6b6c4345dc9624f88fce9142e8614d08ccf9cb9a627fc",
+      "identical": true
+    },
+    "libmtmd.so.0.7.0": {
+      "baseline": "5700b6dcb59f7935e3904330190e11bf94817413fe5cf45bc38715740d2e6b00",
+      "candidate": "5700b6dcb59f7935e3904330190e11bf94817413fe5cf45bc38715740d2e6b00",
+      "identical": true
+    },
+    "libllama-perplexity-impl.so": {
+      "baseline": "cef290b743bf12332b1ca218a8d706be689e202109c45c852c98057fda22aff7",
+      "candidate": "cef290b743bf12332b1ca218a8d706be689e202109c45c852c98057fda22aff7",
+      "identical": true
+    },
+    "test-backend-ops": {
+      "baseline": "adfd2841d513b1f6f53708e5501b496029d6a6fab8c1522d6b4099d7ae51079c",
+      "candidate": "adfd2841d513b1f6f53708e5501b496029d6a6fab8c1522d6b4099d7ae51079c",
+      "identical": true
+    },
+    "llama-server": {
+      "baseline": "762347da2ece595c7de89ddfa02a9f8dbaa95adb926f2a5cd7896985d37a785a",
+      "candidate": "762347da2ece595c7de89ddfa02a9f8dbaa95adb926f2a5cd7896985d37a785a",
+      "identical": true
+    },
+    "libggml-cpu.so.0.27.0": {
+      "baseline": "04a99633b6c5189988ee38df4b4bc6d06ffe44e31d4fdfecda41aa4be3ba6d45",
+      "candidate": "04a99633b6c5189988ee38df4b4bc6d06ffe44e31d4fdfecda41aa4be3ba6d45",
+      "identical": true
+    }
+  }
+}

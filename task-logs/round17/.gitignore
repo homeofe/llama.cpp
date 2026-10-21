@@ -4,3 +4,4 @@ e2e/
 *.sqlite
 __pycache__/
 /check_graph_variants
+perf.data*

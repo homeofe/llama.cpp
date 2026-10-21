@@ -1,0 +1,50 @@
+[
+  {
+    "capacity": 1,
+    "exit_code": 0,
+    "actions": {},
+    "oracle": [
+      "checks=264 failures=0"
+    ],
+    "runtime_cuda_sha256": "aae2ed080ca3ce516758e7611dc9794e3cc0c8b5282eccaafecda0cf9f3461ab"
+  },
+  {
+    "capacity": 2,
+    "exit_code": 0,
+    "actions": {
+      "miss": 88,
+      "active": 94,
+      "reuse": 82
+    },
+    "oracle": [
+      "checks=264 failures=0"
+    ],
+    "runtime_cuda_sha256": "aae2ed080ca3ce516758e7611dc9794e3cc0c8b5282eccaafecda0cf9f3461ab"
+  },
+  {
+    "capacity": 4,
+    "exit_code": 0,
+    "actions": {
+      "miss": 63,
+      "active": 94,
+      "reuse": 107
+    },
+    "oracle": [
+      "checks=264 failures=0"
+    ],
+    "runtime_cuda_sha256": "aae2ed080ca3ce516758e7611dc9794e3cc0c8b5282eccaafecda0cf9f3461ab"
+  },
+  {
+    "capacity": 8,
+    "exit_code": 0,
+    "actions": {
+      "miss": 11,
+      "active": 94,
+      "reuse": 159
+    },
+    "oracle": [
+      "checks=264 failures=0"
+    ],
+    "runtime_cuda_sha256": "aae2ed080ca3ce516758e7611dc9794e3cc0c8b5282eccaafecda0cf9f3461ab"
+  }
+]

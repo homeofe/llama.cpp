@@ -1,0 +1,392 @@
+{
+  "3417411": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417425": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417426": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417427": [
+    "Name:\tcuda00001400006",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417571": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417572": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417573": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417574": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417575": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417576": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417577": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417579": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417580": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417581": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417582": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417583": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417584": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417585": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417586": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417587": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417588": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417589": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417590": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417591": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417592": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417594": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417595": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417596": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417597": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417598": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417599": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417600": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417601": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417602": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417603": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417604": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417605": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417606": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417608": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417609": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417610": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417611": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417612": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417613": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417614": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417615": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417616": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417617": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417618": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417619": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417620": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417621": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417834": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3417835": [
+    "Name:\tcuda-EvtHandlr",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420803": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t1,25",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420804": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t2,26",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420805": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t3,27",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420806": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t4,28",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420807": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t5,29",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420808": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t6,30",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420809": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t7,31",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420810": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t8,32",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420811": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t9,33",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420812": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t10,34",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420813": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t11,35",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420814": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t12,36",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420815": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t13,37",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420816": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t14,38",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420817": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t15,39",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420818": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t16,40",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420819": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t17,41",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420820": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t18,42",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420821": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t19,43",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420822": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t20,44",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420823": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t21,45",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420824": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t22,46",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420825": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t23,47",
+    "Mems_allowed_list:\t0"
+  ],
+  "3420856": [
+    "Name:\tllama-server",
+    "Cpus_allowed_list:\t0,24",
+    "Mems_allowed_list:\t0"
+  ]
+}

@@ -1,0 +1,2 @@
+[ perf record: Woken up 744 times to write data ]
+[ perf record: Captured and wrote 241.096 MB /opt/llm-gateway/data/build/llama-vibe/task-logs/round17/cpu-aligned/perf.data ]

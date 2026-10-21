@@ -1,0 +1,11 @@
+[
+  {
+    "capacity": 1,
+    "exit_code": 0,
+    "actions": {},
+    "oracle": [
+      "checks=264 failures=0"
+    ],
+    "runtime_cuda_sha256": "b41e953d482f013b07d060ae915a679c969317ff11feb46719b3618ec3e1fc78"
+  }
+]

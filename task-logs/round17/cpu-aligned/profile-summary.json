@@ -1,0 +1,15 @@
+{
+  "raw_path": "task-logs/round17/cpu-aligned/perf.data",
+  "bytes": 252893162,
+  "sha256": "430db2484c47826c651b38c65b1c2a6ea15a1a8afc3ec105aa15c0ec2deb0441",
+  "benchmark_valid": false,
+  "window_s": 25,
+  "includes_idle": true,
+  "libgomp_pause_offsets": [
+    "0x256c0",
+    "0x258a0"
+  ],
+  "libgomp_pause_sample_percent": 53.72,
+  "quantized_dot_sample_percent": 39.27,
+  "interpretation": "Whole-process sampled cycles, including idle periods; not wall time, removable latency, or a speedup bound."
+}

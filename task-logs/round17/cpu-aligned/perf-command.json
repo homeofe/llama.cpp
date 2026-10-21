@@ -1,0 +1,1 @@
+["sudo", "-n", "perf", "record", "--no-buildid", "-F", "199", "--call-graph", "dwarf,4096", "-p", "3417411", "-o", "/opt/llm-gateway/data/build/llama-vibe/task-logs/round17/cpu-aligned/perf.data", "--", "sleep", "25"]

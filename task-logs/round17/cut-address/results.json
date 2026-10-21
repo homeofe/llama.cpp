@@ -1,0 +1,15 @@
+[
+  {
+    "capacity": 4,
+    "exit_code": 1,
+    "actions": {
+      "miss": 62,
+      "active": 130,
+      "reuse": 72
+    },
+    "oracle": [
+      "checks=264 failures=24"
+    ],
+    "runtime_cuda_sha256": "8e0c8ab758ab59c61d1c4037abf562bc1ab7aff074f02b9e22a4b793a3fc2419"
+  }
+]

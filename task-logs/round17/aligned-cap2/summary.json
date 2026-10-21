@@ -1,0 +1,168 @@
+{
+  "complete_blocks": [
+    [
+      0,
+      0
+    ],
+    [
+      1,
+      0
+    ]
+  ],
+  "comparisons": [
+    {
+      "prompt": "code-duration",
+      "phase": "novel",
+      "n_a": 1,
+      "n_b": 1,
+      "a_tok_s": 40.90366568551617,
+      "b_tok_s": 40.38745152635956,
+      "gain_pct": -1.2620241988223424,
+      "outputs_and_drafts_identical": true,
+      "a_signatures": [
+        [
+          "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+          218,
+          176,
+          151,
+          0,
+          98
+        ]
+      ],
+      "b_signatures": [
+        [
+          "6085cbab37d9cbea233e6bed234d4985c784feda97c27313fb9bc20c350633a7",
+          218,
+          176,
+          151,
+          0,
+          98
+        ]
+      ],
+      "a_tok_s_values": [
+        40.90366568551617
+      ],
+      "b_tok_s_values": [
+        40.38745152635956
+      ]
+    },
+    {
+      "prompt": "code-duration",
+      "phase": "repeat",
+      "n_a": 1,
+      "n_b": 1,
+      "a_tok_s": 39.93981153966686,
+      "b_tok_s": 40.67743961608154,
+      "gain_pct": 1.8468491662312791,
+      "outputs_and_drafts_identical": true,
+      "a_signatures": [
+        [
+          "f761084f92ba0de854a76609ba2d5eca26d350b1a71823f497d1f20e96d99265",
+          217,
+          175,
+          148,
+          94,
+          4
+        ]
+      ],
+      "b_signatures": [
+        [
+          "f761084f92ba0de854a76609ba2d5eca26d350b1a71823f497d1f20e96d99265",
+          217,
+          175,
+          148,
+          94,
+          4
+        ]
+      ],
+      "a_tok_s_values": [
+        39.93981153966686
+      ],
+      "b_tok_s_values": [
+        40.67743961608154
+      ]
+    },
+    {
+      "prompt": "en-1",
+      "phase": "novel",
+      "n_a": 1,
+      "n_b": 1,
+      "a_tok_s": 37.24268264346429,
+      "b_tok_s": 37.496298894538874,
+      "gain_pct": 0.6809827678165181,
+      "outputs_and_drafts_identical": true,
+      "a_signatures": [
+        [
+          "4050fde2494962a87ba223ea4de828f45118504cc34ebe9747140ec4391b3349",
+          256,
+          190,
+          153,
+          0,
+          37
+        ]
+      ],
+      "b_signatures": [
+        [
+          "4050fde2494962a87ba223ea4de828f45118504cc34ebe9747140ec4391b3349",
+          256,
+          190,
+          153,
+          0,
+          37
+        ]
+      ],
+      "a_tok_s_values": [
+        37.24268264346429
+      ],
+      "b_tok_s_values": [
+        37.496298894538874
+      ]
+    },
+    {
+      "prompt": "en-1",
+      "phase": "repeat",
+      "n_a": 1,
+      "n_b": 1,
+      "a_tok_s": 36.36455754749046,
+      "b_tok_s": 36.539494345372866,
+      "gain_pct": 0.48106400759571066,
+      "outputs_and_drafts_identical": false,
+      "a_signatures": [
+        [
+          "14501e421132d464b70111e37d059edbbd745219a92da4603b7e9008bba61976",
+          256,
+          201,
+          152,
+          33,
+          4
+        ]
+      ],
+      "b_signatures": [
+        [
+          "14501e421132d464b70111e37d059edbbd745219a92da4603b7e9008bba61976",
+          256,
+          203,
+          151,
+          33,
+          4
+        ]
+      ],
+      "a_tok_s_values": [
+        36.36455754749046
+      ],
+      "b_tok_s_values": [
+        36.539494345372866
+      ]
+    }
+  ],
+  "gpu_memory_mib": {
+    "A": [
+      10602
+    ],
+    "B": [
+      10644
+    ]
+  },
+  "foreign_cores_max": 0.4196396200140021,
+  "note": "Client decode=(completion_tokens-1)/(last-first content chunk). No instrumented requests. Only completed blocks included."
+}

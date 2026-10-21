@@ -1,0 +1,12 @@
+diff --git a/ggml/src/ggml-cuda/ggml-cuda.cu b/ggml/src/ggml-cuda/ggml-cuda.cu
+index 876dcb0c4..974bf480f 100644
+--- a/ggml/src/ggml-cuda/ggml-cuda.cu
++++ b/ggml/src/ggml-cuda/ggml-cuda.cu
+@@ -2760,6 +2760,7 @@ static bool ggml_cuda_graph_select_variant(ggml_cuda_graph * graph, ggml_cgraph
+         auto & prop = props[i];
+         memset(&prop, 0, sizeof(prop));
+         memcpy(&prop.node, cgraph->nodes[i], sizeof(ggml_tensor));
++        memset(prop.node.op_params, 0, sizeof(prop.node.op_params)); // Deliberate parameter-check mutation.
+         for (int j = 0; j < GGML_MAX_SRC; ++j) {
+             if (cgraph->nodes[i]->src[j]) {
+                 prop.node_src_data_ptrs[j] = cgraph->nodes[i]->src[j]->data;

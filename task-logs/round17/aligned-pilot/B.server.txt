@@ -1,0 +1,138 @@
+0.00.130.270 I srv  llama_server: initializing ...
+0.00.130.284 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.130.390 I srv  init_listene: The UI is disabled
+0.00.130.392 I srv  init_listene: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
+0.00.130.474 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.134.345 I srv    load_model: loading model '/opt/llm-gateway/models/Qwen3.8-Flash-Next/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf'
+0.01.491.637 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 99, abort
+0.41.675.085 W llama_moe_cache: packed frozen profile: 1815 experts
+0.42.039.612 I cmn          init: llama threadpool init, n_threads = 24
+0.42.180.299 I common_speculative_init_result: loading draft model '/opt/llm-gateway/data/moe-quant/qwen38/round16-models/strata-q6subset.gguf'
+0.43.246.475 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 8192, kv_unified = 'false'
+0.43.246.528 I spec common_specu: Strata reference: full-vocabulary confidence, MTP 3 / lookup 5, p_min=0.7
+0.43.263.434 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.43.263.494 I srv  llama_server: model loaded
+0.43.263.503 I srv  llama_server: listening on http://127.0.0.1:8799
+0.43.992.414 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 0, t_last = -1
+0.43.992.494 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.44.649.400 I spec        begin: Strata lookup windows in previous request: 0
+0.45.214.764 I slot print_timing: id  0 | task 0 | prompt eval time =     659.03 ms /    18 tokens (   36.61 ms per token,    27.31 tokens per second)
+0.45.214.771 I slot print_timing: id  0 | task 0 |        eval time =     563.18 ms /     8 tokens (   80.45 ms per token,    12.43 tokens per second)
+0.45.214.772 I slot print_timing: id  0 | task 0 |       total time =    1222.21 ms /    26 tokens
+0.45.214.777 I slot print_timing: id  0 | task 0 |    graphs reused =          1
+0.45.214.778 I slot print_timing: id  0 | task 0 |   graph reallocs =          2    /     0        (same size) / (changed size)
+0.45.214.783 I slot print_timing: id  0 | task 0 | draft acceptance = 0.75000 (    3 accepted /     4 generated), mean len =  2.50
+0.45.214.840 I slot      release: id  0 | task 0 | stop processing: n_tokens = 25, truncated = 0
+1.31.237.641 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 25, t_last = 942104042241
+1.31.404.353 I slot launch_slot_: id  0 | task 7 | processing task, is_child = 0
+1.32.640.958 I spec        begin: Strata lookup windows in previous request: 0
+/opt/llm-gateway/data/build/llama-vibe/ggml/src/ggml-cuda/ggml-cuda.cu:111: CUDA error
+1.33.814.091 E CUDA error: out of memory
+1.33.814.097 E   current device: 0, in function ggml_cuda_graph_evaluate_and_capture at /opt/llm-gateway/data/build/llama-vibe/ggml/src/ggml-cuda/ggml-cuda.cu:4828
+1.33.814.097 E   cudaGraphInstantiate(&graph->instance, graph->graph, __null, __null, 0)
+[New LWP 3269753]
+[New LWP 3269727]
+[New LWP 3269726]
+[New LWP 3269725]
+[New LWP 3269724]
+[New LWP 3269723]
+[New LWP 3269722]
+[New LWP 3269721]
+[New LWP 3269720]
+[New LWP 3269719]
+[New LWP 3269718]
+[New LWP 3269717]
+[New LWP 3269716]
+[New LWP 3269715]
+[New LWP 3269714]
+[New LWP 3269713]
+[New LWP 3269712]
+[New LWP 3269711]
+[New LWP 3269710]
+[New LWP 3269709]
+[New LWP 3269708]
+[New LWP 3269707]
+[New LWP 3269706]
+[New LWP 3269705]
+[New LWP 3265643]
+[New LWP 3265642]
+[New LWP 3265641]
+[New LWP 3265640]
+[New LWP 3265639]
+[New LWP 3265638]
+[New LWP 3265637]
+[New LWP 3265636]
+[New LWP 3265635]
+[New LWP 3265634]
+[New LWP 3265633]
+[New LWP 3265632]
+[New LWP 3265631]
+[New LWP 3265630]
+[New LWP 3265629]
+[New LWP 3265628]
+[New LWP 3265627]
+[New LWP 3265626]
+[New LWP 3265625]
+[New LWP 3265624]
+[New LWP 3265623]
+[New LWP 3265622]
+[New LWP 3265621]
+[New LWP 3265620]
+[New LWP 3265619]
+[New LWP 3265618]
+[New LWP 3265617]
+[New LWP 3265616]
+[New LWP 3265615]
+[New LWP 3265614]
+[New LWP 3265613]
+[New LWP 3265612]
+[New LWP 3265611]
+[New LWP 3265610]
+[New LWP 3265609]
+[New LWP 3265608]
+[New LWP 3265607]
+[New LWP 3265606]
+[New LWP 3265605]
+[New LWP 3265604]
+[New LWP 3265603]
+[New LWP 3265602]
+[New LWP 3265601]
+[New LWP 3265600]
+[New LWP 3265599]
+[New LWP 3265598]
+[New LWP 3265597]
+[New LWP 3265596]
+[New LWP 3265595]
+[New LWP 3265594]
+[New LWP 3265590]
+[New LWP 3265589]
+[New LWP 3265588]
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.ubuntu.com>
+Enable debuginfod for this session? (y or [n]) [answered N; input not from terminal]
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+0x00007f0a17510913 in wait4 () from /lib/x86_64-linux-gnu/libc.so.6
+#0  0x00007f0a17510913 in wait4 () from /lib/x86_64-linux-gnu/libc.so.6
+#1  0x00007f0a17b45bf3 in ggml_print_backtrace () from /opt/llm-gateway/data/build/llama-vibe/build-cuda/bin/libggml-base.so.0
+#2  0x00007f0a17b45d9b in ggml_abort () from /opt/llm-gateway/data/build/llama-vibe/build-cuda/bin/libggml-base.so.0
+#3  0x00007f0a09ac6bd7 in ggml_cuda_error(char const*, char const*, char const*, int, char const*) () from /opt/llm-gateway/data/build/llama-vibe/build-cuda/bin/libggml-cuda.so.0
+#4  0x00007f0a09adfa70 in ggml_backend_cuda_graph_compute(ggml_backend*, ggml_cgraph*) () from /opt/llm-gateway/data/build/llama-vibe/build-cuda/bin/libggml-cuda.so.0
+#5  0x00007f0a17b648da in ggml_backend_sched_compute_splits(ggml_backend_sched*) () from /opt/llm-gateway/data/build/llama-vibe/build-cuda/bin/libggml-base.so.0
+#6  0x00007f0a16a3439b in llama_context::graph_compute(ggml_cgraph*, bool) () from /opt/llm-gateway/data/build/llama-vibe/build-cuda/bin/libllama.so.0
+#7  0x00007f0a16a380ee in llama_context::process_ubatch(llama_ubatch const&, llm_graph_type, llama_memory_context_i*, ggml_status&, bool, bool) () from /opt/llm-gateway/data/build/llama-vibe/build-cuda/bin/libllama.so.0
+#8  0x00007f0a16a4210f in llama_context::decode(llama_batch_ext const&) () from /opt/llm-gateway/data/build/llama-vibe/build-cuda/bin/libllama.so.0
+#9  0x00007f0a17d6ba82 in std::_Function_handler<void (), server_context_impl::decode(int&, int)::{lambda()#1}>::_M_invoke(std::_Any_data const&) () from /opt/llm-gateway/data/build/llama-vibe/build-cuda/bin/libllama-server-impl.so
+#10 0x00007f0a17d297c6 in server_queue::yield_to_queue(std::function<void ()>&&) () from /opt/llm-gateway/data/build/llama-vibe/build-cuda/bin/libllama-server-impl.so
+#11 0x00007f0a17d8132f in server_context_impl::decode(int&, int) () from /opt/llm-gateway/data/build/llama-vibe/build-cuda/bin/libllama-server-impl.so
+#12 0x00007f0a17d82e68 in server_context_impl::update_slots() () from /opt/llm-gateway/data/build/llama-vibe/build-cuda/bin/libllama-server-impl.so
+#13 0x00007f0a17d2a415 in server_queue::start_loop(long) () from /opt/llm-gateway/data/build/llama-vibe/build-cuda/bin/libllama-server-impl.so
+#14 0x00007f0a17cdc3e3 in llama_server(common_params&, int, char**, server_child&) () from /opt/llm-gateway/data/build/llama-vibe/build-cuda/bin/libllama-server-impl.so
+#15 0x00007f0a17cdd0a1 in llama_server(int, char**) () from /opt/llm-gateway/data/build/llama-vibe/build-cuda/bin/libllama-server-impl.so
+#16 0x00007f0a1742a1ca in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+#17 0x00007f0a1742a28b in __libc_start_main () from /lib/x86_64-linux-gnu/libc.so.6
+#18 0x000056b114e312a5 in _start ()
+[Inferior 1 (process 3265586) detached]

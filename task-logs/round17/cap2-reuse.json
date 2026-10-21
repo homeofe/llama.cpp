@@ -1,0 +1,11 @@
+{
+  "checks": 12909,
+  "actions": {
+    "miss": 7895,
+    "active": 804,
+    "reuse": 4210
+  },
+  "warm_reuses": 2345,
+  "max_entries": 2,
+  "benchmark_valid": false
+}

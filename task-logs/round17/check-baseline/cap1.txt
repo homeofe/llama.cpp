@@ -1,0 +1,3 @@
+ggml_cuda_init: found 1 CUDA devices (Total VRAM: 10820 MiB):
+  Device 0: NVIDIA GeForce RTX 2080 Ti, compute capability 7.5, VMM: yes, VRAM: 10820 MiB
+checks=264 failures=0

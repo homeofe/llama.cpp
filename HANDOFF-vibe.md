@@ -1,6 +1,28 @@
 # Qwen3.8-Flash-Next decode optimization: status and evidence
 
-**Round 16 in progress (2026-10-21): `NOTES-round16-draft-parity.md` and `NOTES-round16-qwen-architecture.md`.**
+**Round 17 (2026-10-21): `NOTES-round17-graph-reuse.md`, experiment branch `graph-reuse`.**
+The bounded CUDA graph-variant cache passes exact arithmetic and deliberate-failure
+checks, but is not adopted. Four variants exhaust VRAM; two variants retain the same
+expert budget and add 42 MiB, yet the clean pilot's comparable pairs range from
+-1.26% to +1.85%, below the 3% gate. All four output pairs match; one English-repeat
+pair changes offered/accepted draft counts under the timing-dependent selection
+policy. Do not treat it as an isolated patch gain.
+
+The first pilot is invalidated: copied binaries retained an absolute build RUNPATH.
+Commit `fd32ef149` repairs the shared launcher with an explicit library directory
+and `/proc/PID/maps` verification. The corrected pilot has verified runtime paths.
+Historical copied-runtime file hashes alone do not prove loaded-library isolation;
+old/new library attribution needs revalidation. Full results and rejected controls
+are archived under `task-logs/round17/`. No live runtime is changed.
+
+Final CPU profile: 53.72% of sampled cycles occur in confirmed OpenMP PAUSE loops,
+39.27% in quantized dot products. This includes idle intervals and is not a gain
+bound. Existing wait-policy/native-pool negative results remain closed. Next:
+attribute waits within the expert-phase critical path against the native CPU
+service; no further sweep or deployment is justified yet. REA was source-reviewed,
+not executed. GPU released at 14:15:11 UTC; 21 round-17 history rows archived.
+
+**Round 16 record: `NOTES-round16-draft-parity.md` and `NOTES-round16-qwen-architecture.md`.**
 The initial Q2/reduced-Q6/GPU draft failed the clean A B B A confirmation (+0.30%
 code / +1.12% English server rate, n=8/category). It is not adopted.
 
