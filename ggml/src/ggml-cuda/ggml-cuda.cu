@@ -2738,6 +2738,10 @@ static const void * ggml_cuda_graph_get_key(ggml_cgraph * cgraph) {
 
 static bool ggml_cuda_graph_update_required(ggml_backend_cuda_context * cuda_ctx, ggml_cgraph * cgraph) {
     bool res = false;
+    static const bool trace = ggml_cuda_env_flag("GGML_CUDA_GRAPH_TRACE");
+    uint64_t fingerprint = UINT64_C(14695981039346656037);
+    int first_changed = -1;
+    unsigned changes = 0;
 
     const void * graph_key = ggml_cuda_graph_get_key(cgraph);
     ggml_cuda_graph * graph = cuda_ctx->cuda_graph(graph_key);
@@ -2772,9 +2776,39 @@ static bool ggml_cuda_graph_update_required(ggml_backend_cuda_context * cuda_ctx
         }
 
         if (res || memcmp(&graph->node_props[i], &prop, sizeof(prop)) != 0) {
+            if (trace) {
+                const auto & old = graph->node_props[i];
+                if (first_changed < 0) { first_changed = i; }
+                if (old.node.data != prop.node.data) { changes |= 1; }
+                if (memcmp(old.node.ne, prop.node.ne, sizeof(prop.node.ne))) { changes |= 2; }
+                if (memcmp(old.node.nb, prop.node.nb, sizeof(prop.node.nb))) { changes |= 4; }
+                if (old.node.op != prop.node.op || old.node.type != prop.node.type) { changes |= 8; }
+                if (memcmp(old.node.op_params, prop.node.op_params, sizeof(prop.node.op_params))) { changes |= 16; }
+                if (memcmp(old.node_src_data_ptrs, prop.node_src_data_ptrs, sizeof(prop.node_src_data_ptrs))) { changes |= 32; }
+                if (memcmp(old.node_src_ne, prop.node_src_ne, sizeof(prop.node_src_ne)) ||
+                    memcmp(old.node_src_nb, prop.node_src_nb, sizeof(prop.node_src_nb))) { changes |= 64; }
+            }
             graph->node_props[i] = prop;
             res = true;
         }
+        if (trace) {
+            const auto * bytes = reinterpret_cast<const unsigned char *>(&prop);
+            for (size_t j = 0; j < sizeof(prop); ++j) {
+                fingerprint = (fingerprint ^ bytes[j]) * UINT64_C(1099511628211);
+            }
+        }
+    }
+
+    if (trace) {
+        static thread_local std::unordered_map<const void *, std::unordered_map<uint64_t, unsigned>> seen;
+        auto & hashes = seen[graph_key];
+        auto it = hashes.find(fingerprint);
+        unsigned previous = it == hashes.end() ? 0 : it->second;
+        if (it != hashes.end()) { ++it->second; }
+        else if (hashes.size() < 512) { hashes.emplace(fingerprint, 1); }
+        GGML_LOG_WARN("graph_trace key=%p uid=%llu nodes=%d changed=%d first_changed=%d flags=%u hash=%016llx seen=%u first=%s last=%s\n",
+            graph_key, (unsigned long long) cgraph->uid, cgraph->n_nodes, res, first_changed, changes,
+            (unsigned long long) fingerprint, previous, cgraph->nodes[0]->name, cgraph->nodes[cgraph->n_nodes - 1]->name);
     }
 
     return res;

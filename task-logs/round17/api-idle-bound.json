@@ -1,0 +1,35 @@
+{
+  "source": "../round16/profile-aligned-v1/trace.sqlite",
+  "benchmark_valid": false,
+  "note": "Intersection with recorded GPU-idle intervals is a diagnostic upper bound, not an isolated speedup; categories are not additive.",
+  "graph_lifecycle": {
+    "calls": 3102,
+    "host_union_ms": 164.653177,
+    "overlap_device_idle_ms": 155.714509,
+    "fraction_window_pct": 2.421541017317298
+  },
+  "graph_launch": {
+    "calls": 4579,
+    "host_union_ms": 362.365077,
+    "overlap_device_idle_ms": 71.326123,
+    "fraction_window_pct": 1.1092038472196495
+  },
+  "kernel_launch": {
+    "calls": 137267,
+    "host_union_ms": 485.742852,
+    "overlap_device_idle_ms": 193.285097,
+    "fraction_window_pct": 3.005807187958655
+  },
+  "sync": {
+    "calls": 42983,
+    "host_union_ms": 1324.774707,
+    "overlap_device_idle_ms": 110.976034,
+    "fraction_window_pct": 1.7258058995016263
+  },
+  "memcpy": {
+    "calls": 37520,
+    "host_union_ms": 221.98033,
+    "overlap_device_idle_ms": 93.557001,
+    "fraction_window_pct": 1.4549197556066884
+  }
+}

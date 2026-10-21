@@ -1,0 +1,5 @@
+e2e/
+*.qdstrm
+*.nsys-rep
+*.sqlite
+__pycache__/
