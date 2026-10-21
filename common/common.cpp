@@ -1404,7 +1404,7 @@ static std::string moe_auto_decide(const moe_auto_rec & st, const moe_auto_rec &
 // --moe autotune=0 or LLAMA_AUTOTUNE=0: the kill switch for everything the engine tunes or measures by itself
 bool common_autotune_on(const common_params & params) {
     const char * e = getenv("LLAMA_AUTOTUNE");
-    return params.n_moe_cache_slots != 0 && params.autotune && !(e && atoi(e) == 0);
+    return params.n_moe_cache_slots != 0 && params.autotune && (params.autotune_set || !(e && atoi(e) == 0));
 }
 
 // -ub from the request and the card, no VRAM tiers: the compute buffer of a ubatch is probed (no_alloc, per candidate) and what it

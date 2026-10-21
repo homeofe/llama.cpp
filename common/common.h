@@ -460,6 +460,7 @@ struct common_params {
     int32_t n_moe_cache_inserts   = 2;    // max expert uploads per layer per decode step
     int32_t n_moe_cache_window    = 64;   // tokens of recent expert usage the cache scores by
     bool autotune          = true;        // --moe autotune=0 / LLAMA_AUTOTUNE=0: no self-tuning (cache knobs, threads) and no placement measuring
+    bool autotune_set      = false;       // explicit --autotune / --moe autotune overrides the legacy environment
     bool threads_batch_set = false;       // -tb was given: the batch thread count is the user's, never tuned
     std::string moe_opts;                 // --moe NAME=value,... tuner knobs, handed to the engine
     int32_t n_moe_predict         = 0;    // router prediction: prefetch confident experts among the top M (0 = off)

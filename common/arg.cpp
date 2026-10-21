@@ -2580,7 +2580,7 @@ common_params_context common_params_parser_init(common_params & params, llama_ex
                 else if (key == "inserts") { params.n_moe_cache_inserts = v; }
                 else if (key == "window")  { params.n_moe_cache_window  = v; }
                 else if (key == "predict") { params.n_moe_predict       = v; }
-                else if (key == "autotune") { params.autotune = v != 0; }
+                else if (key == "autotune") { params.autotune = v != 0; params.autotune_set = true; }
                 else if (key == "train")   { params.n_moe_predict_train = v; if (params.n_moe_predict <= 0) { params.n_moe_predict = 8; } }
                 else { params.moe_opts += (params.moe_opts.empty() ? "" : ",") + kv; } // a tuner knob: the engine checks the name
             }
@@ -2598,6 +2598,7 @@ common_params_context common_params_parser_init(common_params & params, llama_ex
             if      (value == "on"  || value == "1" || value == "true")  { params.autotune = true;  }
             else if (value == "off" || value == "0" || value == "false") { params.autotune = false; }
             else { throw std::invalid_argument("-at: expected on or off, got '" + value + "'"); }
+            params.autotune_set = true;
         }
     ).set_env("LLAMA_ARG_AUTOTUNE"));
     if (ex == LLAMA_EXAMPLE_SERVER) {

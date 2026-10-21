@@ -1,0 +1,2 @@
+warn: LLAMA_ARG_AUTOTUNE environment variable is set, but will be overwritten by command line argument --autotune
+PASS env-cli
