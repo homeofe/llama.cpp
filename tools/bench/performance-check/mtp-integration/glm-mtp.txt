@@ -1,0 +1,39 @@
+0.00.055.479 I srv  llama_server: initializing ...
+0.00.055.492 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.055.803 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.276.420 I common_spec_auto: model 9.1x free VRAM: draft depth starts at 0, max 3
+0.00.276.707 I srv    load_model: loading model '/opt/llm-gateway/models/GLM-5.3-Flash-GGUF/UD-IQ2_XXS/GLM-5.3-Flash-UD-IQ2_XXS-00001-of-00004.gguf'
+0.00.390.934 I common_moe_cache_auto_impl: MoE placement: cache (model 94.9 GiB does not fit the free VRAM 10.4 GiB, nothing to measure)
+0.00.390.950 I common_moe_cache_auto_impl: MoE model (94.9 GiB) exceeds free VRAM (10.4 GiB): experts in RAM + GPU expert cache, no repack, ctx 2048, ubatch 64, threads 24, weights mmap (settings you pass win)
+0.00.448.122 I common_spec_auto: model 9.1x free VRAM: draft depth starts at 0, max 3
+0.01.199.148 E llama_init_from_model: failed to initialize the context: glm5-next requires ctx_other to be set (this warning is normal during memory fitting)
+0.01.243.091 W operator(): failed to measure the memory of the extra model, fitting without it: failed to create llama_context from model
+0.01.483.692 W load: special_eot_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.01.483.698 W load: special_eom_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.01.541.727 W llama_model_loader: tensor overrides to CPU are used with mmap enabled - consider using --load-mode none for better performance
+0.46.667.271 I cmn          init: llama threadpool init, n_threads = 24
+0.46.668.024 I common_speculative_init_result: loading draft model '/opt/llm-gateway/data/moe-quant/audit/GLM-5.3-Flash-MTP-Q4_K.gguf'
+0.46.928.736 W load: special_eot_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.46.928.743 W load: special_eom_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.55.255.370 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 2048, kv_unified = 'false'
+0.55.385.482 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.55.385.518 I srv  llama_server: model loaded
+0.55.385.522 I srv  llama_server: listening on http://127.0.0.1:18123
+0.55.836.193 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+0.55.836.236 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.55.836.365 W moe-cache: 43 expert layers cached on CUDA0 (CUDA0), upload link fastest
+0.55.839.538 W moe-cache: 1 upload workers, from pageable host memory (mmap; --load-mode pin: faster uploads)
+0.57.606.849 W moe-cache: probe: links alone link 0 9.5 GB/s; CPU threads:GB/s alone/with links 1:23.9/30.9 2:43.0/44.3 3:58.7/56.8 4:68.5/63.9 5:75.6/69.7 6:80.9/73.5 7:82.8/74.9 8:84.2/77.8 9:84.3/77.9 10:83.7/77.7 -> CPU 84.3 GB/s (saturated by 6 threads), RAM budget 84.3 GB/s
+0.57.606.912 W operator(): MoE expert cache enabled: 43 layers, slots/layer 1..1, 2 inserts/step, 630.2 MiB device memory
+1.05.778.903 I slot print_timing: id  0 | task 0 | prompt eval time =    2890.12 ms /    13 tokens (  222.32 ms per token,     4.50 tokens per second)
+1.05.778.908 I slot print_timing: id  0 | task 0 |        eval time =    7052.51 ms /    64 tokens (  111.94 ms per token,     8.93 tokens per second)
+1.05.778.908 I slot print_timing: id  0 | task 0 |       total time =    9942.63 ms /    77 tokens
+1.05.778.913 I slot print_timing: id  0 | task 0 |    graphs reused =         18
+1.05.778.941 I slot print_timing: id  0 | task 0 |        moe cache = on, hit 3.6% this request / 3.6% overall, 1..1 slots/layer, margin 0 gate 3 wait 1 big 0 predict 1
+1.05.778.944 I slot print_timing: id  0 | task 0 |        moe churn = 177 uploads, 134 evictions, 1300.8 MiB uploaded (this request)
+1.05.778.945 I slot print_timing: id  0 | task 0 |          threads = 24 decode / 24 batch, batch 256, ubatch 64
+1.05.778.950 I slot print_timing: id  0 | task 0 | draft acceptance = 0.72881 (   43 accepted /    59 generated), mean len =  3.15
+1.05.779.004 I slot      release: id  0 | task 0 | stop processing: n_tokens = 76, truncated = 0
+1.05.780.048 I srv    operator(): operator(): cleaning up before exit...
+1.05.783.358 W ~llama_context:  CUDA_Host compute buffer size of   3.1670 MiB, does not match expectation of   2.8458 MiB
+1.06.004.425 W moe-cache: steps=22 hits=1151 misses=30977 hit-rate=3.6%, prefill experts from cache 0/0, kept from prefill 0

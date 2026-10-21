@@ -1,0 +1,35 @@
+0.00.051.529 I srv  llama_server: initializing ...
+0.00.051.542 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.051.680 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.274.277 I common_spec_auto: model 7.5x free VRAM: draft depth starts at 0, max 3
+0.00.274.324 I srv    load_model: loading model '/opt/llm-gateway/models/Qwen3.8-Flash-Next/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf'
+0.00.373.320 I common_moe_cache_auto_impl: MoE placement: cache (model 77.9 GiB does not fit the free VRAM 10.4 GiB, nothing to measure)
+0.00.373.337 I common_moe_cache_auto_impl: MoE model (77.9 GiB) exceeds free VRAM (10.4 GiB): experts in RAM + GPU expert cache, no repack, ctx 2048, ubatch 64, threads 24, weights mmap (settings you pass win)
+0.00.421.623 I common_spec_auto: model 7.5x free VRAM: draft depth starts at 0, max 3
+0.01.340.127 E llama_init_from_model: failed to initialize the context: qwen4exp requires ctx_other to be set (this warning is normal during memory fitting)
+0.01.384.160 W operator(): failed to measure the memory of the extra model, fitting without it: failed to create llama_context from model
+0.01.770.082 W llama_model_loader: tensor overrides to CPU are used with mmap enabled - consider using --load-mode none for better performance
+0.29.116.632 I cmn          init: llama threadpool init, n_threads = 24
+0.29.117.377 I common_speculative_init_result: loading draft model '/opt/llm-gateway/models/Qwen3.8-Flash-Next/MTP/mtp-Qwen3.8-Flash-Next-shared-Q8_0.gguf'
+0.36.526.432 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 2048, kv_unified = 'false'
+0.37.112.092 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.37.112.288 I srv  llama_server: model loaded
+0.37.112.294 I srv  llama_server: listening on http://127.0.0.1:18123
+0.37.172.043 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+0.37.172.071 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.37.179.150 W moe-cache: 48 expert layers cached on CUDA0 (CUDA0), upload link fastest
+0.37.191.018 W moe-cache: 1 upload workers, from pageable host memory (mmap; --load-mode pin: faster uploads)
+0.38.793.233 W moe-cache: probe: links alone link 0 5.4 GB/s; CPU threads:GB/s alone/with links 1:7.6/19.3 2:21.6/36.4 3:50.7/53.6 4:63.4/58.1 5:70.3/70.1 6:79.9/73.6 7:80.4/76.2 8:80.2/73.0 9:78.2/72.7 -> CPU 80.4 GB/s (saturated by 6 threads), RAM budget 80.4 GB/s
+0.38.800.401 W operator(): MoE expert cache enabled: 48 layers, slots/layer 52..52, 2 inserts/step, 4964.9 MiB device memory
+0.44.129.357 I slot print_timing: id  0 | task 0 | prompt eval time =    2990.99 ms /    15 tokens (  199.40 ms per token,     5.02 tokens per second)
+0.44.129.365 I slot print_timing: id  0 | task 0 |        eval time =    3966.26 ms /    64 tokens (   62.96 ms per token,    15.88 tokens per second)
+0.44.129.366 I slot print_timing: id  0 | task 0 |       total time =    6957.25 ms /    79 tokens
+0.44.129.370 I slot print_timing: id  0 | task 0 |    graphs reused =         16
+0.44.129.404 I slot print_timing: id  0 | task 0 |        moe cache = on, hit 45.0% this request / 45.0% overall, 52..52 slots/layer, margin 0 gate 3 wait 1 big 0 predict 1
+0.44.129.408 I slot print_timing: id  0 | task 0 |        moe churn = 6571 uploads, 4639 evictions, 13725.5 MiB uploaded (this request)
+0.44.129.409 I slot print_timing: id  0 | task 0 |          threads = 24 decode / 24 batch, batch 256, ubatch 64
+0.44.129.415 I slot print_timing: id  0 | task 0 | draft acceptance = 0.84906 (   45 accepted /    53 generated), mean len =  3.50
+0.44.129.473 I slot      release: id  0 | task 0 | stop processing: n_tokens = 78, truncated = 0
+0.44.134.346 I srv    operator(): operator(): cleaning up before exit...
+0.44.310.254 W moe-cache: steps=20 hits=18568 misses=22712 hit-rate=45.0%, prefill experts from cache 0/0, kept from prefill 0
+0.44.313.512 W ~llama_context:  CUDA_Host compute buffer size of   2.3414 MiB, does not match expectation of   2.2801 MiB

@@ -1,0 +1,6 @@
+qwen plain True 
+qwen mtp True 
+qwen auto True 
+glm plain True 
+glm mtp True 
+glm auto True 

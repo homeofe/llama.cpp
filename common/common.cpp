@@ -1713,6 +1713,9 @@ common_init_result::common_init_result(common_params & params, bool model_only) 
     common_spec_auto(params);
     auto mparams = common_model_params_to_llama(params);
     auto cparams = common_context_params_to_llama(params);
+    if (params.n_moe_cache_slots != 0 && params.speculative.has_dft()) {
+        mparams.load_mtp = false; // the separate draft owns its MTP weights
+    }
 
     if (params.fit_params) {
         COM_TRC("%s", "fitting params to device memory ...\n");

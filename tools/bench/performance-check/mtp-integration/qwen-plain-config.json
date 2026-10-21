@@ -1,0 +1,34 @@
+{
+  "family": "qwen",
+  "mode": "plain",
+  "cmd": [
+    "/opt/llm-gateway/data/build/llama-performance-check/build-cuda/bin/llama-server",
+    "-m",
+    "/opt/llm-gateway/models/Qwen3.8-Flash-Next/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf",
+    "-c",
+    "2048",
+    "-np",
+    "1",
+    "-b",
+    "256",
+    "-ub",
+    "64",
+    "-t",
+    "24",
+    "-tb",
+    "24",
+    "-fa",
+    "1",
+    "--load-mode",
+    "mmap",
+    "--no-warmup",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "18123"
+  ],
+  "env": {
+    "LLAMA_MOE_STATE": "0"
+  },
+  "benchmark_valid": false
+}

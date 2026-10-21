@@ -1,0 +1,68 @@
+0.00.121.758 I srv  llama_server: initializing ...
+0.00.121.771 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.121.908 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.332.872 I common_spec_auto: model 9.1x free VRAM: draft depth starts at 0, max 3
+0.00.333.159 I srv    load_model: loading model '/opt/llm-gateway/models/GLM-5.3-Flash-GGUF/UD-IQ2_XXS/GLM-5.3-Flash-UD-IQ2_XXS-00001-of-00004.gguf'
+0.00.439.909 I common_moe_cache_auto_impl: MoE placement: cache (model 94.9 GiB does not fit the free VRAM 10.4 GiB, nothing to measure)
+0.00.439.924 I common_moe_cache_auto_impl: MoE model (94.9 GiB) exceeds free VRAM (10.4 GiB): experts in RAM + GPU expert cache, no repack, ctx 2048, ubatch 64, threads 24, weights mmap (settings you pass win)
+0.00.493.998 I common_spec_auto: model 9.1x free VRAM: draft depth starts at 0, max 3
+0.01.223.244 E llama_init_from_model: failed to initialize the context: glm5-next requires ctx_other to be set (this warning is normal during memory fitting)
+0.01.262.816 W operator(): failed to measure the memory of the extra model, fitting without it: failed to create llama_context from model
+0.01.503.916 W load: special_eot_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.01.503.923 W load: special_eom_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.01.562.099 W llama_model_loader: tensor overrides to CPU are used with mmap enabled - consider using --load-mode none for better performance
+0.01.675.015 W model has unused tensor blk.45.attn_norm.weight (size = 16384 bytes) -- ignoring
+0.01.675.022 W model has unused tensor blk.45.ffn_norm.weight (size = 16384 bytes) -- ignoring
+0.01.675.026 W model has unused tensor blk.45.attn_q_a_norm.weight (size = 6144 bytes) -- ignoring
+0.01.675.029 W model has unused tensor blk.45.attn_kv_a_norm.weight (size = 2048 bytes) -- ignoring
+0.01.675.033 W model has unused tensor blk.45.attn_q_a.weight (size = 4325376 bytes) -- ignoring
+0.01.675.037 W model has unused tensor blk.45.attn_q_b.weight (size = 26738688 bytes) -- ignoring
+0.01.675.041 W model has unused tensor blk.45.attn_kv_a_mqa.weight (size = 2228224 bytes) -- ignoring
+0.01.675.044 W model has unused tensor blk.45.attn_k_b.weight (size = 8912896 bytes) -- ignoring
+0.01.675.048 W model has unused tensor blk.45.attn_v_b.weight (size = 8912896 bytes) -- ignoring
+0.01.675.052 W model has unused tensor blk.45.attn_output.weight (size = 46137344 bytes) -- ignoring
+0.01.675.056 W model has unused tensor blk.45.indexer.k_norm.weight (size = 512 bytes) -- ignoring
+0.01.675.060 W model has unused tensor blk.45.indexer.k_norm.bias (size = 512 bytes) -- ignoring
+0.01.675.064 W model has unused tensor blk.45.indexer.proj.weight (size = 524288 bytes) -- ignoring
+0.01.675.068 W model has unused tensor blk.45.indexer.attn_k.weight (size = 557056 bytes) -- ignoring
+0.01.675.072 W model has unused tensor blk.45.indexer.attn_q_b.weight (size = 6684672 bytes) -- ignoring
+0.01.675.077 W model has unused tensor blk.45.indexer_compressor_gate.weight (size = 557056 bytes) -- ignoring
+0.01.675.081 W model has unused tensor blk.45.indexer_compressor_ape.weight (size = 2048 bytes) -- ignoring
+0.01.675.085 W model has unused tensor blk.45.ffn_gate_inp.weight (size = 4718592 bytes) -- ignoring
+0.01.675.089 W model has unused tensor blk.45.exp_probs_b.bias (size = 1152 bytes) -- ignoring
+0.01.675.093 W model has unused tensor blk.45.ffn_gate_exps.weight (size = 792723456 bytes) -- ignoring
+0.01.675.097 W model has unused tensor blk.45.ffn_down_exps.weight (size = 1038090240 bytes) -- ignoring
+0.01.675.101 W model has unused tensor blk.45.ffn_up_exps.weight (size = 792723456 bytes) -- ignoring
+0.01.675.105 W model has unused tensor blk.45.ffn_gate_shexp.weight (size = 5767168 bytes) -- ignoring
+0.01.675.109 W model has unused tensor blk.45.ffn_down_shexp.weight (size = 6881280 bytes) -- ignoring
+0.01.675.113 W model has unused tensor blk.45.ffn_up_shexp.weight (size = 5767168 bytes) -- ignoring
+0.01.675.118 W model has unused tensor blk.45.nextn.eh_proj.weight (size = 35651584 bytes) -- ignoring
+0.01.675.122 W model has unused tensor blk.45.nextn.enorm.weight (size = 16384 bytes) -- ignoring
+0.01.675.126 W model has unused tensor blk.45.nextn.hnorm.weight (size = 16384 bytes) -- ignoring
+0.01.675.138 W model has unused tensor blk.45.nextn.shared_head_norm.weight (size = 16384 bytes) -- ignoring
+0.11.216.432 I cmn          init: llama threadpool init, n_threads = 24
+0.11.217.172 I common_speculative_init_result: loading draft model '/opt/llm-gateway/data/moe-quant/audit/GLM-5.3-Flash-MTP-Q4_K.gguf'
+0.11.475.914 W load: special_eot_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.11.475.922 W load: special_eom_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.11.950.053 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 2048, kv_unified = 'false'
+0.12.032.751 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.12.032.792 I srv  llama_server: model loaded
+0.12.032.796 I srv  llama_server: listening on http://127.0.0.1:18123
+0.12.300.674 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+0.12.300.713 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.12.300.811 W moe-cache: 42 expert layers cached on CUDA0 (CUDA0), upload link fastest
+0.12.304.380 W moe-cache: 1 upload workers, from pageable host memory (mmap; --load-mode pin: faster uploads)
+0.14.070.902 W moe-cache: probe: links alone link 0 9.6 GB/s; CPU threads:GB/s alone/with links 1:23.8/31.3 2:38.6/47.1 3:53.4/57.5 4:69.2/64.9 5:77.3/69.0 6:79.8/71.9 7:83.3/75.0 8:84.4/78.0 9:82.6/74.5 10:84.5/78.0 -> CPU 84.5 GB/s (saturated by 7 threads), RAM budget 84.5 GB/s
+0.14.070.965 W operator(): MoE expert cache enabled: 42 layers, slots/layer 2..2, 2 inserts/step, 919.3 MiB device memory
+0.20.796.448 I slot print_timing: id  0 | task 0 | prompt eval time =    2916.59 ms /    13 tokens (  224.35 ms per token,     4.46 tokens per second)
+0.20.796.455 I slot print_timing: id  0 | task 0 |        eval time =    5579.10 ms /    64 tokens (   88.56 ms per token,    11.29 tokens per second)
+0.20.796.456 I slot print_timing: id  0 | task 0 |       total time =    8495.69 ms /    77 tokens
+0.20.796.461 I slot print_timing: id  0 | task 0 |    graphs reused =         16
+0.20.796.490 I slot print_timing: id  0 | task 0 |        moe cache = on, hit 5.8% this request / 5.8% overall, 2..2 slots/layer, margin 0 gate 3 wait 1 big 0 predict 1
+0.20.796.492 I slot print_timing: id  0 | task 0 |        moe churn = 274 uploads, 197 evictions, 2042.9 MiB uploaded (this request)
+0.20.796.493 I slot print_timing: id  0 | task 0 |          threads = 24 decode / 24 batch, batch 256, ubatch 64
+0.20.796.498 I slot print_timing: id  0 | task 0 | draft acceptance = 0.90196 (   46 accepted /    51 generated), mean len =  3.71
+0.20.796.550 I slot      release: id  0 | task 0 | stop processing: n_tokens = 76, truncated = 0
+0.20.797.669 I srv    operator(): operator(): cleaning up before exit...
+0.20.800.732 W ~llama_context:  CUDA_Host compute buffer size of   3.1670 MiB, does not match expectation of   2.8458 MiB
+0.21.013.907 W moe-cache: steps=19 hits=1584 misses=25632 hit-rate=5.8%, prefill experts from cache 0/0, kept from prefill 0

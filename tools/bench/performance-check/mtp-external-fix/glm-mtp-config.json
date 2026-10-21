@@ -1,0 +1,43 @@
+{
+  "family": "glm",
+  "mode": "mtp",
+  "cmd": [
+    "/opt/llm-gateway/data/build/llama-performance-check/build-cuda/bin/llama-server",
+    "-m",
+    "/opt/llm-gateway/models/GLM-5.3-Flash-GGUF/UD-IQ2_XXS/GLM-5.3-Flash-UD-IQ2_XXS-00001-of-00004.gguf",
+    "-c",
+    "2048",
+    "-np",
+    "1",
+    "-b",
+    "256",
+    "-ub",
+    "64",
+    "-t",
+    "24",
+    "-tb",
+    "24",
+    "-fa",
+    "1",
+    "--load-mode",
+    "mmap",
+    "--no-warmup",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "18123",
+    "-md",
+    "/opt/llm-gateway/data/moe-quant/audit/GLM-5.3-Flash-MTP-Q4_K.gguf",
+    "--spec-type",
+    "draft-mtp",
+    "-ngld",
+    "0",
+    "--spec-draft-n-max",
+    "3"
+  ],
+  "env": {
+    "LLAMA_MOE_STATE": "0",
+    "LLAMA_SPEC_DEPTH": "3"
+  },
+  "benchmark_valid": false
+}
