@@ -1,0 +1,235 @@
+{
+ "trace": "../vibe-round14/trace.sqlite",
+ "window_s": 7.348,
+ "bursts": [
+  {
+   "offset_s": 0.0,
+   "dur_s": 7.35
+  }
+ ],
+ "kernels": [
+  {
+   "name": "mul_mat_vec_q",
+   "count": 22638,
+   "ms": 718.157
+  },
+  {
+   "name": "mul_mat_vec_q_moe",
+   "count": 8601,
+   "ms": 353.257
+  },
+  {
+   "name": "mul_mat_f",
+   "count": 16468,
+   "ms": 341.707
+  },
+  {
+   "name": "mul_mat_vec_f",
+   "count": 14023,
+   "ms": 95.669
+  },
+  {
+   "name": "gated_delta_net_cuda",
+   "count": 2232,
+   "ms": 75.47
+  },
+  {
+   "name": "quantize_q8_1",
+   "count": 31239,
+   "ms": 75.234
+  },
+  {
+   "name": "rms_norm_f32",
+   "count": 18003,
+   "ms": 67.276
+  },
+  {
+   "name": "k_bin_bcast",
+   "count": 25299,
+   "ms": 62.398
+  },
+  {
+   "name": "concat_non_cont",
+   "count": 2294,
+   "ms": 54.036
+  },
+  {
+   "name": "unary_op_kernel",
+   "count": 14088,
+   "ms": 27.598
+  },
+  {
+   "name": "k_get_rows_float_vec",
+   "count": 3094,
+   "ms": 26.56
+  },
+  {
+   "name": "unary_gated_op_kernel",
+   "count": 9368,
+   "ms": 25.164
+  },
+  {
+   "name": "dsv4_hc_pre_f32",
+   "count": 6620,
+   "ms": 23.433
+  },
+  {
+   "name": "k_get_rows_float",
+   "count": 7537,
+   "ms": 23.226
+  },
+  {
+   "name": "scale_f32",
+   "count": 10242,
+   "ms": 21.522
+  },
+  {
+   "name": "dsv4_hc_post_f32",
+   "count": 6440,
+   "ms": 21.254
+  },
+  {
+   "name": "mul_mat_q",
+   "count": 339,
+   "ms": 19.771
+  },
+  {
+   "name": "topk_moe_cuda",
+   "count": 3047,
+   "ms": 18.374
+  },
+  {
+   "name": "cpy_scalar_contiguous",
+   "count": 9306,
+   "ms": 18.264
+  },
+  {
+   "name": "flash_attn_ext_f16",
+   "count": 988,
+   "ms": 17.431
+  },
+  {
+   "name": "scale_silu_f32",
+   "count": 6681,
+   "ms": 15.169
+  },
+  {
+   "name": "scale_sigmoid_scale_f32",
+   "count": 6440,
+   "ms": 13.561
+  },
+  {
+   "name": "k_set_rows_quant",
+   "count": 2976,
+   "ms": 12.319
+  },
+  {
+   "name": "k_argsort_f32_i32",
+   "count": 1161,
+   "ms": 10.982
+  },
+  {
+   "name": "moe_weighted_reduction_f32",
+   "count": 3220,
+   "ms": 10.69
+  },
+  {
+   "name": "rope_multi",
+   "count": 3952,
+   "ms": 9.974
+  },
+  {
+   "name": "fill_kernel",
+   "count": 4940,
+   "ms": 8.969
+  },
+  {
+   "name": "ssm_conv_f32",
+   "count": 2196,
+   "ms": 8.389
+  },
+  {
+   "name": "concat_cont",
+   "count": 3208,
+   "ms": 7.754
+  },
+  {
+   "name": "fwht_cuda",
+   "count": 2976,
+   "ms": 6.705
+  },
+  {
+   "name": "lightning_indexer_kernel_vec",
+   "count": 973,
+   "ms": 6.163
+  },
+  {
+   "name": "dequantize_block_q8_0_f16",
+   "count": 1488,
+   "ms": 4.623
+  },
+  {
+   "name": "top_k_radix_select",
+   "count": 720,
+   "ms": 4.549
+  },
+  {
+   "name": "k_set_rows",
+   "count": 1964,
+   "ms": 4.53
+  },
+  {
+   "name": "mul_mat_q_stream_k_fixup",
+   "count": 339,
+   "ms": 4.424
+  },
+  {
+   "name": "op_clamp_kernel",
+   "count": 2211,
+   "ms": 4.385
+  },
+  {
+   "name": "cpy_scalar",
+   "count": 1236,
+   "ms": 4.265
+  },
+  {
+   "name": "convert_unary_cont_vec4",
+   "count": 928,
+   "ms": 4.109
+  },
+  {
+   "name": "turing_h1688gemm_128x128_ldg8_stages_32x1_tn",
+   "count": 157,
+   "ms": 4.061
+  },
+  {
+   "name": "k_get_rows",
+   "count": 1488,
+   "ms": 3.888
+  }
+ ],
+ "kernel_total_ms": 2256.542,
+ "memcpy": {
+  "DtoH": {
+   "count": 10335,
+   "bytes": 696887072,
+   "ms": 69.036,
+   "gbps": 10.09
+  },
+  "HtoD": {
+   "count": 24714,
+   "bytes": 9116060992,
+   "ms": 740.356,
+   "gbps": 12.31
+  },
+  "DtoD": {
+   "count": 23746,
+   "bytes": 2401337344,
+   "ms": 117.953,
+   "gbps": 20.36
+  }
+ },
+ "busy_ms": 3133.43,
+ "gap_ms": 4214.602
+}

@@ -1,0 +1,7 @@
+trace.qdstrm
+trace.nsys-rep
+trace.sqlite
+tmp/
+config/
+cache/
+profile-runner.log
