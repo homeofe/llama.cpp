@@ -2736,6 +2736,78 @@ static const void * ggml_cuda_graph_get_key(ggml_cgraph * cgraph) {
     return cgraph->nodes[0];
 }
 
+static int ggml_cuda_graph_variant_capacity(const ggml_backend_cuda_context * cuda_ctx) {
+#if defined(GGML_USE_VMM) && !defined(GGML_USE_HIP) && !defined(GGML_USE_MUSA)
+    static const int capacity = [] {
+        const char * value = getenv("GGML_CUDA_GRAPH_VARIANTS");
+        const char * optimize = getenv("GGML_CUDA_GRAPH_OPT");
+        // Concurrent-region events are recreated by graph_optimize; do not retain their captures.
+        return value && !(optimize && atoi(optimize) == 1) ? std::max(1, std::min(8, atoi(value))) : 1;
+    }();
+    // Legacy pools can release captured scratch addresses on allocation failure.
+    return ggml_cuda_info().devices[cuda_ctx->device].vmm ? capacity : 1;
+#else
+    GGML_UNUSED(cuda_ctx);
+    return 1;
+#endif
+}
+
+static bool ggml_cuda_graph_select_variant(ggml_cuda_graph * graph, ggml_cgraph * cgraph, int capacity) {
+    using properties = ggml_cuda_graph::node_properties;
+    static thread_local std::vector<properties> props;
+    props.resize(cgraph->n_nodes);
+    for (int i = 0; i < cgraph->n_nodes; ++i) {
+        auto & prop = props[i];
+        memset(&prop, 0, sizeof(prop));
+        memcpy(&prop.node, cgraph->nodes[i], sizeof(ggml_tensor));
+        for (int j = 0; j < GGML_MAX_SRC; ++j) {
+            if (cgraph->nodes[i]->src[j]) {
+                prop.node_src_data_ptrs[j] = cgraph->nodes[i]->src[j]->data;
+                memcpy(prop.node_src_ne[j], cgraph->nodes[i]->src[j]->ne, sizeof(prop.node_src_ne[j]));
+                memcpy(prop.node_src_nb[j], cgraph->nodes[i]->src[j]->nb, sizeof(prop.node_src_nb[j]));
+            }
+        }
+    }
+    auto matches = [&](const ggml_cuda_graph & candidate) {
+        return candidate.node_props.size() == props.size() &&
+               memcmp(candidate.node_props.data(), props.data(), props.size() * sizeof(properties)) == 0;
+    };
+    bool changed = false;
+    const char * action = "active";
+    if (!matches(*graph)) {
+        auto match = std::find_if(graph->variants.begin(), graph->variants.end(),
+                                 [&](const auto & candidate) { return matches(*candidate); });
+        if (match != graph->variants.end()) {
+            graph->swap_execution_state(**match);
+            action = "reuse";
+        } else {
+            if (!graph->node_props.empty()) {
+                if ((int) graph->variants.size() + 1 < capacity) {
+                    graph->variants.emplace_back(std::make_unique<ggml_cuda_graph>());
+                    graph->swap_execution_state(*graph->variants.back());
+                } else {
+                    auto oldest = std::min_element(graph->variants.begin(), graph->variants.end(),
+                        [](const auto & a, const auto & b) { return a->last_used_time < b->last_used_time; });
+                    graph->swap_execution_state(**oldest);
+                }
+            }
+            graph->node_props.swap(props);
+            graph->warmup_complete = false;
+            changed = true;
+            action = "miss";
+        }
+    }
+    graph->uid = cgraph->uid;
+    graph->last_used_time = ggml_time_us();
+    static const bool trace = ggml_cuda_env_flag("GGML_CUDA_GRAPH_TRACE");
+    if (trace) {
+        GGML_LOG_WARN("graph_variant action=%s nodes=%d entries=%zu warm=%d instance=%d first=%s\n",
+            action, cgraph->n_nodes, graph->variants.size() + 1, graph->warmup_complete,
+            graph->instance != nullptr, cgraph->nodes[0]->name);
+    }
+    return changed;
+}
+
 static bool ggml_cuda_graph_update_required(ggml_backend_cuda_context * cuda_ctx, ggml_cgraph * cgraph) {
     bool res = false;
     static const bool trace = ggml_cuda_env_flag("GGML_CUDA_GRAPH_TRACE");
@@ -2753,6 +2825,11 @@ static bool ggml_cuda_graph_update_required(ggml_backend_cuda_context * cuda_ctx
         }
         GGML_ASSERT((int)graph->node_props.size() == cgraph->n_nodes);
         return false;
+    }
+
+    const int variant_capacity = ggml_cuda_graph_variant_capacity(cuda_ctx);
+    if (variant_capacity > 1) {
+        return ggml_cuda_graph_select_variant(graph, cgraph, variant_capacity);
     }
 
     graph->uid = cgraph->uid;

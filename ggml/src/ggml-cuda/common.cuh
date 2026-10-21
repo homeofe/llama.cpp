@@ -1286,6 +1286,19 @@ struct ggml_cuda_graph {
         size_t   node_src_nb[GGML_MAX_SRC][GGML_MAX_DIMS];
     };
     std::vector<node_properties> node_props;
+    // Optional bounded alternatives; the map's active object keeps its stable address.
+    std::vector<std::unique_ptr<ggml_cuda_graph>> variants;
+
+    void swap_execution_state(ggml_cuda_graph & other) {
+        std::swap(graph, other.graph);
+        std::swap(instance, other.instance);
+        std::swap(num_nodes, other.num_nodes);
+        nodes.swap(other.nodes);
+        std::swap(warmup_complete, other.warmup_complete);
+        std::swap(uid, other.uid);
+        std::swap(last_used_time, other.last_used_time);
+        node_props.swap(other.node_props);
+    }
 
     bool is_enabled() const {
         static const bool disable_cuda_graphs_due_to_env = (getenv("GGML_CUDA_DISABLE_GRAPHS") != nullptr);
@@ -1503,6 +1516,13 @@ struct ggml_backend_cuda_context {
         for (const auto & [key, graph] : cuda_graphs) {
             if (graph && graph->instance != nullptr) {
                 return true;
+            }
+            if (graph) {
+                for (const auto & variant : graph->variants) {
+                    if (variant->instance != nullptr) {
+                        return true;
+                    }
+                }
             }
         }
         return false;
