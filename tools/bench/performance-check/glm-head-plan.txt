@@ -1,0 +1,3 @@
+[dry-run] Will download 1 files (out of 1) totalling 4.6G.
+file	size
+GLM-5.3-Flash-MTP-Q4_K.gguf	4.6G

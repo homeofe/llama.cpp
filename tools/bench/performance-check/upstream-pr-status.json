@@ -1,0 +1,29 @@
+{
+  "checked_at": "2026-10-21",
+  "prs": [
+    {
+      "url": "https://github.com/ggml-org/llama.cpp/pull/28243",
+      "number": 28243,
+      "state": "closed",
+      "merged": false,
+      "draft": false,
+      "title": "models: Qwen3.8-Flash-Next MTP",
+      "merge_commit_sha": null,
+      "updated_at": "2026-10-12T19:00:34Z",
+      "closed_at": "2026-10-01T12:36:57Z",
+      "merged_at": null
+    },
+    {
+      "url": "https://github.com/ggml-org/llama.cpp/pull/27917",
+      "number": 27917,
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "title": "Add MTP for GLM-5.3-Flash",
+      "merge_commit_sha": null,
+      "updated_at": "2026-10-04T07:01:50Z",
+      "closed_at": null,
+      "merged_at": null
+    }
+  ]
+}

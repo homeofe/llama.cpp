@@ -1,18 +1,23 @@
 #!/usr/bin/env python3
 """Run the production MMVF unpack helper on every BF16 bit pattern on sm_75."""
-import json, pathlib, subprocess, urllib.request
+import json, pathlib, subprocess, sys, urllib.request
 ROOT=pathlib.Path(__file__).resolve().parents[3]
 HERE=pathlib.Path(__file__).resolve().parent
 s=(ROOT/'ggml/src/ggml-cuda/mmvf.cu').read_text()
 a=s.index('template <typename T>\nstatic __device__ __forceinline__ void mmvf_v16_unpack')
 b=s.index('\ntemplate <typename T, int ROWS>',a)
+cut=sys.argv[1] if len(sys.argv)>1 else 'none'
+helper=s[a:b]
+if cut=='pair':helper=helper.replace('f[2*k] = t.x', 'f[2*k] = t.y')
+if cut=='tiny':helper=helper.replace('f[2*k] = t.x', 'f[2*k] = t.x + 1e-6f')
+assert cut in ('none','pair','tiny')
 cu=ROOT/'build-cuda/check-bf16.cu'
 cu.write_text('''#include "convert.cuh"
 #include <cstdio>
 #include <cstring>
 #include <cmath>
 #include <vector>
-'''+s[a:b]+'''
+'''+helper+'''
 __global__ void check(float * out) {
     unsigned int i=(blockIdx.x*blockDim.x+threadIdx.x)*8;
     if (i>=65536) return;
@@ -45,6 +50,8 @@ gw('POST','/api/v1/gpu/hold',{'reason':'codex: BF16 conversion correctness','ttl
 try:
     gw('POST','/api/v1/gpu/free',{})
     assert not subprocess.check_output(['nvidia-smi','--query-compute-apps=pid','--format=csv,noheader'],text=True).strip()
-    subprocess.run([str(cu.with_suffix(''))],check=True)
+    result=subprocess.run([str(cu.with_suffix(''))])
+    assert result.returncode == (0 if cut=='none' else 1), (cut,result.returncode)
+    print('PASS control',cut,'exit',result.returncode)
 finally:
     gw('DELETE','/api/v1/gpu/hold')

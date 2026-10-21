@@ -1,0 +1,13 @@
+{"epoch": 1792579070.9069607, "kind": "pause_reference", "pid": 1483672}
+{"epoch": 1792579131.530907, "kind": "cpu_build_complete", "seconds": 60.623940229415894}
+{"epoch": 1792579131.5313635, "kind": "resume_reference", "pid": 1483672}
+{"epoch": 1792579218.0327742, "kind": "pause_reference", "command": ["build-cpu/bin/check-options", "dense-state", "/opt/llm-gateway/models/Phi-4-mini-reasoning-GGUF/Phi-4-mini-reasoning-Q4_K_M.gguf", "/tmp/llama-audit-dense-before.ini"]}
+{"epoch": 1792579297.049339, "kind": "resume_reference"}
+{"epoch": 1792579321.388914, "kind": "pause_reference", "command": ["build-cpu/bin/check-options", "dense-state", "/opt/llm-gateway/models/Phi-4-mini-reasoning-GGUF/Phi-4-mini-reasoning-Q4_K_M.gguf", "/tmp/llama-audit-dense-before.ini"]}
+{"epoch": 1792579325.711114, "kind": "resume_reference"}
+{"epoch": 1792579352.7903936, "kind": "pause_reference", "command": ["nice", "-n", "10", "cmake", "--build", "build-cpu", "--target", "llama-common", "server-context", "-j", "8"]}
+{"epoch": 1792579383.0143993, "kind": "resume_reference"}
+{"epoch": 1792579404.4165535, "kind": "pause_reference", "command": ["python3", "tools/bench/performance-check/run_options.py", "stock-fix-after"]}
+{"epoch": 1792579407.9370265, "kind": "resume_reference"}
+{"epoch": 1792579498.1684456, "kind": "pause_reference", "command": ["nice", "-n", "10", "cmake", "--build", "build-cpu", "--target", "llama-common", "-j", "8"]}
+{"epoch": 1792579521.2291093, "kind": "resume_reference"}

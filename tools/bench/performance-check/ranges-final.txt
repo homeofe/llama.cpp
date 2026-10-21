@@ -1,0 +1,12 @@
+test_exact_tensor_range (__main__.RangeChecks.test_exact_tensor_range) ... ok
+test_reject_ignored_range (__main__.RangeChecks.test_reject_ignored_range) ... ok
+test_reject_length_mismatch (__main__.RangeChecks.test_reject_length_mismatch) ... ok
+test_reject_short_nonfinal_range (__main__.RangeChecks.test_reject_short_nonfinal_range) ... ok
+test_reject_wrong_offset (__main__.RangeChecks.test_reject_wrong_offset) ... ok
+test_tensor_range_must_not_end_early (__main__.RangeChecks.test_tensor_range_must_not_end_early) ... ok
+test_valid_short_final_header_range (__main__.RangeChecks.test_valid_short_final_header_range) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 3.540s
+
+OK

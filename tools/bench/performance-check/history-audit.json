@@ -1,0 +1,85 @@
+{
+  "baseline_commit": "9a773611b80e5fe88a2bf7630c73f1b01fe721bb",
+  "rows": 608,
+  "missing": {
+    "commit": 15,
+    "bno": 15,
+    "build": 0,
+    "hw": 0,
+    "args": 469,
+    "cmd": 182
+  },
+  "readme_cases": {
+    "GLM short": {
+      "rounded_tps": 22.4,
+      "matches": []
+    },
+    "MiMo short": {
+      "rounded_tps": 10.9,
+      "matches": []
+    },
+    "Qwen IQ3 short": {
+      "rounded_tps": 57.1,
+      "matches": []
+    },
+    "Qwen IQ1 short": {
+      "rounded_tps": 67.5,
+      "matches": []
+    },
+    "Qwen36 laptop": {
+      "rounded_tps": 59.3,
+      "matches": []
+    },
+    "dense CPU": {
+      "rounded_tps": 1.6,
+      "matches": [
+        {
+          "ts": "2026-09-30 21:08:00",
+          "commit": "34557c12c",
+          "bno": "11648",
+          "tps": "1.6",
+          "pp": "5.8",
+          "hit": "",
+          "model": "Qwen3.8-27B-GSQ-RCO-IQ3_S-mtp.gguf",
+          "args": "",
+          "test": "cli-t100",
+          "hw": "pc2",
+          "ok": "1",
+          "build": "rel-b11648-cpu",
+          "md5": "",
+          "campaign": "",
+          "note": "pc2 CPU-only Ryzen 5 3600, cli tetris -n 100 -c 1024 --temp 0, run 1; imported",
+          "ppl": "",
+          "spp": "",
+          "n_gen": "",
+          "origin": "fork",
+          "env": "",
+          "cmd": ""
+        },
+        {
+          "ts": "2026-09-30 21:08:00",
+          "commit": "34557c12c",
+          "bno": "11648",
+          "tps": "1.6",
+          "pp": "5.8",
+          "hit": "",
+          "model": "Qwen3.8-27B-GSQ-RCO-IQ3_S-mtp.gguf",
+          "args": "",
+          "test": "cli-t100",
+          "hw": "pc2",
+          "ok": "1",
+          "build": "rel-b11648-cpu",
+          "md5": "",
+          "campaign": "",
+          "note": "pc2 CPU-only Ryzen 5 3600, cli tetris -n 100 -c 1024 --temp 0, run 2; imported",
+          "ppl": "",
+          "spp": "",
+          "n_gen": "",
+          "origin": "fork",
+          "env": "",
+          "cmd": ""
+        }
+      ]
+    }
+  }
+}

@@ -2593,7 +2593,7 @@ common_params_context common_params_parser_init(common_params & params, llama_ex
     add_opt(common_arg(
         {"-at", "--autotune"}, "on|off",
         "self-tuning on measured token times (expert cache knobs, decode and prompt thread counts, cache-or-stock placement measuring), default on; "
-        "off = fixed defaults and the static placement rule, nothing is measured or saved. Same as --moe autotune=0 or LLAMA_AUTOTUNE=0",
+        "off = no tuning trials or learned state; static placement, cache statistics and bandwidth probes remain. Same as --moe autotune=0 or LLAMA_AUTOTUNE=0",
         [](common_params & params, const std::string & value) {
             if      (value == "on"  || value == "1" || value == "true")  { params.autotune = true;  }
             else if (value == "off" || value == "0" || value == "false") { params.autotune = false; }
@@ -2755,7 +2755,7 @@ common_params_context common_params_parser_init(common_params & params, llama_ex
         "model loading mode (default: auto)\n"
         "- auto: mmap, unless a device does not support it\n"
         "- none: no special loading mode (with a GPU: weights in pinned RAM, faster uploads)\n"
-        "- pin: same as none; llama-server picks it by itself when the model fits in available RAM\n"
+        "- pin: same as none; automatic MoE caching on llama-server picks it when the model fits in available RAM\n"
         "- mmap: memory-map model (if mmap disabled, slower load but may reduce pageouts if not using mlock)\n"
         "- mlock: force system to keep model in RAM rather than swapping or compressing\n"
         "- mmap+mlock: mmap + force system to keep model in RAM rather than swapping or compressing\n"

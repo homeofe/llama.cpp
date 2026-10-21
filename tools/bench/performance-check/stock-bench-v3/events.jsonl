@@ -1,0 +1,110 @@
+{"kind": "run", "index": 0, "tag": "00-moe-prefill-upstream", "case": "moe-prefill", "build": "upstream", "cmd": ["/opt/llm-gateway/data/build/llama-audit-upstream/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Qwen3.6-35B-A3B-MTP-GGUF/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf", "-ngl", "99", "-ncmoe", "41", "-p", "12288", "-n", "0", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 1.14501953125, "foreign_cores": 0.3179896328279732, "accepted": true, "utc": "2026-10-21T11:45:35Z"}
+{"kind": "run", "index": 1, "tag": "01-moe-prefill-fork", "case": "moe-prefill", "build": "fork", "cmd": ["/opt/llm-gateway/data/build/llama-performance-check/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Qwen3.6-35B-A3B-MTP-GGUF/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf", "-ngl", "99", "-ncmoe", "41", "-p", "12288", "-n", "0", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 1.279296875, "foreign_cores": 0.32111478450324593, "accepted": true, "utc": "2026-10-21T11:46:46Z"}
+{"kind": "run", "index": 2, "tag": "02-moe-prefill-fork", "case": "moe-prefill", "build": "fork", "cmd": ["/opt/llm-gateway/data/build/llama-performance-check/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Qwen3.6-35B-A3B-MTP-GGUF/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf", "-ngl", "99", "-ncmoe", "41", "-p", "12288", "-n", "0", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 1.14404296875, "foreign_cores": 0.23133002046868398, "accepted": true, "utc": "2026-10-21T11:47:57Z"}
+{"kind": "run", "index": 3, "tag": "03-moe-prefill-upstream", "case": "moe-prefill", "build": "upstream", "cmd": ["/opt/llm-gateway/data/build/llama-audit-upstream/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Qwen3.6-35B-A3B-MTP-GGUF/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf", "-ngl", "99", "-ncmoe", "41", "-p", "12288", "-n", "0", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 1.1533203125, "foreign_cores": 0.22352903227893844, "accepted": true, "utc": "2026-10-21T11:49:08Z"}
+{"kind": "run", "index": 4, "tag": "04-moe-prefill-upstream", "case": "moe-prefill", "build": "upstream", "cmd": ["/opt/llm-gateway/data/build/llama-audit-upstream/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Qwen3.6-35B-A3B-MTP-GGUF/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf", "-ngl", "99", "-ncmoe", "41", "-p", "12288", "-n", "0", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 1.1484375, "foreign_cores": 0.23074744561299654, "accepted": true, "utc": "2026-10-21T11:50:19Z"}
+{"kind": "run", "index": 5, "tag": "05-moe-prefill-fork", "case": "moe-prefill", "build": "fork", "cmd": ["/opt/llm-gateway/data/build/llama-performance-check/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Qwen3.6-35B-A3B-MTP-GGUF/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf", "-ngl", "99", "-ncmoe", "41", "-p", "12288", "-n", "0", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 1.19140625, "foreign_cores": 0.23248383158491234, "accepted": true, "utc": "2026-10-21T11:51:30Z"}
+{"kind": "run", "index": 6, "tag": "06-dense-gpu-upstream", "case": "dense-gpu", "build": "upstream", "cmd": ["/opt/llm-gateway/data/build/llama-audit-upstream/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Phi-4-mini-reasoning-GGUF/Phi-4-mini-reasoning-Q4_K_M.gguf", "-ngl", "99", "-p", "0", "-n", "128", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 1.1025390625, "foreign_cores": 0.1766024741390344, "accepted": true, "utc": "2026-10-21T11:51:35Z"}
+{"kind": "run", "index": 7, "tag": "07-dense-gpu-fork", "case": "dense-gpu", "build": "fork", "cmd": ["/opt/llm-gateway/data/build/llama-performance-check/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Phi-4-mini-reasoning-GGUF/Phi-4-mini-reasoning-Q4_K_M.gguf", "-ngl", "99", "-p", "0", "-n", "128", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 1.01416015625, "foreign_cores": 0.17659493604651885, "accepted": true, "utc": "2026-10-21T11:51:40Z"}
+{"kind": "run", "index": 8, "tag": "08-dense-gpu-fork", "case": "dense-gpu", "build": "fork", "cmd": ["/opt/llm-gateway/data/build/llama-performance-check/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Phi-4-mini-reasoning-GGUF/Phi-4-mini-reasoning-Q4_K_M.gguf", "-ngl", "99", "-p", "0", "-n", "128", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 0.85791015625, "foreign_cores": 0.15660137814345035, "accepted": true, "utc": "2026-10-21T11:51:46Z"}
+{"kind": "run", "index": 9, "tag": "09-dense-gpu-upstream", "case": "dense-gpu", "build": "upstream", "cmd": ["/opt/llm-gateway/data/build/llama-audit-upstream/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Phi-4-mini-reasoning-GGUF/Phi-4-mini-reasoning-Q4_K_M.gguf", "-ngl", "99", "-p", "0", "-n", "128", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 0.7890625, "foreign_cores": 0.2732219311038269, "accepted": true, "utc": "2026-10-21T11:51:51Z"}
+{"kind": "run", "index": 10, "tag": "10-dense-gpu-upstream", "case": "dense-gpu", "build": "upstream", "cmd": ["/opt/llm-gateway/data/build/llama-audit-upstream/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Phi-4-mini-reasoning-GGUF/Phi-4-mini-reasoning-Q4_K_M.gguf", "-ngl", "99", "-p", "0", "-n", "128", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 0.80615234375, "foreign_cores": 0.35650178090270584, "accepted": true, "utc": "2026-10-21T11:51:56Z"}
+{"kind": "run", "index": 11, "tag": "11-dense-gpu-fork", "case": "dense-gpu", "build": "fork", "cmd": ["/opt/llm-gateway/data/build/llama-performance-check/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Phi-4-mini-reasoning-GGUF/Phi-4-mini-reasoning-Q4_K_M.gguf", "-ngl", "99", "-p", "0", "-n", "128", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 0.7412109375, "foreign_cores": 0.1366060819169113, "accepted": true, "utc": "2026-10-21T11:52:01Z"}
+{"kind": "run", "index": 12, "tag": "12-dense-cpu-upstream", "case": "dense-cpu", "build": "upstream", "cmd": ["/opt/llm-gateway/data/build/llama-audit-upstream/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Phi-4-mini-reasoning-GGUF/Phi-4-mini-reasoning-Q4_K_M.gguf", "-ngl", "0", "-nopo", "1", "-p", "0", "-n", "128", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 0.681640625, "foreign_cores": 0.5860176045097714, "accepted": true, "utc": "2026-10-21T11:52:09Z"}
+{"kind": "wait_quiet", "load": 2.70947265625, "foreign_cores": 0.225, "utc": "2026-10-21T11:52:11Z"}
+{"kind": "wait_quiet", "load": 2.4921875, "foreign_cores": 0.16, "utc": "2026-10-21T11:52:13Z"}
+{"kind": "wait_quiet", "load": 2.4921875, "foreign_cores": 0.21, "utc": "2026-10-21T11:52:15Z"}
+{"kind": "wait_quiet", "load": 2.4921875, "foreign_cores": 0.465, "utc": "2026-10-21T11:52:17Z"}
+{"kind": "wait_quiet", "load": 2.29248046875, "foreign_cores": 0.185, "utc": "2026-10-21T11:52:19Z"}
+{"kind": "wait_quiet", "load": 2.29248046875, "foreign_cores": 0.255, "utc": "2026-10-21T11:52:21Z"}
+{"kind": "wait_quiet", "load": 2.10888671875, "foreign_cores": 0.16, "utc": "2026-10-21T11:52:23Z"}
+{"kind": "wait_quiet", "load": 2.10888671875, "foreign_cores": 0.18, "utc": "2026-10-21T11:52:25Z"}
+{"kind": "wait_quiet", "load": 2.10888671875, "foreign_cores": 0.23, "utc": "2026-10-21T11:52:27Z"}
+{"kind": "run", "index": 13, "tag": "13-dense-cpu-fork", "case": "dense-cpu", "build": "fork", "cmd": ["/opt/llm-gateway/data/build/llama-performance-check/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Phi-4-mini-reasoning-GGUF/Phi-4-mini-reasoning-Q4_K_M.gguf", "-ngl", "0", "-nopo", "1", "-p", "0", "-n", "128", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 1.93994140625, "foreign_cores": 0.4145765134788592, "accepted": true, "utc": "2026-10-21T11:52:35Z"}
+{"kind": "wait_quiet", "load": 3.78662109375, "foreign_cores": 0.43, "utc": "2026-10-21T11:52:37Z"}
+{"kind": "wait_quiet", "load": 3.48291015625, "foreign_cores": 0.145, "utc": "2026-10-21T11:52:39Z"}
+{"kind": "wait_quiet", "load": 3.48291015625, "foreign_cores": 0.23, "utc": "2026-10-21T11:52:41Z"}
+{"kind": "wait_quiet", "load": 3.20361328125, "foreign_cores": 0.15, "utc": "2026-10-21T11:52:43Z"}
+{"kind": "wait_quiet", "load": 3.20361328125, "foreign_cores": 0.295, "utc": "2026-10-21T11:52:45Z"}
+{"kind": "wait_quiet", "load": 3.20361328125, "foreign_cores": 0.255, "utc": "2026-10-21T11:52:47Z"}
+{"kind": "wait_quiet", "load": 3.02685546875, "foreign_cores": 0.595, "utc": "2026-10-21T11:52:49Z"}
+{"kind": "wait_quiet", "load": 3.02685546875, "foreign_cores": 0.29, "utc": "2026-10-21T11:52:51Z"}
+{"kind": "wait_quiet", "load": 2.7841796875, "foreign_cores": 0.285, "utc": "2026-10-21T11:52:53Z"}
+{"kind": "wait_quiet", "load": 2.7841796875, "foreign_cores": 0.225, "utc": "2026-10-21T11:52:55Z"}
+{"kind": "wait_quiet", "load": 2.7841796875, "foreign_cores": 0.175, "utc": "2026-10-21T11:52:57Z"}
+{"kind": "wait_quiet", "load": 2.56103515625, "foreign_cores": 0.32, "utc": "2026-10-21T11:52:59Z"}
+{"kind": "wait_quiet", "load": 2.56103515625, "foreign_cores": 0.205, "utc": "2026-10-21T11:53:01Z"}
+{"kind": "wait_quiet", "load": 2.35546875, "foreign_cores": 0.165, "utc": "2026-10-21T11:53:03Z"}
+{"kind": "wait_quiet", "load": 2.35546875, "foreign_cores": 0.205, "utc": "2026-10-21T11:53:05Z"}
+{"kind": "wait_quiet", "load": 2.35546875, "foreign_cores": 0.25, "utc": "2026-10-21T11:53:07Z"}
+{"kind": "wait_quiet", "load": 2.24658203125, "foreign_cores": 0.175, "utc": "2026-10-21T11:53:09Z"}
+{"kind": "wait_quiet", "load": 2.24658203125, "foreign_cores": 0.64, "utc": "2026-10-21T11:53:11Z"}
+{"kind": "wait_quiet", "load": 2.06640625, "foreign_cores": 0.25, "utc": "2026-10-21T11:53:13Z"}
+{"kind": "wait_quiet", "load": 2.06640625, "foreign_cores": 0.13, "utc": "2026-10-21T11:53:15Z"}
+{"kind": "wait_quiet", "load": 2.06640625, "foreign_cores": 0.145, "utc": "2026-10-21T11:53:17Z"}
+{"kind": "run", "index": 14, "tag": "14-dense-cpu-fork", "case": "dense-cpu", "build": "fork", "cmd": ["/opt/llm-gateway/data/build/llama-performance-check/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Phi-4-mini-reasoning-GGUF/Phi-4-mini-reasoning-Q4_K_M.gguf", "-ngl", "0", "-nopo", "1", "-p", "0", "-n", "128", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 1.90087890625, "foreign_cores": 0.5636746747552102, "accepted": true, "utc": "2026-10-21T11:53:26Z"}
+{"kind": "wait_quiet", "load": 3.4501953125, "foreign_cores": 0.085, "utc": "2026-10-21T11:53:28Z"}
+{"kind": "wait_quiet", "load": 3.4501953125, "foreign_cores": 0.085, "utc": "2026-10-21T11:53:30Z"}
+{"kind": "wait_quiet", "load": 3.4501953125, "foreign_cores": 0.12, "utc": "2026-10-21T11:53:32Z"}
+{"kind": "wait_quiet", "load": 3.173828125, "foreign_cores": 0.385, "utc": "2026-10-21T11:53:34Z"}
+{"kind": "wait_quiet", "load": 3.173828125, "foreign_cores": 0.12, "utc": "2026-10-21T11:53:36Z"}
+{"kind": "wait_quiet", "load": 2.91943359375, "foreign_cores": 0.095, "utc": "2026-10-21T11:53:38Z"}
+{"kind": "wait_quiet", "load": 2.91943359375, "foreign_cores": 0.21, "utc": "2026-10-21T11:53:40Z"}
+{"kind": "wait_quiet", "load": 2.91943359375, "foreign_cores": 0.225, "utc": "2026-10-21T11:53:42Z"}
+{"kind": "wait_quiet", "load": 2.685546875, "foreign_cores": 0.44, "utc": "2026-10-21T11:53:44Z"}
+{"kind": "wait_quiet", "load": 2.685546875, "foreign_cores": 0.275, "utc": "2026-10-21T11:53:46Z"}
+{"kind": "wait_quiet", "load": 2.47021484375, "foreign_cores": 0.14, "utc": "2026-10-21T11:53:48Z"}
+{"kind": "wait_quiet", "load": 2.47021484375, "foreign_cores": 0.21, "utc": "2026-10-21T11:53:50Z"}
+{"kind": "wait_quiet", "load": 2.47021484375, "foreign_cores": 0.295, "utc": "2026-10-21T11:53:52Z"}
+{"kind": "wait_quiet", "load": 2.27197265625, "foreign_cores": 0.165, "utc": "2026-10-21T11:53:54Z"}
+{"kind": "wait_quiet", "load": 2.27197265625, "foreign_cores": 0.46, "utc": "2026-10-21T11:53:56Z"}
+{"kind": "wait_quiet", "load": 2.08984375, "foreign_cores": 0.165, "utc": "2026-10-21T11:53:58Z"}
+{"kind": "wait_quiet", "load": 2.08984375, "foreign_cores": 0.175, "utc": "2026-10-21T11:54:00Z"}
+{"kind": "wait_quiet", "load": 2.08984375, "foreign_cores": 0.18, "utc": "2026-10-21T11:54:02Z"}
+{"kind": "run", "index": 15, "tag": "15-dense-cpu-upstream", "case": "dense-cpu", "build": "upstream", "cmd": ["/opt/llm-gateway/data/build/llama-audit-upstream/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Phi-4-mini-reasoning-GGUF/Phi-4-mini-reasoning-Q4_K_M.gguf", "-ngl", "0", "-nopo", "1", "-p", "0", "-n", "128", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 1.92236328125, "foreign_cores": 0.8790055615148497, "accepted": true, "utc": "2026-10-21T11:54:10Z"}
+{"kind": "wait_quiet", "load": 3.7705078125, "foreign_cores": 0.41, "utc": "2026-10-21T11:54:12Z"}
+{"kind": "wait_quiet", "load": 3.46826171875, "foreign_cores": 0.175, "utc": "2026-10-21T11:54:14Z"}
+{"kind": "wait_quiet", "load": 3.46826171875, "foreign_cores": 0.175, "utc": "2026-10-21T11:54:16Z"}
+{"kind": "wait_quiet", "load": 3.1904296875, "foreign_cores": 0.47, "utc": "2026-10-21T11:54:18Z"}
+{"kind": "wait_quiet", "load": 3.1904296875, "foreign_cores": 0.175, "utc": "2026-10-21T11:54:20Z"}
+{"kind": "wait_quiet", "load": 3.1904296875, "foreign_cores": 0.155, "utc": "2026-10-21T11:54:22Z"}
+{"kind": "wait_quiet", "load": 2.9345703125, "foreign_cores": 0.165, "utc": "2026-10-21T11:54:24Z"}
+{"kind": "wait_quiet", "load": 2.9345703125, "foreign_cores": 0.17, "utc": "2026-10-21T11:54:26Z"}
+{"kind": "wait_quiet", "load": 2.69921875, "foreign_cores": 0.135, "utc": "2026-10-21T11:54:28Z"}
+{"kind": "wait_quiet", "load": 2.69921875, "foreign_cores": 0.485, "utc": "2026-10-21T11:54:30Z"}
+{"kind": "wait_quiet", "load": 2.69921875, "foreign_cores": 0.175, "utc": "2026-10-21T11:54:32Z"}
+{"kind": "wait_quiet", "load": 2.56298828125, "foreign_cores": 0.18, "utc": "2026-10-21T11:54:34Z"}
+{"kind": "wait_quiet", "load": 2.56298828125, "foreign_cores": 0.185, "utc": "2026-10-21T11:54:36Z"}
+{"kind": "wait_quiet", "load": 2.357421875, "foreign_cores": 0.205, "utc": "2026-10-21T11:54:38Z"}
+{"kind": "wait_quiet", "load": 2.357421875, "foreign_cores": 0.5, "utc": "2026-10-21T11:54:40Z"}
+{"kind": "wait_quiet", "load": 2.357421875, "foreign_cores": 0.22, "utc": "2026-10-21T11:54:42Z"}
+{"kind": "wait_quiet", "load": 2.16845703125, "foreign_cores": 0.12, "utc": "2026-10-21T11:54:44Z"}
+{"kind": "wait_quiet", "load": 2.16845703125, "foreign_cores": 0.155, "utc": "2026-10-21T11:54:46Z"}
+{"kind": "wait_quiet", "load": 2.07470703125, "foreign_cores": 0.165, "utc": "2026-10-21T11:54:48Z"}
+{"kind": "wait_quiet", "load": 2.07470703125, "foreign_cores": 0.17, "utc": "2026-10-21T11:54:50Z"}
+{"kind": "wait_quiet", "load": 2.07470703125, "foreign_cores": 0.435, "utc": "2026-10-21T11:54:52Z"}
+{"kind": "run", "index": 16, "tag": "16-dense-cpu-upstream", "case": "dense-cpu", "build": "upstream", "cmd": ["/opt/llm-gateway/data/build/llama-audit-upstream/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Phi-4-mini-reasoning-GGUF/Phi-4-mini-reasoning-Q4_K_M.gguf", "-ngl", "0", "-nopo", "1", "-p", "0", "-n", "128", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 1.908203125, "foreign_cores": 0.3296603632894902, "accepted": true, "utc": "2026-10-21T11:55:00Z"}
+{"kind": "wait_quiet", "load": 3.677734375, "foreign_cores": 0.25, "utc": "2026-10-21T11:55:02Z"}
+{"kind": "wait_quiet", "load": 3.3828125, "foreign_cores": 0.28, "utc": "2026-10-21T11:55:04Z"}
+{"kind": "wait_quiet", "load": 3.3828125, "foreign_cores": 0.16, "utc": "2026-10-21T11:55:06Z"}
+{"kind": "wait_quiet", "load": 3.11181640625, "foreign_cores": 0.14, "utc": "2026-10-21T11:55:08Z"}
+{"kind": "wait_quiet", "load": 3.11181640625, "foreign_cores": 0.225, "utc": "2026-10-21T11:55:10Z"}
+{"kind": "wait_quiet", "load": 3.11181640625, "foreign_cores": 0.155, "utc": "2026-10-21T11:55:12Z"}
+{"kind": "wait_quiet", "load": 2.9423828125, "foreign_cores": 0.47, "utc": "2026-10-21T11:55:14Z"}
+{"kind": "wait_quiet", "load": 2.9423828125, "foreign_cores": 0.52, "utc": "2026-10-21T11:55:16Z"}
+{"kind": "wait_quiet", "load": 2.70654296875, "foreign_cores": 0.265, "utc": "2026-10-21T11:55:18Z"}
+{"kind": "wait_quiet", "load": 2.70654296875, "foreign_cores": 0.26, "utc": "2026-10-21T11:55:20Z"}
+{"kind": "wait_quiet", "load": 2.70654296875, "foreign_cores": 0.16, "utc": "2026-10-21T11:55:22Z"}
+{"kind": "wait_quiet", "load": 2.48974609375, "foreign_cores": 0.09, "utc": "2026-10-21T11:55:24Z"}
+{"kind": "wait_quiet", "load": 2.48974609375, "foreign_cores": 0.45, "utc": "2026-10-21T11:55:26Z"}
+{"kind": "wait_quiet", "load": 2.3701171875, "foreign_cores": 0.17, "utc": "2026-10-21T11:55:28Z"}
+{"kind": "wait_quiet", "load": 2.3701171875, "foreign_cores": 0.18, "utc": "2026-10-21T11:55:30Z"}
+{"kind": "wait_quiet", "load": 2.3701171875, "foreign_cores": 0.17, "utc": "2026-10-21T11:55:32Z"}
+{"kind": "wait_quiet", "load": 2.18017578125, "foreign_cores": 0.17, "utc": "2026-10-21T11:55:34Z"}
+{"kind": "wait_quiet", "load": 2.18017578125, "foreign_cores": 0.435, "utc": "2026-10-21T11:55:36Z"}
+{"kind": "wait_quiet", "load": 2.08544921875, "foreign_cores": 0.155, "utc": "2026-10-21T11:55:38Z"}
+{"kind": "wait_quiet", "load": 2.08544921875, "foreign_cores": 0.185, "utc": "2026-10-21T11:55:40Z"}
+{"kind": "wait_quiet", "load": 2.08544921875, "foreign_cores": 0.115, "utc": "2026-10-21T11:55:42Z"}
+{"kind": "run", "index": 17, "tag": "17-dense-cpu-fork", "case": "dense-cpu", "build": "fork", "cmd": ["/opt/llm-gateway/data/build/llama-performance-check/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Phi-4-mini-reasoning-GGUF/Phi-4-mini-reasoning-Q4_K_M.gguf", "-ngl", "0", "-nopo", "1", "-p", "0", "-n", "128", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 1.91796875, "foreign_cores": 0.8574847091598686, "accepted": true, "utc": "2026-10-21T11:55:50Z"}
+{"kind": "complete", "utc": "2026-10-21T11:55:50Z"}
+{"kind": "finished", "gpu_released": true, "utc": "2026-10-21T11:55:50Z"}

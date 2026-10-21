@@ -1,0 +1,5 @@
+PASS write
+PASS read
+PASS off
+PASS reset
+{"fresh_process_persistence": true, "disabled_file_syscalls": 0, "disabled_file_unchanged": true, "delete_resets": true}

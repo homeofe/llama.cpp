@@ -1,0 +1,73 @@
+{"kind": "wait_quiet", "load": 2.37744140625, "foreign_cores": 1.95, "utc": "2026-10-21T11:35:21Z"}
+{"kind": "wait_quiet", "load": 2.18701171875, "foreign_cores": 0.415, "utc": "2026-10-21T11:35:23Z"}
+{"kind": "wait_quiet", "load": 2.18701171875, "foreign_cores": 0.505, "utc": "2026-10-21T11:35:25Z"}
+{"kind": "wait_quiet", "load": 2.18701171875, "foreign_cores": 1.01, "utc": "2026-10-21T11:35:27Z"}
+{"kind": "wait_quiet", "load": 2.091796875, "foreign_cores": 2.18, "utc": "2026-10-21T11:35:29Z"}
+{"kind": "wait_quiet", "load": 2.091796875, "foreign_cores": 1.95, "utc": "2026-10-21T11:35:31Z"}
+{"kind": "wait_quiet", "load": 2.083984375, "foreign_cores": 1.935, "utc": "2026-10-21T11:35:33Z"}
+{"kind": "wait_quiet", "load": 2.083984375, "foreign_cores": 0.805, "utc": "2026-10-21T11:35:35Z"}
+{"kind": "wait_quiet", "load": 2.083984375, "foreign_cores": 0.26, "utc": "2026-10-21T11:35:37Z"}
+{"kind": "run", "index": 0, "tag": "00-moe-decode-upstream", "case": "moe-decode", "build": "upstream", "cmd": ["/opt/llm-gateway/data/build/llama-audit-upstream/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Qwen3.6-35B-A3B-MTP-GGUF/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf", "-ngl", "99", "-ncmoe", "41", "-p", "0", "-n", "128", "-d", "128,12288", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 1.9169921875, "foreign_cores": 0.5245901893199697, "accepted": true, "utc": "2026-10-21T11:36:22Z"}
+{"kind": "wait_quiet", "load": 1.85302734375, "foreign_cores": 1.38, "utc": "2026-10-21T11:36:24Z"}
+{"kind": "run", "index": 1, "tag": "01-moe-decode-fork", "case": "moe-decode", "build": "fork", "cmd": ["/opt/llm-gateway/data/build/llama-performance-check/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Qwen3.6-35B-A3B-MTP-GGUF/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf", "-ngl", "99", "-ncmoe", "41", "-p", "0", "-n", "128", "-d", "128,12288", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 1.85302734375, "foreign_cores": 0.42580806842767593, "accepted": true, "utc": "2026-10-21T11:37:09Z"}
+{"kind": "wait_quiet", "load": 2.50830078125, "foreign_cores": 0.415, "utc": "2026-10-21T11:37:11Z"}
+{"kind": "wait_quiet", "load": 2.30712890625, "foreign_cores": 0.26, "utc": "2026-10-21T11:37:13Z"}
+{"kind": "wait_quiet", "load": 2.30712890625, "foreign_cores": 0.69, "utc": "2026-10-21T11:37:15Z"}
+{"kind": "wait_quiet", "load": 2.30712890625, "foreign_cores": 0.765, "utc": "2026-10-21T11:37:17Z"}
+{"kind": "wait_quiet", "load": 2.1220703125, "foreign_cores": 0.28, "utc": "2026-10-21T11:37:19Z"}
+{"kind": "wait_quiet", "load": 2.1220703125, "foreign_cores": 0.21, "utc": "2026-10-21T11:37:21Z"}
+{"kind": "run", "index": 2, "tag": "02-moe-decode-fork", "case": "moe-decode", "build": "fork", "cmd": ["/opt/llm-gateway/data/build/llama-performance-check/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Qwen3.6-35B-A3B-MTP-GGUF/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf", "-ngl", "99", "-ncmoe", "41", "-p", "0", "-n", "128", "-d", "128,12288", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 1.95166015625, "foreign_cores": 0.29937994626456066, "accepted": true, "utc": "2026-10-21T11:38:06Z"}
+{"kind": "wait_quiet", "load": 3.2744140625, "foreign_cores": 0.225, "utc": "2026-10-21T11:38:08Z"}
+{"kind": "wait_quiet", "load": 3.2744140625, "foreign_cores": 0.215, "utc": "2026-10-21T11:38:10Z"}
+{"kind": "wait_quiet", "load": 3.2744140625, "foreign_cores": 0.41, "utc": "2026-10-21T11:38:12Z"}
+{"kind": "wait_quiet", "load": 3.091796875, "foreign_cores": 0.19, "utc": "2026-10-21T11:38:14Z"}
+{"kind": "wait_quiet", "load": 3.091796875, "foreign_cores": 0.23, "utc": "2026-10-21T11:38:16Z"}
+{"kind": "wait_quiet", "load": 2.84375, "foreign_cores": 0.25, "utc": "2026-10-21T11:38:18Z"}
+{"kind": "wait_quiet", "load": 2.84375, "foreign_cores": 0.85, "utc": "2026-10-21T11:38:20Z"}
+{"kind": "wait_quiet", "load": 2.84375, "foreign_cores": 0.435, "utc": "2026-10-21T11:38:22Z"}
+{"kind": "wait_quiet", "load": 2.61572265625, "foreign_cores": 0.74, "utc": "2026-10-21T11:38:24Z"}
+{"kind": "wait_quiet", "load": 2.61572265625, "foreign_cores": 1.26, "utc": "2026-10-21T11:38:26Z"}
+{"kind": "wait_quiet", "load": 2.64697265625, "foreign_cores": 2.01, "utc": "2026-10-21T11:38:28Z"}
+{"kind": "wait_quiet", "load": 2.64697265625, "foreign_cores": 1.965, "utc": "2026-10-21T11:38:30Z"}
+{"kind": "wait_quiet", "load": 2.64697265625, "foreign_cores": 2.3, "utc": "2026-10-21T11:38:32Z"}
+{"kind": "wait_quiet", "load": 2.5146484375, "foreign_cores": 3.09, "utc": "2026-10-21T11:38:34Z"}
+{"kind": "wait_quiet", "load": 2.5146484375, "foreign_cores": 4.45, "utc": "2026-10-21T11:38:36Z"}
+{"kind": "wait_quiet", "load": 3.0341796875, "foreign_cores": 2.155, "utc": "2026-10-21T11:38:38Z"}
+{"kind": "wait_quiet", "load": 3.0341796875, "foreign_cores": 1.45, "utc": "2026-10-21T11:38:40Z"}
+{"kind": "wait_quiet", "load": 3.0341796875, "foreign_cores": 1.22, "utc": "2026-10-21T11:38:42Z"}
+{"kind": "wait_quiet", "load": 2.87109375, "foreign_cores": 1.19, "utc": "2026-10-21T11:38:44Z"}
+{"kind": "wait_quiet", "load": 2.87109375, "foreign_cores": 1.54, "utc": "2026-10-21T11:38:46Z"}
+{"kind": "wait_quiet", "load": 2.72119140625, "foreign_cores": 1.18, "utc": "2026-10-21T11:38:48Z"}
+{"kind": "wait_quiet", "load": 2.72119140625, "foreign_cores": 6.495, "utc": "2026-10-21T11:38:50Z"}
+{"kind": "wait_quiet", "load": 2.72119140625, "foreign_cores": 5.2, "utc": "2026-10-21T11:38:52Z"}
+{"kind": "wait_quiet", "load": 3.22412109375, "foreign_cores": 8.78, "utc": "2026-10-21T11:38:54Z"}
+{"kind": "wait_quiet", "load": 3.22412109375, "foreign_cores": 1.935, "utc": "2026-10-21T11:38:56Z"}
+{"kind": "wait_quiet", "load": 3.0458984375, "foreign_cores": 2.255, "utc": "2026-10-21T11:38:58Z"}
+{"kind": "wait_quiet", "load": 3.0458984375, "foreign_cores": 0.89, "utc": "2026-10-21T11:39:00Z"}
+{"kind": "wait_quiet", "load": 3.0458984375, "foreign_cores": 0.47, "utc": "2026-10-21T11:39:02Z"}
+{"kind": "wait_quiet", "load": 2.8818359375, "foreign_cores": 0.82, "utc": "2026-10-21T11:39:04Z"}
+{"kind": "wait_quiet", "load": 2.8818359375, "foreign_cores": 1.135, "utc": "2026-10-21T11:39:06Z"}
+{"kind": "wait_quiet", "load": 2.73095703125, "foreign_cores": 1.23, "utc": "2026-10-21T11:39:08Z"}
+{"kind": "wait_quiet", "load": 2.73095703125, "foreign_cores": 1.4, "utc": "2026-10-21T11:39:10Z"}
+{"kind": "wait_quiet", "load": 2.73095703125, "foreign_cores": 4.145, "utc": "2026-10-21T11:39:12Z"}
+{"kind": "wait_quiet", "load": 3.0732421875, "foreign_cores": 0.945, "utc": "2026-10-21T11:39:14Z"}
+{"kind": "wait_quiet", "load": 3.0732421875, "foreign_cores": 0.28, "utc": "2026-10-21T11:39:16Z"}
+{"kind": "wait_quiet", "load": 2.82666015625, "foreign_cores": 0.495, "utc": "2026-10-21T11:39:18Z"}
+{"kind": "wait_quiet", "load": 2.82666015625, "foreign_cores": 0.845, "utc": "2026-10-21T11:39:20Z"}
+{"kind": "wait_quiet", "load": 2.82666015625, "foreign_cores": 0.76, "utc": "2026-10-21T11:39:22Z"}
+{"kind": "wait_quiet", "load": 2.68017578125, "foreign_cores": 0.23, "utc": "2026-10-21T11:39:24Z"}
+{"kind": "wait_quiet", "load": 2.68017578125, "foreign_cores": 0.37, "utc": "2026-10-21T11:39:26Z"}
+{"kind": "wait_quiet", "load": 2.46533203125, "foreign_cores": 0.4, "utc": "2026-10-21T11:39:28Z"}
+{"kind": "wait_quiet", "load": 2.46533203125, "foreign_cores": 0.255, "utc": "2026-10-21T11:39:30Z"}
+{"kind": "wait_quiet", "load": 2.46533203125, "foreign_cores": 0.235, "utc": "2026-10-21T11:39:32Z"}
+{"kind": "wait_quiet", "load": 2.267578125, "foreign_cores": 0.225, "utc": "2026-10-21T11:39:34Z"}
+{"kind": "wait_quiet", "load": 2.267578125, "foreign_cores": 0.52, "utc": "2026-10-21T11:39:36Z"}
+{"kind": "wait_quiet", "load": 2.166015625, "foreign_cores": 0.245, "utc": "2026-10-21T11:39:38Z"}
+{"kind": "wait_quiet", "load": 2.166015625, "foreign_cores": 0.49, "utc": "2026-10-21T11:39:40Z"}
+{"kind": "wait_quiet", "load": 2.166015625, "foreign_cores": 0.305, "utc": "2026-10-21T11:39:42Z"}
+{"kind": "run", "index": 3, "tag": "03-moe-decode-upstream", "case": "moe-decode", "build": "upstream", "cmd": ["/opt/llm-gateway/data/build/llama-audit-upstream/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Qwen3.6-35B-A3B-MTP-GGUF/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf", "-ngl", "99", "-ncmoe", "41", "-p", "0", "-n", "128", "-d", "128,12288", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 1.9921875, "foreign_cores": 0.3888431400472239, "accepted": true, "utc": "2026-10-21T11:40:27Z"}
+{"kind": "run", "index": 4, "tag": "04-moe-decode-upstream", "case": "moe-decode", "build": "upstream", "cmd": ["/opt/llm-gateway/data/build/llama-audit-upstream/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Qwen3.6-35B-A3B-MTP-GGUF/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf", "-ngl", "99", "-ncmoe", "41", "-p", "0", "-n", "128", "-d", "128,12288", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 1.5869140625, "foreign_cores": 0.30146748858254674, "accepted": true, "utc": "2026-10-21T11:41:12Z"}
+{"kind": "run", "index": 5, "tag": "05-moe-decode-fork", "case": "moe-decode", "build": "fork", "cmd": ["/opt/llm-gateway/data/build/llama-performance-check/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Qwen3.6-35B-A3B-MTP-GGUF/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf", "-ngl", "99", "-ncmoe", "41", "-p", "0", "-n", "128", "-d", "128,12288", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 1.27490234375, "foreign_cores": 0.41114746297303695, "accepted": true, "utc": "2026-10-21T11:41:57Z"}
+{"kind": "run", "index": 6, "tag": "06-moe-prefill-upstream", "case": "moe-prefill", "build": "upstream", "cmd": ["/opt/llm-gateway/data/build/llama-audit-upstream/build-cuda/bin/llama-bench", "-m", "/opt/llm-gateway/models/Qwen3.6-35B-A3B-MTP-GGUF/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf", "-ngl", "99", "-ncmoe", "41", "-p", "12288", "-n", "0", "-r", "1", "-o", "json", "-fa", "on", "-b", "2048", "-ub", "512", "-t", "24", "-lm", "mmap"], "returncode": 0, "load_start": 1.1103515625, "foreign_cores": 0.2660905310024126, "accepted": true, "utc": "2026-10-21T11:43:08Z"}
+{"kind": "incomplete", "error": "benchmark budget exhausted", "utc": "2026-10-21T11:44:19Z"}
+{"kind": "finished", "gpu_released": true, "utc": "2026-10-21T11:44:19Z"}

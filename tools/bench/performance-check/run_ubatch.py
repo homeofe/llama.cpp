@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+"""Compare 512/1024 microbatches with the real automatic MoE cache, ABBAAB."""
+import argparse,hashlib,json,os,pathlib,signal,subprocess,time,urllib.request
+ROOT=pathlib.Path(__file__).resolve().parents[3];HERE=pathlib.Path(__file__).resolve().parent
+ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--minutes',type=int,default=18);a=ap.parse_args()
+OUT=HERE/a.out;OUT.mkdir(exist_ok=False);end=time.monotonic()+60*a.minutes
+KEY=pathlib.Path('/opt/llm-gateway/data/api-key').read_text().strip();HZ=os.sysconf('SC_CLK_TCK')
+model='/opt/llm-gateway/models/Qwen3.6-35B-A3B-MTP-GGUF/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf'
+child=None;held=False;last_hold=0;rows=[]
+def gw(method,path,body=None):
+ req=urllib.request.Request('http://127.0.0.1:8790'+path,method=method,data=None if body is None else json.dumps(body).encode(),headers={'X-API-Key':KEY,'Content-Type':'application/json'})
+ with urllib.request.urlopen(req,timeout=30) as r:return r.read()
+def renew():
+ global last_hold,held
+ if time.monotonic()-last_hold>300:
+  gw('POST','/api/v1/gpu/hold',{'reason':'codex: cache microbatch comparison','ttlS':900});held=True;last_hold=time.monotonic()
+def api(path,body=None):
+ req=urllib.request.Request('http://127.0.0.1:18124'+path,data=None if body is None else json.dumps(body).encode(),headers={'Content-Type':'application/json'})
+ with urllib.request.urlopen(req,timeout=max(1,min(300,end-time.monotonic()))) as r:return json.load(r)
+def busy():
+ v=list(map(int,pathlib.Path('/proc/stat').read_text().splitlines()[0].split()[1:8]));return sum(v)-v[3]-v[4]
+def own():
+ if child is None:return 0
+ v=pathlib.Path(f'/proc/{child.pid}/stat').read_text().rsplit(')',1)[1].split();return int(v[11])+int(v[12])
+def event(**v):
+ v['utc']=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())
+ with (OUT/'events.jsonl').open('a') as f:f.write(json.dumps(v)+'\n')
+def quiet():
+ while time.monotonic()<end:
+  if held:renew()
+  b,o=busy(),own();time.sleep(2);foreign=max(0,busy()-b-own()+o)/HZ/2;load=os.getloadavg()[0]
+  if load<2 and foreign<1:return load
+ raise TimeoutError('quiet-window budget exhausted')
+def stop_child():
+ global child
+ if child:
+  child.terminate()
+  try:child.wait(timeout=20)
+  except subprocess.TimeoutExpired:child.kill();child.wait()
+  child=None
+signal.signal(signal.SIGTERM,lambda *_:(_ for _ in ()).throw(KeyboardInterrupt('SIGTERM')))
+env={k:v for k,v in os.environ.items() if not k.startswith(('LLAMA_','GGML_MOE','GGML_CUDA_'))};env['LLAMA_MOE_STATE']='0'
+base=[str(ROOT/'build-cuda/bin/llama-server'),'-m',model,'-np','1','-c','16384','-b','2048','-t','24','-tb','24','-fa','1','--load-mode','mmap','--moe-expert-cache','-1','-at','off','--no-warmup','--host','127.0.0.1','--port','18124']
+(OUT/'plan.json').write_text(json.dumps(dict(order=[512,1024,1024,512,512,1024],base=base,env={'LLAMA_MOE_STATE':'0'},note='Synthetic repeated prose at exactly 12288 input token IDs; fresh server per block; short then long request; fixed threads and tuning off; automatic cache capacity can change with buffers.'),indent=2)+'\n')
+try:
+ quiet();renew();gw('POST','/api/v1/gpu/free',{})
+ assert not subprocess.check_output(['nvidia-smi','--query-compute-apps=pid','--format=csv,noheader'],text=True).strip()
+ for block,ub in enumerate([512,1024,1024,512,512,1024]):
+  quiet();renew();cmd=base+['-ub',str(ub)];tag=f'{block:02d}-ub{ub}'
+  with (OUT/(tag+'.server.txt')).open('w') as log:
+   child=subprocess.Popen(cmd,env=env,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+   deadline=min(end,time.monotonic()+240)
+   while time.monotonic()<deadline:
+    assert child.poll() is None,'server exited'
+    try:
+     if api('/health').get('status')=='ok':break
+    except Exception:pass
+    time.sleep(1)
+   else:raise TimeoutError('startup deadline')
+   api('/completion',dict(prompt='Say hello.',n_predict=16,ignore_eos=True,temperature=0,seed=1,cache_prompt=False))
+   long_tokens=api('/tokenize',dict(content=('A cache stores frequently used data. Larger batches can improve processing throughput while consuming additional memory. '*1500),add_special=False))['tokens'][:12288]
+   assert len(long_tokens)==12288
+   if block==0:(OUT/'long-prompt-tokens.json').write_text(json.dumps(long_tokens)+'\n')
+   for case,prompt in [('short','Complete this Python function. Return only code.\ndef fibonacci(n):\n'),('long',long_tokens)]:
+    load=quiet();b,o,t=busy(),own(),time.monotonic()
+    body=dict(prompt=prompt,n_predict=128,ignore_eos=True,temperature=0,seed=1,cache_prompt=False)
+    r=api('/completion',body);wall=time.monotonic()-t;foreign=max(0,busy()-b-own()+o)/HZ/wall
+    (OUT/(tag+'-'+case+'.json')).write_text(json.dumps(r,indent=2)+'\n')
+    row=dict(block=block,ub=ub,case=case,cmd=cmd,env={'LLAMA_MOE_STATE':'0'},load_start=load,foreign_cores=foreign,wall_s=wall,accepted=load<2 and foreign<1,sha256=hashlib.sha256(r['content'].encode()).hexdigest(),timings=r['timings'],tokens=r['tokens_predicted'])
+    rows.append(row);event(kind='request',**row)
+    assert row['accepted'],'foreign load: discard series'
+    assert r['tokens_predicted']==128,'unexpected generation length'
+    assert r['timings']['tuning']['moe_cache']['active'],'cache not active'
+    if case=='long':assert 12288<=r['timings']['prompt_n']<=12289,'unexpected prompt length'
+   event(kind='block_complete',block=block,ub=ub)
+  stop_child()
+ event(kind='complete')
+except Exception as e:event(kind='incomplete',error=str(e))
+finally:
+ stop_child()
+ if held:gw('DELETE','/api/v1/gpu/hold')
+ (OUT/'rows.json').write_text(json.dumps(rows,indent=2)+'\n');event(kind='finished',gpu_released=True)

@@ -1,0 +1,2 @@
+BF16 patterns=65536 failures=32642 (NaNs compared by class)
+PASS control pair exit 1

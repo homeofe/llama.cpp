@@ -9,7 +9,7 @@ llama-server -m GLM-5.3-Flash-GSQ-RCO-3.0bit-q4kattn.gguf
 llama-cli    -m model.gguf -p "hello"
 ```
 
-The decode speedup is largest when a third to a half of a MoE model fits in VRAM (1.9x to 2.4x), fades above about 55% and is 1.0x once it fits; dense models gain nothing.
+The decode speedup is largest when a third to a half of a MoE model fits in VRAM (1.9x to 2.4x), fades above about 55% and uses stock placement once it fits; dense models do not use the expert cache. A 1.0x timing ratio is an expectation, not a guarantee across different source revisions.
 Gain over stock llama.cpp by the share of the model that fits in VRAM (decode; the tables below have the machines and tests):
 
 | model on machine | share of the model in VRAM | gain |
@@ -56,16 +56,15 @@ GLM 3.5-bit, IQ3_S and IQ1_M are the first run of build b11707 against fresh ups
 | **Qwen3.6-35B-A3B** Q2_0 (11 GB, on an 8 GB GPU) | B | short tetris prompt, 100 tokens, decode | 29.2 | **59.3** | **2.0x** |
 | | C | same, CPU only (AVX Q2_0 kernels) | 6.3 | **11.3** | **1.8x** |
 | Qwen3.8-27B IQ4_NL, dense (fits VRAM) | A | same | 45.1 | 45.0 | 1.0x |
-| Qwen3.8-27B IQ3_S, dense, CPU only | C | same | 1.7 | 1.6 | 1.0x |
+| Qwen3.8-27B IQ3_S, dense, CPU only | C | same | 1.7 | 1.6 | ~0.94x (from rounded rates; cause unverified) |
 | Qwen3.8-27B Q5_K_M with MTP (`--spec-type draft-mtp`), fits VRAM | A | same | 78.3 | 77.0 | 1.0x (38.6 without MTP) |
 | | | 2.2k-token prompt, decode / processing | 31.3 / 599 | **51.1 / 792** | 1.6x / 1.3x |
-| Models that fit in VRAM | any | anything | same | same | 1.0x (cache off) |
+| Models that fit in VRAM | any | stock placement | baseline | expected similar | cache off; verify timing on your build |
 
 D: upstream is the downloaded release b11323 (a source build of def4d406a gave 24.8 and 20.1); the fork is b11707 with the placement change in this branch (any model that does not fit takes the cache);
 the model is 85% in VRAM on 4 GPUs, so the first run only matches stock placement. D numbers are from one session on a rented box (raw logs not kept, not in run-history.csv).
 
-\* from the previous release. GLM and MiMo were measured on release-candidate builds (MiMo also on b11509) before the last placement and thread commits, Qwen3.6 on the release binary. Every run behind these numbers (commit, build, machine, settings) is in
-[`tools/bench/run-history.csv`](tools/bench/run-history.csv).
+\* from the previous release. GLM and MiMo were measured on release-candidate builds (MiMo also on b11509) before the last placement and thread commits, Qwen3.6 on the release binary. The available run history is in [`tools/bench/run-history.csv`](tools/bench/run-history.csv). It is incomplete: the D session has no raw logs, and several older headline rows cannot be matched to a fully specified recorded run. See the [performance audit](docs/performance-check-report.md).
 
 ### Why the gain depends on how much of the model fits
 
@@ -91,12 +90,11 @@ Four points from one session with different output texts: a good explanation, no
 Running a model bigger than your VRAM well means choosing placement, cache size, upload schedule, batch size, thread counts, the VRAM margin. Instead of a page of flags, the
 fork measures your machine and tunes most of those while you use it. The defaults are chosen on your machine, not hard-coded:
 
-- **Cache or stock.** If the model fits in VRAM it is placed exactly like stock llama.cpp. A model that does not fit takes
-  the cache right away. When what you run is mostly long prompts (processing them would cost more than the faster generation
-  gains), the first two runs compare both and keep the faster one.
+- **Cache or stock.** Automatic MoE placement estimates fit from model file size and a VRAM reserve. Models classified as fitting keep stock placement; oversized MoE models normally enable the cache. Dense models, CPU-only operation and explicit tensor placement keep their stock placement path. When what you run is mostly long prompts (processing them would cost more than the faster generation
+  gains), successive starts compare the modes, normally twice each; an estimated cache win of at least 3% can decide after one run each. This uses startup prompt/output estimates; it does not classify future server HTTP prompts at model load.
 - **Self-tuning on real token times.** The cache policy and the upload schedule are adjusted while you use it. The decode and prompt thread counts start from
   a formula (cores minus one per GPU) and the tuner moves them a few threads at a time; on a many-core host `-t 16` can be a better start (on a 64-core machine the
-  difference was under 2%). A setting that does not help is dropped, a setting you fix yourself is never touched.
+  difference was under 2%). More threads must beat a noise-dependent gain threshold; fewer threads may be accepted at up to 1% slower to leave cores free. Explicit thread counts and tuning knobs stay fixed.
 - **It remembers.** What it learned per model (hot experts, tuned settings, cache-or-stock) is kept in one file,
   `~/.cache/llama.cpp/moe-state.ini`, so the next start, even a one-shot short prompt, begins from it. Delete the file to start over.
 - **It tells you what it does.** `llama-server` logs, and `llama-cli -lv 3` prints after each reply, whether the cache is on,
@@ -106,7 +104,7 @@ fork measures your machine and tunes most of those while you use it. The default
 
 Qwen3.8-Flash-Next MTP from PR [#28243](https://github.com/ggml-org/llama.cpp/pull/28243)
 ([@danielhanchen](https://github.com/danielhanchen)), GLM-5.3-Flash MTP from PR
-[#27917](https://github.com/ggml-org/llama.cpp/pull/27917) (timkhronos), both in this build. Load a model's MTP draft head
+[#27917](https://github.com/ggml-org/llama.cpp/pull/27917) (timkhronos), both integrated into this fork. This does not mean both upstream PRs were merged. Load a model's MTP draft head
 with `-md`:
 
 ```sh
@@ -122,8 +120,8 @@ llama-server -m GLM-5.3-Flash-GSQ-RCO-3.0bit-q4kattn.gguf \
   (4.3 GiB, works with any `glm5-next` GLM-5.3-Flash GGUF). We made it: no GLM MTP GGUF existed, so
   `tools/bench/glm_splice_mtp.py` pulls just the MTP tensors out of unsloth's UD-Q4_K_XL GGUF with HTTP range requests
   (~4.3 GiB instead of the whole model) and writes them as a draft file; see [`tools/bench/`](tools/bench/) to rebuild it.
-- GLM MTP: 89% of drafts accepted in our test, output identical to plain decoding. For a model far bigger than VRAM the draft
-  is not loaded unless you pass `--spec-draft-n-max`.
+- GLM MTP: a historical test reported 89% acceptance and identical text. The current 2080 Ti audit observed 90.2% after a loading fix, but text differed; repeated no-draft controls also differed. Neither acceptance nor output identity is guaranteed across workloads and placements. For a model far bigger than VRAM the draft
+  is not loaded by the autotuned cache path unless you pass `--spec-draft-n-max`. With tuning disabled, an explicit draft request is preserved.
 
 ## Your settings win
 
@@ -134,17 +132,19 @@ Anything you pass is used as given and is never auto-tuned:
 | `-t N`, `-tb N` | fixed thread counts |
 | `--moe-expert-cache N` | cache slots per layer; `0` turns the cache off, `-1` sizes it from free VRAM |
 | `--moe KEY=VAL,...` | `cache`, `prefetch-slots`, `inserts`, `window`, `predict`, `train`, or any tuning knob (`MARGIN`, `GATE`, `WAIT`, `BIG`, `SWAP_FRAC`, ...), for example `--moe gate=3,margin=0` |
-| `--load-mode pin\|mmap` | pinned weights (the server default when the model fits in RAM, faster prompts) or mmap |
-| `LLAMA_MOE_AUTO_MODE=stock\|cache` | force the placement; `LLAMA_MOE_STATE=0` ignores and never writes the state file |
+| `--load-mode pin\|mmap` | pinned weights (selected automatically on the server's oversized-MoE cache path when the model fits in available RAM) or mmap |
+| `LLAMA_MOE_AUTO_MODE=stock\|cache` | force the automatic oversized-MoE placement decision; explicit tensor placement still wins. `LLAMA_MOE_STATE=0` ignores and never writes the state file |
 
 ## Turn it off
 
 | you pass | effect |
 |---|---|
-| `--moe cache=0` | the whole fork off: no expert cache, nothing tuned or measured, plain stock behaviour (same as `--moe-expert-cache 0`) |
-| `-at off` | only the self-tuning off (`--autotune off`, same as `--moe autotune=0`): the cache keeps working with fixed defaults, placement uses a static rule, nothing is measured or saved |
+| `--moe cache=0` | disable expert caching and automatic tuning/placement measurements (same as `--moe-expert-cache 0`); retain stock placement. Other compiled fork kernels are still present |
+| `-at off` | only the self-tuning off (`--autotune off`, same as `--moe autotune=0`): the cache keeps working without tuning trials or learned state; placement uses a static rule. Cache statistics and operational bandwidth probes remain active |
 
-Environment forms: `LLAMA_AUTOTUNE=0`, `LLAMA_ARG_AUTOTUNE=off`, `LLAMA_ARG_MOE=cache=0`.
+Environment forms: `LLAMA_AUTOTUNE=0`, `LLAMA_ARG_AUTOTUNE=off`, `LLAMA_ARG_MOE=cache=0`. Explicit CLI autotune settings override environment defaults; `cache=0` always disables tuning.
+
+Manual `-ngl`, `--n-cpu-moe`/`--cpu-moe` or `-ot` tensor placement disables automatic cache selection. To combine manual placement with caching, explicitly request `--moe-expert-cache N` (or `-1`); only host-resident expert layers can be cached. `llama-bench` has its own argument/init path and does not enable this automatic cache: use `llama-server` or `llama-cli` for cache-performance measurements.
 
 ## Good to know
 

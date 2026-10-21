@@ -1,0 +1,28 @@
+{
+  "fork": {
+    "source_commit": "d1962986063432af2c1548366ea7e76ea78de10a",
+    "binary_version": "version: 0.5.0-dev (build 11750, commit 08c52b62f)\nbuilt with GNU 13.3.0 for Linux x86_64\n",
+    "sha256": {
+      "llama-server": "d184070ee18a8adb73ae99a940cc51d58d38442e4ac8f64581c9f1f823ffc3a2",
+      "llama-bench": "6db6e5b702eee70ce9433b75b61359b5f3b4fe5d84b8c56ab14c1f63468d410e",
+      "libllama.so": "f8249f1f148b24b728bb93fd0bb5171139993aeb657a942fe568728f2fe8085e",
+      "libllama-common.so": "a66e2be01a4e877e28fe2544046c8dfb34dce31107e08e0c5bd3f54d950b2fa1",
+      "libggml-cuda.so": "91d4020a61ba86c74ca4995368618e353583f85b24f62dd055f947dfbc4c0495",
+      "libggml-cpu.so": "08906c40b67cc22f1a8876f27cba6b1a039e7ffce66d6a30c839f7ccb8929209",
+      "libllama-server-impl.so": "4a29589000cddbbc517d4d10f5a0e92f5a3c25c31522daded9fe222074659fab"
+    }
+  },
+  "upstream": {
+    "source_commit": "def4d406ae2c2f39573120d68730fbb7760b24bf",
+    "binary_version": "version: 0.5.0-dev (build 11325, commit def4d406a)\nbuilt with GNU 13.3.0 for Linux x86_64\n",
+    "sha256": {
+      "llama-server": "683d01cd1af000202c20f20b525afe986d96d7db88a862c42ff17a0a025f8487",
+      "llama-bench": "579623d87673d6ea31b5a72e53c745751cabbd6c6c0430d267de23e6dd4abade",
+      "libllama.so": "6961f949e359924d5b6582801ba8d4a42ee58b1128652cdba7185cb724b2a067",
+      "libllama-common.so": "2c028220f8fea74c6c28d8378f7dbfab001fe3e15350a413d322bc204e1db13b",
+      "libggml-cuda.so": "0c1fadec55f18768b9f7481b08cd992a904316cc32094d67356301d75c5e0b34",
+      "libggml-cpu.so": "000de6b374624f5f94da7481d62f758b9358dbd6b8bcf4c7ef810bb39b8a24cf",
+      "libllama-server-impl.so": "d0885bf39a6a055d87cb1558c7786339bbccf282199529f088c2e333a4ddf159"
+    }
+  }
+}
