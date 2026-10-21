@@ -9,6 +9,11 @@
 #include "ngram-map.h"
 #include "ngram-mod.h"
 #include "sampling.h"
+#include "speculative-confidence.h"
+#include "strata-reference/draft_policy.hpp"
+#include "strata-reference/suffix_drafter.hpp"
+#include <cstdlib>
+#include <stdexcept>
 
 #include "../src/llama-ext.h" // staging API: llama_set_embeddings_nextn / llama_get_embeddings_nextn_ith (used by MTP)
 
@@ -1433,6 +1438,21 @@ struct common_speculative_impl_draft_mtp : public common_speculative_impl {
 
     common_batch batch;
 
+    // Measurement only: Strata 1cb045cb's greedy policy, with a six-token verifier window.
+    bool strata_reference = false;
+    struct strata_state {
+        strata::spec::SuffixDrafter suffix{3, 64, 8192};
+        strata::spec::DraftPolicy policy{6};
+        llama_pos pos0 = -1;
+        int64_t round_start_us = 0;
+        int window = 1;
+        int match = 0;
+        bool lookup = false;
+        llama_token first_guess = LLAMA_TOKEN_NULL;
+        size_t lookup_windows = 0;
+    };
+    std::vector<strata_state> strata_states;
+
     std::vector<common_sampler_ptr> smpls;
 
     std::vector<common_params_sampling> smpls_cfg;
@@ -1491,6 +1511,18 @@ struct common_speculative_impl_draft_mtp : public common_speculative_impl {
 
         batch = common_batch(ctx_dft);
 
+        const char * strata_env = std::getenv("LLAMA_MTP_STRATA_REFERENCE");
+        strata_reference = strata_env && std::strcmp(strata_env, "1") == 0;
+        if (strata_reference) {
+            if (this->params.n_max != 5 || this->params.probabilistic || !this->params.backend_sampling || n_mtp_layers != 1) {
+                throw std::runtime_error("Strata reference requires n_max=5, one MTP layer, greedy backend sampling");
+            }
+            this->params.n_max = 3;
+            this->params.p_min = 0.7f;
+            strata_states.resize(n_seq);
+            SPC_INF("%s", "Strata reference: full-vocabulary confidence, MTP 3 / lookup 5, p_min=0.7\n");
+        }
+
         smpls.resize(n_seq);
         for (auto & s : smpls) {
             common_params_sampling sparams;
@@ -1505,12 +1537,15 @@ struct common_speculative_impl_draft_mtp : public common_speculative_impl {
         if (this->params.backend_sampling) {
             for (llama_seq_id seq_id = 0; seq_id < (llama_seq_id) n_seq; ++seq_id) {
                 llama_sampler * chain = llama_sampler_chain_init(llama_sampler_chain_default_params());
-                llama_sampler_chain_add(chain, llama_sampler_init_top_k(10));
+                llama_sampler_chain_add(chain, strata_reference ? common_mtp_confidence_init() : llama_sampler_init_top_k(10));
 
                 if (!llama_set_sampler(ctx_dft, seq_id, chain)) {
                     SPC_WRN("backend offload failed for seq_id=%d; using CPU sampler\n", (int) seq_id);
                     llama_sampler_free(chain);
                     chain = nullptr;
+                    if (strata_reference) {
+                        throw std::runtime_error("Strata confidence sampler needs backend support");
+                    }
                 }
                 backend_chains[seq_id] = chain;
             }
@@ -1530,7 +1565,7 @@ struct common_speculative_impl_draft_mtp : public common_speculative_impl {
                 c.reserve((size_t) (this->params.n_max + 1) * n_embd);
             }
         }
-        this->n_max = this->params.n_max;
+        this->n_max = strata_reference ? 5 : this->params.n_max;
 
         pending_h.assign(n_seq, std::vector<float>(n_embd, 0.0f));
 
@@ -1559,6 +1594,12 @@ struct common_speculative_impl_draft_mtp : public common_speculative_impl {
     void begin(llama_seq_id seq_id, const llama_tokens & prompt) override {
         // reset here rather than per round, or two identical requests differ
         common_sampler_reset(smpls[seq_id].get());
+        if (strata_reference) {
+            auto & state = strata_states[seq_id];
+            SPC_INF("Strata lookup windows in previous request: %zu\n", state.lookup_windows);
+            state = strata_state{};
+            state.suffix.append(prompt.data(), prompt.size());
+        }
 
         const int32_t N = (int32_t) prompt.size();
         if (N <= 0) {
@@ -1787,6 +1828,10 @@ struct common_speculative_impl_draft_mtp : public common_speculative_impl {
                 // add drafted token for each sequence
                 const llama_token id = dparams.at(seq_id).result_q ? id_sampled : cur_p->data[0].id;
 
+                if (strata_reference && i == 0) {
+                    strata_states[seq_id].first_guess = id;
+                }
+
                 // only collect very high-confidence draft tokens
                 if (cur_p->data[0].p < params.p_min) {
                     drafting[seq_id] = false;
@@ -1853,6 +1898,38 @@ struct common_speculative_impl_draft_mtp : public common_speculative_impl {
                 continue;
             }
 
+            if (strata_reference) {
+                auto & state = strata_states[seq_id];
+                const int64_t now = ggml_time_us();
+                const int accepted = state.pos0 >= 0 ? dp.pos0 - state.pos0 - 1 : -1;
+                if (accepted >= 0 && accepted < state.window) {
+                    state.policy.observe(state.lookup, state.window, accepted, state.match,
+                                         (now - state.round_start_us)*0.001);
+                }
+                const auto & prompt = *dp.prompt;
+                if (state.suffix.size() > prompt.size() ||
+                    (state.suffix.size() && state.suffix.history().back() != prompt[state.suffix.size() - 1])) {
+                    state.suffix.reset();
+                }
+                state.suffix.append(prompt.data() + state.suffix.size(), prompt.size() - state.suffix.size());
+                state.suffix.append(dp.id_last);
+                llama_token lookup[5];
+                const int k = state.suffix.propose(5, lookup);
+                state.match = state.suffix.last_match();
+                state.lookup = false;
+                if (k > 0 && lookup[0] == state.first_guess) {
+                    const auto pick = state.policy.choose((int) dp.result->size() + 1, k, state.match);
+                    if (pick.lookup) {
+                        const int limit = dp.n_max >= 0 ? std::min(dp.n_max, pick.t - 1) : pick.t - 1;
+                        dp.result->assign(lookup, lookup + limit);
+                        state.lookup = true;
+                        ++state.lookup_windows;
+                    }
+                }
+                state.window = (int) dp.result->size() + 1;
+                state.pos0 = dp.pos0;
+                state.round_start_us = ggml_time_us();
+            }
             if (dp.result->size() < (size_t) params.n_min) {
                 dp.result->clear();
             }

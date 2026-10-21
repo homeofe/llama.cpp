@@ -1,0 +1,104 @@
+{
+  "profile_source_sha256": "8f59b4aa8873209dff11c11e37bcda9529a1335b724a1afeea37bf6388975baf",
+  "count": 1815,
+  "groups": [
+    {
+      "layers": [
+        0,
+        7,
+        14,
+        16,
+        18,
+        22,
+        31,
+        33,
+        37,
+        38,
+        41,
+        42,
+        43,
+        46
+      ],
+      "expert_bytes": 2176000,
+      "required_slots": 536,
+      "budget_mib": 3593.2609481683294
+    },
+    {
+      "layers": [
+        1,
+        8,
+        10,
+        13,
+        36
+      ],
+      "expert_bytes": 1510400,
+      "required_slots": 156,
+      "budget_mib": 2941.5772146451272
+    },
+    {
+      "layers": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        15,
+        19,
+        23,
+        24,
+        26,
+        32,
+        34,
+        39
+      ],
+      "expert_bytes": 1971200,
+      "required_slots": 558,
+      "budget_mib": 3491.1178343141232
+    },
+    {
+      "layers": [
+        12,
+        20,
+        30
+      ],
+      "expert_bytes": 1715200,
+      "required_slots": 117,
+      "budget_mib": 3684.7309934701493
+    },
+    {
+      "layers": [
+        17,
+        25,
+        27,
+        28,
+        29,
+        35,
+        40,
+        44,
+        45
+      ],
+      "expert_bytes": 2329600,
+      "required_slots": 386,
+      "budget_mib": 4028.1829391311812
+    },
+    {
+      "layers": [
+        21
+      ],
+      "expert_bytes": 1868800,
+      "required_slots": 24,
+      "budget_mib": 2342.0216047731165
+    },
+    {
+      "layers": [
+        47
+      ],
+      "expert_bytes": 2662400,
+      "required_slots": 38,
+      "budget_mib": 3653.465613731971
+    }
+  ],
+  "minimum_budget_mib": 4028.1829391311812
+}

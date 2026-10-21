@@ -7,3 +7,8 @@ check_norm
 **/workspace/
 check_confidence
 check_policy
+check_suffix
+check_confidence_san
+qwen-architecture.png
+qwen-tech-report.pdf
+qwen-report-extracted.txt

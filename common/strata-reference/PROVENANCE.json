@@ -1,0 +1,26 @@
+{
+  "draft_policy.hpp": {
+    "source": "/opt/llm-gateway/data/runtimes/strata/0.1.41-local-1cb045cb/include/strata/spec/draft_policy.hpp",
+    "sha256_source": "f6f1c972a9b80bc6c82c1b24c87335d40852bfd7555b10d8288030b24477ccb9",
+    "sha256_local": "f6f1c972a9b80bc6c82c1b24c87335d40852bfd7555b10d8288030b24477ccb9",
+    "change": "none"
+  },
+  "draft_policy.cpp": {
+    "source": "/opt/llm-gateway/data/runtimes/strata/0.1.41-local-1cb045cb/src/spec/draft_policy.cpp",
+    "sha256_source": "20db3d6708aaeb02845a955e89480174dd440a7b407a19b054884639a7018011",
+    "sha256_local": "f9adfcce5790b18fb02e43ba7e436040018b912b9827091fbd3b8597befa07c5",
+    "change": "local include path only"
+  },
+  "suffix_drafter.hpp": {
+    "source": "/opt/llm-gateway/data/runtimes/strata/0.1.41-local-1cb045cb/include/strata/spec/suffix_drafter.hpp",
+    "sha256_source": "ab154719dd72b23b9e4e540bc2f923be2bbbbad343b21fcf40116966720f963f",
+    "sha256_local": "ab154719dd72b23b9e4e540bc2f923be2bbbbad343b21fcf40116966720f963f",
+    "change": "none"
+  },
+  "suffix_drafter.cpp": {
+    "source": "/opt/llm-gateway/data/runtimes/strata/0.1.41-local-1cb045cb/src/spec/suffix_drafter.cpp",
+    "sha256_source": "aeee3eb16627642e9e07c9765fd4946938b5c764f51304500403908d75e67325",
+    "sha256_local": "6e2664b1266863f427845734b8460bf96b9cd227cc92b6127da68422c08ac856",
+    "change": "local include path only"
+  }
+}

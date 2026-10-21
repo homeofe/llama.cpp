@@ -1,0 +1,28 @@
+## Usage
+
+### Basic Sync
+
+To sync your local directory to an S3 bucket:
+
+```bash
+s3sync sync ./local-folder s3://my-bucket/path/
+```
+
+### Common Options
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--delete` | Remove files in the bucket that no longer exist locally | `false` |
+| `--dry-run` | Show what would be synced without making changes | `false` |
+| `--exclude <pattern>` | Exclude files matching a glob pattern (can be used multiple times) | none |
+| `--include <pattern>` | Include only files matching a glob pattern (can be used multiple times) | none |
+| `--concurrency <n>` | Number of concurrent uploads | `10` |
+| `--profile <name>` | AWS profile to use | `default` |
+| `--region <region>` | AWS region for the bucket | auto-detected |
+| `--verbose` | Enable detailed logging | `false` |
+
+### Examples
+
+**Sync with deletion and exclusions:**
+```bash
+s3sync sync ./dist s3://my-bucket/assets/ \

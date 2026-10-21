@@ -1,0 +1,13 @@
+count=17 valid=17 p=0.100000001 expected=0.100000002 errors=1 top10_cut=1 tiny_cut=1
+count=17 valid=17 p=0.699989974 expected=0.699989998 errors=1 top10_cut=1 tiny_cut=1
+count=17 valid=17 p=0.700010061 expected=0.700010025 errors=1 top10_cut=1 tiny_cut=1
+count=17 valid=17 p=0.99000001 expected=0.990000011 errors=1 top10_cut=1 tiny_cut=1
+count=106299 valid=106299 p=0.0999999642 expected=0.0999999571 errors=1 top10_cut=1 tiny_cut=1
+count=106299 valid=106299 p=0.699990034 expected=0.699990054 errors=1 top10_cut=1 tiny_cut=1
+count=106299 valid=106299 p=0.700010061 expected=0.700010082 errors=1 top10_cut=1 tiny_cut=1
+count=106299 valid=106299 p=0.98999995 expected=0.990000011 errors=1 top10_cut=1 tiny_cut=1
+count=248320 valid=106299 p=0.0999999642 expected=0.0999999571 errors=1 top10_cut=1 tiny_cut=1
+count=248320 valid=106299 p=0.699990034 expected=0.699990054 errors=1 top10_cut=1 tiny_cut=1
+count=248320 valid=106299 p=0.700010061 expected=0.700010082 errors=1 top10_cut=1 tiny_cut=1
+count=248320 valid=106299 p=0.98999995 expected=0.990000011 errors=1 top10_cut=1 tiny_cut=1
+CONFIDENCE_CHECK errors=12

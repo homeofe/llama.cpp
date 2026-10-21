@@ -1,0 +1,11 @@
+{"kind": "correctness_only", "benchmark_valid": false, "load": [1.75, 5.880859375, 6.43701171875], "epoch": 1792577484.7, "utc": "2026-10-21 10:11:24"}
+{"kind": "released", "gpu": {}, "epoch": 1792577548.8, "utc": "2026-10-21 10:12:28"}
+Traceback (most recent call last):
+  File "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/check_reference.py", line 28, in <module>
+    run.start('strata-reference', cfg)
+  File "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/native_reference.py", line 67, in start
+    return super().start(name, cfg)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/llm-gateway/data/build/llama-vibe/task-logs/round16/run_drafts.py", line 44, in start
+    raise RuntimeError(f'server exited {self.child.returncode}')
+RuntimeError: server exited 1

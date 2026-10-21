@@ -78,3 +78,31 @@ Two fallback files retain all original Q8 experts and only change the head: q8ex
 Pending: select a candidate with a positive full-prompt pilot, confirm it against the original runtime in three interleaved rounds over all eight stage_b prompts (n=12 per category), compare output hashes/counts and run affected code/tools/German/format panels against both versions. Require the existing +3% gate in both categories. No new deployment or Strata-parity throughput claim is justified before those results.
 
 The remaining Strata verifier-graph/CPU synchronization difference is a separate measured design question. The old graph-node-incomplete trace cannot provide its saving. Closed target quantized kernels and cache-policy sweeps remain closed.
+
+
+## Complete Strata reference configuration (2026-10-21)
+
+The component screens above were not the requested full engine-configuration comparison. The new `strata-reference` experiment combines the actual Strata choices instead of inferring parity from Q2 experts alone:
+
+- `strata-q6subset.gguf` (1331.928 MiB) copies all 34 source draft tensors into the llama representation, plus the draft-to-target map. This includes the native IQ4_XS embedding, Q8 dense projections, BF16 small matrices, converted norm weights, Q2_0 routed experts and native Q6_K head subset. `strata-q6subset-manifest.json` and `strata-weight-conversion.txt` verify all types, shapes, bytes, split/concatenated projections and saved tensors.
+- `LLAMA_MTP_HNORM_GLOBAL=1` selects the same whole-hidden norm. The standalone norm checks remain valid, but neither the earlier norm-only pilot nor the single abandoned complete-weight request establishes a gain.
+- `LLAMA_MTP_STRATA_REFERENCE=1` uses full-vocabulary softmax confidence (excluded head rows are -infinity), threshold 0.7, up to three MTP drafts, and the actual MIT-licensed Strata suffix drafter/policy with up to five lookup drafts. CLI n_max=5 reserves six-token verifier/rollback capacity; the MTP chain itself remains capped at three. The policy receives the preceding verifier/commit/catch-up/next-draft elapsed time and accepted-token outcome.
+- `LLAMA_MTP_DENSE=1` uses dense causal attention in the MTP block, as this Strata version does. It requires context <=32768, so every test token lies inside Strata's default dense draft window. The target still uses QSA. Qwen's proposed reuse of draft QSA selections is a separate long-context experiment, documented in `NOTES-round16-qwen-architecture.md`.
+- Target cache is frozen to the **same 1815 expert IDs** from the first ranks of Strata's profile. Their weight bytes total 3574.19 MiB. llama's allocation across separate quantization groups needs a 4032 MiB budget for those IDs (computed lower bound 4028.18 MiB); Strata packs them without this group-allocation slack. `make_profile.py` reproduces the translation and budget calculation. No adaptive replacement is enabled.
+
+`e2e/reference-dense/` preserves every original runtime file except `libllama` and `libllama-common`, with the latter carrying the experimental sampling/policy. `reference-dense-binaries.json` checks every file and symlink. Build only `llama-common` and `llama`, never the server/UI target. This is a measurement branch, not a generic upstream-ready sampler or policy API.
+
+The imported policy/suffix implementation retains the original MIT license and source hashes in `common/strata-reference/PROVENANCE.json`; only local include paths differ. Its original policy and suffix unit tests pass. `check_confidence.cpp` passes 12 cases on CPU and CUDA for 17, 106299 and masked 248320 vocabulary sizes, with double-precision probability references around 0.7 and elsewhere. CPU ASAN/UBSAN passes. Independently compiled wrong top-10 normalization and +1e-6 probability mutations return 1; restored source returns 0 (`confidence-cuts.json`). This proves the confidence calculation, not yet the complete server integration or model quality.
+
+The matched native-engine harness `native_reference.py` sends the same chat requests with temperature 0, seed 1, thinking off, 256 tokens and prompt-cache reuse enabled. Each of eight prompts is sent once and immediately repeated. "Novel" means first use of that prompt in this engine process; it does not mean no shared prefix or an empty expert cache. Startup, source/config, full text, hashes, cache counts, draft counts and timing are archived. A contaminated block is reset and replayed in full. This is still a sequential pilot, not the three-round interleaved adoption test.
+
+Actual Strata completed a clean block (attempt 1, after discarding attempt 0 for foreign CPU load). Server-rate medians and ranges, **four distinct prompts/category, one execution per phase**:
+
+| Phase | Code tok/s median [min,max] | English tok/s median [min,max] |
+|---|---:|---:|
+| Novel | 69.15 [62.8,70.6] | 60.70 [57.5,64.0] |
+| Immediate repeat | 73.65 [68.7,76.8] | 63.30 [63.0,65.4] |
+
+Source: `native-reference/runs.jsonl`, only the completed Strata attempt 1. A long foreign-load interval required 1177.9 seconds of quiet waiting before its final request. The overall runner was stopped after this complete Strata block because its original deadline was consumed; the llama blocks must run separately. No cross-engine gain can yet be derived from this table. The old runner's shutdown POST returned HTTP 415; its owned-engine PID fallback stopped it and released the GPU. The harness now sends JSON with the required Content-Type.
+
+Remaining engine differences include arithmetic/reduction order, draft K/V formats, dense projection concatenation versus separate sums, KV-only versus full-graph draft catch-up, first-window handling, prefix-cache implementation, and target scheduler/CUDA-graph boundaries. These are explicitly not made equivalent by sharing draft weights and policy.

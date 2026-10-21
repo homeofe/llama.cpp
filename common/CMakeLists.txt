@@ -106,6 +106,8 @@ add_library(${TARGET}
     sampling.cpp
     sampling.h
     speculative.cpp
+    strata-reference/draft_policy.cpp
+    strata-reference/suffix_drafter.cpp
     speculative.h
     subproc.cpp
     subproc.h

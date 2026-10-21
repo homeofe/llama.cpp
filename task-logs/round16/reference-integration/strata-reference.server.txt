@@ -1,0 +1,17 @@
+0.00.127.298 I srv  llama_server: initializing ...
+0.00.127.311 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.127.424 I srv  init_listene: The UI is disabled
+0.00.127.426 I srv  init_listene: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
+0.00.127.510 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.131.388 I srv    load_model: loading model '/opt/llm-gateway/models/Qwen3.8-Flash-Next/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf'
+0.01.512.387 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 99, abort
+0.49.348.588 I cmn          init: llama threadpool init, n_threads = 24
+0.49.472.065 I common_speculative_init_result: loading draft model '/opt/llm-gateway/data/moe-quant/qwen38/round16-models/strata-q6subset.gguf'
+0.49.892.979 E ggml_backend_cuda_buffer_type_alloc_buffer: allocating 998.61 MiB on device 0: cudaMalloc failed: out of memory
+0.49.892.985 E ggml_backend_buft_alloc_buffer_n_default: failed to allocate CUDA0 buffer of size 1047116416
+0.49.940.371 E llama_model_load: error loading model: unable to allocate CUDA0 buffer
+0.49.940.379 E llama_model_load_from_file_impl: failed to load model
+0.49.940.380 E common_speculative_init_result: failed to load draft model, '/opt/llm-gateway/data/moe-quant/qwen38/round16-models/strata-q6subset.gguf'
+0.49.940.388 E srv    load_model: failed to load draft model, '/opt/llm-gateway/data/moe-quant/qwen38/round16-models/strata-q6subset.gguf'
+0.49.940.397 I srv    operator(): operator(): cleaning up before exit...
+0.49.942.553 E srv  llama_server: exiting due to model loading error
