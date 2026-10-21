@@ -1,0 +1,2 @@
+common_spec_auto: model is 1000000000.0x free VRAM: speculative decoding would be slower here, not loading it (--spec-draft-n-max N to force)
+FAIL: stock path changed explicit speculative configuration

@@ -207,6 +207,7 @@ struct spec_depth_tuner {
     static constexpr int probe   = 128;
     static constexpr int recheck = 4096;
     static inline int start = 1;  // set from common_params_speculative_draft::n_start
+    static inline bool enabled = false;
 
     enum phase_t { UP, DOWN, REFINE, DONE };
 
@@ -265,6 +266,9 @@ struct spec_depth_tuner {
         static const int pinned = getenv("LLAMA_SPEC_DEPTH") ? atoi(getenv("LLAMA_SPEC_DEPTH")) : -1;
         if (pinned >= 0 || d_max <= 0) {
             return std::max(0, std::min(pinned, d_max));
+        }
+        if (!enabled) {
+            return d_max;
         }
         const int64_t now = ggml_time_us();
         if (last_t != 0) {  // credit the step that just finished to the depth it used
@@ -1235,6 +1239,7 @@ private:
 
         llama_init = common_init_from_params(params_base);
         spec_depth_tuner::start = params_base.speculative.draft.n_start;
+        spec_depth_tuner::enabled = common_autotune_on(params_base);
 
         model_tgt = llama_init->model();
         ctx_tgt   = llama_init->context();

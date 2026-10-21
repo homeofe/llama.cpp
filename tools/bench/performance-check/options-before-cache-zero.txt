@@ -1,0 +1,1 @@
+FAIL: cache=0 must disable tuning regardless of flag order

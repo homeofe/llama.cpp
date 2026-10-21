@@ -1278,6 +1278,9 @@ static size_t common_swap_out_bytes() {
 // speculative defaults from model size vs free VRAM: the tuner's starting depth and, unless set,
 // the max draft depth (recurrent-state rollback buffers are sized by it, so it costs VRAM)
 void common_spec_auto(common_params & params) {
+    if (!common_autotune_on(params)) {
+        return;
+    }
     auto & dft = params.speculative.draft;
     if (std::none_of(params.speculative.types.begin(), params.speculative.types.end(),
                      [](auto t) { return t != COMMON_SPECULATIVE_TYPE_NONE; })) {
@@ -1401,7 +1404,7 @@ static std::string moe_auto_decide(const moe_auto_rec & st, const moe_auto_rec &
 // --moe autotune=0 or LLAMA_AUTOTUNE=0: the kill switch for everything the engine tunes or measures by itself
 bool common_autotune_on(const common_params & params) {
     const char * e = getenv("LLAMA_AUTOTUNE");
-    return params.autotune && !(e && atoi(e) == 0);
+    return params.n_moe_cache_slots != 0 && params.autotune && !(e && atoi(e) == 0);
 }
 
 // -ub from the request and the card, no VRAM tiers: the compute buffer of a ubatch is probed (no_alloc, per candidate) and what it
@@ -1478,6 +1481,7 @@ static void common_moe_cache_auto_impl(common_params & params) {
         COM_DBG("expert cache set by user (%d), no auto setup\n", params.n_moe_cache_slots);
         return;
     }
+    const bool autotune = common_autotune_on(params);
     params.n_moe_cache_slots = 0;
 
     const bool user_placement = params.n_gpu_layers != -1 ||
@@ -1536,7 +1540,7 @@ static void common_moe_cache_auto_impl(common_params & params) {
         std::string mode;
         if (f == "stock" || f == "cache") {
             mode = f;
-        } else if (!common_autotune_on(params)) {
+        } else if (!autotune) {
             // no measuring: the static rule, cache whenever the model does not fit (and the prompt is not long); nothing is recorded
             mode = moe_auto_est_prompt(params) < 3000 ? "cache" : "stock";
             LOG_INF("%s: MoE placement: %s (autotune off: static rule, model %.1f GiB, free VRAM %.1f GiB)\n", __func__, mode.c_str(),
@@ -1575,9 +1579,11 @@ static void common_moe_cache_auto_impl(common_params & params) {
         use_cache = mode != "stock";
     }
 
-    // stock placement (the model fitter places layers): only the expert cache and what exists for it stays off (experts on the
-    // CPU, repack disabled, cache slots, the big prompt batch that its uploads want); pinned weights and the thread choice stay
-    if (use_cache) {
+    if (!use_cache) {
+        LOG_INF("%s: MoE placement: stock, expert cache off\n", __func__);
+        return;
+    }
+    {
         auto & tbo = params.tensor_buft_overrides;
         tbo.insert(std::find_if(tbo.begin(), tbo.end(), [](const auto & o) { return o.pattern == nullptr; }), llm_ffn_exps_cpu_override());
         params.no_extra_bufts    = true;
@@ -1826,11 +1832,11 @@ common_init_result::common_init_result(common_params & params, bool model_only) 
         cparams.n_samplers = pimpl->samplers_seq_config.size();
     }
 
-    llama_moe_set_options((params.moe_opts + (common_autotune_on(params) ? "" : (params.moe_opts.empty() ? "autotune=0" : ",autotune=0"))).c_str());
+    llama_moe_set_options((params.moe_opts + (params.moe_opts.empty() ? "" : ",") + (common_autotune_on(params) ? "autotune=1" : "autotune=0")).c_str());
     llama_context * lctx = llama_init_from_model(model, cparams);
     // the compute buffers did not fit (a card near its limit): a smaller ubatch needs a smaller buffer, retry halving it; only an
     // ubatch of ours, the user's -ub is respected. (A GPU fault at run time, Xid 31, kills the CUDA context and cannot be retried.)
-    while (lctx == NULL && !params.ubatch_user && cparams.n_ubatch > 128) {
+    while (lctx == NULL && params.n_moe_cache_slots != 0 && !params.ubatch_user && cparams.n_ubatch > 128) {
         cparams.n_ubatch /= 2;
         LOG_WRN("%s: context creation failed, retrying with ubatch %u\n", __func__, cparams.n_ubatch);
         lctx = llama_init_from_model(model, cparams);
@@ -2214,8 +2220,8 @@ struct llama_context_params common_context_params_to_llama(const common_params &
     cparams.n_moe_cache_slots   = params.n_moe_cache_slots == -2 ? 0 : params.n_moe_cache_slots;
     cparams.n_moe_cache_inserts = params.n_moe_cache_inserts;
     cparams.n_moe_cache_window  = params.n_moe_cache_window;
-    cparams.n_moe_predict       = params.n_moe_predict;
-    cparams.n_moe_predict_train = params.n_moe_predict_train;
+    cparams.n_moe_predict       = params.n_moe_cache_slots == 0 ? 0 : params.n_moe_predict;
+    cparams.n_moe_predict_train = params.n_moe_cache_slots == 0 ? 0 : params.n_moe_predict_train;
     cparams.n_threads         = params.cpuparams.n_threads;
     cparams.n_threads_batch   = params.cpuparams_batch.n_threads == -1 ?
                                 params.cpuparams.n_threads : params.cpuparams_batch.n_threads;
@@ -2236,7 +2242,7 @@ struct llama_context_params common_context_params_to_llama(const common_params &
     cparams.offload_kqv       = !params.no_kv_offload;
     cparams.no_perf           = params.no_perf;
     cparams.op_offload        = !params.no_op_offload;
-    cparams.prefetch_experts_slots = params.prefetch_experts_slots;
+    cparams.prefetch_experts_slots = params.n_moe_cache_slots == 0 ? 0 : params.prefetch_experts_slots;
     cparams.swa_full          = params.swa_full;
     cparams.kv_unified        = params.kv_unified;
 
@@ -2291,7 +2297,7 @@ void common_threadpools::init(llama_context * ctx, const common_params & params)
 
     struct ggml_threadpool_params tpp_batch =
             ggml_threadpool_params_from_cpu_params(params.cpuparams_batch);
-    if (params.cpuparams.auto_threads && !params.threads_batch_set) {
+    if (params.cpuparams.auto_threads && !params.threads_batch_set && common_autotune_on(params)) {
         // the batch tuner may use up to the logical cores: size the batch pool for it, so it differs from the decode pool
         // (graph_compute uses n_threads_batch of them, the rest idle)
         tpp_batch.n_threads = std::max(tpp_batch.n_threads, (int) std::thread::hardware_concurrency());
