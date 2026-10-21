@@ -203,7 +203,12 @@ struct upload_job {
     int64_t t_queued = 0;    // ggml_time_us() when queued (trace)
 };
 
+struct knobs_t;
+
 struct moe_cache {
+    struct tunable { const char * name; double knobs_t::* f; std::vector<double> vals; bool slow = false; };
+    std::vector<tunable> tunables;
+    bool tunables_ready = false;
     int32_t n_slots     = 0;
     int32_t max_inserts = 2;
     int32_t window      = 64; // recent-usage window in tokens (--moe-cache-window)
@@ -3088,7 +3093,7 @@ static void apply_predict(moe_cache * mc) {
 static void self_tune(moe_cache * mc) {
     // slow: the knob changes what the cache holds, and its effect builds up over hundreds of tokens, so a candidate needs a long
     // slice (its first tokens run on the previous candidate's contents) instead of the 36-token slice of the transient knobs
-    struct tunable { const char * name; double knobs_t::* f; std::vector<double> vals; bool slow = false; };
+    using tunable = moe_cache::tunable;
     // the streaming knobs only matter with the predictor; the swap path's are always live
     static const std::vector<tunable> T_stream = {
         { "STREAM_M", &knobs_t::stream_m,  { 4, 6, 8, 12 } },
@@ -3101,8 +3106,8 @@ static void self_tune(moe_cache * mc) {
         { "WAIT",     &knobs_t::wait,      { 0, 1 } },
         { "BIG",      &knobs_t::big,       { 0, 1 } },
     };
-    static const std::vector<tunable> T = [&] {
-        std::vector<tunable> t;
+    if (!mc->tunables_ready) {
+        auto & t = mc->tunables;
         // whatever the user set (LLAMA_MOE_CACHE_<NAME> in the environment) is theirs: never tuned. Deterministic mode fixes them all.
         const char * dm = getenv("LLAMA_MOE_CACHE_DETERMINISTIC");
         const bool det_mode = dm && atoi(dm) != 0;
@@ -3117,8 +3122,9 @@ static void self_tune(moe_cache * mc) {
         // on the machine (slow link, RAM headroom), so it is tuned live; a state-carrying knob, hence the long slices
         add({ "MARGIN", &knobs_t::margin, { 0, -2 }, true });
         for (const auto & x : T_swap) { add(x); }
-        return t;
-    }();
+        mc->tunables_ready = true;
+    }
+    const auto & T = mc->tunables;
     if (T.empty()) { return; } // -at off, every knob set by the user or deterministic mode: nothing to tune
     const size_t MIN_S = 3, MAX_S = 8;
     // a cycle costs ~2k tokens per state-carrying knob (half of them on the worse candidate): rest long enough to keep that under ~10%
