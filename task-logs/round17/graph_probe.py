@@ -3,18 +3,20 @@
 import argparse, json, pathlib, signal, sys, time
 HERE=pathlib.Path(__file__).resolve().parent
 sys.path.insert(0,str(HERE.parent/'round16'))
-from native_reference import Reference, configs, bench
+from run_variants import GraphRun, configs, bench
 
 ap=argparse.ArgumentParser()
 ap.add_argument('--out',required=True)
 ap.add_argument('--runtime',required=True,type=pathlib.Path)
 ap.add_argument('--trace',action='store_true')
+ap.add_argument('--capacity',type=int,default=1)
 ap.add_argument('--minutes',type=int,default=10)
 a=ap.parse_args()
 out=HERE/a.out;out.mkdir(exist_ok=False)
-run=Reference(out,time.time()+60*a.minutes)
+run=GraphRun(out,time.time()+60*a.minutes)
 signal.signal(signal.SIGTERM,lambda *_:(_ for _ in ()).throw(KeyboardInterrupt('SIGTERM')))
 cfg=configs()['strata-reference'];cfg['cmd'][0]=str(a.runtime.resolve()/'llama-server')
+cfg['env']['GGML_CUDA_GRAPH_VARIANTS']=str(a.capacity)
 if a.trace:cfg['env']['GGML_CUDA_GRAPH_TRACE']='1'
 (out/'config.json').write_text(json.dumps({'config':cfg,'benchmark_valid':False},indent=2)+'\n')
 try:

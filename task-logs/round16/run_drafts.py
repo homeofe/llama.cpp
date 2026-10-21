@@ -35,6 +35,8 @@ class Run(Probe):
             raise RuntimeError('GPU already in use')
         env = {k:v for k,v in os.environ.items() if not k.startswith('GGML_MOE_HYBRID') and k != 'LD_LIBRARY_PATH'}
         env.update(cfg['env'])
+        runtime = Path(cfg['cmd'][0]).resolve().parent
+        env['LD_LIBRARY_PATH'] = str(runtime)
         with (self.out / (name + '.server.txt')).open('a') as log:
             self.child = subprocess.Popen(cfg['cmd'], env=env, stdout=log, stderr=subprocess.STDOUT,
                                           stdin=subprocess.DEVNULL, start_new_session=True)
@@ -45,8 +47,13 @@ class Run(Probe):
             try:
                 with urllib.request.urlopen(f'http://127.0.0.1:{bench.PORT}/health', timeout=2) as f:
                     if f.status == 200:
+                        paths = sorted({line.split()[-1] for line in Path(f'/proc/{self.child.pid}/maps').read_text().splitlines()
+                                        if '/' in line and any(lib in line for lib in ('libggml', 'libllama', 'libmtmd'))})
+                        self.event(kind='loaded_libraries', config=name, runtime=str(runtime), paths=paths)
+                        if not paths or any(Path(path).parent != runtime for path in paths):
+                            raise RuntimeError('runtime loaded libraries outside its isolated directory')
                         return
-            except Exception:
+            except (OSError, ValueError):
                 pass
             self.renew()
             time.sleep(2)

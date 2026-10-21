@@ -16,6 +16,17 @@ from run_drafts import Contaminated
 
 
 class GraphRun(Reference):
+    def request(self, *args, **kwargs):
+        def timeout(*_):
+            raise TimeoutError('request wall-clock deadline')
+        old = signal.signal(signal.SIGALRM, timeout)
+        signal.setitimer(signal.ITIMER_REAL, min(120, max(1, self.end - time.time())))
+        try:
+            return super().request(*args, **kwargs)
+        finally:
+            signal.setitimer(signal.ITIMER_REAL, 0)
+            signal.signal(signal.SIGALRM, old)
+
     def renew(self, force=False):
         if self.held and (force or time.monotonic() - self.last_hold > 300):
             bench.gw('POST', '/api/v1/gpu/hold', {'reason': 'codex: bounded CUDA graph reuse measurement', 'ttlS': 900})
@@ -35,6 +46,7 @@ def main():
     out.mkdir(exist_ok=False)
     cfg = configs()['strata-reference' if args.stack == 'aligned' else 'base']
     controls = {'A': copy.deepcopy(cfg), 'B': copy.deepcopy(cfg)}
+    controls['A']['env']['GGML_CUDA_GRAPH_VARIANTS'] = '1'
     controls['B']['cmd'][0] = str(args.candidate.resolve() / 'llama-server')
     controls['B']['env']['GGML_CUDA_GRAPH_VARIANTS'] = str(args.capacity)
     for control in controls.values():
