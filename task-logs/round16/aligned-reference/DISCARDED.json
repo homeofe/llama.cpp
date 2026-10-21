@@ -1,0 +1,4 @@
+{
+  "reason": "Incomplete block; audit harness with unresolved server parallel=-1 caused memory pressure during a pause. Do not aggregate this attempt.",
+  "epoch": 1792579568.8040624
+}

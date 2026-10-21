@@ -1,0 +1,161 @@
+0.00.123.102 I srv  llama_server: initializing ...
+0.00.123.116 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.123.224 I srv  init_listene: The UI is disabled
+0.00.123.225 I srv  init_listene: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
+0.00.123.309 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.127.205 I srv    load_model: loading model '/opt/llm-gateway/models/Qwen3.8-Flash-Next/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf'
+0.01.478.693 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 99, abort
+0.39.859.768 W llama_moe_cache: packed frozen profile: 1815 experts
+0.40.208.261 I cmn          init: llama threadpool init, n_threads = 24
+0.40.332.307 I common_speculative_init_result: loading draft model '/opt/llm-gateway/data/moe-quant/qwen38/round16-models/strata-q6subset.gguf'
+0.41.141.960 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 8192, kv_unified = 'false'
+0.41.142.009 I spec common_specu: Strata reference: full-vocabulary confidence, MTP 3 / lookup 5, p_min=0.7
+0.41.155.270 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.41.155.312 I srv  llama_server: model loaded
+0.41.155.316 I srv  llama_server: listening on http://127.0.0.1:8799
+0.41.990.525 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 0, t_last = -1
+0.41.990.603 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.42.548.003 I spec        begin: Strata lookup windows in previous request: 0
+0.42.993.927 I slot print_timing: id  0 | task 0 | prompt eval time =     559.22 ms /    18 tokens (   31.07 ms per token,    32.19 tokens per second)
+0.42.993.934 I slot print_timing: id  0 | task 0 |        eval time =     444.05 ms /     8 tokens (   63.44 ms per token,    15.76 tokens per second)
+0.42.993.935 I slot print_timing: id  0 | task 0 |       total time =    1003.26 ms /    26 tokens
+0.42.993.939 I slot print_timing: id  0 | task 0 |    graphs reused =          1
+0.42.993.939 I slot print_timing: id  0 | task 0 |   graph reallocs =          2    /     0        (same size) / (changed size)
+0.42.993.944 I slot print_timing: id  0 | task 0 | draft acceptance = 0.75000 (    3 accepted /     4 generated), mean len =  2.50
+0.42.993.985 I slot      release: id  0 | task 0 | stop processing: n_tokens = 25, truncated = 0
+1.11.010.187 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 25, t_last = 930290291994
+1.11.167.806 I slot launch_slot_: id  0 | task 7 | processing task, is_child = 0
+1.12.395.811 I spec        begin: Strata lookup windows in previous request: 0
+1.15.462.554 I slot print_timing: id  0 | task 7 | n_gen =    124, tg =  40.13 t/s, tg_3s =  40.46 t/s
+1.17.903.958 I slot print_timing: id  0 | task 7 | prompt eval time =    1229.93 ms /    98 tokens (   12.55 ms per token,    79.68 tokens per second)
+1.17.903.966 I slot print_timing: id  0 | task 7 |        eval time =    5506.16 ms /   218 tokens (   25.37 ms per token,    39.41 tokens per second)
+1.17.903.967 I slot print_timing: id  0 | task 7 |       total time =    6736.09 ms /   316 tokens
+1.17.903.968 I slot print_timing: id  0 | task 7 |    graphs reused =         44
+1.17.903.968 I slot print_timing: id  0 | task 7 |   graph reallocs =          5    /     0        (same size) / (changed size)
+1.17.903.973 I slot print_timing: id  0 | task 7 | draft acceptance = 0.86782 (  151 accepted /   174 generated), mean len =  3.44
+1.17.904.011 I slot      release: id  0 | task 7 | stop processing: n_tokens = 315, truncated = 0
+3.43.992.710 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 1.000 (> 0.100 thold), f_keep = 0.311
+3.44.164.495 I slot launch_slot_: id  0 | task 76 | processing task, is_child = 0
+3.44.337.331 I spec        begin: Strata lookup windows in previous request: 2
+3.47.343.694 I slot print_timing: id  0 | task 76 | n_gen =    120, tg =  39.59 t/s, tg_3s =  39.92 t/s
+3.49.571.710 I slot print_timing: id  0 | task 76 | prompt eval time =     173.37 ms /     4 tokens (   43.34 ms per token,    23.07 tokens per second)
+3.49.571.718 I slot print_timing: id  0 | task 76 |        eval time =    5233.78 ms /   218 tokens (   24.12 ms per token,    41.46 tokens per second)
+3.49.571.719 I slot print_timing: id  0 | task 76 |       total time =    5407.15 ms /   222 tokens
+3.49.571.720 I slot print_timing: id  0 | task 76 |    graphs reused =         86
+3.49.571.721 I slot print_timing: id  0 | task 76 |   graph reallocs =          5    /     0        (same size) / (changed size)
+3.49.571.726 I slot print_timing: id  0 | task 76 | draft acceptance = 0.86286 (  151 accepted /   175 generated), mean len =  3.44
+3.49.571.760 I slot      release: id  0 | task 76 | stop processing: n_tokens = 315, truncated = 0
+3.51.596.139 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 315, t_last = 930476869769
+3.51.596.402 I slot launch_slot_: id  0 | task 144 | processing task, is_child = 0
+3.52.518.630 I spec        begin: Strata lookup windows in previous request: 3
+3.55.566.669 I slot print_timing: id  0 | task 144 | n_gen =    117, tg =  38.06 t/s, tg_3s =  38.39 t/s
+3.56.328.206 I slot print_timing: id  0 | task 144 | prompt eval time =     922.77 ms /    70 tokens (   13.18 ms per token,    75.86 tokens per second)
+3.56.328.263 I slot print_timing: id  0 | task 144 |        eval time =    3808.98 ms /   151 tokens (   25.39 ms per token,    39.38 tokens per second)
+3.56.328.290 I slot print_timing: id  0 | task 144 |       total time =    4731.75 ms /   221 tokens
+3.56.328.312 I slot print_timing: id  0 | task 144 |    graphs reused =        113
+3.56.328.335 I slot print_timing: id  0 | task 144 |   graph reallocs =          7    /     0        (same size) / (changed size)
+3.56.328.363 I slot print_timing: id  0 | task 144 | draft acceptance = 0.86667 (  104 accepted /   120 generated), mean len =  3.48
+3.56.328.412 I slot      release: id  0 | task 144 | stop processing: n_tokens = 220, truncated = 0
+4.34.369.065 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 1.000 (> 0.100 thold), f_keep = 0.318
+4.34.532.630 I slot launch_slot_: id  0 | task 193 | processing task, is_child = 0
+4.34.701.916 I spec        begin: Strata lookup windows in previous request: 2
+4.37.741.435 I slot print_timing: id  0 | task 193 | n_gen =    121, tg =  39.49 t/s, tg_3s =  39.82 t/s
+4.38.389.622 I slot print_timing: id  0 | task 193 | prompt eval time =     169.83 ms /     4 tokens (   42.46 ms per token,    23.55 tokens per second)
+4.38.389.688 I slot print_timing: id  0 | task 193 |        eval time =    3687.10 ms /   151 tokens (   24.58 ms per token,    40.68 tokens per second)
+4.38.389.715 I slot print_timing: id  0 | task 193 |       total time =    3856.93 ms /   155 tokens
+4.38.389.738 I slot print_timing: id  0 | task 193 |    graphs reused =        143
+4.38.389.760 I slot print_timing: id  0 | task 193 |   graph reallocs =          7    /     0        (same size) / (changed size)
+4.38.389.790 I slot print_timing: id  0 | task 193 | draft acceptance = 0.84553 (  104 accepted /   123 generated), mean len =  3.48
+4.38.389.840 I slot      release: id  0 | task 193 | stop processing: n_tokens = 220, truncated = 0
+4.40.414.832 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 220, t_last = 930525687873
+4.40.415.081 I slot launch_slot_: id  0 | task 241 | processing task, is_child = 0
+4.41.406.974 I spec        begin: Strata lookup windows in previous request: 2
+4.44.435.318 I slot print_timing: id  0 | task 241 | n_gen =    131, tg =  42.95 t/s, tg_3s =  43.28 t/s
+4.47.355.341 I slot print_timing: id  0 | task 241 | prompt eval time =     993.69 ms /    75 tokens (   13.25 ms per token,    75.48 tokens per second)
+4.47.355.397 I slot print_timing: id  0 | task 241 |        eval time =    5946.52 ms /   256 tokens (   23.32 ms per token,    42.88 tokens per second)
+4.47.355.441 I slot print_timing: id  0 | task 241 |       total time =    6940.21 ms /   331 tokens
+4.47.355.460 I slot print_timing: id  0 | task 241 |    graphs reused =        191
+4.47.355.478 I slot print_timing: id  0 | task 241 |   graph reallocs =         11    /     0        (same size) / (changed size)
+4.47.355.503 I slot print_timing: id  0 | task 241 | draft acceptance = 0.93401 (  184 accepted /   197 generated), mean len =  3.67
+4.47.355.550 I slot      release: id  0 | task 241 | stop processing: n_tokens = 330, truncated = 0
+5.25.398.438 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 1.000 (> 0.100 thold), f_keep = 0.227
+5.25.566.797 I slot launch_slot_: id  0 | task 315 | processing task, is_child = 0
+5.25.734.120 I spec        begin: Strata lookup windows in previous request: 1
+5.28.804.031 I slot print_timing: id  0 | task 315 | n_gen =    132, tg =  42.68 t/s, tg_3s =  43.01 t/s
+5.31.675.908 I slot print_timing: id  0 | task 315 | prompt eval time =     167.85 ms /     4 tokens (   41.96 ms per token,    23.83 tokens per second)
+5.31.675.917 I slot print_timing: id  0 | task 315 |        eval time =    5941.21 ms /   256 tokens (   23.30 ms per token,    42.92 tokens per second)
+5.31.675.918 I slot print_timing: id  0 | task 315 |       total time =    6109.06 ms /   260 tokens
+5.31.675.918 I slot print_timing: id  0 | task 315 |    graphs reused =        239
+5.31.675.919 I slot print_timing: id  0 | task 315 |   graph reallocs =         14    /     0        (same size) / (changed size)
+5.31.675.924 I slot print_timing: id  0 | task 315 | draft acceptance = 0.93401 (  184 accepted /   197 generated), mean len =  3.67
+5.31.675.958 I slot      release: id  0 | task 315 | stop processing: n_tokens = 330, truncated = 0
+6.09.717.370 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 330, t_last = 930578973967
+6.09.717.628 I slot launch_slot_: id  0 | task 388 | processing task, is_child = 0
+6.11.479.688 I spec        begin: Strata lookup windows in previous request: 1
+6.13.561.851 I slot print_timing: id  0 | task 388 | prompt eval time =    1762.62 ms /   147 tokens (   11.99 ms per token,    83.40 tokens per second)
+6.13.561.858 I slot print_timing: id  0 | task 388 |        eval time =    2081.55 ms /    94 tokens (   22.38 ms per token,    44.68 tokens per second)
+6.13.561.859 I slot print_timing: id  0 | task 388 |       total time =    3844.17 ms /   241 tokens
+6.13.561.860 I slot print_timing: id  0 | task 388 |    graphs reused =        251
+6.13.561.861 I slot print_timing: id  0 | task 388 |   graph reallocs =         16    /     0        (same size) / (changed size)
+6.13.561.866 I slot print_timing: id  0 | task 388 | draft acceptance = 0.96000 (   72 accepted /    75 generated), mean len =  4.43
+6.13.561.903 I slot      release: id  0 | task 388 | stop processing: n_tokens = 240, truncated = 0
+6.15.587.565 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 1.000 (> 0.100 thold), f_keep = 0.613
+6.15.587.664 I slot launch_slot_: id  0 | task 412 | processing task, is_child = 0
+6.15.751.224 I spec        begin: Strata lookup windows in previous request: 8
+6.17.861.557 I slot print_timing: id  0 | task 412 | prompt eval time =     164.10 ms /     4 tokens (   41.03 ms per token,    24.38 tokens per second)
+6.17.861.565 I slot print_timing: id  0 | task 412 |        eval time =    2109.74 ms /    94 tokens (   22.69 ms per token,    44.08 tokens per second)
+6.17.861.566 I slot print_timing: id  0 | task 412 |       total time =    2273.84 ms /    98 tokens
+6.17.861.566 I slot print_timing: id  0 | task 412 |    graphs reused =        265
+6.17.861.567 I slot print_timing: id  0 | task 412 |   graph reallocs =         16    /     0        (same size) / (changed size)
+6.17.861.572 I slot print_timing: id  0 | task 412 | draft acceptance = 0.92208 (   71 accepted /    77 generated), mean len =  4.09
+6.17.861.609 I slot      release: id  0 | task 412 | stop processing: n_tokens = 241, truncated = 0
+6.19.886.257 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 241, t_last = 930625159618
+6.20.016.980 I slot launch_slot_: id  0 | task 437 | processing task, is_child = 0
+6.20.597.677 I spec        begin: Strata lookup windows in previous request: 7
+6.23.610.772 I slot print_timing: id  0 | task 437 | n_gen =    100, tg =  32.86 t/s, tg_3s =  33.19 t/s
+6.26.616.981 I slot print_timing: id  0 | task 437 | n_gen =    213, tg =  35.22 t/s, tg_3s =  37.59 t/s
+6.27.710.710 I slot print_timing: id  0 | task 437 | prompt eval time =     581.24 ms /    37 tokens (   15.71 ms per token,    63.66 tokens per second)
+6.27.710.717 I slot print_timing: id  0 | task 437 |        eval time =    7112.45 ms /   256 tokens (   27.89 ms per token,    35.85 tokens per second)
+6.27.710.717 I slot print_timing: id  0 | task 437 |       total time =    7693.69 ms /   293 tokens
+6.27.710.718 I slot print_timing: id  0 | task 437 |    graphs reused =        305
+6.27.710.719 I slot print_timing: id  0 | task 437 |   graph reallocs =         20    /     0        (same size) / (changed size)
+6.27.710.725 I slot print_timing: id  0 | task 437 | draft acceptance = 0.76142 (  150 accepted /   197 generated), mean len =  2.81
+6.27.710.755 I slot      release: id  0 | task 437 | stop processing: n_tokens = 292, truncated = 0
+7.33.763.688 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 1.000 (> 0.100 thold), f_keep = 0.127
+7.33.931.791 I slot launch_slot_: id  0 | task 545 | processing task, is_child = 0
+7.34.102.263 I spec        begin: Strata lookup windows in previous request: 2
+7.37.161.058 I slot print_timing: id  0 | task 545 | n_gen =    105, tg =  34.01 t/s, tg_3s =  34.33 t/s
+7.40.192.039 I slot print_timing: id  0 | task 545 | n_gen =    227, tg =  37.12 t/s, tg_3s =  40.25 t/s
+7.40.972.109 I slot print_timing: id  0 | task 545 | prompt eval time =     170.99 ms /     4 tokens (   42.75 ms per token,    23.39 tokens per second)
+7.40.972.116 I slot print_timing: id  0 | task 545 |        eval time =    6869.29 ms /   256 tokens (   26.94 ms per token,    37.12 tokens per second)
+7.40.972.116 I slot print_timing: id  0 | task 545 |       total time =    7040.29 ms /   260 tokens
+7.40.972.117 I slot print_timing: id  0 | task 545 |    graphs reused =        343
+7.40.972.118 I slot print_timing: id  0 | task 545 |   graph reallocs =         20    /     0        (same size) / (changed size)
+7.40.972.122 I slot print_timing: id  0 | task 545 | draft acceptance = 0.75500 (  151 accepted /   200 generated), mean len =  2.82
+7.40.972.150 I slot      release: id  0 | task 545 | stop processing: n_tokens = 292, truncated = 0
+8.25.016.611 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 292, t_last = 930708270159
+8.25.188.034 I slot launch_slot_: id  0 | task 651 | processing task, is_child = 0
+8.25.758.506 I spec        begin: Strata lookup windows in previous request: 3
+8.28.785.802 I slot print_timing: id  0 | task 651 | n_gen =    111, tg =  36.34 t/s, tg_3s =  36.67 t/s
+8.31.797.293 I slot print_timing: id  0 | task 651 | n_gen =    206, tg =  33.95 t/s, tg_3s =  31.55 t/s
+8.33.294.965 I slot print_timing: id  0 | task 651 | prompt eval time =     571.05 ms /    36 tokens (   15.86 ms per token,    63.04 tokens per second)
+8.33.294.972 I slot print_timing: id  0 | task 651 |        eval time =    7535.85 ms /   256 tokens (   29.55 ms per token,    33.84 tokens per second)
+8.33.294.973 I slot print_timing: id  0 | task 651 |       total time =    8106.90 ms /   292 tokens
+8.33.294.974 I slot print_timing: id  0 | task 651 |    graphs reused =        378
+8.33.294.974 I slot print_timing: id  0 | task 651 |   graph reallocs =         22    /     0        (same size) / (changed size)
+8.33.294.979 I slot print_timing: id  0 | task 651 | draft acceptance = 0.75661 (  143 accepted /   189 generated), mean len =  2.62
+8.33.295.014 I slot      release: id  0 | task 651 | stop processing: n_tokens = 291, truncated = 0
+9.35.346.843 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 1.000 (> 0.100 thold), f_keep = 0.124
+9.35.517.343 I slot launch_slot_: id  0 | task 766 | processing task, is_child = 0
+9.35.687.189 I spec        begin: Strata lookup windows in previous request: 1
+9.38.763.093 I slot print_timing: id  0 | task 766 | n_gen =    115, tg =  37.07 t/s, tg_3s =  37.39 t/s
+9.41.770.829 I slot print_timing: id  0 | task 766 | n_gen =    216, tg =  35.34 t/s, tg_3s =  33.58 t/s
+9.43.012.778 I slot print_timing: id  0 | task 766 | prompt eval time =     170.37 ms /     4 tokens (   42.59 ms per token,    23.48 tokens per second)
+9.43.012.785 I slot print_timing: id  0 | task 766 |        eval time =    7325.03 ms /   256 tokens (   28.73 ms per token,    34.81 tokens per second)
+9.43.012.786 I slot print_timing: id  0 | task 766 |       total time =    7495.41 ms /   260 tokens
+9.43.012.787 I slot print_timing: id  0 | task 766 |    graphs reused =        413
+9.43.012.787 I slot print_timing: id  0 | task 766 |   graph reallocs =         22    /     0        (same size) / (changed size)
+9.43.012.792 I slot print_timing: id  0 | task 766 | draft acceptance = 0.75521 (  145 accepted /   192 generated), mean len =  2.75
+9.43.012.820 I slot      release: id  0 | task 766 | stop processing: n_tokens = 291, truncated = 0
+21.45.605.372 I srv    operator(): operator(): cleaning up before exit...
+21.48.289.648 W ~llama_context:  CUDA_Host compute buffer size of  29.2789 MiB, does not match expectation of  17.9476 MiB

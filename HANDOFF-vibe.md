@@ -1,21 +1,48 @@
 # HANDOFF - the Qwen3.8-Flash-Next decode-speed effort, state after round 14
 
-**Round 16 in progress (2026-10-21): `NOTES-round16-draft-parity.md`.**
-Q2 experts and a reduced Q6_K draft head run in llama.cpp, with the draft fully on
-GPU. The initial two-prompt gain DID NOT generalize: clean A B B A, n=8/category,
-shows only +0.30% code / +1.12% English by server time (`confirm-clean/`). Stopped
-early below the +3% gate; no adoption. The head mapping correctness controls pass.
-Current GPU work: `task-logs/round16/global-screen/`, an eight-prompt check of Strata's
-whole-hidden MTP norm, behind `LLAMA_MTP_HNORM_GLOBAL=1` (default off, draft only).
-CPU/CUDA reference checks pass. Do not launch another GPU job while its runner holds
-the GPU. Two head-only fallback model files with original Q8 experts are also ready
-(`q8exp-q8subset` / `q8exp-q6subset`); not yet measured.
-Live settings are unchanged. The old runtime is `task-logs/round16/e2e/original/`;
-`e2e/isolated/` differs only in libllama (reduced head), `e2e/global/` additionally
-has the experimental norm switch. Source checkpoint: `2bf16dd2b`, local, not yet
-pushed. The abandoned `confirm/` run encountered foreign load and is excluded.
-The updated runner discards/reloads a whole block after contamination to prevent
-uniquely warmed retry caches. Final selection still needs 3 rounds and quality.
+**Round 16 in progress (2026-10-21): `NOTES-round16-draft-parity.md` and `NOTES-round16-qwen-architecture.md`.**
+The initial Q2/reduced-Q6/GPU draft failed the clean A B B A confirmation (+0.30%
+code / +1.12% English server rate, n=8/category). It is not adopted.
+
+The owner then requested the complete actual Strata setup. That reference now builds
+and serves real requests: all actual draft weights, full-hidden norm, full-vocabulary
+confidence at 0.7, Strata's MTP/suffix policy, dense draft attention and the SAME 1815
+frozen target experts. Default paths remain unchanged. Runtime:
+`task-logs/round16/e2e/reference-packed-v2/`; config `strata-reference` in
+`run_drafts.py`. Only libllama and libllama-common differ from the original runtime.
+The new packed-profile allocation needs 3587.86 MiB instead of the proportional
+4032 MiB budget and fixes the draft-load OOM without dropping any expert IDs.
+Three actual replies pass (`packed-integration-v2/`); they ran under foreign load,
+so their rates are NOT benchmark results. CPU/CUDA confidence checks, sanitizer
+checks and deliberate wrong-formula/tiny-change controls pass. Actual allocation
+on/off output and invalid-profile controls pass in `profile-controls/`: identical 64-token
+output at packed 3600 versus proportional 4032 MiB; duplicate and over-budget profiles reject.
+
+Actual Strata has one complete clean paired novel/repeat block in `native-reference/`.
+Medians across four prompts/category: novel 69.15/60.70; repeat 73.65/63.30 tok/s
+(code/English). `native-reference-summary.json` preserves ranges and sample counts.
+The runner was stopped after that complete Strata block because foreign load consumed
+its deadline; baseline/candidate llama blocks still need a separate timed run.
+Do not confuse partial/discarded blocks or loaded-machine integration rates with gains.
+
+The later `aligned-reference/` llama block is DISCARDED: an audit test-driver memory
+allocation error caused memory pressure before it completed. Its partial rates are not
+evidence. The already completed native Strata block is unaffected.
+
+FLARE review: `NOTES-round16-flare.md`. Its cache-only accepted-history MTP graph is
+a concrete next port candidate; full FLARE needs about 67 GiB GPU weights and a
+Blackwell backend. No FLARE code or speedup is claimed here.
+
+Qwen's report gives a further concrete design: reuse QSA top-k indices across MTP
+steps (Table 4 mean accepted lengths 4.06 full attention / 4.07 QSA, Qwen's numbers).
+Our QSA draft recomputes them; this Strata version uses dense draft attention instead.
+N-gram embedding prefetch and four-stream gated residuals already exist in both.
+QSA reuse is not implemented here. The software ceiling is NOT established.
+
+Latest reference code checkpoint: `002602e39` (packed cache), following `92cdb84a1`,
+`c5e335102`, `2bf16dd2b`. The archived proofs include the rejected controls.
+Live settings are unchanged. Final selection requires an actual positive quiet pilot,
+three interleaved rounds and affected quality panels; no new deployment is justified.
 
 **Round-15 correction (2026-10-21): read `NOTES-round15-strata-comparison.md` first.**
 The old Strata trace omitted CUDA graph nodes, the archived n5 crash was graph-allocation

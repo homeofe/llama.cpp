@@ -1,0 +1,20 @@
+[  2%] Built target llama-common-base
+[  2%] Built target cpp-httplib
+[  6%] Built target ggml-base
+[ 12%] Built target ggml-cpu
+[ 65%] Built target ggml-cuda
+[ 65%] Built target ggml
+[ 80%] Built target llama
+[ 80%] Building CXX object common/CMakeFiles/llama-common.dir/speculative.cpp.o
+/opt/llm-gateway/data/build/llama-vibe/common/speculative.cpp: In member function ‘virtual void common_speculative_impl_draft_simple::draft(common_speculative_draft_params_vec&)’:
+/opt/llm-gateway/data/build/llama-vibe/common/speculative.cpp:378:17: error: ‘strata_reference’ was not declared in this scope
+  378 |             if (strata_reference) {
+      |                 ^~~~~~~~~~~~~~~~
+/opt/llm-gateway/data/build/llama-vibe/common/speculative.cpp:379:17: error: ‘strata_states’ was not declared in this scope; did you mean ‘set_state’?
+  379 |                 strata_states[seq_id].first_guess = LLAMA_TOKEN_NULL;
+      |                 ^~~~~~~~~~~~~
+      |                 set_state
+gmake[3]: *** [common/CMakeFiles/llama-common.dir/build.make:692: common/CMakeFiles/llama-common.dir/speculative.cpp.o] Error 1
+gmake[2]: *** [CMakeFiles/Makefile2:2195: common/CMakeFiles/llama-common.dir/all] Error 2
+gmake[1]: *** [CMakeFiles/Makefile2:2202: common/CMakeFiles/llama-common.dir/rule] Error 2
+gmake: *** [Makefile:647: llama-common] Error 2

@@ -1,0 +1,98 @@
+{
+  "protocol": "sequential pilot, not interleaved adoption proof",
+  "sources": [
+    {
+      "directory": "task-logs/round16/native-reference",
+      "config": "strata",
+      "attempt": 1
+    }
+  ],
+  "summary": {
+    "strata": {
+      "code-novel": {
+        "n": 4,
+        "tokens": [
+          217,
+          151,
+          256,
+          94
+        ],
+        "server": {
+          "median": 69.15,
+          "min": 62.8,
+          "max": 70.6
+        },
+        "stream": {
+          "median": 70.50308853929742,
+          "min": 62.976446336162255,
+          "max": 72.04087928585669
+        },
+        "draft_accepted": 522,
+        "draft_offered": 569
+      },
+      "code-repeat": {
+        "n": 4,
+        "tokens": [
+          217,
+          151,
+          256,
+          94
+        ],
+        "server": {
+          "median": 73.65,
+          "min": 68.7,
+          "max": 76.8
+        },
+        "stream": {
+          "median": 75.73169809622081,
+          "min": 70.28315797245446,
+          "max": 78.45999537630244
+        },
+        "draft_accepted": 521,
+        "draft_offered": 562
+      },
+      "en-novel": {
+        "n": 4,
+        "tokens": [
+          256,
+          256,
+          256,
+          256
+        ],
+        "server": {
+          "median": 60.7,
+          "min": 57.5,
+          "max": 64.0
+        },
+        "stream": {
+          "median": 60.83442073977185,
+          "min": 57.61138899084339,
+          "max": 64.1537176450354
+        },
+        "draft_accepted": 607,
+        "draft_offered": 757
+      },
+      "en-repeat": {
+        "n": 4,
+        "tokens": [
+          256,
+          256,
+          256,
+          256
+        ],
+        "server": {
+          "median": 63.3,
+          "min": 63.0,
+          "max": 65.4
+        },
+        "stream": {
+          "median": 63.493319823348656,
+          "min": 63.20158795495919,
+          "max": 65.54251619685591
+        },
+        "draft_accepted": 614,
+        "draft_offered": 752
+      }
+    }
+  }
+}
