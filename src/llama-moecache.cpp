@@ -560,7 +560,7 @@ std::string cache_file(const llama_model & model, const char * prefix, const std
 
 // the model's section in the state file; empty when the state is off (LLAMA_MOE_STATE=0 / LLAMA_MOE_CACHE_PROFILE=0)
 std::string profile_path(const llama_model & model) {
-    return moe_state_enabled() ? moe_state_section(model) : "";
+    return !g_autotune_off && moe_state_enabled() ? moe_state_section(model) : "";
 }
 
 void profile_save(const moe_cache * mc) {

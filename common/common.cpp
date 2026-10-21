@@ -1533,10 +1533,10 @@ static void common_moe_cache_auto_impl(common_params & params) {
         const std::string path = moe_auto_path(params, model_size, n_gpu, vram_max);
         const char * force = getenv("LLAMA_MOE_AUTO_MODE");
         const std::string f = force ? force : "";
-        if (f == "retest") { std::string sec, pre; moe_auto_split(path, sec, pre); llama_state_erase(sec.c_str(), pre.c_str()); }
+        if (autotune && f == "retest") { std::string sec, pre; moe_auto_split(path, sec, pre); llama_state_erase(sec.c_str(), pre.c_str()); }
         moe_auto_rec st, ca;
         std::string decided;
-        moe_auto_read(path, st, ca, decided);
+        if (autotune) { moe_auto_read(path, st, ca, decided); }
         std::string mode;
         if (f == "stock" || f == "cache") {
             mode = f;

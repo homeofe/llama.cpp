@@ -1,0 +1,42 @@
+{
+  "cmd": [
+    "/opt/llm-gateway/data/build/llama-performance-check/build-cuda/bin/llama-server",
+    "-m",
+    "/opt/llm-gateway/data/build/llama-performance-check/build-cuda/audit-moe.gguf",
+    "-np",
+    "1",
+    "-c",
+    "1024",
+    "-b",
+    "128",
+    "-ub",
+    "64",
+    "-t",
+    "2",
+    "-tb",
+    "2",
+    "-fa",
+    "1",
+    "-fit",
+    "off",
+    "--no-warmup",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "18122",
+    "-ngl",
+    "99",
+    "--cpu-moe",
+    "--no-repack",
+    "--moe",
+    "cache=4",
+    "--moe",
+    "cache=0",
+    "-at",
+    "on"
+  ],
+  "env": {
+    "LLAMA_MOE_STATE": "/opt/llm-gateway/data/build/llama-performance-check/tools/bench/performance-check/fixture-after-off-fix/moe-state.ini"
+  },
+  "benchmark": false
+}

@@ -1,0 +1,70 @@
+[  0%] Provisioning UI assets
+[  3%] Built target llama-common-base
+[  3%] Built target vendor-hash
+[  5%] Built target ggml-base
+[  5%] Built target cpp-httplib
+CMake Warning at /opt/llm-gateway/data/build/llama-performance-check/scripts/ui-assets.cmake:584 (message):
+  UI: no assets available - building without an embedded UI.  In a
+  disconnected environment, download the pre-built UI from a llama.cpp
+  release at https://github.com/ggml-org/llama.cpp/releases and extract to
+  tools/ui/dist.
+
+
+-- UI: assets unchanged, skipping embedding
+[  5%] Built target llama-ui-assets
+[ 11%] Built target ggml-cpu
+[ 12%] Built target llama-ui
+[ 52%] Built target ggml-cuda
+[ 54%] Built target ggml
+[ 54%] Building CXX object src/CMakeFiles/llama.dir/llama-moecache.cpp.o
+[ 54%] Linking CXX shared library ../bin/libllama.so
+[ 66%] Built target llama
+[ 66%] Linking CXX shared library ../../bin/libmtmd.so
+[ 66%] Building CXX object common/CMakeFiles/llama-common.dir/common.cpp.o
+[ 81%] Built target mtmd
+[ 81%] Linking CXX shared library ../bin/libllama-common.so
+[ 96%] Built target llama-common
+[ 98%] Built target server-context
+[ 98%] Linking CXX shared library ../../bin/libllama-server-impl.so
+[100%] Built target llama-server-impl
+[100%] Linking CXX executable ../../bin/llama-server
+[100%] Built target llama-server
+[  2%] Built target cpp-httplib
+[  2%] Built target vendor-hash
+[  3%] Built target llama-common-base
+[  3%] Provisioning UI assets
+CMake Warning at /opt/llm-gateway/data/build/llama-performance-check/scripts/ui-assets.cmake:584 (message):
+  UI: no assets available - building without an embedded UI.  In a
+  disconnected environment, download the pre-built UI from a llama.cpp
+  release at https://github.com/ggml-org/llama.cpp/releases and extract to
+  tools/ui/dist.
+
+
+-- UI: assets unchanged, skipping embedding
+[  5%] Built target ggml-base
+[  5%] Built target llama-ui-assets
+[ 11%] Built target ggml-cpu
+[ 12%] Built target llama-ui
+[ 52%] Built target ggml-cuda
+[ 53%] Built target ggml
+[ 65%] Built target llama
+[ 80%] Built target mtmd
+[ 95%] Built target llama-common
+[ 97%] Built target server-context
+[ 98%] Built target llama-server-impl
+[ 98%] Linking CXX shared library ../../bin/libllama-cli-impl.so
+[100%] Built target llama-cli-impl
+[100%] Linking CXX executable ../../bin/llama-cli
+[100%] Built target llama-cli
+[  1%] Built target llama-common-base
+[  1%] Built target cpp-httplib
+[  4%] Built target ggml-base
+[ 11%] Built target ggml-cpu
+[ 62%] Built target ggml-cuda
+[ 63%] Built target ggml
+[ 79%] Built target llama
+[ 98%] Built target llama-common
+[ 98%] Linking CXX shared library ../../bin/libllama-bench-impl.so
+[100%] Built target llama-bench-impl
+[100%] Linking CXX executable ../../bin/llama-bench
+[100%] Built target llama-bench

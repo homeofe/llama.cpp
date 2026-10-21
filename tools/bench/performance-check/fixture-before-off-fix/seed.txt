@@ -1,0 +1,25 @@
+0.00.125.229 I srv  llama_server: initializing ...
+0.00.125.252 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.125.456 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.130.245 I srv    load_model: loading model '/opt/llm-gateway/data/build/llama-performance-check/build-cuda/audit-moe.gguf'
+0.00.467.073 W llama_model_loader: tensor overrides to CPU are used with mmap enabled - consider using --load-mode none for better performance
+0.00.501.640 I cmn          init: llama threadpool init, n_threads = 2
+0.00.502.825 W moe-cache: 2 expert layers cached on CUDA0 (CUDA0), upload link fastest
+0.00.502.990 W moe-cache: 1 upload workers, from pageable host memory (mmap; --load-mode pin: faster uploads)
+0.01.299.332 W moe-cache: probe: links alone link 0 1.4 GB/s; CPU threads:GB/s alone/with links 1:71.2/69.0 2:114.3/108.8 3:59.5/53.0 4:46.6/65.8 -> CPU 114.3 GB/s (saturated by 2 threads), RAM budget 114.3 GB/s
+0.01.299.855 W operator(): MoE expert cache enabled: 2 layers, slots/layer 4..4, 2 inserts/step, 0.3 MiB device memory
+0.01.350.846 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 1024, kv_unified = 'false'
+0.01.353.340 I srv  llama_server: model loaded
+0.01.353.348 I srv  llama_server: listening on http://127.0.0.1:18122
+0.01.504.951 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+0.01.505.018 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.02.173.902 I slot print_timing: id  0 | task 0 | prompt eval time =      13.07 ms /     4 tokens (    3.27 ms per token,   305.97 tokens per second)
+0.02.173.907 I slot print_timing: id  0 | task 0 |        eval time =     655.78 ms /    80 tokens (    8.30 ms per token,   120.47 tokens per second)
+0.02.173.908 I slot print_timing: id  0 | task 0 |       total time =     668.85 ms /    84 tokens
+0.02.173.914 I slot print_timing: id  0 | task 0 |    graphs reused =         78
+0.02.173.950 I slot print_timing: id  0 | task 0 |        moe cache = on, hit 96.0% this request / 94.9% overall, 4..4 slots/layer, margin 0 gate 3 wait 1 big 0 predict 1
+0.02.173.953 I slot print_timing: id  0 | task 0 |        moe churn = 4 uploads, 1 evictions, 0.1 MiB uploaded (this request)
+0.02.173.954 I slot print_timing: id  0 | task 0 |          threads = 2 decode / 2 batch, batch 128, ubatch 64
+0.02.173.995 I slot      release: id  0 | task 0 | stop processing: n_tokens = 83, truncated = 0
+0.02.177.850 I srv    operator(): operator(): cleaning up before exit...
+0.02.181.043 W moe-cache: steps=81 hits=315 misses=17 hit-rate=94.9%, prefill experts from cache 0/0, kept from prefill 0

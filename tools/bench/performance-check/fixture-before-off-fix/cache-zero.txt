@@ -1,0 +1,20 @@
+0.00.051.454 W DEPRECATED: argument '--moe' specified multiple times, use comma-separated values instead (only last value will be used)
+0.00.051.680 I srv  llama_server: initializing ...
+0.00.051.696 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.051.898 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.057.917 I srv    load_model: loading model '/opt/llm-gateway/data/build/llama-performance-check/build-cuda/audit-moe.gguf'
+0.00.252.792 W llama_model_loader: tensor overrides to CPU are used with mmap enabled - consider using --load-mode none for better performance
+0.00.273.156 I cmn          init: llama threadpool init, n_threads = 2
+0.00.299.243 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 1024, kv_unified = 'false'
+0.00.302.012 I srv  llama_server: model loaded
+0.00.302.026 I srv  llama_server: listening on http://127.0.0.1:18122
+0.00.355.354 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+0.00.355.417 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.00.396.973 I slot print_timing: id  0 | task 0 | prompt eval time =       1.83 ms /     4 tokens (    0.46 ms per token,  2188.18 tokens per second)
+0.00.396.979 I slot print_timing: id  0 | task 0 |        eval time =      39.70 ms /    80 tokens (    0.50 ms per token,  1989.77 tokens per second)
+0.00.396.980 I slot print_timing: id  0 | task 0 |       total time =      41.53 ms /    84 tokens
+0.00.396.985 I slot print_timing: id  0 | task 0 |    graphs reused =         78
+0.00.397.005 I slot print_timing: id  0 | task 0 |        moe cache = off
+0.00.397.006 I slot print_timing: id  0 | task 0 |          threads = 2 decode / 2 batch, batch 128, ubatch 64
+0.00.397.043 I slot      release: id  0 | task 0 | stop processing: n_tokens = 83, truncated = 0
+0.00.398.720 I srv    operator(): operator(): cleaning up before exit...
