@@ -1,0 +1,37 @@
+{
+  "checks": 12909,
+  "changed": 12105,
+  "changed_seen": 10266,
+  "keys": 293,
+  "lru": {
+    "1": {
+      "hits": 804,
+      "changed_hits": 0
+    },
+    "2": {
+      "hits": 5014,
+      "changed_hits": 4210
+    },
+    "4": {
+      "hits": 10084,
+      "changed_hits": 9280
+    },
+    "8": {
+      "hits": 10303,
+      "changed_hits": 9499
+    },
+    "16": {
+      "hits": 11057,
+      "changed_hits": 10253
+    },
+    "32": {
+      "hits": 11070,
+      "changed_hits": 10266
+    }
+  },
+  "limitations": [
+    "FNV fingerprints are diagnostic, not correctness keys.",
+    "No graph capture timing, warmup or eviction simulated.",
+    "Equal-UID fast paths are absent from this trace."
+  ]
+}
