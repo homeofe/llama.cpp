@@ -5,6 +5,7 @@
 #include "ggml-impl.h"
 
 #include <cstdio>
+#include <cmath>
 #include <cstring>
 #include <vector>
 
@@ -65,7 +66,7 @@ int main() {
                 const auto & input = moved ? alt : av;
                 for (int row = 0; row < rows; ++row) {
                     for (int col = 0; col < width; ++col) {
-                        const float expected = (input[row * stride + col] + bv[row * width + col]) * scale;
+                        const float expected = std::fma(input[row * stride + col] + bv[row * width + col], scale, 0.0f);
                         if (memcmp(&got[row * width + col], &expected, sizeof(float))) { bad = true; }
                     }
                 }
