@@ -1704,7 +1704,7 @@ static void common_moe_cache_auto_impl(common_params & params) {
     }
     LOG_INF("%s: MoE model (%.1f GiB) exceeds free VRAM (%.1f GiB): experts in RAM + GPU expert cache, no repack, "
         "ctx %d, ubatch %d, threads %d, weights %s (settings you pass win)\n", __func__, model_size / 1073741824.0, vram_free / 1073741824.0,
-        params.n_ctx, params.n_ubatch, params.cpuparams.n_threads, params.load_pinned_auto ? "pinned" : "mmap");
+        params.n_ctx, params.n_ubatch, params.cpuparams.n_threads, params.load_mode == LLAMA_LOAD_MODE_NONE ? "pinned" : llama_load_mode_name(params.load_mode));
 }
 
 common_init_result::common_init_result(common_params & params, bool model_only) :
