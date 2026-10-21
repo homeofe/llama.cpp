@@ -1,0 +1,1 @@
+BF16 patterns=65536 failures=0 (NaNs compared by class)
